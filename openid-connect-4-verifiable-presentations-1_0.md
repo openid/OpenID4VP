@@ -1,5 +1,5 @@
 %%%
-title = "OpenID Connect for W3C Verifiable Credential Objects"
+title = "OpenID Connect for Verifiable Presentations"
 abbrev = "openid-4-vp"
 ipr = "none"
 workgroup = "connect"
