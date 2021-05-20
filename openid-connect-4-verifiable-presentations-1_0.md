@@ -1061,6 +1061,3 @@ The technology described in this specification was made available from contribut
    -00 
 
    *  initial revision
-
-# Related Issues
-- https://bitbucket.org/openid/connect/issues/1206/how-to-support-ld-proofs-in-verifiable#comment-60051830
