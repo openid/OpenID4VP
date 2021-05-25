@@ -1,0 +1,59 @@
+{
+   "id_token": {
+      "verifiable_presentations": {
+         // verifiable_presentations element is a presentation_definition
+         "input_descriptors": [
+            {
+               "id": "ContosoUniversityCredential",
+               "schema": {
+                  "uri": [
+                     "https://www.w3.org/2018/credentials/examples/v1/IDCardCredential"
+                  ]
+               }
+            }
+         ],
+         "format": {
+            // meaning?
+            // better captured in client metadata?
+            "jwt": {
+               "alg": [
+                  "EdDSA",
+                  "ES256K",
+                  "ES384"
+               ]
+            },
+            "jwt_vc": {
+               "alg": [
+                  "ES256K",
+                  "ES384"
+               ]
+            },
+            "jwt_vp": {
+               "alg": [
+                  "EdDSA",
+                  "ES256K"
+               ]
+            },
+            "ldp_vc": {
+               "proof_type": [
+                  "JsonWebSignature2020",
+                  "Ed25519Signature2018",
+                  "EcdsaSecp256k1Signature2019",
+                  "RsaSignature2018"
+               ]
+            },
+            "ldp_vp": {
+               "proof_type": [
+                  "Ed25519Signature2018"
+               ]
+            },
+            // meaning?
+            "ldp": {
+               "proof_type": [
+                  "RsaSignature2018"
+               ]
+            }
+         }
+      }
+   }
+}
