@@ -14,17 +14,17 @@
                         "fields": [
                             {
                                 "path": [
-                                    "$.given_name"
+                                    "$.credentialSubject.given_name"
                                 ]
                             },
                             {
                                 "path": [
-                                    "$.family_name"
+                                    "$.credentialSubject.family_name"
                                 ]
                             },
                             {
                                 "path": [
-                                    "$.birthdate"
+                                    "$.credentialSubject.birthdate"
                                 ]
                             }
                         ]
