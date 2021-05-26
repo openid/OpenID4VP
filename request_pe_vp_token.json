@@ -3,7 +3,7 @@
         "email": null
     },
     "vp_token": {
-        // vp_token element is a presentation_definition
+        "comment": "vp_token element is a presentation_definition",
         "input_descriptors": [
             {
                 "schema": {

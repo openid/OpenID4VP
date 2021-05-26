@@ -1,7 +1,8 @@
 {
     "id_token": {
+        "email":null,
         "verifiable_presentations": {
-            // verifiable_presentations element is a presentation_definition
+            "comment": "verifiable_presentations element is a presentation_definition",
             "input_descriptors": [
                 {
                     "schema": {
@@ -10,21 +11,30 @@
                         ]
                     },
                     "constraints": {
+                        "format": {
+                            "comment": "extension to PE syntax - vc only - use path instead",
+                            "jwt_vc": {
+                               "alg": [
+                                  "ES256K",
+                                  "ES384"
+                               ]
+                            }
+                        },
                         "limit_disclosure": "required",
                         "fields": [
                             {
                                 "path": [
-                                    "$.credentialSubject.given_name"
+                                    "$.vc.credentialSubject.given_name"
                                 ]
                             },
                             {
                                 "path": [
-                                    "$.credentialSubject.family_name"
+                                    "$.vc.credentialSubject.family_name"
                                 ]
                             },
                             {
                                 "path": [
-                                    "$.credentialSubject.birthdate"
+                                    "$.vc.credentialSubject.birthdate"
                                 ]
                             }
                         ]

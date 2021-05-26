@@ -1,7 +1,7 @@
 {
    "id_token": {
-      "verifiable_presentations": {
-         // verifiable_presentations element is a presentation_definition
+      "presentation_definition": {
+         "comment": "verifiable_presentations element is a presentation_definition",
          "input_descriptors": [
             {
                "schema": {
