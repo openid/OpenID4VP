@@ -290,7 +290,7 @@ Here is an example for a SIOP RP to be used as value of the `registration` reque
 
 ## OP Metadata
 
-The OP pubishes the formats it supports using the `vp_formats` metadata parameter as defined above in its "openid-configuration". 
+The OP publishes the formats it supports using the `vp_formats` metadata parameter as defined above in its "openid-configuration". 
 
 #  Examples 
 
