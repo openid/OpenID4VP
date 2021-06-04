@@ -240,35 +240,57 @@ A Verifiable Presentation is requested using the synatx defined by the `presenta
 
 A Verifiable Presentation embedded in an ID Token (or userinfo response) is requested by adding the element `verifiable_presentations` to the `id_token` (or `userinfo`) top level element of the `claims` parameter. 
 
-This element MUST contain the following element:
+The `verifiable_presentations` element MUST contain a `input_descriptors` containing at least the `schema` sub element
 
-* `input_descriptors` containing at least the `schema` sub element
+The `verifiable_presentations` element MAY contain all other elements as defined in [@!DIF.PresentationExchange] except the `format` element.
 
-This element MAY contain all elements as defined in [@!DIF.PresentationExchange].
+Note: supported presentation formats, proof types, and algorithms are determined using new RP and OP metadata (see ). 
 
 Here is a non-normative example: 
 
-```json
-{
-   "id_token": {
-      "acr": null,
-      "verifiable_presentations": {
-         "input_descriptors": [
-            {
-               "schema": {
-                  "uri": [
-                     "https://www.w3.org/2018/credentials/examples/v1/IDCardCredential"
-                  ]
-               }
-            }
-         ]
-      }
-   }
-}
-```
+<{{examples/requests/id_token_type_only.json}}
+
+This simple example requests the presentation of a credential of a certain type. 
+
+The following example
+
+<{{examples/requests/id_token_type_and_claims.json}}
+
+shows how the RP can request selective dislosure or certain claims from a credential of a particular type. 
+
+RPs can also ask for alternative credentials being presented, which is shown in the next example:
+
+<{{examples/requests/id_token_alternative_credentials.json}}
+
 ### VP Token
 
 A VP Token is requested by adding a new top level element `vp_token` to the `claims` parameter. This element uses the same syntax as defined by `verifiable_presentations` in [Embedded Verifiable Presentations](#verifiable_presentations). 
+
+This is illustrated in the following example:
+
+<{{examples/requests/id_token_alternative_credentials.json}}
+
+# Metadata
+
+This specification introduces additional metadata to enable RP and OP to determine the verifiable presentation formats, proof types and algorithms to be used in a protocol exchange. 
+
+## RP Metadata
+
+RPs indicate the suported formats using the follwoing element.
+
+* `vp_formats`: an object defining the formats, proof types and algorithms a RP supports. The is based on the definition of the `format` elememt in a `presentation_definition` as defined in [@!DIF.PresentationExchange] with the supported formats `jwt_vp` and `ldp_vp`.
+
+Here is an example for a RP registering with a Standard OP via dynamic client registration:
+
+<{{examples/client_metadata/client_code_format.json}}
+
+Here is an example for a SIOP RP to be used as value of the `registration` request parameter:
+
+<{{examples/client_metadata/client_siop_format.json}}
+
+## OP Metadata
+
+The OP pubishes the formats it supports using the `vp_formats` metadata parameter as defined above in its "openid-configuration". 
 
 #  Examples 
 
