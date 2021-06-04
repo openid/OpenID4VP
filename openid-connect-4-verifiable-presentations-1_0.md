@@ -120,7 +120,7 @@ All representations share the same container format.
 
 A verifiable presentation container is an array of objects, each of them containing the following fields:
 
-`format`: REQUIRED A JSON string denoting the proof format the presentation was returned in. This specification introduces the values `jwt_vp` and `ldp_vp` to denote credentials in JSON-LD and JWT format, respectively, as defined in https://identity.foundation/presentation-exchange/.  
+`format`: REQUIRED A JSON string denoting the proof format the presentation was returned in. This specification introduces the values `jwt_vp` and `ldp_vp` to denote credentials in JSON-LD and JWT format, respectively, as defined in [@!DIF.PresentationExchange].  
 
 `presentation` : REQUIRED. A W3C Verifiable Presentation with a cryptographically verifiable proof in the defined proof format. 
 
@@ -228,33 +228,37 @@ OPTIONAL. Hash value of `vp_token` that represents the W3C VP. Its value is the 
 
 # Requesting Verifiable Presentations 
 
-This section illustrates how the `claims` parameter can be used for requesting verified presentations. It serves as a starting point to drive discussion about this aspect. There are other candidate approaches for this purpose (most notably [DIF Presentation Exchange](https://identity.foundation/presentation-exchange/). They will be evaluated as this draft evolves. 
+This draft extends the existing OpenID Connect `claims` request parameter to allow RPs to request verifiable presentations using the request syntax defined in [@!DIF.PresentationExchange].
 
-## Embedded Verifiable Presentations
+## Embedded Verifiable Presentations {#verifiable_presentations}
 
-A Verifiable Presentation embedded in an ID Token (or userinfo response) is requested by adding an element `verifiable_presentations` to the `id_token` (or `userinfo`) top level element of the `claims` parameter. This element must contain the following element:
+A Verifiable Presentation is requested using the synatx defined by the `presentation_definition` element as defined in Section 4 of [@!DIF.PresentationExchange]. This draft deviates from the defintion given in [@!DIF.PresentationExchange] as follows in order to better fit the characteristics of the OpenID Connect protocol:
 
-`credential_types`
-Object array containing definitions of credential types the RP wants to obtain along with an (optional) definition of the claims from the respective credential type the RP is requesting. Each of those object has the following fields:
+* the element name is `verifiable_presentations` instead of `presentation_definition`
+* the `id` element is optional
+* the field `id` of the `input_descriptor` sub element is optional
 
-* `type` REQUIRED String denoting a credential type
-* `claims` OPTIONAL An object determining the claims the RP wants to obtain using the same notation as used underneath `id_token`. 
-* `format` OPTION String designating the VP format. Predefined values are `vp_ldp` and `vp_jwt`. 
+A Verifiable Presentation embedded in an ID Token (or userinfo response) is requested by adding the element `verifiable_presentations` to the `id_token` (or `userinfo`) top level element of the `claims` parameter. 
+
+This element MUST contain the following element:
+
+* `input_descriptors` containing at least the `schema` sub element
+
+This element MAY contain all elements as defined in [@!DIF.PresentationExchange].
 
 Here is a non-normative example: 
 
 ```json
 {
-   "id_token":{
-      "acr":null,
-      "verifiable_presentations":{
-         "credential_types":[
+   "id_token": {
+      "acr": null,
+      "verifiable_presentations": {
+         "input_descriptors": [
             {
-               "type":"https://www.w3.org/2018/credentials/examples/v1/IDCardCredential",
-               "claims":{
-                  "given_name":null,
-                  "family_name":null,
-                  "birthdate":null
+               "schema": {
+                  "uri": [
+                     "https://www.w3.org/2018/credentials/examples/v1/IDCardCredential"
+                  ]
                }
             }
          ]
@@ -264,7 +268,7 @@ Here is a non-normative example:
 ```
 ### VP Token
 
-A VP Token is requested by adding a new top level element `vp_token` to the `claims` parameter. This element contains the sub elements as defined above.
+A VP Token is requested by adding a new top level element `vp_token` to the `claims` parameter. This element uses the same syntax as defined by `verifiable_presentations` in [Embedded Verifiable Presentations](#verifiable_presentations). 
 
 #  Examples 
 
@@ -1020,6 +1024,22 @@ HTTP/1.1 302 Found
     </author>
    <date day="8" month="Nov" year="2014"/>
   </front>
+</reference>
+
+<reference anchor="DIF.PresentationExchange" target="hhttps://identity.foundation/presentation-exchange/">
+        <front>
+          <title>Presentation Exchange v1.0.0</title>
+		  <author fullname="Daniel Buchner">
+            <organization>Microsoft</organization>
+          </author>
+          <author fullname="Brent Zunde">
+            <organization>Evernym</organization>
+          </author>
+          <author fullname="Martin Riedel">
+            <organization>Consensys Mesh</organization>
+          </author>
+         <date day="8" month="Nov" year="2014"/>
+        </front>
 </reference>
 
 <reference anchor="OpenID.Registration" target="https://openid.net/specs/openid-connect-registration-1_0.html">
