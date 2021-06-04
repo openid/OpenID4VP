@@ -1,0 +1,16 @@
+{
+   "id_token": {
+      "acr": null,
+      "verifiable_presentations": {
+         "input_descriptors": [
+            {
+               "schema": {
+                  "uri": [
+                     "https://www.w3.org/2018/credentials/examples/v1/IDCardCredential"
+                  ]
+               }
+            }
+         ]
+      }
+   }
+}

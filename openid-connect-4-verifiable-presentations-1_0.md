@@ -322,16 +322,20 @@ The following is a non-normative example of how an RP would use the `claims` par
 ```
 #### `claims` parameter 
 
-Below is a non-normative example of how the `claims` parameter can be used for requesting verified presentations signed as a JWT.
+Below is a non-normative example of how the `claims` parameter can be used for requesting verified presentations containg a credential of a certain type.
 
 ```json
 {
    "id_token":{
       "acr":null,
       "verifiable_presentations":{
-         "credential_types":[
+         "input_descriptors": [
             {
-               "type":"https://did.itsourweb.org:3000/smartcredential/Ontario-Health-Insurance-Plan"
+               "schema": {
+                  "uri": [
+                     "https://did.itsourweb.org:3000/smartcredential/Ontario-Health-Insurance-Plan"
+                  ]
+               }
             }
          ]
       }
@@ -341,6 +345,7 @@ Below is a non-normative example of how the `claims` parameter can be used for r
 ### Authentication Response 
 
 Below is a non-normative example of ID Token that includes `verifiable_presentations` claim.
+Note: the RP was setup with the preferred format `jwt_vp`.
 
 ```json
 {
@@ -399,23 +404,43 @@ Note that `vp` is used to contain only "those parts of the standard verifiable p
 ## Self-Issued OpenID Provider with Verifiable Presentation in ID Token (selective disclosure)
 ### `claims` parameter 
 
-Below is a non-normative example of how the `claims` parameter can be used for requesting verified presentations signed as Linked Data Proofs.
+Below is a non-normative example of how the `claims` parameter can be used for requesting verified presentations with selective disclosure.
+Note: the RP was setup with the preferred format `ldp_vp`.
 
 ```json
 {
    "id_token":{
-      "verifiable_presentations":[
-         {
-            "credential_types":[
-               "https://www.w3.org/2018/credentials/examples/v1/IDCardCredential"
-            ],
-            "claims":{
-               "given_name":null,
-               "family_name":null,
-               "birthdate":null
-            }
-         }
-      ]
+      "verifiable_presentations":{
+         "input_descriptors": [
+                {
+                    "schema": {
+                        "uri": [
+                            "https://www.w3.org/2018/credentials/examples/v1/IDCardCredential"
+                        ]
+                    },
+                    "constraints": {
+                        "limit_disclosure": "required",
+                        "fields": [
+                            {
+                                "path": [
+                                    "$.vc.credentialSubject.given_name"
+                                ]
+                            },
+                            {
+                                "path": [
+                                    "$.vc.credentialSubject.family_name"
+                                ]
+                            },
+                            {
+                                "path": [
+                                    "$.vc.credentialSubject.birthdate"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+      }
    }
 }
 ```
@@ -511,16 +536,20 @@ Below are the examples when W3C Verifiable Credentials are requested and returne
 ```
 #### Claims parameter 
 
-Below is a non-normative example of how the `claims` parameter can be used for requesting verified presentations signed as JWT.
+Below is a non-normative example of how the `claims` parameter can be used for requesting a verified presentations in an ID Token.
 
 ```json
 {
    "id_token":{
       "acr":null,
       "verifiable_presentations":{
-         "credential_types":[
+         "input_descriptors": [
             {
-               "type":"https://did.itsourweb.org:3000/smartcredential/Ontario-Health-Insurance-Plan"
+               "schema": {
+                  "uri": [
+                     "https://did.itsourweb.org:3000/smartcredential/Ontario-Health-Insurance-Plan"
+                  ]
+               }
             }
          ]
       }
@@ -568,15 +597,19 @@ Below are the examples when verifiable presentation is requested and returned fr
 
 #### Claims parameter 
 
-Below is a non-normative example of how the `claims` parameter can be used for requesting verified presentations signed as JWT.
+Below is a non-normative example of how the `claims` parameter can be used for requesting verified presentations in a userinfo response.
 
 ```json
 {
    "userinfo":{
       "verifiable_presentations":{
-         "credential_types":[
+          "input_descriptors": [
             {
-               "type":"https://did.itsourweb.org:3000/smartcredential/Ontario-Health-Insurance-Plan"
+               "schema": {
+                  "uri": [
+                     "https://did.itsourweb.org:3000/smartcredential/Ontario-Health-Insurance-Plan"
+                  ]
+               }
             }
          ]
       }
@@ -657,16 +690,35 @@ Below is a non-normative example of how the `claims` parameter can be used for r
 {
    "userinfo":{
       "verifiable_presentations":{
-         "credential_types":[
-            {
-               "type":"https://www.w3.org/2018/credentials/examples/v1/IDCardCredential",
-               "claims":{
-                  "given_name":null,
-                  "family_name":null,
-                  "birthdate":null
-               }
-            }
-         ]
+        "input_descriptors": [
+                {
+                    "schema": {
+                        "uri": [
+                            "https://www.w3.org/2018/credentials/examples/v1/IDCardCredential"
+                        ]
+                    },
+                    "constraints": {
+                        "limit_disclosure": "required",
+                        "fields": [
+                            {
+                                "path": [
+                                    "$.vc.credentialSubject.given_name"
+                                ]
+                            },
+                            {
+                                "path": [
+                                    "$.vc.credentialSubject.family_name"
+                                ]
+                            },
+                            {
+                                "path": [
+                                    "$.vc.credentialSubject.birthdate"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
       }
    },
    "id_token":{
@@ -784,16 +836,35 @@ The following is a non-normative example of how an RP would use the `claims` par
 ```json
 {
    "vp_token":{
-      "credential_types":[
-         {
-            "type":"https://www.w3.org/2018/credentials/examples/v1/IDCardCredential",
-            "claims":{
-               "given_name":null,
-               "family_name":null,
-               "birthdate":null
+      "input_descriptors": [
+            {
+                "schema": {
+                    "uri": [
+                        "https://www.w3.org/2018/credentials/examples/v1/IDCardCredential"
+                    ]
+                },
+                "constraints": {
+                    "limit_disclosure": "required",
+                    "fields": [
+                        {
+                            "path": [
+                                "$.vc.credentialSubject.given_name"
+                            ]
+                        },
+                        {
+                            "path": [
+                                "$.vc.credentialSubject.family_name"
+                            ]
+                        },
+                        {
+                            "path": [
+                                "$.vc.credentialSubject.birthdate"
+                            ]
+                        }
+                    ]
+                }
             }
-         }
-      ]
+        ]
    }
 }
 ```
@@ -913,16 +984,35 @@ This section illustrates the protocol flow for the case of communication using f
 ```json
 {
    "vp_token":{
-      "credential_types":[
-         {
-            "type":"https://www.w3.org/2018/credentials/examples/v1/IDCardCredential",
-            "claims":{
-               "given_name":null,
-               "family_name":null,
-               "birthdate":null
+      "input_descriptors": [
+            {
+                "schema": {
+                    "uri": [
+                        "https://www.w3.org/2018/credentials/examples/v1/IDCardCredential"
+                    ]
+                },
+                "constraints": {
+                    "limit_disclosure": "required",
+                    "fields": [
+                        {
+                            "path": [
+                                "$.vc.credentialSubject.given_name"
+                            ]
+                        },
+                        {
+                            "path": [
+                                "$.vc.credentialSubject.family_name"
+                            ]
+                        },
+                        {
+                            "path": [
+                                "$.vc.credentialSubject.birthdate"
+                            ]
+                        }
+                    ]
+                }
             }
-         }
-      ]
+        ]
    }
 }
 ```
