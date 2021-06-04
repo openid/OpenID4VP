@@ -131,7 +131,7 @@ Here is an example:
 ```json
 [
    {
-      "format":"vp_jwt",
+      "format":"jwt_vp",
       "presentation":
       "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImRpZDpleGFtcGxlOmFiZmUxM2Y3MTIxMjA0
       MzFjMjc2ZTEyZWNhYiNrZXlzLTEifQ.eyJzdWIiOiJkaWQ6ZXhhbXBsZTplYmZlYjFmNzEyZWJjNmYxY
@@ -150,7 +150,7 @@ Here is an example:
       --7kLsyBAfQGbg"
    },
    {
-      "format":"vp_ldp",
+      "format":"ldp_vp",
       "presentation":{
          "@context":[
             "https://www.w3.org/2018/credentials/v1"
@@ -362,7 +362,7 @@ Note: the RP was setup with the preferred format `jwt_vp`.
    "nonce":"960848874",
    "verifiable_presentations":[
       {
-         "format":"vp_jwt",
+         "format":"jwt_vp",
          "presentation":"ewogICAgImlzcyI6Imh0dHBzOi8vYm9vay5pdHNvdXJ3ZWIub...IH0="
       }
    ],   
@@ -458,7 +458,7 @@ Below is a non-normative example of ID Token that includes `verifiable_presentat
    "auth_time":1615910535,
    "verifiable_presentations":[
       {
-         "format":"vp_jwt",
+         "format":"jwt_vp",
          "presentation":{
             "@context":[
                "https://www.w3.org/2018/credentials/v1"
@@ -672,7 +672,7 @@ Below is a non-normative example of a UserInfo Response that includes a `verifia
    "family_name": "Doe",
     "verifiable_presentations":[
       {
-         "format":"vp_jwt",
+         "format":"jwt_vp",
          "presentation":"ewogICAgImlzcyI6Imh0dHBzOi8vYm9vay5pdHNvdXJ3ZWIub...IH0="
       }
    ],   
@@ -758,7 +758,7 @@ Below is a non-normative example of a UserInfo Response that includes `verifiabl
    "family_name":"Doe",
    "verifiable_presentations":[
       {
-         "format":"vp_jwt",
+         "format":"jwt_vp",
          "presentation":{
             "@context":[
                "https://www.w3.org/2018/credentials/v1"
@@ -910,7 +910,7 @@ This example shows an ID Token containing a `vp_hash`:
 ```json
 [
    {
-      "format":"vp_ldp",
+      "format":"ldp_vp",
       "presentation":{
          "@context":[
             "https://www.w3.org/2018/credentials/v1"
@@ -1048,7 +1048,7 @@ HTTP/1.1 302 Found
    "id_token":"eyJ0 ... NiJ9.eyJ1c ... I6IjIifX0.DeWt4Qu ... ZXso",
    "vp_token":[
       {
-         "format":"vp_ldp",
+         "format":"ldp_vp",
          "presentation":{
             "@context":[
                "https://www.w3.org/2018/credentials/v1"
