@@ -223,9 +223,6 @@ This specifications introduces the following new token:
 
 If the `vp_token` is returned in the frontchannel, a hash of the respective token MUST be included in `id_token`.
 
-`vp_hash`
-OPTIONAL. Hash value of `vp_token` that represents the W3C VP. Its value is the base64url encoding of the left-most half of the hash of the octets of the ASCII representation of the `vp_token` value, where the hash algorithm used is the hash algorithm used in the alg Header Parameter of the ID Token's JOSE Header. For instance, if the alg is RS256, hash the vp_token value with SHA-256, then take the left-most 128 bits and base64url encode them. The `vp_hash` value is a case sensitive string.
-
 # Requesting Verifiable Presentations 
 
 This section illustrates how the `claims` parameter can be used for requesting verified presentations. It serves as a starting point to drive discussion about this aspect. There are other candidate approaches for this purpose (most notably [DIF Presentation Exchange](https://identity.foundation/presentation-exchange/). They will be evaluated as this draft evolves. 
@@ -265,6 +262,65 @@ Here is a non-normative example:
 ### VP Token
 
 A VP Token is requested by adding a new top level element `vp_token` to the `claims` parameter. This element contains the sub elements as defined above.
+
+# Security Considerations
+
+To prevent replay attacks, verifiable presentation container objects MUST use `client_id` and if provided `nonce` from the Authentication Request. The `client_id` is used 
+to detect presentation of credentials to a different than the intended party. The `nonce` value binds the presentation to a certain authentication transaction and allows
+the verifier to detect injection of a presentation in the OpenID Connect flow, which is especially important in flows where the presentation is passed through the front channel. 
+
+The values are passed through unmodified from the Authentication Request to the verifiable presentations. 
+
+Note: These values MAY be represented in different claims according to the selected proof format denated by the format claim in the verifiable presentation container.
+
+Here is a non-normative example for format=`jwt_vp` (only relevant part):
+
+```json
+{
+  "iss": "did:example:ebfeb1f712ebc6f1c276e12ec21",
+  "jti": "urn:uuid:3978344f-8596-4c3a-a978-8fcaba3903c5",
+  "aud": "s6BhdRkqt3",
+  "nonce": "343s$FSFDa-",
+  "nbf": 1541493724,
+  "iat": 1541493724,
+  "exp": 1573029723,
+  "vp": {
+    "@context": [
+      "<https://www.w3.org/2018/credentials/v1",>
+      "<https://www.w3.org/2018/credentials/examples/v1">
+    ],
+    "type": ["VerifiablePresentation"],
+
+    "verifiableCredential": [""]
+  }
+}
+```
+
+In the example above, `nonce` is included as the `nonce` and `client_id` as the `aud` value in the proof of the verifiable presentation.
+
+Here is a non-normative example for format=`ldp_vp` (only relevant part):
+
+```json
+{
+  "@context": [ ... ],
+  "type": "VerifiablePresentation",
+  "verifiableCredential": [ ... ],
+  "proof": {
+    "type": "RsaSignature2018",
+    "created": "2018-09-14T21:19:10Z",
+    "proofPurpose": "authentication",
+    "verificationMethod": "did:example:ebfeb1f712ebc6f1c276e12ec21#keys-1",    
+    "challenge": "n-0S6_WzA2Mj",
+    "domain": "s6BhdRkqt3",
+    "jws": "eyJhbGciOiJSUzI1NiIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..kTCYt5
+      XsITJX1CxPCT8yAV-TVIw5WEuts01mq-pQy7UJiN5mgREEMGlv50aqzpqh4Qq_PbChOMqs
+      LfRoPsnsgxD-WUcX16dUOqV0G_zS245-kronKb78cPktb3rk-BuQy72IFLN25DYuNzVBAh
+      4vGHSrQyHUGlcTwLtjPAnKb78"
+  }
+}
+```
+
+In the example above, `nonce` is included as the `challenge` and `client_id` as the `domain` value in the proof of the verifiable presentation.
 
 #  Examples 
 
