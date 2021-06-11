@@ -265,7 +265,7 @@ A VP Token is requested by adding a new top level element `vp_token` to the `cla
 
 # Security Considerations
 
-To prevent replay attacks, verifiable presentation container objects MUST use `client_id` and if provided `nonce` from the Authentication Request. The `client_id` is used 
+To prevent replay attacks, verifiable presentation container objects MUST be linked to `client_id` and if provided `nonce` from the Authentication Request. The `client_id` is used 
 to detect presentation of credentials to a different than the intended party. The `nonce` value binds the presentation to a certain authentication transaction and allows
 the verifier to detect injection of a presentation in the OpenID Connect flow, which is especially important in flows where the presentation is passed through the front channel. 
 
