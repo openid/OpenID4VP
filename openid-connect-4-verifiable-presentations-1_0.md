@@ -7,7 +7,7 @@ keyword = ["security", "openid", "ssi"]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "openid-connect-4-verifiable-presentations-1_0-00"
+value = "openid-connect-4-verifiable-presentations-1_0-01"
 status = "standard"
 
 [[author]]
@@ -120,7 +120,7 @@ All representations share the same container format.
 
 A verifiable presentation container is an array of objects, each of them containing the following fields:
 
-`format`: REQUIRED A JSON string denoting the proof format the presentation was returned in. This specification introduces the values `jwt_vp` and `ldp_vp` to denote credentials in JSON-LD and JWT format, respectively, as defined in https://identity.foundation/presentation-exchange/.  
+`format`: REQUIRED A JSON string denoting the proof format the presentation was returned in. This specification introduces the values `jwt_vp` and `ldp_vp` to denote credentials in JSON-LD and JWT format, respectively, as defined in [@!DIF.PresentationExchange].  
 
 `presentation` : REQUIRED. A W3C Verifiable Presentation with a cryptographically verifiable proof in the defined proof format. 
 
@@ -131,7 +131,7 @@ Here is an example:
 ```json
 [
    {
-      "format":"vp_jwt",
+      "format":"jwt_vp",
       "presentation":
       "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImRpZDpleGFtcGxlOmFiZmUxM2Y3MTIxMjA0
       MzFjMjc2ZTEyZWNhYiNrZXlzLTEifQ.eyJzdWIiOiJkaWQ6ZXhhbXBsZTplYmZlYjFmNzEyZWJjNmYxY
@@ -150,7 +150,7 @@ Here is an example:
       --7kLsyBAfQGbg"
    },
    {
-      "format":"vp_ldp",
+      "format":"ldp_vp",
       "presentation":{
          "@context":[
             "https://www.w3.org/2018/credentials/v1"
@@ -225,43 +225,69 @@ If the `vp_token` is returned in the frontchannel, a hash of the respective toke
 
 # Requesting Verifiable Presentations 
 
-This section illustrates how the `claims` parameter can be used for requesting verified presentations. It serves as a starting point to drive discussion about this aspect. There are other candidate approaches for this purpose (most notably [DIF Presentation Exchange](https://identity.foundation/presentation-exchange/). They will be evaluated as this draft evolves. 
+This draft extends the existing OpenID Connect `claims` request parameter to allow RPs to request verifiable presentations using the request syntax defined in [@!DIF.PresentationExchange].
 
-## Embedded Verifiable Presentations
+## Embedded Verifiable Presentations {#verifiable_presentations}
 
-A Verifiable Presentation embedded in an ID Token (or userinfo response) is requested by adding an element `verifiable_presentations` to the `id_token` (or `userinfo`) top level element of the `claims` parameter. This element must contain the following element:
+A Verifiable Presentation is requested using the synatx defined by the `presentation_definition` element as defined in Section 4 of [@!DIF.PresentationExchange]. This draft deviates from the defintion given in [@!DIF.PresentationExchange] as follows in order to better fit the characteristics of the OpenID Connect protocol:
 
-`credential_types`
-Object array containing definitions of credential types the RP wants to obtain along with an (optional) definition of the claims from the respective credential type the RP is requesting. Each of those object has the following fields:
+* the element name is `verifiable_presentations` instead of `presentation_definition`
+* the `id` element is optional
+* the field `id` of the `input_descriptor` sub element is optional
 
-* `type` REQUIRED String denoting a credential type
-* `claims` OPTIONAL An object determining the claims the RP wants to obtain using the same notation as used underneath `id_token`. 
-* `format` OPTION String designating the VP format. Predefined values are `vp_ldp` and `vp_jwt`. 
+A Verifiable Presentation embedded in an ID Token (or userinfo response) is requested by adding the element `verifiable_presentations` to the `id_token` (or `userinfo`) top level element of the `claims` parameter. 
+
+The `verifiable_presentations` element MUST contain a `input_descriptors` containing at least the `schema` sub element
+
+The `verifiable_presentations` element MAY contain all other elements as defined in [@!DIF.PresentationExchange] except the `format` element.
+
+Note: supported presentation formats, proof types, and algorithms are determined using new RP and OP metadata (see ). 
 
 Here is a non-normative example: 
 
-```json
-{
-   "id_token":{
-      "acr":null,
-      "verifiable_presentations":{
-         "credential_types":[
-            {
-               "type":"https://www.w3.org/2018/credentials/examples/v1/IDCardCredential",
-               "claims":{
-                  "given_name":null,
-                  "family_name":null,
-                  "birthdate":null
-               }
-            }
-         ]
-      }
-   }
-}
-```
+<{{examples/requests/id_token_type_only.json}}
+
+This simple example requests the presentation of a credential of a certain type. 
+
+The following example
+
+<{{examples/requests/id_token_type_and_claims.json}}
+
+shows how the RP can request selective dislosure or certain claims from a credential of a particular type. 
+
+RPs can also ask for alternative credentials being presented, which is shown in the next example:
+
+<{{examples/requests/id_token_alternative_credentials.json}}
+
 ### VP Token
 
-A VP Token is requested by adding a new top level element `vp_token` to the `claims` parameter. This element contains the sub elements as defined above.
+A VP Token is requested by adding a new top level element `vp_token` to the `claims` parameter. This element uses the same syntax as defined by `verifiable_presentations` in [Embedded Verifiable Presentations](#verifiable_presentations). 
+
+This is illustrated in the following example:
+
+<{{examples/requests/id_token_alternative_credentials.json}}
+
+# Metadata
+
+This specification introduces additional metadata to enable RP and OP to determine the verifiable presentation formats, proof types and algorithms to be used in a protocol exchange. 
+
+## RP Metadata
+
+RPs indicate the suported formats using the follwoing element.
+
+* `vp_formats`: an object defining the formats, proof types and algorithms a RP supports. The is based on the definition of the `format` elememt in a `presentation_definition` as defined in [@!DIF.PresentationExchange] with the supported formats `jwt_vp` and `ldp_vp`.
+
+Here is an example for a RP registering with a Standard OP via dynamic client registration:
+
+<{{examples/client_metadata/client_code_format.json}}
+
+Here is an example for a SIOP RP to be used as value of the `registration` request parameter:
+
+<{{examples/client_metadata/client_siop_format.json}}
+
+## OP Metadata
+
+The OP publishes the formats it supports using the `vp_formats` metadata parameter as defined above in its "openid-configuration". 
 
 # Security Considerations
 
@@ -352,16 +378,20 @@ The following is a non-normative example of how an RP would use the `claims` par
 ```
 #### `claims` parameter 
 
-Below is a non-normative example of how the `claims` parameter can be used for requesting verified presentations signed as a JWT.
+Below is a non-normative example of how the `claims` parameter can be used for requesting verified presentations containg a credential of a certain type.
 
 ```json
 {
    "id_token":{
       "acr":null,
       "verifiable_presentations":{
-         "credential_types":[
+         "input_descriptors": [
             {
-               "type":"https://did.itsourweb.org:3000/smartcredential/Ontario-Health-Insurance-Plan"
+               "schema": {
+                  "uri": [
+                     "https://did.itsourweb.org:3000/smartcredential/Ontario-Health-Insurance-Plan"
+                  ]
+               }
             }
          ]
       }
@@ -371,6 +401,7 @@ Below is a non-normative example of how the `claims` parameter can be used for r
 ### Authentication Response 
 
 Below is a non-normative example of ID Token that includes `verifiable_presentations` claim.
+Note: the RP was setup with the preferred format `jwt_vp`.
 
 ```json
 {
@@ -387,7 +418,7 @@ Below is a non-normative example of ID Token that includes `verifiable_presentat
    "nonce":"960848874",
    "verifiable_presentations":[
       {
-         "format":"vp_jwt",
+         "format":"jwt_vp",
          "presentation":"ewogICAgImlzcyI6Imh0dHBzOi8vYm9vay5pdHNvdXJ3ZWIub...IH0="
       }
    ],   
@@ -429,23 +460,43 @@ Note that `vp` is used to contain only "those parts of the standard verifiable p
 ## Self-Issued OpenID Provider with Verifiable Presentation in ID Token (selective disclosure)
 ### `claims` parameter 
 
-Below is a non-normative example of how the `claims` parameter can be used for requesting verified presentations signed as Linked Data Proofs.
+Below is a non-normative example of how the `claims` parameter can be used for requesting verified presentations with selective disclosure.
+Note: the RP was setup with the preferred format `ldp_vp`.
 
 ```json
 {
    "id_token":{
-      "verifiable_presentations":[
-         {
-            "credential_types":[
-               "https://www.w3.org/2018/credentials/examples/v1/IDCardCredential"
-            ],
-            "claims":{
-               "given_name":null,
-               "family_name":null,
-               "birthdate":null
-            }
-         }
-      ]
+      "verifiable_presentations":{
+         "input_descriptors": [
+                {
+                    "schema": {
+                        "uri": [
+                            "https://www.w3.org/2018/credentials/examples/v1/IDCardCredential"
+                        ]
+                    },
+                    "constraints": {
+                        "limit_disclosure": "required",
+                        "fields": [
+                            {
+                                "path": [
+                                    "$.vc.credentialSubject.given_name"
+                                ]
+                            },
+                            {
+                                "path": [
+                                    "$.vc.credentialSubject.family_name"
+                                ]
+                            },
+                            {
+                                "path": [
+                                    "$.vc.credentialSubject.birthdate"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+      }
    }
 }
 ```
@@ -463,7 +514,7 @@ Below is a non-normative example of ID Token that includes `verifiable_presentat
    "auth_time":1615910535,
    "verifiable_presentations":[
       {
-         "format":"vp_jwt",
+         "format":"jwt_vp",
          "presentation":{
             "@context":[
                "https://www.w3.org/2018/credentials/v1"
@@ -541,16 +592,20 @@ Below are the examples when W3C Verifiable Credentials are requested and returne
 ```
 #### Claims parameter 
 
-Below is a non-normative example of how the `claims` parameter can be used for requesting verified presentations signed as JWT.
+Below is a non-normative example of how the `claims` parameter can be used for requesting a verified presentations in an ID Token.
 
 ```json
 {
    "id_token":{
       "acr":null,
       "verifiable_presentations":{
-         "credential_types":[
+         "input_descriptors": [
             {
-               "type":"https://did.itsourweb.org:3000/smartcredential/Ontario-Health-Insurance-Plan"
+               "schema": {
+                  "uri": [
+                     "https://did.itsourweb.org:3000/smartcredential/Ontario-Health-Insurance-Plan"
+                  ]
+               }
             }
          ]
       }
@@ -598,15 +653,19 @@ Below are the examples when verifiable presentation is requested and returned fr
 
 #### Claims parameter 
 
-Below is a non-normative example of how the `claims` parameter can be used for requesting verified presentations signed as JWT.
+Below is a non-normative example of how the `claims` parameter can be used for requesting verified presentations in a userinfo response.
 
 ```json
 {
    "userinfo":{
       "verifiable_presentations":{
-         "credential_types":[
+          "input_descriptors": [
             {
-               "type":"https://did.itsourweb.org:3000/smartcredential/Ontario-Health-Insurance-Plan"
+               "schema": {
+                  "uri": [
+                     "https://did.itsourweb.org:3000/smartcredential/Ontario-Health-Insurance-Plan"
+                  ]
+               }
             }
          ]
       }
@@ -669,7 +728,7 @@ Below is a non-normative example of a UserInfo Response that includes a `verifia
    "family_name": "Doe",
     "verifiable_presentations":[
       {
-         "format":"vp_jwt",
+         "format":"jwt_vp",
          "presentation":"ewogICAgImlzcyI6Imh0dHBzOi8vYm9vay5pdHNvdXJ3ZWIub...IH0="
       }
    ],   
@@ -687,16 +746,35 @@ Below is a non-normative example of how the `claims` parameter can be used for r
 {
    "userinfo":{
       "verifiable_presentations":{
-         "credential_types":[
-            {
-               "type":"https://www.w3.org/2018/credentials/examples/v1/IDCardCredential",
-               "claims":{
-                  "given_name":null,
-                  "family_name":null,
-                  "birthdate":null
-               }
-            }
-         ]
+        "input_descriptors": [
+                {
+                    "schema": {
+                        "uri": [
+                            "https://www.w3.org/2018/credentials/examples/v1/IDCardCredential"
+                        ]
+                    },
+                    "constraints": {
+                        "limit_disclosure": "required",
+                        "fields": [
+                            {
+                                "path": [
+                                    "$.vc.credentialSubject.given_name"
+                                ]
+                            },
+                            {
+                                "path": [
+                                    "$.vc.credentialSubject.family_name"
+                                ]
+                            },
+                            {
+                                "path": [
+                                    "$.vc.credentialSubject.birthdate"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
       }
    },
    "id_token":{
@@ -736,7 +814,7 @@ Below is a non-normative example of a UserInfo Response that includes `verifiabl
    "family_name":"Doe",
    "verifiable_presentations":[
       {
-         "format":"vp_jwt",
+         "format":"jwt_vp",
          "presentation":{
             "@context":[
                "https://www.w3.org/2018/credentials/v1"
@@ -814,16 +892,35 @@ The following is a non-normative example of how an RP would use the `claims` par
 ```json
 {
    "vp_token":{
-      "credential_types":[
-         {
-            "type":"https://www.w3.org/2018/credentials/examples/v1/IDCardCredential",
-            "claims":{
-               "given_name":null,
-               "family_name":null,
-               "birthdate":null
+      "input_descriptors": [
+            {
+                "schema": {
+                    "uri": [
+                        "https://www.w3.org/2018/credentials/examples/v1/IDCardCredential"
+                    ]
+                },
+                "constraints": {
+                    "limit_disclosure": "required",
+                    "fields": [
+                        {
+                            "path": [
+                                "$.vc.credentialSubject.given_name"
+                            ]
+                        },
+                        {
+                            "path": [
+                                "$.vc.credentialSubject.family_name"
+                            ]
+                        },
+                        {
+                            "path": [
+                                "$.vc.credentialSubject.birthdate"
+                            ]
+                        }
+                    ]
+                }
             }
-         }
-      ]
+        ]
    }
 }
 ```
@@ -869,7 +966,7 @@ This example shows an ID Token containing a `vp_hash`:
 ```json
 [
    {
-      "format":"vp_ldp",
+      "format":"ldp_vp",
       "presentation":{
          "@context":[
             "https://www.w3.org/2018/credentials/v1"
@@ -943,16 +1040,35 @@ This section illustrates the protocol flow for the case of communication using f
 ```json
 {
    "vp_token":{
-      "credential_types":[
-         {
-            "type":"https://www.w3.org/2018/credentials/examples/v1/IDCardCredential",
-            "claims":{
-               "given_name":null,
-               "family_name":null,
-               "birthdate":null
+      "input_descriptors": [
+            {
+                "schema": {
+                    "uri": [
+                        "https://www.w3.org/2018/credentials/examples/v1/IDCardCredential"
+                    ]
+                },
+                "constraints": {
+                    "limit_disclosure": "required",
+                    "fields": [
+                        {
+                            "path": [
+                                "$.vc.credentialSubject.given_name"
+                            ]
+                        },
+                        {
+                            "path": [
+                                "$.vc.credentialSubject.family_name"
+                            ]
+                        },
+                        {
+                            "path": [
+                                "$.vc.credentialSubject.birthdate"
+                            ]
+                        }
+                    ]
+                }
             }
-         }
-      ]
+        ]
    }
 }
 ```
@@ -988,7 +1104,7 @@ HTTP/1.1 302 Found
    "id_token":"eyJ0 ... NiJ9.eyJ1c ... I6IjIifX0.DeWt4Qu ... ZXso",
    "vp_token":[
       {
-         "format":"vp_ldp",
+         "format":"ldp_vp",
          "presentation":{
             "@context":[
                "https://www.w3.org/2018/credentials/v1"
@@ -1078,6 +1194,22 @@ HTTP/1.1 302 Found
   </front>
 </reference>
 
+<reference anchor="DIF.PresentationExchange" target="hhttps://identity.foundation/presentation-exchange/">
+        <front>
+          <title>Presentation Exchange v1.0.0</title>
+		  <author fullname="Daniel Buchner">
+            <organization>Microsoft</organization>
+          </author>
+          <author fullname="Brent Zunde">
+            <organization>Evernym</organization>
+          </author>
+          <author fullname="Martin Riedel">
+            <organization>Consensys Mesh</organization>
+          </author>
+         <date day="8" month="Nov" year="2014"/>
+        </front>
+</reference>
+
 <reference anchor="OpenID.Registration" target="https://openid.net/specs/openid-connect-registration-1_0.html">
         <front>
           <title>OpenID Connect Dynamic Client Registration 1.0 incorporating errata set 1</title>
@@ -1113,6 +1245,10 @@ The technology described in this specification was made available from contribut
 # Document History
 
    [[ To be removed from the final specification ]]
+
+   -01
+
+   * adopted DIF Presentation Exchange request syntax
 
    -00 
 
