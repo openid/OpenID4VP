@@ -1249,6 +1249,7 @@ The technology described in this specification was made available from contribut
    -01
 
    * adopted DIF Presentation Exchange request syntax
+   * added security considerations regarding replay detection for verifiable credentials
 
    -00 
 
