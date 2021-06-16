@@ -1,14 +1,14 @@
 {
     "id_token": {
-        "email":null,
+        "email": null,
         "verifiable_presentations": {
             "input_descriptors": [
                 {
-                    "schema": {
-                        "uri": [
-                            "https://www.w3.org/2018/credentials/examples/v1/IDCardCredential"
-                        ]
-                    },
+                    "schema": [
+                        {
+                            "uri": "https://www.w3.org/2018/credentials/examples/v1/IDCardCredential"
+                        }
+                    ],
                     "constraints": {
                         "limit_disclosure": "required",
                         "fields": [
