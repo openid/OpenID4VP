@@ -245,19 +245,19 @@ Note: supported presentation formats, proof types, and algorithms are determined
 
 Here is a non-normative example: 
 
-<{{examples/requests/id_token_type_only.json}}
+<{{examples/request/id_token_type_only.json}}
 
 This simple example requests the presentation of a credential of a certain type. 
 
 The following example
 
-<{{examples/requests/id_token_type_and_claims.json}}
+<{{examples/request/id_token_type_and_claims.json}}
 
 shows how the RP can request selective dislosure or certain claims from a credential of a particular type. 
 
 RPs can also ask for alternative credentials being presented, which is shown in the next example:
 
-<{{examples/requests/id_token_alternative_credentials.json}}
+<{{examples/request/id_token_alternative_credentials.json}}
 
 ### VP Token
 
@@ -265,7 +265,7 @@ A VP Token is requested by adding a new top level element `vp_token` to the `cla
 
 This is illustrated in the following example:
 
-<{{examples/requests/id_token_alternative_credentials.json}}
+<{{examples/request/vp_token_type_only.json}}
 
 # Metadata
 
@@ -380,24 +380,8 @@ The following is a non-normative example of how an RP would use the `claims` par
 
 Below is a non-normative example of how the `claims` parameter can be used for requesting verified presentations containg a credential of a certain type.
 
-```json
-{
-   "id_token":{
-      "acr":null,
-      "verifiable_presentations":{
-         "input_descriptors": [
-            {
-               "schema": {
-                  "uri": [
-                     "https://did.itsourweb.org:3000/smartcredential/Ontario-Health-Insurance-Plan"
-                  ]
-               }
-            }
-         ]
-      }
-   }
-}
-```
+<{{examples/request/id_token_health.json}}
+
 ### Authentication Response 
 
 Below is a non-normative example of ID Token that includes `verifiable_presentations` claim.
@@ -463,43 +447,8 @@ Note that `vp` is used to contain only "those parts of the standard verifiable p
 Below is a non-normative example of how the `claims` parameter can be used for requesting verified presentations with selective disclosure.
 Note: the RP was setup with the preferred format `ldp_vp`.
 
-```json
-{
-   "id_token":{
-      "verifiable_presentations":{
-         "input_descriptors": [
-                {
-                    "schema": {
-                        "uri": [
-                            "https://www.w3.org/2018/credentials/examples/v1/IDCardCredential"
-                        ]
-                    },
-                    "constraints": {
-                        "limit_disclosure": "required",
-                        "fields": [
-                            {
-                                "path": [
-                                    "$.vc.credentialSubject.given_name"
-                                ]
-                            },
-                            {
-                                "path": [
-                                    "$.vc.credentialSubject.family_name"
-                                ]
-                            },
-                            {
-                                "path": [
-                                    "$.vc.credentialSubject.birthdate"
-                                ]
-                            }
-                        ]
-                    }
-                }
-            ]
-      }
-   }
-}
-```
+<{{examples/request/id_token_type_and_claims.json}}
+
 ### Authentication Response 
 
 Below is a non-normative example of ID Token that includes `verifiable_presentations` claim.
@@ -594,24 +543,8 @@ Below are the examples when W3C Verifiable Credentials are requested and returne
 
 Below is a non-normative example of how the `claims` parameter can be used for requesting a verified presentations in an ID Token.
 
-```json
-{
-   "id_token":{
-      "acr":null,
-      "verifiable_presentations":{
-         "input_descriptors": [
-            {
-               "schema": {
-                  "uri": [
-                     "https://did.itsourweb.org:3000/smartcredential/Ontario-Health-Insurance-Plan"
-                  ]
-               }
-            }
-         ]
-      }
-   }
-}
-```
+<{{examples/request/id_token_health.json}}
+
 ### Authentication Response
 
 ```
@@ -655,28 +588,8 @@ Below are the examples when verifiable presentation is requested and returned fr
 
 Below is a non-normative example of how the `claims` parameter can be used for requesting verified presentations in a userinfo response.
 
-```json
-{
-   "userinfo":{
-      "verifiable_presentations":{
-          "input_descriptors": [
-            {
-               "schema": {
-                  "uri": [
-                     "https://did.itsourweb.org:3000/smartcredential/Ontario-Health-Insurance-Plan"
-                  ]
-               }
-            }
-         ]
-      }
-   },
-   "id_token":{
-      "auth_time":{
-         "essential":true
-      }
-   }
-}
-```
+<{{examples/request/userinfo_health.json}}
+
 ### Authentication Response
 
 ```
@@ -742,48 +655,8 @@ JWT inside the `verifiable_presentations` claim when decoded equals to a verifia
 
 Below is a non-normative example of how the `claims` parameter can be used for requesting verified presentations signed as Linked Data Proofs.
 
-```json
-{
-   "userinfo":{
-      "verifiable_presentations":{
-        "input_descriptors": [
-                {
-                    "schema": {
-                        "uri": [
-                            "https://www.w3.org/2018/credentials/examples/v1/IDCardCredential"
-                        ]
-                    },
-                    "constraints": {
-                        "limit_disclosure": "required",
-                        "fields": [
-                            {
-                                "path": [
-                                    "$.vc.credentialSubject.given_name"
-                                ]
-                            },
-                            {
-                                "path": [
-                                    "$.vc.credentialSubject.family_name"
-                                ]
-                            },
-                            {
-                                "path": [
-                                    "$.vc.credentialSubject.birthdate"
-                                ]
-                            }
-                        ]
-                    }
-                }
-            ]
-      }
-   },
-   "id_token":{
-      "auth_time":{
-         "essential":true
-      }
-   }
-}
-```
+<{{examples/request/userinfo_type_and_claims.json}}
+
 ### Token Response
 
 #### id_token
@@ -889,41 +762,8 @@ The following is a non-normative example of how an RP would use the `claims` par
 ```
 #### claims parameter
 
-```json
-{
-   "vp_token":{
-      "input_descriptors": [
-            {
-                "schema": {
-                    "uri": [
-                        "https://www.w3.org/2018/credentials/examples/v1/IDCardCredential"
-                    ]
-                },
-                "constraints": {
-                    "limit_disclosure": "required",
-                    "fields": [
-                        {
-                            "path": [
-                                "$.vc.credentialSubject.given_name"
-                            ]
-                        },
-                        {
-                            "path": [
-                                "$.vc.credentialSubject.family_name"
-                            ]
-                        },
-                        {
-                            "path": [
-                                "$.vc.credentialSubject.birthdate"
-                            ]
-                        }
-                    ]
-                }
-            }
-        ]
-   }
-}
-```
+<{{examples/request/vp_token_type_and_claims.json}}
+
 ### Authentication Response (including vp_token)
 
 The successful authentication response contains a `vp_token` parameter along with  `id_token` and `state`.
@@ -1037,41 +877,7 @@ This section illustrates the protocol flow for the case of communication using f
 
 #### Claims parameter
 
-```json
-{
-   "vp_token":{
-      "input_descriptors": [
-            {
-                "schema": {
-                    "uri": [
-                        "https://www.w3.org/2018/credentials/examples/v1/IDCardCredential"
-                    ]
-                },
-                "constraints": {
-                    "limit_disclosure": "required",
-                    "fields": [
-                        {
-                            "path": [
-                                "$.vc.credentialSubject.given_name"
-                            ]
-                        },
-                        {
-                            "path": [
-                                "$.vc.credentialSubject.family_name"
-                            ]
-                        },
-                        {
-                            "path": [
-                                "$.vc.credentialSubject.birthdate"
-                            ]
-                        }
-                    ]
-                }
-            }
-        ]
-   }
-}
-```
+<{{examples/request/vp_token_type_and_claims.json}}
 
 ### Authentication Response
 ```
