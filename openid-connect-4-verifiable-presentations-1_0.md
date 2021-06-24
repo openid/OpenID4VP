@@ -7,7 +7,7 @@ keyword = ["security", "openid", "ssi"]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "openid-connect-4-verifiable-presentations-1_0-01"
+value = "openid-connect-4-verifiable-presentations-1_0-02"
 status = "standard"
 
 [[author]]
@@ -229,19 +229,15 @@ This draft extends the existing OpenID Connect `claims` request parameter to all
 
 ## Embedded Verifiable Presentations {#verifiable_presentations}
 
-A Verifiable Presentation is requested using the synatx defined by the `presentation_definition` element as defined in Section 4 of [@!DIF.PresentationExchange]. This draft deviates from the defintion given in [@!DIF.PresentationExchange] as follows in order to better fit the characteristics of the OpenID Connect protocol:
+Verifiable Presentations are requested by embedding a `verifiable_presentations` element containing a `presentation_definition` element as defined in Section 4 of [@!DIF.PresentationExchange] to the `id_token` (or `userinfo`) top level element of the `claims` parameter. 
 
-* the element name is `verifiable_presentations` instead of `presentation_definition`
-* the `id` element is optional
-* the field `id` of the `input_descriptor` sub element is optional
+Please note this draft defines a profile of [@!DIF.PresentationExchange] as follows: 
 
-A Verifiable Presentation embedded in an ID Token (or userinfo response) is requested by adding the element `verifiable_presentations` to the `id_token` (or `userinfo`) top level element of the `claims` parameter. 
+* The `presentation_definition.id` element is optional
+* The field `presentation_definition.input_descriptorid` is optional
+* The `presentation_definition` element MAY contain all other elements as defined in [@!DIF.PresentationExchange] except the `format` element.
 
-The `verifiable_presentations` element MUST contain a `input_descriptors` containing at least the `schema` sub element
-
-The `verifiable_presentations` element MAY contain all other elements as defined in [@!DIF.PresentationExchange] except the `format` element.
-
-Note: supported presentation formats, proof types, and algorithms are determined using new RP and OP metadata (see ). 
+Note: supported presentation formats, proof types, and algorithms are determined using new RP and OP metadata (see (#metadata)). 
 
 Here is a non-normative example: 
 
@@ -259,15 +255,15 @@ RPs can also ask for alternative credentials being presented, which is shown in 
 
 <{{examples/request/id_token_alternative_credentials.json}}
 
-### VP Token
+## VP Token
 
-A VP Token is requested by adding a new top level element `vp_token` to the `claims` parameter. This element uses the same syntax as defined by `verifiable_presentations` in [Embedded Verifiable Presentations](#verifiable_presentations). 
+A VP Token is requested by adding a new top level element `vp_token` to the `claims` parameter. This element contains a `presentation_definition` element as defined in Section 4 of [@!DIF.PresentationExchange] following the profile as defined in (#verifiable_presentations). 
 
 This is illustrated in the following example:
 
 <{{examples/request/vp_token_type_only.json}}
 
-# Metadata
+# Metadata {#metadata}
 
 This specification introduces additional metadata to enable RP and OP to determine the verifiable presentation formats, proof types and algorithms to be used in a protocol exchange. 
 
@@ -1051,6 +1047,10 @@ The technology described in this specification was made available from contribut
 # Document History
 
    [[ To be removed from the final specification ]]
+
+   -02
+
+   * added `presentation_definition` as sub element of `verifiable_presentation` and `vp_token`
 
    -01
 

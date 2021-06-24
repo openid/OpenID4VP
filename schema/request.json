@@ -457,7 +457,13 @@
       "type": "object",
       "properties": {
         "verifiable_presentations": {
-          "$ref": "#/definitions/presentation_definition"
+          "type": "object",
+          "properties": {
+            "presentation_definition": {
+              "$ref": "#/definitions/presentation_definition"
+            }
+          },
+          "additionalProperties": false
         }
       }
     },
@@ -465,12 +471,24 @@
       "type": "object",
       "properties": {
         "verifiable_presentations": {
-          "$ref": "#/definitions/presentation_definition"
+          "type": "object",
+          "properties": {
+            "presentation_definition": {
+              "$ref": "#/definitions/presentation_definition"
+            }
+          },
+          "additionalProperties": false
         }
       }
     },
     "vp_token": {
-      "$ref": "#/definitions/presentation_definition"
+      "type": "object",
+      "properties": {
+        "presentation_definition": {
+          "$ref": "#/definitions/presentation_definition"
+        }
+      },
+      "additionalProperties": false
     }
   },
   "additionalProperties": false
