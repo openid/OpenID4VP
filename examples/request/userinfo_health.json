@@ -1,0 +1,20 @@
+{
+   "userinfo":{
+      "verifiable_presentations":{
+          "input_descriptors": [
+            {
+               "schema": [
+                  {
+                     "uri": "https://did.itsourweb.org:3000/smartcredential/Ontario-Health-Insurance-Plan"
+                  }
+               ]
+            }
+         ]
+      }
+   },
+   "id_token":{
+      "auth_time":{
+         "essential":true
+      }
+   }
+}

@@ -1,0 +1,36 @@
+{
+    "id_token": {
+        "email": null,
+        "verifiable_presentations": {
+            "input_descriptors": [
+                {
+                    "schema": [
+                        {
+                            "uri": "https://www.w3.org/2018/credentials/examples/v1/IDCardCredential"
+                        }
+                    ],
+                    "constraints": {
+                        "limit_disclosure": "required",
+                        "fields": [
+                            {
+                                "path": [
+                                    "$.vc.credentialSubject.given_name"
+                                ]
+                            },
+                            {
+                                "path": [
+                                    "$.vc.credentialSubject.family_name"
+                                ]
+                            },
+                            {
+                                "path": [
+                                    "$.vc.credentialSubject.birthdate"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+}
