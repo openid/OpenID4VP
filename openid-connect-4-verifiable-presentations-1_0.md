@@ -996,7 +996,7 @@ HTTP/1.1 302 Found
   </front>
 </reference>
 
-<reference anchor="DIF.PresentationExchange" target="hhttps://identity.foundation/presentation-exchange/">
+<reference anchor="DIF.PresentationExchange" target="https://identity.foundation/presentation-exchange/spec/v1.0.0/">
         <front>
           <title>Presentation Exchange v1.0.0</title>
 		  <author fullname="Daniel Buchner">
@@ -1008,7 +1008,7 @@ HTTP/1.1 302 Found
           <author fullname="Martin Riedel">
             <organization>Consensys Mesh</organization>
           </author>
-         <date day="8" month="Nov" year="2014"/>
+         <date month="Feb" year="2021"/>
         </front>
 </reference>
 
