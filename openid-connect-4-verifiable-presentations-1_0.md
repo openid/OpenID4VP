@@ -7,7 +7,7 @@ keyword = ["security", "openid", "ssi"]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "openid-connect-4-verifiable-presentations-1_0-02"
+value = "openid-connect-4-verifiable-presentations-1_0-03"
 status = "standard"
 
 [[author]]
@@ -437,6 +437,7 @@ Note that `vp` is used to contain only "those parts of the standard verifiable p
     }   
   }
 ```
+
 ## Self-Issued OpenID Provider with Verifiable Presentation in ID Token (selective disclosure)
 ### `claims` parameter 
 
@@ -457,6 +458,13 @@ Below is a non-normative example of ID Token that includes `verifiable_presentat
    "exp":1615911138,
    "sub":"did:ion:EiC6Y9_aDaCsITlY06HId4seJjJ...b1df31ec42d0",
    "auth_time":1615910535,
+   "nonce":"960848874",
+   "sub_jwk":{
+      "crv":"P-384",
+      "kty":"EC",
+      "x":"jf3a6dquclZ4PJ0JMU8RuucG9T1O3hpU_S_79sHQi7VZBD9e2VKXPts9lUjaytBm",
+      "y":"38VlVE3kNiMEjklFe4Wo4DqdTKkFbK6QrmZf77lCMN2x9bENZoGF2EYFiBsOsnq0"
+   },
    "verifiable_presentations":[
       {
          "format":"jwt_vp",
@@ -508,16 +516,10 @@ Below is a non-normative example of ID Token that includes `verifiable_presentat
             }
          }
       }
-   ],
-   "nonce":"960848874",
-   "sub_jwk":{
-      "crv":"P-384",
-      "kty":"EC",
-      "x":"jf3a6dquclZ4PJ0JMU8RuucG9T1O3hpU_S_79sHQi7VZBD9e2VKXPts9lUjaytBm",
-      "y":"38VlVE3kNiMEjklFe4Wo4DqdTKkFbK6QrmZf77lCMN2x9bENZoGF2EYFiBsOsnq0"
-   }
+   ]
 }
 ```
+
 ## Authorization Code Flow with Verifiable Presentation in ID Token
 
 Below are the examples when W3C Verifiable Credentials are requested and returned inside ID Token as part of Authorization Code flow. ID Token contains a `verifiable_presentations` element with the Verifiable Presentations data. 
@@ -607,6 +609,7 @@ HTTP/1.1 302 Found
   &code=SplxlOBeZQQYbYS6WxSbIA
   &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
 ```
+
 ### Token Response
 
 #### id_token
@@ -622,6 +625,7 @@ HTTP/1.1 302 Found
   "auth_time": 1615910535
 }
 ```
+
 ### UserInfo Response 
 
 Below is a non-normative example of a UserInfo Response that includes a `verifiable_presentations` claim:
@@ -668,6 +672,7 @@ Below is a non-normative example of how the `claims` parameter can be used for r
   "auth_time": 1615910535
 }
 ```
+
 ### UserInfo Response 
 
 Below is a non-normative example of a UserInfo Response that includes `verifiable_presentations` claim:
@@ -735,6 +740,7 @@ Below is a non-normative example of a UserInfo Response that includes `verifiabl
    ]
 }
 ```
+
 ## SIOP with vp_token
 This section illustrates the protocol flow for the case of communication through the front channel only (like in SIOP).
 
@@ -756,6 +762,7 @@ The following is a non-normative example of how an RP would use the `claims` par
       client.example.org%2Frf.txt%22%7D
       
 ```
+
 #### claims parameter
 
 <{{examples/request/vp_token_type_and_claims.json}}
@@ -771,6 +778,7 @@ The successful authentication response contains a `vp_token` parameter along wit
     &state=af0ifjsldkj
       
 ```
+
 #### id_token
 
 This example shows an ID Token containing a `vp_hash`:
@@ -796,6 +804,7 @@ This example shows an ID Token containing a `vp_hash`:
    }
 }
 ```
+
 #### vp_token content
 
 ```json
@@ -852,6 +861,7 @@ This example shows an ID Token containing a `vp_hash`:
    }
 ]
 ```
+
 ## Authorization Code Flow with vp_token
 
 This section illustrates the protocol flow for the case of communication using frontchannel and backchannel (utilizing the authorization code flow).
@@ -957,6 +967,7 @@ HTTP/1.1 302 Found
    ]
 }
 ```
+
 #### id_token
 
 ```json
