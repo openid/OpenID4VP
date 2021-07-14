@@ -389,7 +389,7 @@ Note: the RP was setup with the preferred format `jwt_vp`.
   "typ": "JWT",
   "alg": "ES256K"
 }.{
-   "iss":"https://self-issued.me",
+   "iss":"https://self-issued.me/v2",
    "aud":"https://book.itsourweb.org:3000/client_api/authresp/uhn",
    "iat":1615910538,
    "exp":1615911138,
@@ -451,7 +451,7 @@ Below is a non-normative example of ID Token that includes `verifiable_presentat
 
 ```json
 {
-   "iss":"https://self-issued.me",
+   "iss":"https://self-issued.me/v2",
    "aud":"https://book.itsourweb.org:3000/client_api/authresp/uhn",
    "iat":1615910538,
    "exp":1615911138,
@@ -777,13 +777,12 @@ This example shows an ID Token containing a `vp_hash`:
 
 ```json
 {
-   "iss":"https://book.itsourweb.org:3000/wallet/wallet.html",
+   "iss":"https://self-issued.me/v2",
    "aud":"https://book.itsourweb.org:3000/client_api/authresp/uhn",
    "iat":1615910538,
    "exp":1615911138,
    "sub":"urn:uuid:68f874e2-377c-437f-a447-b304967ca351",
    "auth_time":1615910535,
-   "vp_hash":"77QmUPtjPfzWtF2AnpK9RQ",
    "nonce":"960848874",
    "sub_jwk":{
       "crv":"P-384",
