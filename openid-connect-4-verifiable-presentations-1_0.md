@@ -401,14 +401,7 @@ Note: the RP was setup with the preferred format `jwt_vp`.
          "format":"jwt_vp",
          "presentation":"ewogICAgImlzcyI6Imh0dHBzOi8vYm9vay5pdHNvdXJ3ZWIub...IH0="
       }
-   ],   
-   "sub_jwk":{
-      "crv":"P-384",
-      "kty":"EC",
-      "kid": "c7298a61a6904426a580b1df31ec42d0",
-      "x":"jf3a6dquclZ4PJ0JMU8RuucG9T1O3hpU_S_79sHQi7VZBD9e2VKXPts9lUjaytBm",
-      "y":"38VlVE3kNiMEjklFe4Wo4DqdTKkFbK6QrmZf77lCMN2x9bENZoGF2EYFiBsOsnq0"
-   }
+   ]
 }
 ```
 
@@ -452,71 +445,75 @@ Below is a non-normative example of ID Token that includes `verifiable_presentat
 
 ```json
 {
-   "iss":"https://self-issued.me/v2",
-   "aud":"https://book.itsourweb.org:3000/client_api/authresp/uhn",
-   "iat":1615910538,
-   "exp":1615911138,
-   "sub":"did:ion:EiC6Y9_aDaCsITlY06HId4seJjJ...b1df31ec42d0",
-   "auth_time":1615910535,
-   "nonce":"960848874",
-   "sub_jwk":{
-      "crv":"P-384",
-      "kty":"EC",
-      "x":"jf3a6dquclZ4PJ0JMU8RuucG9T1O3hpU_S_79sHQi7VZBD9e2VKXPts9lUjaytBm",
-      "y":"38VlVE3kNiMEjklFe4Wo4DqdTKkFbK6QrmZf77lCMN2x9bENZoGF2EYFiBsOsnq0"
-   },
-   "verifiable_presentations":[
-      {
-         "format":"jwt_vp",
-         "presentation":{
-            "@context":[
-               "https://www.w3.org/2018/credentials/v1"
-            ],
-            "type":[
-               "VerifiablePresentation"
-            ],
-            "verifiableCredential":[
-               {
-                  "@context":[
-                     "https://www.w3.org/2018/credentials/v1",
-                     "https://www.w3.org/2018/credentials/examples/v1"
-                  ],
-                  "id":"https://example.com/credentials/1872",
-                  "type":[
-                     "VerifiableCredential",
-                     "IDCardCredential"
-                  ],
-                  "issuer":{
-                     "id":"did:example:issuer"
-                  },
-                  "issuanceDate":"2010-01-01T19:23:24Z",
-                  "credentialSubject":{
-                     "given_name":"Fredrik",
-                     "family_name":"Strömberg",
-                     "birthdate":"1949-01-22"
-                  },
-                  "proof":{
-                     "type":"Ed25519Signature2018",
-                     "created":"2021-03-19T15:30:15Z",
-                     "jws":"eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..PT8yCqVjj5ZHD0W36zsBQ47oc3El07WGPWaLUuBTOT48IgKI5HDoiFUt9idChT_Zh5s8cF_2cSRWELuD8JQdBw",
-                     "proofPurpose":"assertionMethod",
-                     "verificationMethod":"did:example:issuer#keys-1"
-                  }
-               }
-            ],
-            "id":"ebc6f1c2",
-            "holder":"did:example:holder",
-            "proof":{
-               "type":"Ed25519Signature2018",
-               "created":"2021-03-19T15:30:15Z",
-               "challenge":"()&)()0__sdf",
-               "jws":"eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..GF5Z6TamgNE8QjE3RbiDOj3n_t25_1K7NVWMUASe_OEzQV63GaKdu235MCS3hIYvepcNdQ_ZOKpGNCf0vIAoDA",
-               "proofPurpose":"authentication",
-               "verificationMethod":"did:example:holder#key-1"
+    "iss": "https://self-issued.me/v2",
+    "aud": "https://book.itsourweb.org:3000/client_api/authresp/uhn",
+    "iat": 1615910538,
+    "exp": 1615911138,
+    "sub": "NzbLsXh8uDCcd-6MNwXF4W_7noWXFZAfHkxZsRGC9Xs",
+    "sub_jwk": {
+        "kty": "RSA",
+        "n": "0vx7agoebGcQSuuPiLJXZptN9nndrQmbXEps2aiAFbWhM78LhWx
+     4cbbfAAtVT86zwu1RK7aPFFxuhDR1L6tSoc_BJECPebWKRXjBZCiFV4n3oknjhMs
+     tn64tZ_2W-5JsGY4Hc5n9yBXArwl93lqt7_RN5w6Cf0h4QyQ5v-65YGjQR0_FDW2
+     QvzqY368QQMicAtaSqzs8KJZgnYb9c7d0zgdAZHzu6qMQvRL5hajrn1n91CbOpbI
+     SD08qNLyrdkt-bFTWhAI4vMQFh6WeZu0fM4lFd2NcRwr3XPksINHaQ-G_xBniIqb
+     w0Ls1jF44-csFCur-kEgU8awapJzKnqDKgw",
+     "e": "AQAB"
+    },
+    "auth_time": 1615910535,
+    "nonce": "960848874",
+    "verifiable_presentations": [
+        {
+            "format": "jwt_vp",
+            "presentation": {
+                "@context": [
+                    "https://www.w3.org/2018/credentials/v1"
+                ],
+                "type": [
+                    "VerifiablePresentation"
+                ],
+                "verifiableCredential": [
+                    {
+                        "@context": [
+                            "https://www.w3.org/2018/credentials/v1",
+                            "https://www.w3.org/2018/credentials/examples/v1"
+                        ],
+                        "id": "https://example.com/credentials/1872",
+                        "type": [
+                            "VerifiableCredential",
+                            "IDCardCredential"
+                        ],
+                        "issuer": {
+                            "id": "did:example:issuer"
+                        },
+                        "issuanceDate": "2010-01-01T19:23:24Z",
+                        "credentialSubject": {
+                            "given_name": "Fredrik",
+                            "family_name": "Strömberg",
+                            "birthdate": "1949-01-22"
+                        },
+                        "proof": {
+                            "type": "Ed25519Signature2018",
+                            "created": "2021-03-19T15:30:15Z",
+                            "jws": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..PT8yCqVjj5ZHD0W36zsBQ47oc3El07WGPWaLUuBTOT48IgKI5HDoiFUt9idChT_Zh5s8cF_2cSRWELuD8JQdBw",
+                            "proofPurpose": "assertionMethod",
+                            "verificationMethod": "did:example:issuer#keys-1"
+                        }
+                    }
+                ],
+                "id": "ebc6f1c2",
+                "holder": "did:example:holder",
+                "proof": {
+                    "type": "Ed25519Signature2018",
+                    "created": "2021-03-19T15:30:15Z",
+                    "challenge": "()&)()0__sdf",
+                    "jws": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..GF5Z6TamgNE8QjE3RbiDOj3n_t25_1K7NVWMUASe_OEzQV63GaKdu235MCS3hIYvepcNdQ_ZOKpGNCf0vIAoDA",
+                    "proofPurpose": "authentication",
+                    "verificationMethod": "did:example:holder#key-1"
+                }
             }
-         }
-      }
-   ]
+        }
+    ]
 }
 ```
 
