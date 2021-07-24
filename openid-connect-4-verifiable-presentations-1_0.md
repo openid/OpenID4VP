@@ -506,7 +506,7 @@ Below is a non-normative example of ID Token that includes `verifiable_presentat
                 "proof": {
                     "type": "Ed25519Signature2018",
                     "created": "2021-03-19T15:30:15Z",
-                    "challenge": "()&)()0__sdf",
+                    "challenge": "960848874  ",
                     "jws": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..GF5Z6TamgNE8QjE3RbiDOj3n_t25_1K7NVWMUASe_OEzQV63GaKdu235MCS3hIYvepcNdQ_ZOKpGNCf0vIAoDA",
                     "proofPurpose": "authentication",
                     "verificationMethod": "did:example:holder#key-1"
