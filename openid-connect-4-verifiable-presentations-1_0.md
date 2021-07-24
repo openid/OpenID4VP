@@ -332,7 +332,7 @@ Here is a non-normative example for format=`ldp_vp` (only relevant part):
     "created": "2018-09-14T21:19:10Z",
     "proofPurpose": "authentication",
     "verificationMethod": "did:example:ebfeb1f712ebc6f1c276e12ec21#keys-1",    
-    "challenge": "n-0S6_WzA2Mj",
+    "challenge": "343s$FSFDa-",
     "domain": "s6BhdRkqt3",
     "jws": "eyJhbGciOiJSUzI1NiIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..kTCYt5
       XsITJX1CxPCT8yAV-TVIw5WEuts01mq-pQy7UJiN5mgREEMGlv50aqzpqh4Qq_PbChOMqs
