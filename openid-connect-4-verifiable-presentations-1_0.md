@@ -464,7 +464,7 @@ Below is a non-normative example of ID Token that includes `verifiable_presentat
     "nonce": "960848874",
     "verifiable_presentations": [
         {
-            "format": "jwt_vp",
+            "format": "ldp_vp",
             "presentation": {
                 "@context": [
                     "https://www.w3.org/2018/credentials/v1"
