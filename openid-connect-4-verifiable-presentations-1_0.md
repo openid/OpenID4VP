@@ -332,7 +332,7 @@ Here is a non-normative example for format=`ldp_vp` (only relevant part):
     "created": "2018-09-14T21:19:10Z",
     "proofPurpose": "authentication",
     "verificationMethod": "did:example:ebfeb1f712ebc6f1c276e12ec21#keys-1",    
-    "challenge": "n-0S6_WzA2Mj",
+    "challenge": "343s$FSFDa-",
     "domain": "s6BhdRkqt3",
     "jws": "eyJhbGciOiJSUzI1NiIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..kTCYt5
       XsITJX1CxPCT8yAV-TVIw5WEuts01mq-pQy7UJiN5mgREEMGlv50aqzpqh4Qq_PbChOMqs
@@ -677,6 +677,7 @@ HTTP/1.1 302 Found
   &code=SplxlOBeZQQYbYS6WxSbIA
   &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
 ```
+
 ### Token Response
 
 #### id_token
@@ -764,6 +765,7 @@ Below is a non-normative example of how the `claims` parameter can be used for r
   "auth_time": 1615910535
 }
 ```
+
 ### UserInfo Response 
 
 Below is a non-normative example of a UserInfo Response that includes `verifiable_presentations` claim.
@@ -856,6 +858,7 @@ The following is a non-normative example of how an RP would use the `claims` par
       client.example.org%2Frf.txt%22%7D
       
 ```
+
 #### claims parameter
 
 <{{examples/request/vp_token_type_and_claims.json}}
@@ -871,6 +874,7 @@ The successful authentication response contains a `vp_token` parameter along wit
     &state=af0ifjsldkj
       
 ```
+
 #### id_token
 
 This is the example ID Token:
@@ -896,6 +900,7 @@ This is the example ID Token:
     }
 }
 ```
+
 #### vp_token content
 
 This is the example `vp_token` containg a verifiable presentation (and credential) in LD Proof format. 
@@ -956,6 +961,7 @@ Note: in accordance with (#security_considerations) the verifiable presentation'
    }
 ]
 ```
+
 ## Authorization Code Flow with vp_token
 
 This section illustrates the protocol flow for the case of communication using frontchannel and backchannel (utilizing the authorization code flow).
@@ -1065,6 +1071,7 @@ Note: in accordance with (#security_considerations) the verifiable presentation'
    ]
 }
 ```
+
 #### id_token
 
 ```json
