@@ -54,7 +54,7 @@ organization="Mattr"
 
 .# Abstract
 
-This specification defines an extension of OpenID Connect, section 6.3.1) to allow presentation of claims in the form of W3C Verifiable Credentials as part of the protocol flow in addition to claims provided in the `id_token` and/or via Userinfo responses.
+This specification defines an extension of OpenID Connect to allow presentation of claims in the form of W3C Verifiable Credentials as part of the protocol flow in addition to claims provided in the `id_token` and/or via Userinfo responses.
 
 {mainmatter}
 
@@ -408,9 +408,9 @@ Note: the RP was setup with the preferred format `jwt_vp`.
 }
 ```
 
-Below is a non-normative example of a decoded Verifiable Presentation object that was included in `verifiable_presentations` in `jwt_vp` format (see see [@VC_DATA]).
+Below is a non-normative example of a decoded Verifiable Presentation object that was included in `verifiable_presentations` in `jwt_vp` format (see [@VC_DATA]).
 
-Note: in accordance with (#security_considerations) the verifiable presentation's `nonce` claim is set to the value of the `nonce` request parameter value and the `client_id` claim contains the RP's `client_id`.
+Note: in accordance with (#security_considerations) the verifiable presentation's `nonce` claim is set to the value of the `nonce` request parameter value and the `aud` claim contains the RP's `client_id`.
 
 ```json
   {
@@ -445,7 +445,7 @@ Note: the RP was setup with the preferred format `ldp_vp`.
 
 ### Authentication Response 
 
-Below is a non-normative example of an ID Token that includes `verifiable_presentations` claim.
+Below is a non-normative example of an ID Token that includes a `verifiable_presentations` claim containing a verifiable presentation in LD Proof format.
 
 Note: in accordance with (#security_considerations) the verifiable presentation's `challenge` claim is set to the value of the `nonce` request parameter value and the `domain` claim contains the RP's `client_id`.
 
@@ -460,7 +460,7 @@ Note: in accordance with (#security_considerations) the verifiable presentation'
    "nonce":"960848874",
    "verifiable_presentations":[
       {
-         "format":"jwt_vp",
+         "format":"ldp_vp",
          "presentation":{
             "@context":[
                "https://www.w3.org/2018/credentials/v1"
@@ -586,7 +586,7 @@ Note: in accordance with (#security_considerations) the verifiable presentation'
   "iat": 1311280970,
   "verifiable_presentations":[
       {
-         "format":"jwt_vp",
+         "format":"ldp_vp",
          "presentation":{
             "@context":[
                "https://www.w3.org/2018/credentials/v1"
@@ -726,7 +726,7 @@ Below is a non-normative example of a UserInfo Response that includes a `verifia
 
 #### Verifiable Presentation
 
-Note: in accordance with (#security_considerations) the verifiable presentation's `nonce` claim is set to the value of the `nonce` request parameter value and the `client_id` claim contains the RP's `client_id`. 
+Note: in accordance with (#security_considerations) the verifiable presentation's `nonce` claim is set to the value of the `nonce` request parameter value and the `aud` claim contains the RP's `client_id`. 
 
 ```json
   {
@@ -791,7 +791,7 @@ Note: in accordance with (#security_considerations) the verifiable presentation'
    "family_name":"Doe",
    "verifiable_presentations":[
       {
-         "format":"jwt_vp",
+         "format":"ldp_vp",
          "presentation":{
             "@context":[
                "https://www.w3.org/2018/credentials/v1"
