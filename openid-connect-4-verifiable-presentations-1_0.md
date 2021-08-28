@@ -7,7 +7,7 @@ keyword = ["security", "openid", "ssi"]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "openid-connect-4-verifiable-presentations-1_0-03"
+value = "openid-connect-4-verifiable-presentations-1_0-04"
 status = "standard"
 
 [[author]]
@@ -54,13 +54,15 @@ organization="Mattr"
 
 .# Abstract
 
-This specification defines an extension of OpenID Connect to allow presentation of claims in the form of W3C Verifiable Credentials as part of the protocol flow in addition to claims provided in the `id_token` and/or via Userinfo responses.
+This specification defines an extension of OpenID Connect, section 6.3.1) to allow presentation of claims in the form of W3C Verifiable Credentials as part of the protocol flow in addition to claims provided in the `id_token` and/or via Userinfo responses.
 
 {mainmatter}
 
 # Introduction
 
 This specification extends OpenID Connect with support for presentation of claims via W3C Verifiable Credentials. This allows existing OpenID Connect RPs to extends their reach towards claims sources asserting claims in this format. It also allows new applications built using Verifiable Credentials to utilize OpenID Connect as integration and interoperability layer towards credential holders. 
+
+This specification enables requesting and delivery of verifiable presentations in conjunction with Self-Issued OpenID Providers (see [@SIOPv2]) as well as traditional OpenID  Providers (see [@!OpenID]).
 
 # Use Cases
 
@@ -85,19 +87,19 @@ This approach dramatically reduces latency and reduces load on the OP's servers.
 
 Credential
 
-A set of one or more claims made by an issuer. (see https://www.w3.org/TR/vc-data-model/#terminology)
+A set of one or more claims made by an issuer. (see [@VC_DATA])
 
 Verifiable Credential (VC)
 
-A verifiable credential is a tamper-evident credential that has authorship that can be cryptographically verified. Verifiable credentials can be used to build verifiable presentations, which can also be cryptographically verified. The claims in a credential can be about different subjects. (see https://www.w3.org/TR/vc-data-model/#terminology)
+A verifiable credential is a tamper-evident credential that has authorship that can be cryptographically verified. Verifiable credentials can be used to build verifiable presentations, which can also be cryptographically verified. The claims in a credential can be about different subjects. (see [@VC_DATA])
 
 Presentation
 
-Data derived from one or more verifiable credentials, issued by one or more issuers, that is shared with a specific verifier. (see https://www.w3.org/TR/vc-data-model/#terminology)
+Data derived from one or more verifiable credentials, issued by one or more issuers, that is shared with a specific verifier. (see [@VC_DATA])
 
 Verified Presentation (VP)
 
-A verifiable presentation is a tamper-evident presentation encoded in such a way that authorship of the data can be trusted after a process of cryptographic verification. Certain types of verifiable presentations might contain data that is synthesized from, but do not contain, the original verifiable credentials (for example, zero-knowledge proofs). (see https://www.w3.org/TR/vc-data-model/#terminology)
+A verifiable presentation is a tamper-evident presentation encoded in such a way that authorship of the data can be trusted after a process of cryptographic verification. Certain types of verifiable presentations might contain data that is synthesized from, but do not contain, the original verifiable credentials (for example, zero-knowledge proofs). (see [@VC_DATA])
 
 W3C Verifiable Credential Objects
 
@@ -108,7 +110,7 @@ This specification defines mechanisms to allow RPs to request and OPs to provide
 
 Verifiable Presentations are used to present claims along with cryptographic proofs of the link between presenter and subject of the verifiable credentials it contains. A verifiable presentation can contain a subset of claims asserted in a certain credential (selective disclosure) and it can assemble claims from different credentials. 
 
-There are two credential formats to VCs and VPs: JSON or JSON-LD. There are also two proof formats to VCs and VPs: JWT and Linked Data Proofs. Each of those formats has different properties and capabilites and each of them comes with different proof types. Proof formats are agnostic to the credential format chosen. However, the JSON credential format is commonly used with JSON Web Signatures (https://www.w3.org/TR/vc-data-model/#json-web-token). JSON-LD is commonly used with different kinds of Linked Data Proofs and JSON Web Signatures (https://www.w3.org/TR/vc-data-model/#json-ld). Applications can use all beforementioned assertion and proof formats with this specification. 
+There are two credential formats to VCs and VPs: JSON or JSON-LD. There are also two proof formats to VCs and VPs: JWT and Linked Data Proofs. Each of those formats has different properties and capabilites and each of them comes with different proof types. Proof formats are agnostic to the credential format chosen. However, the JSON credential format is commonly used with JSON Web Signatures (see [@VC_DATA], section 6.3.1). JSON-LD is commonly used with different kinds of Linked Data Proofs and JSON Web Signatures (see [@VC_DATA], section 6.3.2). Applications can use all beforementioned assertion and proof formats with this specification. 
 
 This specification introduces the following representations to exchange verifiable credentials objectes between OpenID OPs and RPs.
 
@@ -277,7 +279,9 @@ This specification introduces additional metadata to enable RP and OP to determi
 
 ## RP Metadata
 
-RPs indicate the suported formats using the follwoing element.
+This specification defines new client metadata parameters according to [@!OpenID.Registration].
+
+RPs indicate the suported formats using the new parameter `vp_formats`.
 
 * `vp_formats`: an object defining the formats, proof types and algorithms a RP supports. The is based on the definition of the `format` elememt in a `presentation_definition` as defined in [@!DIF.PresentationExchange] with the supported formats `jwt_vp` and `ldp_vp`.
 
@@ -285,15 +289,17 @@ Here is an example for a RP registering with a Standard OP via dynamic client re
 
 <{{examples/client_metadata/client_code_format.json}}
 
-Here is an example for a SIOP RP to be used as value of the `registration` request parameter:
+Here is an example for a SIOP RP (see [@SIOPv2]) to be used as value of the `registration` request parameter:
 
 <{{examples/client_metadata/client_siop_format.json}}
 
 ## OP Metadata
 
+This specification defines new server metadata parameters according to [@!OpenID-Discovery].
+
 The OP publishes the formats it supports using the `vp_formats` metadata parameter as defined above in its "openid-configuration". 
 
-# Security Considerations
+# Security Considerations {#security_considerations}
 
 To prevent replay attacks, verifiable presentation container objects MUST be linked to `client_id` and if provided `nonce` from the Authentication Request. The `client_id` is used 
 to detect presentation of credentials to a different than the intended party. The `nonce` value binds the presentation to a certain authentication transaction and allows
@@ -301,7 +307,7 @@ the verifier to detect injection of a presentation in the OpenID Connect flow, w
 
 The values are passed through unmodified from the Authentication Request to the verifiable presentations. 
 
-Note: These values MAY be represented in different claims according to the selected proof format denated by the format claim in the verifiable presentation container.
+Note: These values MAY be represented in different ways (directly as claims or indirectly be incoporation in proof calculation) according to the selected proof format denated by the format claim in the verifiable presentation container.
 
 Here is a non-normative example for format=`jwt_vp` (only relevant part):
 
@@ -371,10 +377,7 @@ The following is a non-normative example of how an RP would use the `claims` par
     &client_id=https%3A%2F%2Fclient.example.org%2Fcb
     &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
     &scope=openid
-    &claims=%7B%22id_token%22%3A%7B%22vc%22%3A%7B%22types%22%3A%5B%22https%3A%2F%
-     2Fdid.itsourweb.org%3A3000%2Fsmart-credential%2FOntario-Health-Insurance-Plan
-     %22%5D%7D%7D%7D
-    &state=af0ifjsldkj
+    &claims=...
     &nonce=960848874
     &registration_uri=https%3A%2F%2F
       client.example.org%2Frf.txt%22%7D
@@ -398,7 +401,7 @@ Note: the RP was setup with the preferred format `jwt_vp`.
   "alg": "ES256K"
 }.{
    "iss":"https://self-issued.me/v2",
-   "aud":"https://book.itsourweb.org:3000/client_api/authresp/uhn",
+   "aud":"https://client.example.org/cb",
    "iat":1615910538,
    "exp":1615911138,
    "sub":"did:ion:EiC6Y9_aDaCsITlY06HId4seJjJ-9...mS3NBIn19",
@@ -413,8 +416,9 @@ Note: the RP was setup with the preferred format `jwt_vp`.
 }
 ```
 
-Below is a non-normative example of a decoded Verifiable Presentation object that was included in `verifiable_presentations`. 
-Note that `vp` is used to contain only "those parts of the standard verifiable presentation where no explicit encoding rules for JWT exist" [VC-DATA-MODEL]
+Below is a non-normative example of a decoded Verifiable Presentation object that was included in `verifiable_presentations` in `jwt_vp` format (see see [@VC_DATA]).
+
+Note: in accordance with (#security_considerations) the verifiable presentation's `nonce` claim is set to the value of the `nonce` request parameter value and the `client_id` claim contains the RP's `client_id`.
 
 <{{examples/responses/jwt_vp.json}}
 
@@ -428,7 +432,9 @@ Note: the RP was setup with the preferred format `ldp_vp`.
 
 ### Authentication Response 
 
-Below is a non-normative example of ID Token that includes `verifiable_presentations` claim.
+Below is a non-normative example of an ID Token that includes `verifiable_presentations` claim.
+
+Note: in accordance with (#security_considerations) the verifiable presentation's `challenge` claim is set to the value of the `nonce` request parameter value and the `domain` claim contains the RP's `client_id`.
 
 <{{examples/responses/id_token_with_ldp_vp.json}}
 
@@ -476,6 +482,88 @@ HTTP/1.1 302 Found
   &code=SplxlOBeZQQYbYS6WxSbIA
   &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
 ```
+
+### Token Response 
+
+```json
+{
+   "access_token":"SlAV32hkKG",
+   "token_type":"Bearer",
+   "refresh_token":"8xLOxBtZp8",
+   "expires_in":3600,
+   "id_token":"eyJ0 ... NiJ9.eyJ1c ... I6IjIifX0.DeWt4Qu ... ZXso"
+```
+
+#### id_token (containing verifiable presentation)
+
+This is the example ID Token containing a `verifiable_presentations` element containg a verifiable presentation (and credential) in LD Proof format. 
+
+Note: in accordance with (#security_considerations) the verifiable presentation's `challenge` claim is set to the value of the `nonce` request parameter value and the `domain` claim contains the RP's `client_id`. 
+
+```json
+{
+  "iss": "http://server.example.com",
+  "sub": "248289761001",
+  "aud": "s6BhdRkqt3",
+  "nonce": "n-0S6_WzA2Mj",
+  "exp": 1311281970,
+  "iat": 1311280970,
+  "verifiable_presentations":[
+      {
+         "format":"jwt_vp",
+         "presentation":{
+            "@context":[
+               "https://www.w3.org/2018/credentials/v1"
+            ],
+            "type":[
+               "VerifiablePresentation"
+            ],
+            "verifiableCredential":[
+               {
+                  "@context":[
+                     "https://www.w3.org/2018/credentials/v1",
+                     "https://www.w3.org/2018/credentials/examples/v1"
+                  ],
+                  "id":"https://example.com/credentials/1872",
+                  "type":[
+                     "VerifiableCredential",
+                     "IDCardCredential"
+                  ],
+                  "issuer":{
+                     "id":"did:example:issuer"
+                  },
+                  "issuanceDate":"2010-01-01T19:23:24Z",
+                  "credentialSubject":{
+                     "given_name":"Fredrik",
+                     "family_name":"Strömberg",
+                     "birthdate":"1949-01-22"
+                  },
+                  "proof":{
+                     "type":"Ed25519Signature2018",
+                     "created":"2021-03-19T15:30:15Z",
+                     "jws":"eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..PT8yCqVjj5ZHD0W36zsBQ47oc3El07WGPWaLUuBTOT48IgKI5HDoiFUt9idChT_Zh5s8cF_2cSRWELuD8JQdBw",
+                     "proofPurpose":"assertionMethod",
+                     "verificationMethod":"did:example:issuer#keys-1"
+                  }
+               }
+            ],
+            "id":"ebc6f1c2",
+            "holder":"did:example:holder",
+            "proof":{
+               "type":"Ed25519Signature2018",
+               "created":"2021-03-19T15:30:15Z",
+               "challenge":"n-0S6_WzA2Mj",
+               "domain": "s6BhdRkqt3",
+               "jws":"eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..GF5Z6TamgNE8QjE3RbiDOj3n_t25_1K7NVWMUASe_OEzQV63GaKdu235MCS3hIYvepcNdQ_ZOKpGNCf0vIAoDA",
+               "proofPurpose":"authentication",
+               "verificationMethod":"did:example:holder#key-1"
+            }
+         }
+      }
+   ]
+}
+``` 
+
 ## Authorization Code Flow with Verifiable Presentation returned from the UserInfo endpoint
 
 Below are the examples when verifiable presentation is requested and returned from the UserInfo endpoint as part of OpenID Connect Authorization Code Flow. UserInfo response contains a `verifiable_presentations` element with the Verifiable Presentation data. 
@@ -560,7 +648,32 @@ Below is a non-normative example of a UserInfo Response that includes a `verifia
   }
 ```
 
-JWT inside the `verifiable_presentations` claim when decoded equals to a verifiable presentation in Self-Issued OP with Verifiable Presentation in ID Token, Authentication Response section.
+#### Verifiable Presentation
+
+Note: in accordance with (#security_considerations) the verifiable presentation's `nonce` claim is set to the value of the `nonce` request parameter value and the `client_id` claim contains the RP's `client_id`. 
+
+```json
+  {
+    "iss":"did:ion:EiC6Y9_aDaCsITlY06HId4seJjJ...b1df31ec42d0",
+    "aud":"s6BhdRkqt3",
+    "iat":1615910538,
+    "exp":1615911138,   
+    "nbf":1615910538,
+    "nonce":"n-0S6_WzA2Mj",
+    "vp":{
+        "@context":[
+          "https://www.w3.org/2018/credentials/v1",
+          "https://ohip.ontario.ca/v1"
+        ],
+        "type":[
+          "VerifiablePresentation"
+        ],
+        "verifiableCredential":[
+          "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6InVybjp1dWlkOjU0ZDk2NjE2LTE1MWUt...OLryT1g"    
+        ]
+    }   
+  }
+```
 
 ## Authorization Code Flow with Verifiable Presentation returned from the UserInfo endpoint (LDP)
 ### Claims parameter 
@@ -587,7 +700,9 @@ Below is a non-normative example of how the `claims` parameter can be used for r
 
 ### UserInfo Response 
 
-Below is a non-normative example of a UserInfo Response that includes `verifiable_presentations` claim:
+Below is a non-normative example of a UserInfo Response that includes `verifiable_presentations` claim.
+
+Note: in accordance with (#security_considerations) the verifiable presentation's `challenge` claim is set to the value of the `nonce` request parameter value and the `domain` claim contains the RP's `client_id`. 
 
 <{{examples/responses/userinfo_with_ldp_vp.json}}
 
@@ -631,31 +746,35 @@ The successful authentication response contains a `vp_token` parameter along wit
 
 #### id_token
 
-This example shows an ID Token containing a `vp_hash`:
+This is the example ID Token:
 
 ```json
 {
    "iss":"https://self-issued.me/v2",
-   "aud":"https://book.itsourweb.org:3000/client_api/authresp/uhn",
+   "aud":"https://client.example.org/cb",
    "iat":1615910538,
    "exp":1615911138,
-   "sub":"urn:uuid:68f874e2-377c-437f-a447-b304967ca351",
+   "sub":"NzbLsXh8uDCcd-6MNwXF4W_7noWXFZAfHkxZsRGC9Xs",
    "auth_time":1615910535,
-   "nonce":"960848874",
-   "sub_jwk":{
-      "crv":"P-384",
-      "ext":true,
-      "key_ops":[
-         "verify"
-      ],
-      "kty":"EC",
-      "x":"jf3a6dquclZ4PJ0JMU8RuucG9T1O3hpU_S_79sHQi7VZBD9e2VKXPts9lUjaytBm",
-      "y":"38VlVE3kNiMEjklFe4Wo4DqdTKkFbK6QrmZf77lCMN2x9bENZoGF2EYFiBsOsnq0"
-   }
+   "nonce":"n-0S6_WzA2Mj",
+   "sub_jwk": {
+     "kty":"RSA",
+     "n": "0vx7agoebGcQSuuPiLJXZptN9nndrQmbXEps2aiAFbWhM78LhWx
+     4cbbfAAtVT86zwu1RK7aPFFxuhDR1L6tSoc_BJECPebWKRXjBZCiFV4n3oknjhMs
+     tn64tZ_2W-5JsGY4Hc5n9yBXArwl93lqt7_RN5w6Cf0h4QyQ5v-65YGjQR0_FDW2
+     QvzqY368QQMicAtaSqzs8KJZgnYb9c7d0zgdAZHzu6qMQvRL5hajrn1n91CbOpbI
+     SD08qNLyrdkt-bFTWhAI4vMQFh6WeZu0fM4lFd2NcRwr3XPksINHaQ-G_xBniIqb
+     w0Ls1jF44-csFCur-kEgU8awapJzKnqDKgw",
+     "e":"AQAB"
+    }
 }
 ```
 
 #### vp_token content
+
+This is the example `vp_token` containg a verifiable presentation (and credential) in LD Proof format. 
+
+Note: in accordance with (#security_considerations) the verifiable presentation's `challenge` claim is set to the value of the `nonce` request parameter value and the `domain` claim contains the RP's `client_id`. 
 
 ```json
 [
@@ -702,7 +821,8 @@ This example shows an ID Token containing a `vp_hash`:
          "proof":{
             "type":"Ed25519Signature2018",
             "created":"2021-03-19T15:30:15Z",
-            "challenge":"()&)()0__sdf",
+            "challenge":"n-0S6_WzA2Mj",
+            "domain": "https://client.example.org/cb",
             "jws":"eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..GF5Z6TamgNE8QjE3RbiDOj3n_t25_1K7NVWMUASe_OEzQV63GaKdu235MCS3hIYvepcNdQ_ZOKpGNCf0vIAoDA",
             "proofPurpose":"authentication",
             "verificationMethod":"did:example:holder#key-1"
@@ -756,6 +876,10 @@ HTTP/1.1 302 Found
 
 ### Token Response (including vp_token)
 
+This is the example token response containing a `vp_token` containg a verifiable presentation (and credential) in LD Proof format. 
+
+Note: in accordance with (#security_considerations) the verifiable presentation's `challenge` claim is set to the value of the `nonce` request parameter value and the `domain` claim contains the RP's `client_id`. 
+
 ```json
 {
    "access_token":"SlAV32hkKG",
@@ -807,7 +931,8 @@ HTTP/1.1 302 Found
             "proof":{
                "type":"Ed25519Signature2018",
                "created":"2021-03-19T15:30:15Z",
-               "challenge":"()&)()0__sdf",
+               "challenge":"n-0S6_WzA2Mj",
+               "domain": "s6BhdRkqt3",
                "jws":"eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..GF5Z6TamgNE8QjE3RbiDOj3n_t25_1K7NVWMUASe_OEzQV63GaKdu235MCS3hIYvepcNdQ_ZOKpGNCf0vIAoDA",
                "proofPurpose":"authentication",
                "verificationMethod":"did:example:holder#key-1"
@@ -827,12 +952,52 @@ HTTP/1.1 302 Found
   "aud": "s6BhdRkqt3",
   "nonce": "n-0S6_WzA2Mj",
   "exp": 1311281970,
-  "iat": 1311280970,
-  "vp_hash": "77QmUPtjPfzWtF2AnpK9RQ"
+  "iat": 1311280970
 }
 ``` 
 
 {backmatter}
+
+<reference anchor="VC_DATA" target="https://www.w3.org/TR/vc-data-model">
+  <front>
+    <title>Verifiable Credentials Data Model 1.0</title>
+    <author fullname="Manu Sporny">
+      <organization>Digital Bazaar</organization>
+    </author>
+    <author fullname="Grant Noble">
+      <organization>ConsenSys</organization>
+    </author>
+    <author fullname="Dave Longley">
+      <organization>Digital Bazaar</organization>
+    </author>
+    <author fullname="Daniel C. Burnett">
+      <organization>ConsenSys</organization>
+    </author>
+    <author fullname="Brent Zundel">
+      <organization>Evernym</organization>
+    </author>
+    <author fullname="David Chadwick">
+      <organization>University of Kent</organization>
+    </author>
+   <date day="19" month="Nov" year="2019"/>
+  </front>
+</reference>
+
+<reference anchor="SIOPv2" target="https://openid.bitbucket.io/connect/openid-connect-self-issued-v2-1_0.html">
+  <front>
+    <title>Self-Issued OpenID Provider V2</title>
+    <author ullname="Kristina Yasuda">
+      <organization>Microsoft</organization>
+    </author>
+    <author fullname="Michael B. Jones">
+      <organization>Microsoft</organization>
+    </author>
+    <author fullname="Tobias Looker">
+      <organization>Mattr</organization>
+    </author>
+   <date day="20" month="Jul" year="2021"/>
+  </front>
+</reference>
 
 <reference anchor="OpenID" target="http://openid.net/specs/openid-connect-core-1_0.html">
   <front>
@@ -872,6 +1037,25 @@ HTTP/1.1 302 Found
         </front>
 </reference>
 
+<reference anchor="OpenID-Discovery" target="https://openid.net/specs/openid-connect-discovery-1_0.html">
+  <front>
+    <title>OpenID Connect Discovery 1.0 incorporating errata set 1</title>
+    <author initials="N." surname="Sakimura" fullname="Nat Sakimura">
+      <organization>NRI</organization>
+    </author>
+    <author initials="J." surname="Bradley" fullname="John Bradley">
+      <organization>Ping Identity</organization>
+    </author>
+    <author initials="B." surname="de Medeiros" fullname="Breno de Medeiros">
+      <organization>Google</organization>
+    </author>
+    <author initials="E." surname="Jay" fullname="Edmund Jay">
+      <organization> Illumila </organization>
+    </author>
+   <date day="8" month="Nov" year="2014"/>
+  </front>
+</reference>
+
 <reference anchor="OpenID.Registration" target="https://openid.net/specs/openid-connect-registration-1_0.html">
         <front>
           <title>OpenID Connect Dynamic Client Registration 1.0 incorporating errata set 1</title>
@@ -907,6 +1091,16 @@ The technology described in this specification was made available from contribut
 # Document History
 
    [[ To be removed from the final specification ]]
+
+   -04
+
+   * cleaned up examples to use `nonce` & `client_id` instead of `vp_hash` for replay detection
+   * fixed further nits in examples
+   * added and reworked references to other specifications
+
+   -03
+
+   * aligned with SIOP v2 spec
 
    -02
 
