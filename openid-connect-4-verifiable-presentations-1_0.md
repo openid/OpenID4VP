@@ -420,7 +420,7 @@ Below is a non-normative example of a decoded Verifiable Presentation object tha
 
 Note: in accordance with (#security_considerations) the verifiable presentation's `nonce` claim is set to the value of the `nonce` request parameter value and the `client_id` claim contains the RP's `client_id`.
 
-<{{examples/responses/jwt_vp.json}}
+<{{examples/response/jwt_vp.json}}
 
 ## Self-Issued OpenID Provider with Verifiable Presentation in ID Token (selective disclosure)
 ### `claims` parameter 
@@ -436,7 +436,7 @@ Below is a non-normative example of an ID Token that includes `verifiable_presen
 
 Note: in accordance with (#security_considerations) the verifiable presentation's `challenge` claim is set to the value of the `nonce` request parameter value and the `domain` claim contains the RP's `client_id`.
 
-<{{examples/responses/id_token_with_ldp_vp.json}}
+<{{examples/response/id_token_with_ldp_vp.json}}
 
 ## Authorization Code Flow with Verifiable Presentation in ID Token
 
@@ -704,7 +704,7 @@ Below is a non-normative example of a UserInfo Response that includes `verifiabl
 
 Note: in accordance with (#security_considerations) the verifiable presentation's `challenge` claim is set to the value of the `nonce` request parameter value and the `domain` claim contains the RP's `client_id`. 
 
-<{{examples/responses/userinfo_with_ldp_vp.json}}
+<{{examples/response/userinfo_with_ldp_vp.json}}
 
 ## SIOP with vp_token
 This section illustrates the protocol flow for the case of communication through the front channel only (like in SIOP).
@@ -776,61 +776,7 @@ This is the example `vp_token` containg a verifiable presentation (and credentia
 
 Note: in accordance with (#security_considerations) the verifiable presentation's `challenge` claim is set to the value of the `nonce` request parameter value and the `domain` claim contains the RP's `client_id`. 
 
-```json
-[
-   {
-      "format":"ldp_vp",
-      "presentation":{
-         "@context":[
-            "https://www.w3.org/2018/credentials/v1"
-         ],
-         "type":[
-            "VerifiablePresentation"
-         ],
-         "verifiableCredential":[
-            {
-               "@context":[
-                  "https://www.w3.org/2018/credentials/v1",
-                  "https://www.w3.org/2018/credentials/examples/v1"
-               ],
-               "id":"https://example.com/credentials/1872",
-               "type":[
-                  "VerifiableCredential",
-                  "IDCardCredential"
-               ],
-               "issuer":{
-                  "id":"did:example:issuer"
-               },
-               "issuanceDate":"2010-01-01T19:23:24Z",
-               "credentialSubject":{
-                  "given_name":"Fredrik",
-                  "family_name":"Strömberg",
-                  "birthdate":"1949-01-22"
-               },
-               "proof":{
-                  "type":"Ed25519Signature2018",
-                  "created":"2021-03-19T15:30:15Z",
-                  "jws":"eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..PT8yCqVjj5ZHD0W36zsBQ47oc3El07WGPWaLUuBTOT48IgKI5HDoiFUt9idChT_Zh5s8cF_2cSRWELuD8JQdBw",
-                  "proofPurpose":"assertionMethod",
-                  "verificationMethod":"did:example:issuer#keys-1"
-               }
-            }
-         ],
-         "id":"ebc6f1c2",
-         "holder":"did:example:holder",
-         "proof":{
-            "type":"Ed25519Signature2018",
-            "created":"2021-03-19T15:30:15Z",
-            "challenge":"n-0S6_WzA2Mj",
-            "domain": "https://client.example.org/cb",
-            "jws":"eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..GF5Z6TamgNE8QjE3RbiDOj3n_t25_1K7NVWMUASe_OEzQV63GaKdu235MCS3hIYvepcNdQ_ZOKpGNCf0vIAoDA",
-            "proofPurpose":"authentication",
-            "verificationMethod":"did:example:holder#key-1"
-         }
-      }
-   }
-]
-```
+<{{examples/response/vp_token_ldp_vp.json}}
 
 ## Authorization Code Flow with vp_token
 
@@ -880,68 +826,7 @@ This is the example token response containing a `vp_token` containg a verifiable
 
 Note: in accordance with (#security_considerations) the verifiable presentation's `challenge` claim is set to the value of the `nonce` request parameter value and the `domain` claim contains the RP's `client_id`. 
 
-```json
-{
-   "access_token":"SlAV32hkKG",
-   "token_type":"Bearer",
-   "refresh_token":"8xLOxBtZp8",
-   "expires_in":3600,
-   "id_token":"eyJ0 ... NiJ9.eyJ1c ... I6IjIifX0.DeWt4Qu ... ZXso",
-   "vp_token":[
-      {
-         "format":"ldp_vp",
-         "presentation":{
-            "@context":[
-               "https://www.w3.org/2018/credentials/v1"
-            ],
-            "type":[
-               "VerifiablePresentation"
-            ],
-            "verifiableCredential":[
-               {
-                  "@context":[
-                     "https://www.w3.org/2018/credentials/v1",
-                     "https://www.w3.org/2018/credentials/examples/v1"
-                  ],
-                  "id":"https://example.com/credentials/1872",
-                  "type":[
-                     "VerifiableCredential",
-                     "IDCardCredential"
-                  ],
-                  "issuer":{
-                     "id":"did:example:issuer"
-                  },
-                  "issuanceDate":"2010-01-01T19:23:24Z",
-                  "credentialSubject":{
-                     "given_name":"Fredrik",
-                     "family_name":"Strömberg",
-                     "birthdate":"1949-01-22"
-                  },
-                  "proof":{
-                     "type":"Ed25519Signature2018",
-                     "created":"2021-03-19T15:30:15Z",
-                     "jws":"eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..PT8yCqVjj5ZHD0W36zsBQ47oc3El07WGPWaLUuBTOT48IgKI5HDoiFUt9idChT_Zh5s8cF_2cSRWELuD8JQdBw",
-                     "proofPurpose":"assertionMethod",
-                     "verificationMethod":"did:example:issuer#keys-1"
-                  }
-               }
-            ],
-            "id":"ebc6f1c2",
-            "holder":"did:example:holder",
-            "proof":{
-               "type":"Ed25519Signature2018",
-               "created":"2021-03-19T15:30:15Z",
-               "challenge":"n-0S6_WzA2Mj",
-               "domain": "s6BhdRkqt3",
-               "jws":"eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..GF5Z6TamgNE8QjE3RbiDOj3n_t25_1K7NVWMUASe_OEzQV63GaKdu235MCS3hIYvepcNdQ_ZOKpGNCf0vIAoDA",
-               "proofPurpose":"authentication",
-               "verificationMethod":"did:example:holder#key-1"
-            }
-         }
-      }
-   ]
-}
-```
+<{{examples/response/token_response_vp_token_ldp_vp.json}}
 
 #### id_token
 
@@ -1094,6 +979,7 @@ The technology described in this specification was made available from contribut
 
    -04
 
+   * added presentation submission support
    * cleaned up examples to use `nonce` & `client_id` instead of `vp_hash` for replay detection
    * fixed further nits in examples
    * added and reworked references to other specifications

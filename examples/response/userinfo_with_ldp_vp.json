@@ -48,8 +48,8 @@ Content-Type: application/json
                 "id": "ebc6f1c2",
                 "holder": "did:example:holder",
                 "presentation_submission": {
-                    "id": "Selective disclosure example presentation",
-                    "definition_id": "Selective disclosure example",
+                    "id": "Selective disclosure at userinfo",
+                    "definition_id": "Selective disclosure at userinfo",
                     "descriptor_map": [
                         {
                             "id": "ID Card with constraints",
