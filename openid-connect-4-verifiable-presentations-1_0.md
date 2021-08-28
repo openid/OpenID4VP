@@ -112,11 +112,40 @@ There are two credential formats to VCs and VPs: JSON or JSON-LD. There are also
 
 This specification introduces the following representations to exchange verifiable credentials objectes between OpenID OPs and RPs.
 
-* The JWT claim `verifiable_presentations` used as generic container to embed verifiable presentation objects into ID tokens or userinfo responses.
-* The new token types "VP Token" used as generic container for verifiable presentation objects in authentication and token responses in addition to ID Tokens.
+* The JWT claim `verifiable_presentations` used as generic container to embed verifiable presentation objects into ID tokens or userinfo responses (see (#verifiable_presentations)).
+* The new token types "VP Token" used as generic container for verifiable presentation objects in authentication and token responses in addition to ID Tokens (see (#vp_token)).
 
-All representations share the same container format.
-# Container Format
+All representations share the same container format (see (#container_format)).
+
+Verifiers request verifiable presentations using the `claims` parameter as defined in (@!OpenID) and a syntax based on DIF Presentation exchange (see (#request_syntax)).
+
+# Response Extensions
+
+## verifiable_presentations {#verifiable_presentations}
+
+Verifiable credential objects can be exchanged between OP and RP enveloped in JWT claims in ID tokens or userinfo responses.  
+
+This specification introduces the following JWT claim for that purpose:
+
+- `verifiable_presentations`:  A claim whose value is a verifiable presentations container object as defined above.
+
+This claim can be added to ID Tokens, Userinfo responses as well as Access Tokens and Introspection response. It MAY also be included as aggregated or distributed claims (see Section 5.6.2 of the OpenID Connect specification [OpenID]).
+
+Note that above claim has to be distinguished from `vp` or `vc` claims as defined in [JWT proof format](https://www.w3.org/TR/vc-data-model/#json-web-token). `vp` or `vc` claims contain those parts of the standard verifiable credentials and verifiable presentations where no explicit encoding rules for JWT exist. They are used as part of a verifiable credential or presentation in JWT format. They are not meant to include complete verifiable credentials or verifiable presentations objects which is the purpose of the claims defined in this specification.
+
+## vp_token {#vp_token}
+
+This specifications introduces the following new token:
+
+* VP Token: a token containing a verifiable presentations container as defined above. Such a token is provided to the RP in addition to an `id_token` in the `vp_token` parameter. 
+
+`vp_token` is provided in the same response as the `id_token`. Depending on the response type, this can be either the authentication response or the token response. Authentication event information is conveyed via the id token while it's up to the RP to determine what (additional) claims are allocated to `id_token` and `vp_token`, respectively, via the `claims` parameter. 
+
+If the `vp_token` is returned in the frontchannel, a hash of the respective token MUST be included in `id_token`.
+
+# Container Format {#container_format}
+
+The `verifiable_presentations` element in a ID Token or userinfo response as well as the `vp_token` share the same verifiable presentation container format. 
 
 A verifiable presentation container is an array of objects, each of them containing the following fields:
 
@@ -201,31 +230,10 @@ Here is an example:
    }
 ]
 ```
-# JWT parameters extention
 
-Verifiable credential objects can be exchanged between OP and RP enveloped in JWT claims in ID tokens or userinfo responses.  
+# Requesting Verifiable Presentations {#request_syntax}
 
-This specification introduces the following JWT claim for that purpose:
-
-- `verifiable_presentations`:  A claim whose value is a verifiable presentations container object as defined above.
-
-This claim can be added to ID Tokens, Userinfo responses as well as Access Tokens and Introspection response. It MAY also be included as aggregated or distributed claims (see Section 5.6.2 of the OpenID Connect specification [OpenID]).
-
-Note that above claim has to be distinguished from `vp` or `vc` claims as defined in [JWT proof format](https://www.w3.org/TR/vc-data-model/#json-web-token). `vp` or `vc` claims contain those parts of the standard verifiable credentials and verifiable presentations where no explicit encoding rules for JWT exist. They are used as part of a verifiable credential or presentation in JWT format. They are not meant to include complete verifiable credentials or verifiable presentations objects which is the purpose of the claims defined in this specification.
-
-# New Tokens extention
-
-This specifications introduces the following new token:
-
-* VP Token: a token containing a verifiable presentations container as defined above. Such a token is provided to the RP in addition to an `id_token` in the `vp_token` parameter. 
-
-`vp_token` is provided in the same response as the `id_token`. Depending on the response type, this can be either the authentication response or the token response. Authentication event information is conveyed via the id token while it's up to the RP to determine what (additional) claims are allocated to `id_token` and `vp_token`, respectively, via the `claims` parameter. 
-
-If the `vp_token` is returned in the frontchannel, a hash of the respective token MUST be included in `id_token`.
-
-# Requesting Verifiable Presentations 
-
-This draft extends the existing OpenID Connect `claims` request parameter to allow RPs to request verifiable presentations using the request syntax defined in [@!DIF.PresentationExchange].
+This draft extends the existing OpenID Connect `claims` request parameter (see (@!OpenID), section 5.5) to allow RPs to request verifiable presentations using the request syntax defined in [@!DIF.PresentationExchange].
 
 ## Embedded Verifiable Presentations {#verifiable_presentations}
 
@@ -233,11 +241,7 @@ Verifiable Presentations are requested by embedding a `verifiable_presentations`
 
 Please note this draft defines a profile of [@!DIF.PresentationExchange] as follows: 
 
-* The `presentation_definition.id` element is optional
-* The field `presentation_definition.input_descriptorid` is optional
-* The `presentation_definition` element MAY contain all other elements as defined in [@!DIF.PresentationExchange] except the `format` element.
-
-Note: supported presentation formats, proof types, and algorithms are determined using new RP and OP metadata (see (#metadata)). 
+* The `format` element underneath the `presentation_definition`  is not supported as supported presentation formats, proof types, and algorithms are determined using new RP and OP metadata (see (#metadata)). 
 
 Here is a non-normative example: 
 
@@ -262,6 +266,10 @@ A VP Token is requested by adding a new top level element `vp_token` to the `cla
 This is illustrated in the following example:
 
 <{{examples/request/vp_token_type_only.json}}
+
+## Presentation Submissions
+
+Verifiable presentations provided by the OP MUST contain `presentation_submission` elements as defined in [@!DIF.PresentationExchange], if the respective presentation format supports addition of such an element. Every `presentation_element` MUST refer to the respective input descriptor it fulfills and it MUST be protected from modifications (typically by including it into the signed part of the presentation). 
 
 # Metadata {#metadata}
 
@@ -408,28 +416,7 @@ Note: the RP was setup with the preferred format `jwt_vp`.
 Below is a non-normative example of a decoded Verifiable Presentation object that was included in `verifiable_presentations`. 
 Note that `vp` is used to contain only "those parts of the standard verifiable presentation where no explicit encoding rules for JWT exist" [VC-DATA-MODEL]
 
-```json
-  {
-    "iss":"did:ion:EiC6Y9_aDaCsITlY06HId4seJjJ...b1df31ec42d0",
-    "aud":"https://book.itsourweb.org:3000/ohip",
-    "iat":1615910538,
-    "exp":1615911138,   
-    "nbf":1615910538,
-    "nonce":"acIlfiR6AKqGHg",
-    "vp":{
-        "@context":[
-          "https://www.w3.org/2018/credentials/v1",
-          "https://ohip.ontario.ca/v1"
-        ],
-        "type":[
-          "VerifiablePresentation"
-        ],
-        "verifiableCredential":[
-          "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6InVybjp1dWlkOjU0ZDk2NjE2LTE1MWUt...OLryT1g"    
-        ]
-    }   
-  }
-```
+<{{examples/responses/jwt_vp.json}}
 
 ## Self-Issued OpenID Provider with Verifiable Presentation in ID Token (selective disclosure)
 ### `claims` parameter 
@@ -443,79 +430,7 @@ Note: the RP was setup with the preferred format `ldp_vp`.
 
 Below is a non-normative example of ID Token that includes `verifiable_presentations` claim.
 
-```json
-{
-    "iss": "https://self-issued.me/v2",
-    "aud": "https://book.itsourweb.org:3000/client_api/authresp/uhn",
-    "iat": 1615910538,
-    "exp": 1615911138,
-    "sub": "NzbLsXh8uDCcd-6MNwXF4W_7noWXFZAfHkxZsRGC9Xs",
-    "sub_jwk": {
-        "kty": "RSA",
-        "n": "0vx7agoebGcQSuuPiLJXZptN9nndrQmbXEps2aiAFbWhM78LhWx
-     4cbbfAAtVT86zwu1RK7aPFFxuhDR1L6tSoc_BJECPebWKRXjBZCiFV4n3oknjhMs
-     tn64tZ_2W-5JsGY4Hc5n9yBXArwl93lqt7_RN5w6Cf0h4QyQ5v-65YGjQR0_FDW2
-     QvzqY368QQMicAtaSqzs8KJZgnYb9c7d0zgdAZHzu6qMQvRL5hajrn1n91CbOpbI
-     SD08qNLyrdkt-bFTWhAI4vMQFh6WeZu0fM4lFd2NcRwr3XPksINHaQ-G_xBniIqb
-     w0Ls1jF44-csFCur-kEgU8awapJzKnqDKgw",
-     "e": "AQAB"
-    },
-    "auth_time": 1615910535,
-    "nonce": "960848874",
-    "verifiable_presentations": [
-        {
-            "format": "ldp_vp",
-            "presentation": {
-                "@context": [
-                    "https://www.w3.org/2018/credentials/v1"
-                ],
-                "type": [
-                    "VerifiablePresentation"
-                ],
-                "verifiableCredential": [
-                    {
-                        "@context": [
-                            "https://www.w3.org/2018/credentials/v1",
-                            "https://www.w3.org/2018/credentials/examples/v1"
-                        ],
-                        "id": "https://example.com/credentials/1872",
-                        "type": [
-                            "VerifiableCredential",
-                            "IDCardCredential"
-                        ],
-                        "issuer": {
-                            "id": "did:example:issuer"
-                        },
-                        "issuanceDate": "2010-01-01T19:23:24Z",
-                        "credentialSubject": {
-                            "given_name": "Fredrik",
-                            "family_name": "Strömberg",
-                            "birthdate": "1949-01-22"
-                        },
-                        "proof": {
-                            "type": "Ed25519Signature2018",
-                            "created": "2021-03-19T15:30:15Z",
-                            "jws": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..PT8yCqVjj5ZHD0W36zsBQ47oc3El07WGPWaLUuBTOT48IgKI5HDoiFUt9idChT_Zh5s8cF_2cSRWELuD8JQdBw",
-                            "proofPurpose": "assertionMethod",
-                            "verificationMethod": "did:example:issuer#keys-1"
-                        }
-                    }
-                ],
-                "id": "ebc6f1c2",
-                "holder": "did:example:holder",
-                "proof": {
-                    "type": "Ed25519Signature2018",
-                    "created": "2021-03-19T15:30:15Z",
-                    "challenge": "960848874  ",
-                    "jws": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..GF5Z6TamgNE8QjE3RbiDOj3n_t25_1K7NVWMUASe_OEzQV63GaKdu235MCS3hIYvepcNdQ_ZOKpGNCf0vIAoDA",
-                    "proofPurpose": "authentication",
-                    "verificationMethod": "did:example:holder#key-1"
-                }
-            }
-        }
-    ]
-}
-```
+<{{examples/responses/id_token_with_ldp_vp.json}}
 
 ## Authorization Code Flow with Verifiable Presentation in ID Token
 
@@ -674,69 +589,7 @@ Below is a non-normative example of how the `claims` parameter can be used for r
 
 Below is a non-normative example of a UserInfo Response that includes `verifiable_presentations` claim:
 
-```json
-  HTTP/1.1 200 OK
-  Content-Type: application/json
-
-  {
-   "sub":"248289761001",
-   "name":"Jane Doe",
-   "given_name":"Jane",
-   "family_name":"Doe",
-   "verifiable_presentations":[
-      {
-         "format":"jwt_vp",
-         "presentation":{
-            "@context":[
-               "https://www.w3.org/2018/credentials/v1"
-            ],
-            "type":[
-               "VerifiablePresentation"
-            ],
-            "verifiableCredential":[
-               {
-                  "@context":[
-                     "https://www.w3.org/2018/credentials/v1",
-                     "https://www.w3.org/2018/credentials/examples/v1"
-                  ],
-                  "id":"https://example.com/credentials/1872",
-                  "type":[
-                     "VerifiableCredential",
-                     "IDCardCredential"
-                  ],
-                  "issuer":{
-                     "id":"did:example:issuer"
-                  },
-                  "issuanceDate":"2010-01-01T19:23:24Z",
-                  "credentialSubject":{
-                     "given_name":"Fredrik",
-                     "family_name":"Strömberg",
-                     "birthdate":"1949-01-22"
-                  },
-                  "proof":{
-                     "type":"Ed25519Signature2018",
-                     "created":"2021-03-19T15:30:15Z",
-                     "jws":"eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..PT8yCqVjj5ZHD0W36zsBQ47oc3El07WGPWaLUuBTOT48IgKI5HDoiFUt9idChT_Zh5s8cF_2cSRWELuD8JQdBw",
-                     "proofPurpose":"assertionMethod",
-                     "verificationMethod":"did:example:issuer#keys-1"
-                  }
-               }
-            ],
-            "id":"ebc6f1c2",
-            "holder":"did:example:holder",
-            "proof":{
-               "type":"Ed25519Signature2018",
-               "created":"2021-03-19T15:30:15Z",
-               "challenge":"()&)()0__sdf",
-               "jws":"eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..GF5Z6TamgNE8QjE3RbiDOj3n_t25_1K7NVWMUASe_OEzQV63GaKdu235MCS3hIYvepcNdQ_ZOKpGNCf0vIAoDA",
-               "proofPurpose":"authentication",
-               "verificationMethod":"did:example:holder#key-1"
-            }
-         }
-      }
-   ]
-}
-```
+<{{examples/responses/userinfo_with_ldp_vp.json}}
 
 ## SIOP with vp_token
 This section illustrates the protocol flow for the case of communication through the front channel only (like in SIOP).
