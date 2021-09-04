@@ -293,13 +293,19 @@ The OP publishes the formats it supports using the `vp_formats` metadata paramet
 
 # Security Considerations {#security_considerations}
 
-To prevent replay attacks, verifiable presentation container objects MUST be linked to `client_id` and if provided `nonce` from the Authentication Request. The `client_id` is used 
-to detect presentation of credentials to a different than the intended party. The `nonce` value binds the presentation to a certain authentication transaction and allows
-the verifier to detect injection of a presentation in the OpenID Connect flow, which is especially important in flows where the presentation is passed through the front channel. 
+## Replay Detection
 
-The values are passed through unmodified from the Authentication Request to the verifiable presentations. 
+RPs MUST send a `nonce` parameter complying with the security considerations given in [@!OpenID], section 15.5.2., with every Authentication Request as a basis for replay detection. 
 
-Note: These values MAY be represented in different ways (directly as claims or indirectly be incoporation in proof calculation) according to the selected proof format denated by the format claim in the verifiable presentation container.
+   Every verifiable presentation container objects MUST be linked to `client_id` and `nonce` from the Authentication Request. 
+
+The `client_id` is used to detect presentation of credentials to a different than the intended party. 
+
+The `nonce` value binds the presentation to a certain authentication transaction and allows the verifier to detect injection of a presentation in the OpenID Connect flow, which is especially important in flows where the presentation is passed through the front channel. 
+
+`client_id` and `nonce` MAY be represented in different ways in a verifiable presentation (directly as claims or indirectly be incoporation in proof calculation) according to the selected proof format denoted by the `format` claim in the verifiable presentation container.
+
+Note: signature validation of an ID token does not allow to detect prevent of embedded verifiable presentations as the OP (or user in case of SIOP) could inject presentations obtained somewhere else into such an ID tokens. 
 
 Here is a non-normative example for format=`jwt_vp` (only relevant part):
 
@@ -349,6 +355,12 @@ Here is a non-normative example for format=`ldp_vp` (only relevant part):
 ```
 
 In the example above, `nonce` is included as the `challenge` and `client_id` as the `domain` value in the proof of the verifiable presentation.
+
+## Validation of Verifiable Presentations
+
+A verifier MUST validate the integrity, authenticity, and holder binding of any verifiable presentation provided by an OP according to the rules of the respective presentation format even if those verifiable presentations are embedded within a signed OpenID Connect assertion, such as an ID Token or a Userinfo response.  
+
+This is required because verifiable presentations might be signed by the same holder but with different key material and/or the OpenID Connect assertions may be signed by a 3rd party (a traditional OP). In both cases, just checking the signature of the respective OpenID Connect assertion does not, for example, check the holder binding. 
 
 #  Examples 
 
