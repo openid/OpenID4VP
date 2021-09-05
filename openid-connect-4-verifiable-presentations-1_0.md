@@ -297,7 +297,7 @@ The OP publishes the formats it supports using the `vp_formats` metadata paramet
 
 RPs MUST send a `nonce` parameter complying with the security considerations given in [@!OpenID], section 15.5.2., with every Authentication Request as a basis for replay detection. 
 
-   Every verifiable presentation container objects MUST be linked to `client_id` and `nonce` from the Authentication Request. 
+Every verifiable presentation object MUST be linked to `client_id` and `nonce` from the Authentication Request. 
 
 The `client_id` is used to detect presentation of credentials to a different than the intended party. 
 
