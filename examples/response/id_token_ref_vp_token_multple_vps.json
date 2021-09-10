@@ -30,7 +30,7 @@
                     "format": "jwt_vp",
                     "path": "$[1]",
                     "path_nested": {
-                        "format": "ldp_vc",
+                        "format": "jwt_vc",
                         "path": "$[1].vp.verifiableCredential[0]"
                     }
                 }
