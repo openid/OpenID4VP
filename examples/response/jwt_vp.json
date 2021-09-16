@@ -4,7 +4,7 @@
     "iat": 1615910538,
     "exp": 1615911138,
     "nbf": 1615910538,
-    "nonce": "acIlfiR6AKqGHg",
+    "nonce": "960848874",
     "vp": {
         "@context": [
             "https://www.w3.org/2018/credentials/v1",
@@ -15,17 +15,6 @@
         ],
         "verifiableCredential": [
             "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6InVybjp1dWlkOjU0ZDk2NjE2LTE1MWUt...OLryT1g"
-        ],
-        "presentation_submission": {
-            "id": "health credential presentation",
-            "definition_id": "health credential",
-            "descriptor_map": [
-                {
-                    "id": "Ontario Health Insurance Plan",
-                    "format": "jwt_vc",
-                    "path": "$.verifiableCredential[0]"
-                }
-            ]
-        }
+        ]
     }
 }

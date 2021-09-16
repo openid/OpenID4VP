@@ -45,17 +45,6 @@
             ],
             "id": "ebc6f1c2",
             "holder": "did:example:holder",
-            "presentation_submission": {
-               "id": "vp token example presentation",
-               "definition_id": "vp token example",
-               "descriptor_map": [
-                  {
-                     "id": "ID Card with constraints",
-                     "format": "ldp_vc",
-                     "path": "$.verifiableCredential[0]"
-                  }
-               ]
-            },
             "proof": {
                "type": "Ed25519Signature2018",
                "created": "2021-03-19T15:30:15Z",

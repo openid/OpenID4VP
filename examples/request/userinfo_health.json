@@ -1,5 +1,8 @@
 {
    "userinfo": {
+      "name": null,
+      "given_name": null,
+      "family_name": null,
       "verifiable_presentations": {
          "presentation_definition": {
             "id": "presentation at userinfo",

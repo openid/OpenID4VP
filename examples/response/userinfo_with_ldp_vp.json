@@ -3,9 +3,21 @@ Content-Type: application/json
 
 {
     "sub": "248289761001",
-    "name": "Jane Doe",
-    "given_name": "Jane",
-    "family_name": "Doe",
+    "presentation_submission": {
+        "id": "Selective disclosure example presentation",
+        "definition_id": "Selective disclosure example",
+        "descriptor_map": [
+            {
+                "id": "ID Card with constraints",
+                "format": "ldp_vp",
+                "path": "$.verifiable_presentations[0].presentation",
+                "path_nested": {
+                    "format": "ldp_vc",
+                    "path": "$.verifiableCredential[0]"
+                }
+            }
+        ]
+    },
     "verifiable_presentations": [
         {
             "format": "ldp_vp",
@@ -47,17 +59,6 @@ Content-Type: application/json
                 ],
                 "id": "ebc6f1c2",
                 "holder": "did:example:holder",
-                "presentation_submission": {
-                    "id": "Selective disclosure at userinfo",
-                    "definition_id": "Selective disclosure at userinfo",
-                    "descriptor_map": [
-                        {
-                            "id": "ID Card with constraints",
-                            "format": "ldp_vc",
-                            "path": "$.verifiableCredential[0]"
-                        }
-                    ]
-                },
                 "proof": {
                     "type": "Ed25519Signature2018",
                     "created": "2021-03-19T15:30:15Z",
