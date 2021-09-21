@@ -855,6 +855,10 @@ The technology described in this specification was made available from contribut
 
    [[ To be removed from the final specification ]]
 
+   -05
+
+   * moved presentation submission elements outside of verifiable presentations (ID Token or Userinfo)
+
    -04
 
    * added presentation submission support
