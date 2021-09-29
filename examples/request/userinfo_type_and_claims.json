@@ -1,5 +1,6 @@
 {
     "userinfo": {
+        "email": null,
         "verifiable_presentations": {
             "presentation_definition": {
                 "id": "Selective disclosure at userinfo",

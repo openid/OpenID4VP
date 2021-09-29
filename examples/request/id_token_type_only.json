@@ -1,6 +1,6 @@
 {
    "id_token": {
-      "acr": null,
+      "email": null,
       "verifiable_presentations": {
          "presentation_definition": {
             "id": "simple presentation definition",

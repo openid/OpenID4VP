@@ -132,7 +132,7 @@ A VP Token is requested by adding a new top level element `vp_token` to the `cla
 
 Please note this draft defines a profile of [@!DIF.PresentationExchange] as follows: 
 
-* The `format` element underneath the `presentation_definition` is not supported as supported presentation formats, proof types, and algorithms are determined using new RP and OP metadata (see (#metadata)). 
+* The `format` element underneath the `presentation_definition` that represents supported presentation formats, proof types, and algorithms is not supported. Those are determined using new RP and OP metadata (see (#metadata)). 
 
 The request syntax is illustrated in the following example:
 
@@ -226,7 +226,7 @@ Here is an example for a RP registering with a Standard OP via dynamic client re
 
 <{{examples/client_metadata/client_code_format.json}}
 
-Here is an example for a SIOP RP (see [@SIOPv2]) to be used as value of the `registration` request parameter:
+Here is an example for a RP registering with a SIOP (see [@SIOPv2]) with the `registration` request parameter:
 
 <{{examples/client_metadata/client_siop_format.json}}
 
