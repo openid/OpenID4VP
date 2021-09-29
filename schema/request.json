@@ -353,9 +353,7 @@
           "additionalProperties": false
         }
       },
-      "required": [
-        "schema"
-      ],
+      "required": ["id", "schema"],
       "additionalProperties": false
     },
     "field": {
@@ -446,9 +444,7 @@
           }
         }
       },
-      "required": [
-        "input_descriptors"
-      ],
+      "required": ["id", "input_descriptors"],
       "additionalProperties": false
     }
   },

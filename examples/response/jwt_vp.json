@@ -1,0 +1,20 @@
+{
+    "iss": "did:ion:EiC6Y9_aDaCsITlY06HId4seJjJ...b1df31ec42d0",
+    "aud": "https://book.itsourweb.org:3000/ohip",
+    "iat": 1615910538,
+    "exp": 1615911138,
+    "nbf": 1615910538,
+    "nonce": "960848874",
+    "vp": {
+        "@context": [
+            "https://www.w3.org/2018/credentials/v1",
+            "https://ohip.ontario.ca/v1"
+        ],
+        "type": [
+            "VerifiablePresentation"
+        ],
+        "verifiableCredential": [
+            "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6InVybjp1dWlkOjU0ZDk2NjE2LTE1MWUt...OLryT1g"
+        ]
+    }
+}

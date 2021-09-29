@@ -1,10 +1,12 @@
 {
    "id_token": {
-      "acr": null,
+      "email": null,
       "verifiable_presentations": {
          "presentation_definition": {
+            "id": "health credential",
             "input_descriptors": [
                {
+                  "id": "Ontario Health Insurance Plan",
                   "schema": [
                      {
                         "uri": "https://did.itsourweb.org:3000/smartcredential/Ontario-Health-Insurance-Plan"
