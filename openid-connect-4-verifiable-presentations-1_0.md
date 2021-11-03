@@ -637,7 +637,7 @@ This is the example ID Token:
      w0Ls1jF44-csFCur-kEgU8awapJzKnqDKgw",
      "e":"AQAB"
     }
-    "_vp_token_": {
+    "_vp_token": {
         "presentation_submission": {
             "id": "Selective disclosure example presentation",
             "definition_id": "Selective disclosure example",
