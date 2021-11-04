@@ -6,7 +6,7 @@
     "exp": 1615911138,
     "auth_time": 1615910535,
     "nonce": "960848874",
-    "_vp_token_": {
+    "_vp_token": {
         "presentation_submission": {
             "id": "Selective disclosure example presentation",
             "definition_id": "Selective disclosure example",
