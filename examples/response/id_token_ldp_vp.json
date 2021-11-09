@@ -18,7 +18,7 @@
             {
                 "id": "ID Card with constraints",
                 "format": "ldp_vp",
-                "path": "$.verifiable_presentations[0].presentation",
+                "path": "$.verifiable_presentations[0]",
                 "path_nested": {
                     "format": "ldp_vc",
                     "path": "$.verifiableCredential[0]"

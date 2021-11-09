@@ -26,7 +26,7 @@
             }
         ]
     },
-    "verifiable_presentations":[
+    "verifiable_presentations": [
         {
            "format":"jwt_vp",
            "presentation":"ewogICAgImlzcyI6Imh0dHBzOi8vYm9vay5pdHNvdXJ3ZWIub...IH0="
