@@ -238,6 +238,8 @@ The OP publishes the formats it supports using the `vp_formats` metadata paramet
 
 # Security Considerations {#security_considerations}
 
+## Preventing Replay Attacks
+
 To prevent replay attacks, verifiable presentation container objects MUST be linked to `client_id` and if provided `nonce` from the Authentication Request. The `client_id` is used 
 to detect presentation of credentials to a different than the intended party. The `nonce` value binds the presentation to a certain authentication transaction and allows
 the verifier to detect injection of a presentation in the OpenID Connect flow, which is especially important in flows where the presentation is passed through the front channel. 
@@ -294,6 +296,14 @@ Here is a non-normative example for format=`ldp_vp` (only relevant part):
 ```
 
 In the example above, `nonce` is included as the `challenge` and `client_id` as the `domain` value in the proof of the verifiable presentation.
+
+### Presenter and Subject Binding 
+
+It is RECOMMENDED that there is a binding between presenter of the credential presenting it to the verifier and the subject of the credential to whom that credential has been issued to prevent replay of the credentials by unauthorized parties. 
+
+Note that binding mechanisms would vary depending on the format of the credential and crypto suites. Some of the available mechanisms are outlined in section 4.3.2 of [@!DIF.PresentationExchange].
+
+It is NOT RECOMMENDED for the Subject to delegate the presentation of the credential to a third party.
 
 #  Examples 
 
