@@ -220,7 +220,9 @@ This specification defines new client metadata parameters according to [@!OpenID
 
 RPs indicate the suported formats using the new parameter `vp_formats`.
 
-* `vp_formats`: an object defining the formats, proof types and algorithms a RP supports. The is based on the definition of the `format` elememt in a `presentation_definition` as defined in [@!DIF.PresentationExchange] with the supported formats `jwt_vp` and `ldp_vp`.
+* `vp_formats`: REQUIRED. An object defining the formats, proof types and algorithms a RP supports. When this parameter is used, the `format` property inside a `presentation_definition` object as defined in [@!DIF.PresentationExchange] MUST NOT be present. Valid values include `jwt_vp` and `ldp_vp`. 
+
+Note that version 2.0.0 of [@!DIF.PresentationExchange] allows the RP to specify format of each requested credential using the `formats` property inside the `input_descriptor` object, in addition to communicating the supported presentation formats using the `vp_formats` parameter in the RP metadata.
 
 Here is an example for a RP registering with a Standard OP via dynamic client registration:
 
