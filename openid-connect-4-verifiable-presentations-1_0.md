@@ -230,6 +230,14 @@ Here is an example for a RP registering with a SIOP (see [@SIOPv2]) with the `re
 
 <{{examples/client_metadata/client_siop_format.json}}
 
+## RP Metadata Error Response
+
+This extension defines the following error codes that MUST be returned when the OP does not support client metadata parameters:
+
+* `vp_formats_not_supported: The OP does not support any of the VP formats included in `vp_formats` parameter.
+
+Error response must be made in the same manner as defined in [@!OpenID].
+
 ## OP Metadata
 
 This specification defines new server metadata parameters according to [@!OpenID-Discovery].
