@@ -83,6 +83,7 @@ An existing OpenID Connect may extends its service by maintaining credentials is
 An extisting OpenID Connect OP with a native user experience (PWA or native app) issues Verifiable Credentials and stores it on the user's device linked to a private key residing on this device under the user's control. For every authentication request, the native user experience first checks whether this request can be fulfilled using the locally stored credentials. If so, it generates a presentations signed with the user's keys in order to prevent replay of the credential. 
 
 This approach dramatically reduces latency and reduces load on the OP's servers. Moreover, the user can identity, authenticate, and authorize even in situations with unstable or without internet connectivity. 
+
 # Terminology
 
 Credential
@@ -117,6 +118,8 @@ This specification introduces the following representations to exchange verifiab
 
 * The new token type "VP Token" used as generic container for verifiable presentation objects in authentication and token responses in addition to ID Tokens (see (#vp_token)).
 * The JWT claim `verifiable_presentations` used as generic container to embed verifiable presentation objects into ID tokens or userinfo responses (see (#verifiable_presentations)).
+
+Note that when both ID Token and VP Token are returned, each has a different function. ID Token serves as an Authentication receipt that carries information regarding the Authentication Event of the End-user. VP Token serves as a proof of possession of a third party attested claims and carries claims about the user.
 
 Verifiers request verifiable presentations using the `claims` parameter as defined in (@!OpenID) and syntax as defined in DIF Presentation Exchange [@!DIF.PresentationExchange].
 
