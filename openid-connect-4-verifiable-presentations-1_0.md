@@ -223,7 +223,7 @@ This specification defines new client metadata parameters according to [@!OpenID
 
 RPs indicate the suported formats using the new parameter `vp_formats`.
 
-* `vp_formats`: REQUIRED. An object defining the formats, proof types and algorithms a RP supports. When this parameter is used, the `format` property inside a `presentation_definition` object as defined in [@!DIF.PresentationExchange] MUST NOT be present. Valid values include `jwt_vp` and `ldp_vp`. 
+* `vp_formats`: REQUIRED. An object defining the formats, proof types and algorithms a RP supports. Valid values include `jwt_vp` and `ldp_vp`. When this parameter is used, the `format` property inside a `presentation_definition` object as defined in [@!DIF.PresentationExchange] MUST NOT be present inside the `claims` parameter in the request. The OP MUST ignore `format` property inside a `presentation_definition` object even if the RP includes it.
 
 Note that version 2.0.0 of [@!DIF.PresentationExchange] allows the RP to specify format of each requested credential using the `formats` property inside the `input_descriptor` object, in addition to communicating the supported presentation formats using the `vp_formats` parameter in the RP metadata.
 
@@ -239,7 +239,7 @@ Here is an example for a RP registering with a SIOP (see [@SIOPv2]) with the `re
 
 This extension defines the following error codes that MUST be returned when the OP does not support client metadata parameters:
 
-* `vp_formats_not_supported: The OP does not support any of the VP formats included in `vp_formats` parameter.
+* `vp_formats_not_supported`: The OP does not support any of the VP formats supported by the RP such as those included in the `vp_formats` registration parameter.
 
 Error response must be made in the same manner as defined in [@!OpenID].
 
