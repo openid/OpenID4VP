@@ -259,7 +259,7 @@ the verifier to detect injection of a presentation in the OpenID Connect flow, w
 
 The values are passed through unmodified from the Authentication Request to the verifiable presentations. 
 
-Note: These values MAY be represented in different ways (directly as claims or indirectly be incoporation in proof calculation) according to the selected proof format denated by the format claim in the verifiable presentation container.
+Note: These values MAY be represented in different ways (directly as claims or indirectly be incorporation in proof calculation) according to the selected proof format denated by the format claim in the verifiable presentation container.
 
 Here is a non-normative example for format=`jwt_vp` (only relevant part):
 
