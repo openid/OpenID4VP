@@ -72,7 +72,7 @@ A Verifier uses OpenID Connect to obtain verifiable presentations. This is a sim
 
 ## Existing OpenID Connect RP integrates SSI wallets
 
-An application currently utilizing OpenID Connect for accessing various federated identity providers can use the same protocol to also integrate with emerging SSI-based wallets. Thats an conveient transition path leveraging existing expertise and protecting investments made.
+An application currently utilizing OpenID Connect for accessing various federated identity providers can use the same protocol to also integrate with emerging SSI-based wallets. This is a convenient transition path leveraging existing expertise to protect investments made.
 
 ## Existing OpenID Connect OP as custodian of End-User Credentials
 
@@ -205,7 +205,7 @@ Here is a non-normative example:
 
 ## Response
 
-In response to a request es specfied above, the OP MUST add all matching verifiable presentations to the `verifiable_presentations` claims in the artifact as request (ID token or Userinfo response). 
+In response to a request as specified above, the OP MUST add all matching verifiable presentations to the `verifiable_presentations` claims in the artifact as request (ID token or Userinfo response). 
 
 Additional metadata about the verifiable presentations is provided in an additional `presentation_submission` element as defined in [@!DIF.PresentationExchange] in the same artifact. This `presentation_submission` element links the input descriptor identifiers as specified in the corresponding request to the respective verifiable presentations within the `verifiable_presentations` along with format information as shown in the following example:
 
