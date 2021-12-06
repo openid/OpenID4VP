@@ -72,7 +72,7 @@ A Verifier uses OpenID Connect to obtain verifiable presentations. This is a sim
 
 ## Existing OpenID Connect RP integrates SSI wallets
 
-An application currently utilizing OpenID Connect for accessing various federated identity providers can use the same protocol to also integrate with emerging SSI-based wallets. This is a convenient transition path leveraging existing expertise to protecting investments made.
+An application currently utilizing OpenID Connect for accessing various federated identity providers can use the same protocol to also integrate with emerging SSI-based wallets. This is a convenient transition path leveraging existing expertise to protect investments made.
 
 ## Existing OpenID Connect OP as custodian of End-User Credentials
 
