@@ -259,7 +259,7 @@ the verifier to detect injection of a presentation in the OpenID Connect flow, w
 
 RPs MUST send a `nonce` parameter complying with the security considerations given in [@!OpenID], section 15.5.2., with every Authentication Request as a basis for replay detection. 
 
-Note: These values MAY be represented in different ways (directly as claims or indirectly be incorporation in proof calculation) according to the selected proof format denated by the format claim in the verifiable presentation container.
+Note: These values MAY be represented in different ways in a verifiable presentation (directly as claims or indirectly be incorporation in proof calculation) according to the selected proof format denated by the format claim in the verifiable presentation container.
 
 Here is a non-normative example for format=`jwt_vp` (only relevant part):
 
