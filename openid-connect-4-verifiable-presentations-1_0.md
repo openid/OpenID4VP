@@ -14,9 +14,9 @@ status = "standard"
 initials="O."
 surname="Terbu"
 fullname="Oliver Terbu"
-organization="ConsenSys Mesh"
+organization="walt.id"
     [author.address]
-    email = "oliver.terbu@mesh.xyz"
+    email = "o.terbu@gmail.com"
 
 [[author]]
 initials="T."
