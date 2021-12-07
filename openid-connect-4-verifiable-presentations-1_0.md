@@ -566,7 +566,7 @@ TBD
 
 # Acknowledgements {#Acknowledgements}
 
-TBD
+We would like to thank Ronald König, Daniel Fett, Fabian Hauck, and Alen Horvat for their valuable feedback and contributions that helped to evolve this specification.
 
 # Notices
 
