@@ -114,10 +114,7 @@ Verifiable Presentations are used to present claims along with cryptographic pro
 
 There are two credential formats to VCs and VPs: JSON or JSON-LD. There are also two proof formats to VCs and VPs: JWT and Linked Data Proofs. Each of those formats has different properties and capabilites and each of them comes with different proof types. Proof formats are agnostic to the credential format chosen. However, the JSON credential format is commonly used with JSON Web Signatures (see [@VC_DATA], section 6.3.1). JSON-LD is commonly used with different kinds of Linked Data Proofs and JSON Web Signatures (see [@VC_DATA], section 6.3.2). Applications can use all beforementioned assertion and proof formats with this specification. 
 
-This specification introduces the following representations to exchange verifiable credentials objects between OpenID OPs and RPs.
-
-* The new token type "VP Token" used as generic container for verifiable presentation objects in authentication and token responses in addition to ID Tokens (see (#vp_token)).
-* The JWT claim `verifiable_presentations` used as generic container to embed verifiable presentation objects into ID tokens or userinfo responses (see (#verifiable_presentations)).
+This specification introduces new token type "VP Token" used as generic container for verifiable presentation objects in authentication and token responses in addition to ID Tokens (see (#vp_token)).
 
 Note that when both ID Token and VP Token are returned, each has a different function. ID Token serves as an Authentication receipt that carries information regarding the Authentication Event of the End-user. VP Token serves as a proof of possession of a third party attested claims and carries claims about the user.
 
@@ -184,34 +181,6 @@ And here is the respective `id_token`:
 <{{examples/response/id_token_ref_vp_token_multple_vps.json}}
 
 Note: Authentication event information is conveyed via the id token while it's up to the RP to determine what (additional) claims are allocated to `id_token` and `vp_token`, respectively, via the `claims` parameter.  
-
-# verifiable_presentations {#verifiable_presentations}
-
-The claim `verifiable_presentations` is defined as follows:
-
-- `verifiable_presentations`:  A claim whose value is an array of verifiable presentations.
-
-This claim can be added to ID Tokens, Userinfo responses as well as Access Tokens and Introspection response. It MAY also be included as aggregated or distributed claims (see Section 5.6.2 of the OpenID Connect specification [OpenID]).
-
-Note that above claim has to be distinguished from `vp` or `vc` claims as defined in [JWT proof format](https://www.w3.org/TR/vc-data-model/#json-web-token). `vp` or `vc` claims contain those parts of the standard verifiable credentials and verifiable presentations where no explicit encoding rules for JWT exist. They are used as part of a verifiable credential or presentation in JWT format. They are not meant to include complete verifiable credentials or verifiable presentations objects which is the purpose of the claims defined in this specification.
-
-## Request
-
-Verifiable Presentations are requested by embedding a `verifiable_presentations` element containing a `presentation_definition` following the profile defined in (#vp_token) to the `id_token` (or `userinfo`) top level element of the `claims` parameter. 
-
-Here is a non-normative example: 
-
-<{{examples/request/id_token_type_only.json}}
-
-## Response
-
-In response to a request as specified above, the OP MUST add all matching verifiable presentations to the `verifiable_presentations` claims in the artifact as request (ID token or Userinfo response). 
-
-Additional metadata about the verifiable presentations is provided in an additional `presentation_submission` element as defined in [@!DIF.PresentationExchange] in the same artifact. This `presentation_submission` element links the input descriptor identifiers as specified in the corresponding request to the respective verifiable presentations within the `verifiable_presentations` along with format information as shown in the following example:
-
-<{{examples/response/id_token_jwt_vp.json}}
-
-The root of the path expressions in the descriptor map is the respective JSON documemnt, such as ID token or Userinfo response. 
 
 # Metadata {#metadata}
 
@@ -322,287 +291,10 @@ It is NOT RECOMMENDED for the Subject to delegate the presentation of the creden
 
 #  Examples 
 
-This section illustrates examples when W3C Verifiable Credentials objects are requested using `claims` parameter and returned inside ID Tokens.
+This section illustrates examples when W3C Verifiable Credentials objects are requested using `claims` parameter and returned in a VP Token.
 
-## Self-Issued OpenID Provider with Verifiable Presentation in ID Token 
-
-Below are the examples when W3C Verifiable Credentials are requested and returned inside ID Token as part of Self-Issued OP response. ID Token contains a `verifiable_presentations` claim with the Verifiable Presentation data. It can also contain `verifiable_credentials` element with the Verifiable Credential data. 
-
-### Authentication request
-
-The following is a non-normative example of how an RP would use the `claims` parameter to request the `verifiable_presentations` claim in the `id_token`:
-
-```
-  HTTP/1.1 302 Found
-  Location: openid://?
-    response_type=id_token
-    &client_id=https%3A%2F%2Fbook.itsourweb.org%33000%2Fohip
-    &redirect_uri=https%3A%2F%2Fbook.itsourweb.org%33000%2Fohip
-    &scope=openid
-    &claims=...
-    &nonce=960848874
-    &registration_uri=https%3A%2F%2F
-      client.example.org%2Frf.txt%22%7D
-      
-```
-#### `claims` parameter 
-
-Below is a non-normative example of how the `claims` parameter can be used for requesting verified presentations containg a credential of a certain type.
-
-<{{examples/request/id_token_health.json}}
-
-### Authentication Response 
-
-Below is a non-normative example of ID Token that includes a `verifiable_presentations` claim.
-Note: the RP was setup with the preferred format `jwt_vp`.
-
-<{{examples/response/id_token_jwt_vp.json}}
-
-Below is a non-normative example of a decoded Verifiable Presentation object that was included in `verifiable_presentations` in `jwt_vp` format (see [@VC_DATA]).
-
-Note: in accordance with (#security_considerations) the verifiable presentation's `nonce` claim is set to the value of the `nonce` request parameter value and the `aud` claim contains the RP's `client_id`.
-
-<{{examples/response/jwt_vp.json}}
-
-## Self-Issued OpenID Provider with Verifiable Presentation in ID Token (selective disclosure)
-### `claims` parameter 
-
-Below is a non-normative example of how the `claims` parameter can be used for requesting verified presentations with selective disclosure.
-Note: the RP was setup with the preferred format `ldp_vp`.
-
-<{{examples/request/id_token_type_and_claims.json}}
-
-### Authentication Response 
-
-Below is a non-normative example of an ID Token that includes a `verifiable_presentations` claim containing a verifiable presentation in LD Proof format.
-
-Note: in accordance with (#security_considerations) the verifiable presentation's `challenge` claim is set to the value of the `nonce` request parameter value and the `domain` claim contains the RP's `client_id`.
-
-<{{examples/response/id_token_ldp_vp.json}}
-
-## Authorization Code Flow with Verifiable Presentation in ID Token
-
-Below are the examples when W3C Verifiable Credentials are requested and returned inside ID Token as part of Authorization Code flow. ID Token contains a `verifiable_presentations` element with the Verifiable Presentations data. 
-
-### Authentication Request
-
-```
-  GET /authorize?
-    response_type=code
-    &client_id=s6BhdRkqt3 
-    &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
-    &scope=openid
-    &claims=...
-    &state=af0ifjsldkj
-    &nonce=n-0S6_WzA2Mj HTTP/1.1
-  Host: server.example.com
-```
-#### Claims parameter 
-
-Below is a non-normative example of how the `claims` parameter can be used for requesting a verified presentations in an ID Token.
-
-<{{examples/request/id_token_type_only.json}}
-
-### Authentication Response
-
-```
-HTTP/1.1 302 Found
-  Location: https://client.example.org/cb?
-    code=SplxlOBeZQQYbYS6WxSbIA
-    &state=af0ifjsldkj
-```
-
-### Token Request
-
-```
-  POST /token HTTP/1.1
-  Host: server.example.com
-  Content-Type: application/x-www-form-urlencoded
-  Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
-
-  grant_type=authorization_code
-  &code=SplxlOBeZQQYbYS6WxSbIA
-  &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
-```
-
-### Token Response 
-
-```json
-{
-   "access_token":"SlAV32hkKG",
-   "token_type":"Bearer",
-   "refresh_token":"8xLOxBtZp8",
-   "expires_in":3600,
-   "id_token":"eyJ0 ... NiJ9.eyJ1c ... I6IjIifX0.DeWt4Qu ... ZXso"
-```
-
-#### id_token (containing verifiable presentation)
-
-This is the example ID Token containing a `verifiable_presentations` element containg a verifiable presentation (and credential) in LD Proof format. 
-
-Note: in accordance with (#security_considerations) the verifiable presentation's `challenge` claim is set to the value of the `nonce` request parameter value and the `domain` claim contains the RP's `client_id`. 
-
-<{{examples/response/id_token_ldp_vp.json}} 
-
-## Authorization Code Flow with Verifiable Presentation returned from the UserInfo endpoint
-
-Below are the examples when verifiable presentation is requested and returned from the UserInfo endpoint as part of OpenID Connect Authorization Code Flow. UserInfo response contains a `verifiable_presentations` element with the Verifiable Presentation data. 
-
-### Authentication Request
-
-```
-  GET /authorize?
-    response_type=code
-    &client_id=s6BhdRkqt3 
-    &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
-    &scope=openid
-    &claims=...
-    &state=af0ifjsldkj
-    &nonce=n-0S6_WzA2Mj HTTP/1.1
-  Host: server.example.com
-```
-
-#### Claims parameter 
-
-Below is a non-normative example of how the `claims` parameter can be used for requesting verified presentations in a userinfo response.
-
-<{{examples/request/userinfo_health.json}}
-
-### Authentication Response
-
-```
-HTTP/1.1 302 Found
-  Location: https://client.example.org/cb?
-    code=SplxlOBeZQQYbYS6WxSbIA
-    &state=af0ifjsldkj
-```
-
-### Token Request
-
-```
-  POST /token HTTP/1.1
-  Host: server.example.com
-  Content-Type: application/x-www-form-urlencoded
-  Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
-
-  grant_type=authorization_code
-  &code=SplxlOBeZQQYbYS6WxSbIA
-  &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
-```
-
-### Token Response
-
-#### id_token
-
-```json
-{
-  "iss": "http://server.example.com",
-  "sub": "248289761001",
-  "aud": "s6BhdRkqt3",
-  "nonce": "n-0S6_WzA2Mj",
-  "exp": 1311281970,
-  "iat": 1311280970,
-  "auth_time": 1615910535
-}
-```
-
-### UserInfo Response 
-
-Below is a non-normative example of a UserInfo Response that includes a `verifiable_presentations` claim:
-
-```json
-  HTTP/1.1 200 OK
-  Content-Type: application/json
-
-  {
-    "sub": "248289761001",
-    "name": "Jane Doe",
-    "given_name": "Jane",
-    "family_name": "Doe",
-    "presentation_submission": {
-        "id": "health credential",
-        "definition_id": "health credential",
-        "descriptor_map": [
-            {
-                "id": "Ontario Health Insurance Plan",
-                "format": "jwt_vp",
-                "path": "$.verifiable_presentations[0].presentation",
-                "path_nested": {
-                    "format": "jwt_vc",
-                    "path": "$.verifiableCredential[0]"
-                }
-            }
-        ]
-    },
-    "verifiable_presentations":[
-      {
-         "format":"jwt_vp",
-         "presentation":"ewogICAgImlzcyI6Imh0dHBzOi8vYm9vay5pdHNvdXJ3ZWIub...IH0="
-      }
-   ],   
-  }
-```
-
-#### Verifiable Presentation
-
-Note: in accordance with (#security_considerations) the verifiable presentation's `nonce` claim is set to the value of the `nonce` request parameter value and the `aud` claim contains the RP's `client_id`. 
-
-```json
-  {
-    "iss":"http://server.example.com",
-    "aud":"s6BhdRkqt3",
-    "iat":1615910538,
-    "exp":1615911138,   
-    "nbf":1615910538,
-    "nonce":"n-0S6_WzA2Mj",
-    "vp":{
-        "@context":[
-          "https://www.w3.org/2018/credentials/v1",
-          "https://ohip.ontario.ca/v1"
-        ],
-        "type":[
-          "VerifiablePresentation"
-        ],
-        "verifiableCredential":[
-          "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6InVybjp1dWlkOjU0ZDk2NjE2LTE1MWUt...OLryT1g"    
-        ]
-    }   
-  }
-```
-
-## Authorization Code Flow with Verifiable Presentation returned from the UserInfo endpoint (LDP)
-### Claims parameter 
-
-Below is a non-normative example of how the `claims` parameter can be used for requesting verified presentations signed as Linked Data Proofs.
-
-<{{examples/request/userinfo_type_and_claims.json}}
-
-### Token Response
-
-#### id_token
-
-```json
-{
-  "iss": "http://server.example.com",
-  "sub": "248289761001",
-  "aud": "s6BhdRkqt3",
-  "nonce": "n-0S6_WzA2Mj",
-  "exp": 1311281970,
-  "iat": 1311280970,
-  "auth_time": 1615910535
-}
-```
-
-### UserInfo Response 
-
-Below is a non-normative example of a UserInfo Response that includes `verifiable_presentations` claim.
-
-Note: in accordance with (#security_considerations) the verifiable presentation's `challenge` claim is set to the value of the `nonce` request parameter value and the `domain` claim contains the RP's `client_id`. 
-
-<{{examples/response/userinfo_with_ldp_vp.json}}
-
-## SIOP with vp_token
-This section illustrates the protocol flow for the case of communication through the front channel only (like in SIOP).
+## Self-Issued OpenID Provider (SIOP)
+This section illustrates the protocol flow for the case of communication through the front channel with SIOP.
 
 ### Authentication request
 
@@ -684,7 +376,7 @@ This is the example ID Token:
 
 #### vp_token content
 
-This is the example `vp_token` containg a verifiable presentation (and credential) in LD Proof format. 
+This is the example `vp_token` containing a verifiable presentation (and credential) in LD Proof format. 
 
 Note: in accordance with (#security_considerations) the verifiable presentation's `challenge` claim is set to the value of the `nonce` request parameter value and the `domain` claim contains the RP's `client_id`. 
 
@@ -883,6 +575,7 @@ The technology described in this specification was made available from contribut
    -06
 
    * added additional security considerations
+   * removed support for embedding verifiable presentations in ID Token or Userinfo response
 
    -05
 

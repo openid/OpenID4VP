@@ -449,34 +449,6 @@
     }
   },
   "properties": {
-    "userinfo": {
-      "type": "object",
-      "properties": {
-        "verifiable_presentations": {
-          "type": "object",
-          "properties": {
-            "presentation_definition": {
-              "$ref": "#/definitions/presentation_definition"
-            }
-          },
-          "additionalProperties": false
-        }
-      }
-    },
-    "id_token": {
-      "type": "object",
-      "properties": {
-        "verifiable_presentations": {
-          "type": "object",
-          "properties": {
-            "presentation_definition": {
-              "$ref": "#/definitions/presentation_definition"
-            }
-          },
-          "additionalProperties": false
-        }
-      }
-    },
     "vp_token": {
       "type": "object",
       "properties": {
