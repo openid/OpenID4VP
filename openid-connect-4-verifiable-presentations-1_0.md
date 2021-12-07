@@ -154,29 +154,37 @@ RPs can also ask for alternative credentials being presented, which is shown in 
 
 A `vp_token` MUST be provided in the same response as the `id_token` of the respective OpenID Connect transaction. Depending on the response/grant type, this can be either the authentication response or the token response. 
 
-The corresponding ID Token will always contain an element `_vp_token` containing additional metadata about the verifiable presentation(s) in the VP token. This element is defined as follows;
+The `vp_token` either contains a single verifiable presentation or an array of verifiable presentations. 
 
-`_vp_token`: JWT claim containing an element of type `presentation_submission`. This `presentation_submission` element links the input descriptor identifiers as specified in the corresponding request to the respective verifiable presentations within the `vp_token` along with format information. The root of the path expressions in the descriptor map is the respective `vp_token`. 
+Each of those verifiable presentations MAY contain a `presentation_submission` element as defined in [@!DIF.PresentationExchange]. This `presentation_submission` element links the input descriptor identifiers as specified in the corresponding request to the respective verifiable presentations within the `vp_token` along with format information. The root of the path expressions in the descriptor map is the respective verifable presentation.
 
-In case the OP returns a single verifiable presentation in the `vp_token`, the `vp_token` MUST directly contain the verifiable presentation. The descriptor map would then contain a simple path expression "$".
+This is shown in the following example. 
 
-This is an example of a `vp_token` containing a single verifiable presentation:
+<{{examples/response/vp_token_ldp_vp_with_ps.json}}
+
+The OP MAY also add a `_vp_token` element to the corresponding ID Token, which is defined as follows:
+
+`_vp_token`: JWT claim containing an element of type `presentation_submission` as defined in [@!DIF.PresentationExchange]. This `presentation_submission` element links the input descriptor identifiers as specified in the corresponding request to the respective verifiable presentations within the `vp_token` along with format information. The root of the path expressions in the descriptor map is the respective `vp_token`. 
+
+This element might, for example, be used if the particular format of the provided presentations does not allow for the direct inclusion of `presentation_submission` elements or if the OP wants to provide the RP with additional information about the format and structure in advance of the processing of the `vp_token`.
+
+In case the OP returns a single verifiable presentation in the `vp_token`, the descriptor map would then contain a simple path expression "$".
+
+This is an example of a `vp_token` containing a single verifiable presentation
 
 <{{examples/response/vp_token_raw_ldp_vp.json}}
 
-The respective `id_token` is:
+with a matching `_vp_token` in the corresponding `id_token`.
 
 <{{examples/response/id_token_ref_vp_token.json}}
 
 A `descriptor_map` element MAY also contain a `path_nested` element refering to the actual credential carried in the respective verifiable presentation. 
 
-In case the OP returns multiple verifiable presentations in a `vp_token`, the `vp_token` MUST contain a JSON array, where every element is a verifiable presentation. 
-
-Here is an example of such a `vp_token`:  
+This is an example of a `vp_token` containing multiple verifiable presentations,   
 
 <{{examples/response/vp_token_multiple_vps.json}}
 
-And here is the respective `id_token`:
+with a matching `_vp_token` in the corresponding `id_token`.
 
 <{{examples/response/id_token_ref_vp_token_multple_vps.json}}
 

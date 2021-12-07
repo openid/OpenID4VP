@@ -1,0 +1,59 @@
+{
+    "@context": [
+        "https://www.w3.org/2018/credentials/v1"
+    ],
+    "type": [
+        "VerifiablePresentation"
+    ],
+    "verifiableCredential": [
+        {
+            "@context": [
+                "https://www.w3.org/2018/credentials/v1",
+                "https://www.w3.org/2018/credentials/examples/v1"
+            ],
+            "id": "https://example.com/credentials/1872",
+            "type": [
+                "VerifiableCredential",
+                "IDCardCredential"
+            ],
+            "issuer": {
+                "id": "did:example:issuer"
+            },
+            "issuanceDate": "2010-01-01T19:23:24Z",
+            "credentialSubject": {
+                "given_name": "Fredrik",
+                "family_name": "Strömberg",
+                "birthdate": "1949-01-22"
+            },
+            "proof": {
+                "type": "Ed25519Signature2018",
+                "created": "2021-03-19T15:30:15Z",
+                "jws": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..PT8yCqVjj5ZHD0W36zsBQ47oc3El07WGPWaLUuBTOT48IgKI5HDoiFUt9idChT_Zh5s8cF_2cSRWELuD8JQdBw",
+                "proofPurpose": "assertionMethod",
+                "verificationMethod": "did:example:issuer#keys-1"
+            }
+        }
+    ],
+    "id": "ebc6f1c2",
+    "holder": "did:example:holder",
+    "presentation_submission": {
+        "id": "Selective disclosure example presentation",
+        "definition_id": "Selective disclosure example",
+        "descriptor_map": [
+            {
+                "id": "ID Card with constraints",
+                "format": "ldp_vc",
+                "path": "$.verifiableCredential[0]"
+            }
+        ]
+    },
+    "proof": {
+        "type": "Ed25519Signature2018",
+        "created": "2021-03-19T15:30:15Z",
+        "challenge": "n-0S6_WzA2Mj",
+        "domain": "https://client.example.org/cb",
+        "jws": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..GF5Z6TamgNE8QjE3RbiDOj3n_t25_1K7NVWMUASe_OEzQV63GaKdu235MCS3hIYvepcNdQ_ZOKpGNCf0vIAoDA",
+        "proofPurpose": "authentication",
+        "verificationMethod": "did:example:holder#key-1"
+    }
+}
