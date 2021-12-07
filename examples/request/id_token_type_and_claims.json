@@ -3,8 +3,10 @@
         "email": null,
         "verifiable_presentations": {
             "presentation_definition": {
+                "id": "Selective disclosure example",
                 "input_descriptors": [
                     {
+                        "id": "ID Card with constraints",
                         "schema": [
                             {
                                 "uri": "https://www.w3.org/2018/credentials/examples/v1/IDCardCredential"
