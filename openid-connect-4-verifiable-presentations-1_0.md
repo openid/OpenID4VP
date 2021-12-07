@@ -7,7 +7,7 @@ keyword = ["security", "openid", "ssi"]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "openid-connect-4-verifiable-presentations-1_0-05"
+value = "openid-connect-4-verifiable-presentations-1_0-06"
 status = "standard"
 
 [[author]]
@@ -257,7 +257,7 @@ To prevent replay attacks, verifiable presentation container objects MUST be lin
 to detect presentation of credentials to a different than the intended party. The `nonce` value binds the presentation to a certain authentication transaction and allows
 the verifier to detect injection of a presentation in the OpenID Connect flow, which is especially important in flows where the presentation is passed through the front channel. 
 
-The values are passed through unmodified from the Authentication Request to the verifiable presentations. 
+RPs MUST send a `nonce` parameter complying with the security considerations given in [@!OpenID], section 15.5.2., with every Authentication Request as a basis for replay detection. 
 
 Note: These values MAY be represented in different ways (directly as claims or indirectly be incorporation in proof calculation) according to the selected proof format denated by the format claim in the verifiable presentation container.
 
@@ -310,11 +310,13 @@ Here is a non-normative example for format=`ldp_vp` (only relevant part):
 
 In the example above, `nonce` is included as the `challenge` and `client_id` as the `domain` value in the proof of the verifiable presentation.
 
-### Presenter and Subject Binding 
+## Validation of Verifiable Presentations
 
-It is RECOMMENDED that there is a binding between presenter of the credential presenting it to the verifier and the subject of the credential to whom that credential has been issued to prevent replay of the credentials by unauthorized parties. 
+A verifier MUST validate the integrity, authenticity, and holder binding of any verifiable presentation provided by an OP according to the rules of the respective presentation format. 
 
-Note that binding mechanisms would vary depending on the format of the credential and crypto suites. Some of the available mechanisms are outlined in section 4.3.2 of [@!DIF.PresentationExchange].
+This requirement holds true even if those verifiable presentations are embedded within a signed OpenID Connect assertion, such as an ID Token or a Userinfo response. This is required because verifiable presentations might be signed by the same holder but with different key material and/or the OpenID Connect assertions may be signed by a 3rd party (e.g. a traditional OP). In both cases, just checking the signature of the respective OpenID Connect assertion does not, for example, check the holder binding. 
+
+Note: Some of the available mechanisms are outlined in section 4.3.2 of [@!DIF.PresentationExchange].
 
 It is NOT RECOMMENDED for the Subject to delegate the presentation of the credential to a third party.
 
@@ -877,6 +879,10 @@ The technology described in this specification was made available from contribut
 # Document History
 
    [[ To be removed from the final specification ]]
+
+   -06
+
+   * added additional security considerations
 
    -05
 
