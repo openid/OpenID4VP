@@ -8,6 +8,7 @@
             "input_descriptors": [
                 {
                     "id": "id card credential",
+                    "format":"jwt_vp",
                     "schema": [
                         {
                             "uri": "https://www.w3.org/2018/credentials/examples/v1/IDCardCredential"

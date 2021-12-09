@@ -114,7 +114,7 @@ Verifiable Presentations are used to present claims along with cryptographic pro
 
 There are two credential formats to VCs and VPs: JSON or JSON-LD. There are also two proof formats to VCs and VPs: JWT and Linked Data Proofs. Each of those formats has different properties and capabilites and each of them comes with different proof types. Proof formats are agnostic to the credential format chosen. However, the JSON credential format is commonly used with JSON Web Signatures (see [@VC_DATA], section 6.3.1). JSON-LD is commonly used with different kinds of Linked Data Proofs and JSON Web Signatures (see [@VC_DATA], section 6.3.2). Applications can use all beforementioned assertion and proof formats with this specification. 
 
-This specification introduces new token type "VP Token" used as generic container for verifiable presentation objects in authentication and token responses in addition to ID Tokens (see (#vp_token)).
+This specification introduces new token type "VP Token" used as generic container for verifiable presentation objects that is returned in authentication and token responses in addition to ID Tokens (see (#vp_token)).
 
 Note that when both ID Token and VP Token are returned, each has a different function. ID Token serves as an Authentication receipt that carries information regarding the Authentication Event of the End-user. VP Token serves as a proof of possession of a third party attested claims and carries claims about the user.
 
@@ -156,7 +156,7 @@ A `vp_token` MUST be provided in the same response as the `id_token` of the resp
 
 The `vp_token` either contains a single verifiable presentation or an array of verifiable presentations. 
 
-Each of those verifiable presentations MAY contain a `presentation_submission` element as defined in [@!DIF.PresentationExchange]. This `presentation_submission` element links the input descriptor identifiers as specified in the corresponding request to the respective verifiable presentations within the `vp_token` along with format information. The root of the path expressions in the descriptor map is the respective verifable presentation.
+Each of those verifiable presentations MAY contain a `presentation_submission` element as defined in [@!DIF.PresentationExchange]. This `presentation_submission` element links the input descriptor identifiers as specified in the corresponding request to the respective verifiable presentations within the `vp_token` along with format information. The root of the path expressions in the descriptor map is the respective verifiable presentation, pointing to the respective Verifiable Credentials.
 
 This is shown in the following example. 
 
