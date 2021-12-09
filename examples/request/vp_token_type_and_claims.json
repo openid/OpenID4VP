@@ -8,28 +8,32 @@
             "input_descriptors": [
                 {
                     "id": "id card credential with constraints",
-                    "format":"ldp_vp",
-                    "schema": [
-                        {
-                            "uri": "https://www.w3.org/2018/credentials/examples/v1/IDCardCredential"
-                        }
-                    ],
+                    "format":"ldp_vc",
                     "constraints": {
                         "limit_disclosure": "required",
                         "fields": [
                             {
                                 "path": [
-                                    "$.vc.credentialSubject.given_name"
+                                    "$.type"
+                                ],
+                                "filter": {
+                                    "type": "string",
+                                    "pattern": "IDCardCredential"
+                                }
+                            },
+                            {
+                                "path": [
+                                    "$.credentialSubject.given_name"
                                 ]
                             },
                             {
                                 "path": [
-                                    "$.vc.credentialSubject.family_name"
+                                    "$.credentialSubject.family_name"
                                 ]
                             },
                             {
                                 "path": [
-                                    "$.vc.credentialSubject.birthdate"
+                                    "$.credentialSubject.birthdate"
                                 ]
                             }
                         ]

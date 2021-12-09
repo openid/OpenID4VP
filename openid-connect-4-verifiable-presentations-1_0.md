@@ -509,9 +509,9 @@ Note: in accordance with (#security_considerations) the verifiable presentation'
   </front>
 </reference>
 
-<reference anchor="DIF.PresentationExchange" target="https://identity.foundation/presentation-exchange/spec/v1.0.0/">
+<reference anchor="DIF.PresentationExchange" target="https://identity.foundation/presentation-exchange">
         <front>
-          <title>Presentation Exchange v1.0.0</title>
+          <title>Presentation Exchange 2.0.0</title>
 		  <author fullname="Daniel Buchner">
             <organization>Microsoft</organization>
           </author>
@@ -521,7 +521,9 @@ Note: in accordance with (#security_considerations) the verifiable presentation'
           <author fullname="Martin Riedel">
             <organization>Consensys Mesh</organization>
           </author>
-         <date month="Feb" year="2021"/>
+          <author fullname="Kim Hamilton Duffy">
+            <organization>Centre Consortium</organization>
+          </author>
         </front>
 </reference>
 
@@ -584,6 +586,7 @@ The technology described in this specification was made available from contribut
 
    * added additional security considerations
    * removed support for embedding verifiable presentations in ID Token or Userinfo response
+   * migrated to Presentation Exchange 2.0
 
    -05
 
