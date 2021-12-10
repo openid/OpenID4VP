@@ -8,7 +8,13 @@
             "input_descriptors": [
                 {
                     "id": "id card credential",
-                    "format": "ldp_vc",
+                    "format": {
+                        "ldp_vc": {
+                            "proof_type": [
+                                "Ed25519Signature2018"
+                            ]
+                        }
+                    },
                     "constraints": {
                         "fields": [
                             {
