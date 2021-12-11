@@ -116,7 +116,7 @@ There are two credential formats to VCs and VPs: JSON or JSON-LD. There are also
 
 This specification introduces new token type "VP Token" used as generic container for verifiable presentation objects that is returned in authentication and token responses in addition to ID Tokens (see (#vp_token)).
 
-Note that when both ID Token and VP Token are returned, each has a different function. ID Token serves as an Authentication receipt that carries information regarding the Authentication Event of the End-user. VP Token serves as a proof of possession of a third party attested claims and carries claims about the user.
+Note that when both ID Token and VP Token are returned, each has a different function. The ID Token serves as an Authentication receipt that carries information regarding the Authentication Event of the End-user. VP Token serves as a proof of possession of a third party attested claims and carries claims about the user.
 
 Verifiers request verifiable presentations using the `claims` parameter as defined in (@!OpenID) and syntax as defined in DIF Presentation Exchange [@!DIF.PresentationExchange].
 
@@ -192,7 +192,7 @@ Note: Authentication event information is conveyed via the id token while it's u
 
 # Metadata {#metadata}
 
-This specification introduces additional metadata to enable RP and OP to determine the verifiable presentation formats, proof types and algorithms to be used in a protocol exchange. 
+This specification introduces additional metadata to enable RP and OP to determine the verifiable presentation and verifiable credential formats, proof types and algorithms to be used in a protocol exchange. 
 
 ## RP Metadata
 
@@ -200,7 +200,9 @@ This specification defines new client metadata parameters according to [@!OpenID
 
 RPs indicate the suported formats using the new parameter `vp_formats`.
 
-* `vp_formats`: REQUIRED. An object defining the formats, proof types and algorithms a RP supports. Valid values include `jwt_vp` and `ldp_vp`. When this parameter is used, the `format` property inside a `presentation_definition` object as defined in [@!DIF.PresentationExchange] MUST NOT be present inside the `claims` parameter in the request. The OP MUST ignore `format` property inside a `presentation_definition` object even if the RP includes it.
+* `vp_formats`: REQUIRED. An object defining the formats, proof types and algorithms of verifiable presentation and verifiable credential that a RP supports. Valid values include `jwt_vp`, `ldp_vp`, `jwt_vc` and `ldp_vc`. 
+
+The `format` property inside a `presentation_definition` object as defined in [@!DIF.PresentationExchange] MAY be used to specify concrete format in which the RP is requesting verifiable presentations to be presented. The OP MUST ignore `format` property inside a `presentation_definition` object if that `format` was not included in the `vp_formats` property of the client metadata.
 
 Note that version 2.0.0 of [@!DIF.PresentationExchange] allows the RP to specify format of each requested credential using the `formats` property inside the `input_descriptor` object, in addition to communicating the supported presentation formats using the `vp_formats` parameter in the RP metadata.
 
@@ -299,7 +301,7 @@ It is NOT RECOMMENDED for the Subject to delegate the presentation of the creden
 
 #  Examples 
 
-This section illustrates examples when W3C Verifiable Credentials objects are requested using `claims` parameter and returned in a VP Token.
+This section illustrates examples when W3C Verifiable Credentials objects are requested using the `claims` parameter and returned in a VP Token.
 
 ## Self-Issued OpenID Provider (SIOP)
 This section illustrates the protocol flow for the case of communication through the front channel with SIOP.
@@ -434,7 +436,7 @@ HTTP/1.1 302 Found
 
 ### Token Response (including vp_token)
 
-This is the example token response containing a `vp_token` containg a verifiable presentation (and credential) in LD Proof format. 
+This is the example token response containing a `vp_token` containing a verifiable presentation (and credential) in LD Proof format. 
 
 Note: in accordance with (#security_considerations) the verifiable presentation's `challenge` claim is set to the value of the `nonce` request parameter value and the `domain` claim contains the RP's `client_id`. 
 
