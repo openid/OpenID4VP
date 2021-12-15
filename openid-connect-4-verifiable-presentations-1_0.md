@@ -82,7 +82,7 @@ An existing OpenID Connect may extend its service by maintaining credentials iss
 
 An existing OpenID Connect OP with a native user experience (PWA or native app) issues Verifiable Credentials and stores them on the user's device linked to a private key residing on this device under the user's control. For every authentication request, the native user experience first checks whether this request can be fulfilled using the locally stored credentials. If so, it generates a presentation signed with the user's keys in order to prevent replay of the credential. 
 
-This approach dramatically reduces latency and reduces load on the OP's servers. Moreover, the user can identity, authenticate, and authorize even in situations with unstable or no internet connectivity. 
+This approach dramatically reduces latency and reduces load on the OP's servers. Moreover, the user identification, authentication, and authorization can be done even in situations with unstable or no internet connectivity. 
 
 # Terminology
 
@@ -132,7 +132,7 @@ A VP Token is requested by adding a new top level element `vp_token` to the `cla
 
 Please note this draft defines a profile of [@!DIF.PresentationExchange] as follows: 
 
-* The `format` element underneath the `presentation_definition` that represents supported presentation formats, proof types, and algorithms is not supported. Those are determined using new RP and OP metadata (see (#metadata)). 
+* The `format` element in the `presentation_definition` that represents supported presentation formats, proof types, and algorithms is not supported. Those are determined using new RP and OP metadata (see (#metadata)). 
 
 The request syntax is illustrated in the following example:
 
@@ -149,6 +149,8 @@ RPs can also ask for alternative credentials being presented, which is shown in 
 <{{examples/request/vp_token_alternative_credentials.json}}
 
 ## Response
+
+RPs MUST send a `nonce` parameter complying with the security considerations given in [@!OpenID], section 15.5.2., with every Authentication Request as a basis for replay detection. See (#preventing-replay).
 
 A `vp_token` MUST be provided in the same response as the `id_token` of the respective OpenID Connect transaction. Depending on the response/grant type, this can be either the authentication response or the token response. 
 
@@ -228,13 +230,11 @@ The OP publishes the formats it supports using the `vp_formats` metadata paramet
 
 # Security Considerations {#security_considerations}
 
-## Preventing Replay Attacks
+## Preventing Replay Attacks {#preventing-replay}
 
 To prevent replay attacks, verifiable presentation container objects MUST be linked to `client_id` and optionally provided `nonce` from the Authentication Request. The `client_id` is used 
 to detect presentation of credentials to a different party other than the intended. The `nonce` value binds the presentation to a certain authentication transaction and allows
 the verifier to detect injection of a presentation in the OpenID Connect flow, which is especially important in flows where the presentation is passed through the front-channel. 
-
-RPs MUST send a `nonce` parameter complying with the security considerations given in [@!OpenID], section 15.5.2., with every Authentication Request as a basis for replay detection. 
 
 Note: These values MAY be represented in different ways in a verifiable presentation (directly as claims or indirectly be incorporation in proof calculation) according to the selected proof format denoted by the format claim in the verifiable presentation container.
 
