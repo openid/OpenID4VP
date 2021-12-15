@@ -76,13 +76,13 @@ An application currently utilizing OpenID Connect for accessing various federate
 
 ## Existing OpenID Connect OP as custodian of End-User Credentials
 
-An existing OpenID Connect may extends its service by maintaining credentials issued by other claims sources on behalf of its customers. Customers can mix claims of the OP and from their credentials to fulfil authentication requests. 
+An existing OpenID Connect may extend its service by maintaining credentials issued by other claims sources on behalf of its customers. Customers can mix claims of the OP and from their credentials to fulfil authentication requests. 
 
 ## Federated OpenID Connect OP adds device-local mode
 
-An extisting OpenID Connect OP with a native user experience (PWA or native app) issues Verifiable Credentials and stores it on the user's device linked to a private key residing on this device under the user's control. For every authentication request, the native user experience first checks whether this request can be fulfilled using the locally stored credentials. If so, it generates a presentations signed with the user's keys in order to prevent replay of the credential. 
+An existing OpenID Connect OP with a native user experience (PWA or native app) issues Verifiable Credentials and stores them on the user's device linked to a private key residing on this device under the user's control. For every authentication request, the native user experience first checks whether this request can be fulfilled using the locally stored credentials. If so, it generates a presentation signed with the user's keys in order to prevent replay of the credential. 
 
-This approach dramatically reduces latency and reduces load on the OP's servers. Moreover, the user can identity, authenticate, and authorize even in situations with unstable or without internet connectivity. 
+This approach dramatically reduces latency and reduces load on the OP's servers. Moreover, the user can identity, authenticate, and authorize even in situations with unstable or no internet connectivity. 
 
 # Terminology
 
@@ -112,9 +112,9 @@ This specification defines mechanisms to allow RPs to request and OPs to provide
 
 Verifiable Presentations are used to present claims along with cryptographic proofs of the link between presenter and subject of the verifiable credentials it contains. A verifiable presentation can contain a subset of claims asserted in a certain credential (selective disclosure) and it can assemble claims from different credentials. 
 
-There are two credential formats to VCs and VPs: JSON or JSON-LD. There are also two proof formats to VCs and VPs: JWT and Linked Data Proofs. Each of those formats has different properties and capabilites and each of them comes with different proof types. Proof formats are agnostic to the credential format chosen. However, the JSON credential format is commonly used with JSON Web Signatures (see [@VC_DATA], section 6.3.1). JSON-LD is commonly used with different kinds of Linked Data Proofs and JSON Web Signatures (see [@VC_DATA], section 6.3.2). Applications can use all beforementioned assertion and proof formats with this specification. 
+There are two credential formats to VCs and VPs: JSON or JSON-LD. There are also two proof formats to VCs and VPs: JWT and Linked Data Proofs. Each of those formats has different properties and capabilities and each of them comes with different proof types. Proof formats are agnostic to the credential format chosen. However, the JSON credential format is commonly used with JSON Web Signatures (see [@VC_DATA], section 6.3.1). JSON-LD is commonly used with different kinds of Linked Data Proofs and JSON Web Signatures (see [@VC_DATA], section 6.3.2). Applications can use all beforementioned assertion and proof formats with this specification. 
 
-This specification introduces new token type "VP Token" used as generic container for verifiable presentation objects that is returned in authentication and token responses in addition to ID Tokens (see (#vp_token)).
+This specification introduces a new token type, "VP Token", used as a generic container for verifiable presentation objects, that is returned in authentication and token responses, in addition to ID Tokens (see (#vp_token)).
 
 Note that when both ID Token and VP Token are returned, each has a different function. The ID Token serves as an Authentication receipt that carries information regarding the Authentication Event of the End-user. VP Token serves as a proof of possession of a third party attested claims and carries claims about the user.
 
@@ -124,7 +124,7 @@ Verifiers request verifiable presentations using the `claims` parameter as defin
 
 The response parameter `vp_token` is defined as follows:
 
-* `vp_token`: a parameter that either directly contains a verifiable presentation or it contains a JSON array with multiple verifiable presentations. 
+* `vp_token`: a parameter that either directly contains a verifiable presentation or a JSON array with multiple verifiable presentations. 
 
 ## Request
 
@@ -140,11 +140,9 @@ The request syntax is illustrated in the following example:
 
 This simple example requests the presentation of a credential of a certain type. 
 
-The following example
+The following example shows how the RP can request selective disclosure or certain claims from a credential of a particular type.
 
 <{{examples/request/vp_token_type_and_claims.json}}
-
-shows how the RP can request selective dislosure or certain claims from a credential of a particular type. 
 
 RPs can also ask for alternative credentials being presented, which is shown in the next example:
 
@@ -178,7 +176,7 @@ with a matching `_vp_token` in the corresponding `id_token`.
 
 <{{examples/response/id_token_ref_vp_token.json}}
 
-A `descriptor_map` element MAY also contain a `path_nested` element refering to the actual credential carried in the respective verifiable presentation. 
+A `descriptor_map` element MAY also contain a `path_nested` element referring to the actual credential carried in the respective verifiable presentation. 
 
 This is an example of a `vp_token` containing multiple verifiable presentations,   
 
@@ -188,7 +186,7 @@ with a matching `_vp_token` in the corresponding `id_token`.
 
 <{{examples/response/id_token_ref_vp_token_multple_vps.json}}
 
-Note: Authentication event information is conveyed via the id token while it's up to the RP to determine what (additional) claims are allocated to `id_token` and `vp_token`, respectively, via the `claims` parameter.  
+Note: Authentication event information is conveyed via the ID Token while it's up to the RP to determine what (additional) claims are allocated to `id_token` and `vp_token`, respectively, via the `claims` parameter.  
 
 # Metadata {#metadata}
 
@@ -198,7 +196,7 @@ This specification introduces additional metadata to enable RP and OP to determi
 
 This specification defines new client metadata parameters according to [@!OpenID.Registration].
 
-RPs indicate the suported formats using the new parameter `vp_formats`.
+RPs indicate the supported formats using the new parameter `vp_formats`.
 
 * `vp_formats`: REQUIRED. An object defining the formats, proof types and algorithms of verifiable presentation and verifiable credential that a RP supports. Valid values include `jwt_vp`, `ldp_vp`, `jwt_vc` and `ldp_vc`. 
 
@@ -232,13 +230,13 @@ The OP publishes the formats it supports using the `vp_formats` metadata paramet
 
 ## Preventing Replay Attacks
 
-To prevent replay attacks, verifiable presentation container objects MUST be linked to `client_id` and if provided `nonce` from the Authentication Request. The `client_id` is used 
-to detect presentation of credentials to a different than the intended party. The `nonce` value binds the presentation to a certain authentication transaction and allows
-the verifier to detect injection of a presentation in the OpenID Connect flow, which is especially important in flows where the presentation is passed through the front channel. 
+To prevent replay attacks, verifiable presentation container objects MUST be linked to `client_id` and optionally provided `nonce` from the Authentication Request. The `client_id` is used 
+to detect presentation of credentials to a different party other than the intended. The `nonce` value binds the presentation to a certain authentication transaction and allows
+the verifier to detect injection of a presentation in the OpenID Connect flow, which is especially important in flows where the presentation is passed through the front-channel. 
 
 RPs MUST send a `nonce` parameter complying with the security considerations given in [@!OpenID], section 15.5.2., with every Authentication Request as a basis for replay detection. 
 
-Note: These values MAY be represented in different ways in a verifiable presentation (directly as claims or indirectly be incorporation in proof calculation) according to the selected proof format denated by the format claim in the verifiable presentation container.
+Note: These values MAY be represented in different ways in a verifiable presentation (directly as claims or indirectly be incorporation in proof calculation) according to the selected proof format denoted by the format claim in the verifiable presentation container.
 
 Here is a non-normative example for format=`jwt_vp` (only relevant part):
 
@@ -263,7 +261,7 @@ Here is a non-normative example for format=`jwt_vp` (only relevant part):
 }
 ```
 
-In the example above, `nonce` is included as the `nonce` and `client_id` as the `aud` value in the proof of the verifiable presentation.
+In the example above, the requested `nonce` value is included as the `nonce` and `client_id` as the `aud` value in the proof of the verifiable presentation.
 
 Here is a non-normative example for format=`ldp_vp` (only relevant part):
 
@@ -287,7 +285,7 @@ Here is a non-normative example for format=`ldp_vp` (only relevant part):
 }
 ```
 
-In the example above, `nonce` is included as the `challenge` and `client_id` as the `domain` value in the proof of the verifiable presentation.
+In the example above, the requested `nonce` value is included as the `challenge` and `client_id` as the `domain` value in the proof of the verifiable presentation.
 
 ## Validation of Verifiable Presentations
 
@@ -304,7 +302,7 @@ It is NOT RECOMMENDED for the Subject to delegate the presentation of the creden
 This section illustrates examples when W3C Verifiable Credentials objects are requested using the `claims` parameter and returned in a VP Token.
 
 ## Self-Issued OpenID Provider (SIOP)
-This section illustrates the protocol flow for the case of communication through the front channel with SIOP.
+This section illustrates the protocol flow for the case of communication through the front-channel with SIOP.
 
 ### Authentication request
 
@@ -394,7 +392,7 @@ Note: in accordance with (#security_considerations) the verifiable presentation'
 
 ## Authorization Code Flow with vp_token
 
-This section illustrates the protocol flow for the case of communication using frontchannel and backchannel (utilizing the authorization code flow).
+This section illustrates the protocol flow for the case of communication using front-channel and backchannel (utilizing the authorization code flow).
 
 ### Authentication Request
 
@@ -436,7 +434,7 @@ HTTP/1.1 302 Found
 
 ### Token Response (including vp_token)
 
-This is the example token response containing a `vp_token` containing a verifiable presentation (and credential) in LD Proof format. 
+This is the example token response containing a `vp_token` which contains a verifiable presentation (and credential) in LD Proof format. 
 
 Note: in accordance with (#security_considerations) the verifiable presentation's `challenge` claim is set to the value of the `nonce` request parameter value and the `domain` claim contains the RP's `client_id`. 
 
