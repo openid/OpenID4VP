@@ -54,13 +54,13 @@ organization="Mattr"
 
 .# Abstract
 
-This specification defines an extension of OpenID Connect to allow presentation of claims in the form of W3C Verifiable Credentials as part of the protocol flow in addition to claims provided in the `id_token` and/or via Userinfo responses.
+This specification defines an extension of OpenID Connect to allow presentation of claims in the form of W3C Verifiable Credentials as part of the protocol flow in addition to claims provided in the `id_token` and/or via UserInfo responses.
 
 {mainmatter}
 
 # Introduction
 
-This specification extends OpenID Connect with support for presentation of claims via W3C Verifiable Credentials. This allows existing OpenID Connect RPs to extends their reach towards claims sources asserting claims in this format. It also allows new applications built using Verifiable Credentials to utilize OpenID Connect as integration and interoperability layer towards credential holders. 
+This specification extends OpenID Connect with support for presentation of claims via W3C Verifiable Credentials. This allows existing OpenID Connect RPs to extend their reach towards claims sources asserting claims in this format. It also allows new applications built using Verifiable Credentials to utilize OpenID Connect as integration and interoperability layer towards credential holders.
 
 This specification enables requesting and delivery of verifiable presentations in conjunction with Self-Issued OpenID Providers (see [@SIOPv2]) as well as traditional OpenID  Providers (see [@!OpenID]).
 
@@ -112,11 +112,11 @@ This specification defines mechanisms to allow RPs to request and OPs to provide
 
 Verifiable Presentations are used to present claims along with cryptographic proofs of the link between presenter and subject of the verifiable credentials it contains. A verifiable presentation can contain a subset of claims asserted in a certain credential (selective disclosure) and it can assemble claims from different credentials. 
 
-There are two credential formats to VCs and VPs: JSON or JSON-LD. There are also two proof formats to VCs and VPs: JWT and Linked Data Proofs. Each of those formats has different properties and capabilities and each of them comes with different proof types. Proof formats are agnostic to the credential format chosen. However, the JSON credential format is commonly used with JSON Web Signatures (see [@VC_DATA], section 6.3.1). JSON-LD is commonly used with different kinds of Linked Data Proofs and JSON Web Signatures (see [@VC_DATA], section 6.3.2). Applications can use all beforementioned assertion and proof formats with this specification. 
+There are two credential formats for VCs and VPs: JSON and JSON-LD. There are also two proof formats for VCs and VPs: JWT and Linked Data Proofs. Each of those formats has different properties and capabilities and each of them comes with different proof types. Proof formats are agnostic to the credential format chosen. However, the JSON credential format is commonly used with JSON Web Signatures (see [@VC_DATA], section 6.3.1). JSON-LD is commonly used with different kinds of Linked Data Proofs and JSON Web Signatures (see [@VC_DATA], section 6.3.2). Applications can use all beforementioned assertion and proof formats with this specification.
 
 This specification introduces a new token type, "VP Token", used as a generic container for verifiable presentation objects, that is returned in authentication and token responses, in addition to ID Tokens (see (#vp_token)).
 
-Note that when both ID Token and VP Token are returned, each has a different function. The ID Token serves as an Authentication receipt that carries information regarding the Authentication Event of the End-user. VP Token serves as a proof of possession of a third party attested claims and carries claims about the user.
+Note that when both ID Token and VP Token are returned, each has a different function. The ID Token serves as an Authentication receipt that carries information regarding the Authentication Event of the End-user. The VP Token provides proof of possession of a third-party attested claims and carries claims about the user.
 
 Verifiers request verifiable presentations using the `claims` parameter as defined in (@!OpenID) and syntax as defined in DIF Presentation Exchange [@!DIF.PresentationExchange].
 
@@ -128,7 +128,7 @@ The response parameter `vp_token` is defined as follows:
 
 ## Request
 
-A VP Token is requested by adding a new top level element `vp_token` to the `claims` parameter. This element contains a `presentation_definition` element as defined in Section 4 of [@!DIF.PresentationExchange].
+A VP Token is requested by adding a new top-level element `vp_token` to the `claims` parameter. This element contains a `presentation_definition` element as defined in Section 4 of [@!DIF.PresentationExchange].
 
 Please note this draft defines a profile of [@!DIF.PresentationExchange] as follows: 
 
@@ -156,7 +156,7 @@ The `vp_token` either contains a single verifiable presentation or an array of v
 
 Each of those verifiable presentations MAY contain a `presentation_submission` element as defined in [@!DIF.PresentationExchange]. This `presentation_submission` element links the input descriptor identifiers as specified in the corresponding request to the respective verifiable presentations within the `vp_token` along with format information. The root of the path expressions in the descriptor map is the respective verifiable presentation, pointing to the respective Verifiable Credentials.
 
-This is shown in the following example. 
+This is shown in the following example:
 
 <{{examples/response/vp_token_ldp_vp_with_ps.json}}
 
@@ -186,7 +186,7 @@ with a matching `_vp_token` in the corresponding `id_token`.
 
 <{{examples/response/id_token_ref_vp_token_multple_vps.json}}
 
-Note: Authentication event information is conveyed via the ID Token while it's up to the RP to determine what (additional) claims are allocated to `id_token` and `vp_token`, respectively, via the `claims` parameter.  
+Note: Authentication event information is conveyed via the ID Token while it is up to the RP to determine what (additional) claims are allocated to `id_token` and `vp_token`, respectively, via the `claims` parameter.
 
 # Metadata {#metadata}
 
@@ -198,17 +198,17 @@ This specification defines new client metadata parameters according to [@!OpenID
 
 RPs indicate the supported formats using the new parameter `vp_formats`.
 
-* `vp_formats`: REQUIRED. An object defining the formats, proof types and algorithms of verifiable presentation and verifiable credential that a RP supports. Valid values include `jwt_vp`, `ldp_vp`, `jwt_vc` and `ldp_vc`. 
+* `vp_formats`: REQUIRED. An object defining the formats, proof types and algorithms of verifiable presentation and verifiable credential that an RP supports. Valid values include `jwt_vp`, `ldp_vp`, `jwt_vc` and `ldp_vc`.
 
 The `format` property inside a `presentation_definition` object as defined in [@!DIF.PresentationExchange] MAY be used to specify concrete format in which the RP is requesting verifiable presentations to be presented. The OP MUST ignore `format` property inside a `presentation_definition` object if that `format` was not included in the `vp_formats` property of the client metadata.
 
 Note that version 2.0.0 of [@!DIF.PresentationExchange] allows the RP to specify format of each requested credential using the `formats` property inside the `input_descriptor` object, in addition to communicating the supported presentation formats using the `vp_formats` parameter in the RP metadata.
 
-Here is an example for a RP registering with a Standard OP via dynamic client registration:
+Here is an example for an RP registering with a Standard OP via dynamic client registration:
 
 <{{examples/client_metadata/client_code_format.json}}
 
-Here is an example for a RP registering with a SIOP (see [@SIOPv2]) with the `registration` request parameter:
+Here is an example for an RP registering with a SIOP (see [@SIOPv2]) with the `registration` request parameter:
 
 <{{examples/client_metadata/client_siop_format.json}}
 
@@ -291,7 +291,7 @@ In the example above, the requested `nonce` value is included as the `challenge`
 
 A verifier MUST validate the integrity, authenticity, and holder binding of any verifiable presentation provided by an OP according to the rules of the respective presentation format. 
 
-This requirement holds true even if those verifiable presentations are embedded within a signed OpenID Connect assertion, such as an ID Token or a Userinfo response. This is required because verifiable presentations might be signed by the same holder but with different key material and/or the OpenID Connect assertions may be signed by a 3rd party (e.g. a traditional OP). In both cases, just checking the signature of the respective OpenID Connect assertion does not, for example, check the holder binding. 
+This requirement holds true even if those verifiable presentations are embedded within a signed OpenID Connect assertion, such as an ID Token or a UserInfo response. This is required because verifiable presentations might be signed by the same holder but with different key material and/or the OpenID Connect assertions may be signed by a third party (e.g., a traditional OP). In both cases, just checking the signature of the respective OpenID Connect assertion does not, for example, check the holder binding.
 
 Note: Some of the available mechanisms are outlined in section 4.3.2 of [@!DIF.PresentationExchange].
 
@@ -496,7 +496,7 @@ Note: in accordance with (#security_considerations) the verifiable presentation'
     <author initials="J." surname="Bradley" fullname="John Bradley">
       <organization>Ping Identity</organization>
     </author>
-    <author initials="M." surname="Jones" fullname="Mike Jones">
+    <author initials="M." surname="Jones" fullname="Michael B. Jones">
       <organization>Microsoft</organization>
     </author>
     <author initials="B." surname="de Medeiros" fullname="Breno de Medeiros">
@@ -515,7 +515,7 @@ Note: in accordance with (#security_considerations) the verifiable presentation'
 		  <author fullname="Daniel Buchner">
             <organization>Microsoft</organization>
           </author>
-          <author fullname="Brent Zunde">
+          <author fullname="Brent Zundel">
             <organization>Evernym</organization>
           </author>
           <author fullname="Martin Riedel">
@@ -555,7 +555,7 @@ Note: in accordance with (#security_considerations) the verifiable presentation'
           <author fullname="John Bradley">
             <organization>Ping Identity</organization>
           </author>
-          <author fullname="Mike Jones">
+          <author fullname="Michael B. Jones">
             <organization>Microsoft</organization>
           </author>
           <date day="8" month="Nov" year="2014"/>
@@ -568,7 +568,7 @@ TBD
 
 # Acknowledgements {#Acknowledgements}
 
-We would like to thank Ronald Koenig, Daniel Fett, Fabian Hauck, and Alen Horvat for their valuable feedback and contributions that helped to evolve this specification.
+We would like to thank Daniel Fett, Fabian Hauck, Alen Horvat, Edmund Jay, Ronald Koenig, and Michael B. Jones for their valuable feedback and contributions that helped to evolve this specification.
 
 # Notices
 
@@ -585,12 +585,12 @@ The technology described in this specification was made available from contribut
    -06
 
    * added additional security considerations
-   * removed support for embedding verifiable presentations in ID Token or Userinfo response
+   * removed support for embedding verifiable presentations in ID Token or UserInfo response
    * migrated to Presentation Exchange 2.0
 
    -05
 
-   * moved presentation submission elements outside of verifiable presentations (ID Token or Userinfo)
+   * moved presentation submission elements outside of verifiable presentations (ID Token or UserInfo)
 
    -04
 
