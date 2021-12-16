@@ -112,7 +112,7 @@ This specification defines mechanisms to allow RPs to request and OPs to provide
 
 Verifiable Presentations are used to present claims along with cryptographic proofs of the link between presenter and subject of the verifiable credentials it contains. A verifiable presentation can contain a subset of claims asserted in a certain credential (selective disclosure) and it can assemble claims from different credentials. 
 
-There are two credential formats to VCs and VPs: JSON or JSON-LD. There are also two proof formats to VCs and VPs: JWT and Linked Data Proofs. Each of those formats has different properties and capabilities and each of them comes with different proof types. Proof formats are agnostic to the credential format chosen. However, the JSON credential format is commonly used with JSON Web Signatures (see [@VC_DATA], section 6.3.1). JSON-LD is commonly used with different kinds of Linked Data Proofs and JSON Web Signatures (see [@VC_DATA], section 6.3.2). Applications can use all beforementioned assertion and proof formats with this specification. 
+There are two credential formats to VCs and VPs: JSON or JSON-LD. There are also two proof formats to VCs and VPs: JWT and Linked Data Proofs. Each of those formats has different properties and capabilities and each of them comes with different proof types. Proof formats are agnostic to the credential format chosen. However, the JSON credential format is commonly used with JSON Web Signatures (see [@VC_DATA], Section 6.3.1). JSON-LD is commonly used with different kinds of Linked Data Proofs and JSON Web Signatures (see [@VC_DATA], Section 6.3.2). Applications can use all beforementioned assertion and proof formats with this specification. 
 
 This specification introduces a new token type, "VP Token", used as a generic container for verifiable presentation objects, that is returned in authentication and token responses, in addition to ID Tokens (see (#vp_token)).
 
@@ -150,7 +150,7 @@ RPs can also ask for alternative credentials being presented, which is shown in 
 
 ## Response
 
-RPs MUST send a `nonce` parameter complying with the security considerations given in [@!OpenID], section 15.5.2., with every Authentication Request as a basis for replay detection. See (#preventing-replay).
+RPs MUST send a `nonce` parameter complying with the security considerations given in [@!OpenID], Section 15.5.2., with every Authentication Request as a basis for replay detection. See (#preventing-replay).
 
 A `vp_token` MUST be provided in the same response as the `id_token` of the respective OpenID Connect transaction. Depending on the response/grant type, this can be either the authentication response or the token response. 
 
@@ -293,16 +293,16 @@ A verifier MUST validate the integrity, authenticity, and holder binding of any 
 
 This requirement holds true even if those verifiable presentations are embedded within a signed OpenID Connect assertion, such as an ID Token or a Userinfo response. This is required because verifiable presentations might be signed by the same holder but with different key material and/or the OpenID Connect assertions may be signed by a 3rd party (e.g. a traditional OP). In both cases, just checking the signature of the respective OpenID Connect assertion does not, for example, check the holder binding. 
 
-Note: Some of the available mechanisms are outlined in section 4.3.2 of [@!DIF.PresentationExchange].
+Note: Some of the available mechanisms are outlined in Section 4.3.2 of [@!DIF.PresentationExchange].
 
 It is NOT RECOMMENDED for the Subject to delegate the presentation of the credential to a third party.
 
 #  Examples 
 
-This section illustrates examples when W3C Verifiable Credentials objects are requested using the `claims` parameter and returned in a VP Token.
+This Section illustrates examples when W3C Verifiable Credentials objects are requested using the `claims` parameter and returned in a VP Token.
 
 ## Self-Issued OpenID Provider (SIOP)
-This section illustrates the protocol flow for the case of communication through the front-channel with SIOP.
+This Section illustrates the protocol flow for the case of communication through the front-channel with SIOP.
 
 ### Authentication request
 
@@ -392,7 +392,7 @@ Note: in accordance with (#security_considerations) the verifiable presentation'
 
 ## Authorization Code Flow with vp_token
 
-This section illustrates the protocol flow for the case of communication using front-channel and backchannel (utilizing the authorization code flow).
+This Section illustrates the protocol flow for the case of communication using front-channel and backchannel (utilizing the authorization code flow).
 
 ### Authentication Request
 
