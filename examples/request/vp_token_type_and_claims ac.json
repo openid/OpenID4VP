@@ -20,7 +20,7 @@
                         "fields": [
                             {
                                 "path": [
-                                    "$.identifiers.schema_id"
+                                    "$.schema_id"
                                 ],
                                 "filter": {
                                     "type": "string",
@@ -29,17 +29,17 @@
                             },
                             {
                                 "path": [
-                                    "$.requested_proof.revealed_attr_groups.ref2.values.given_name"
+                                    "$.values.given_name"
                                 ]
                             },
                             {
                                 "path": [
-                                    "$.requested_proof.revealed_attr_groups.ref2.values.family_name"
+                                    "$.values.family_name"
                                 ]
                             },
                             {
                                 "path": [
-                                    "$.requested_proof.revealed_attr_groups.ref2.values.birthdate"
+                                    "$.values.birthdate"
                                 ]
                             }
                         ]
