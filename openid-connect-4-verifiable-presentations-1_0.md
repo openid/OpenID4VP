@@ -7,7 +7,7 @@ keyword = ["security", "openid", "ssi"]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "openid-connect-4-verifiable-presentations-1_0-06"
+value = "openid-connect-4-verifiable-presentations-1_0-07"
 status = "standard"
 
 [[author]]
@@ -581,6 +581,10 @@ The technology described in this specification was made available from contribut
 # Document History
 
    [[ To be removed from the final specification ]]
+
+   -07
+
+   - added text on other credential formats
 
    -06
 
