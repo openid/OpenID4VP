@@ -134,6 +134,8 @@ Please note this draft defines a profile of [@!DIF.PresentationExchange] as foll
 
 * The `format` element in the `presentation_definition` that represents supported presentation formats, proof types, and algorithms is not supported. Those are determined using new RP and OP metadata (see (#metadata)). 
 
+RPs MUST send a `nonce` parameter complying with the security considerations given in [@!OpenID], Section 15.5.2., with every Authentication Request as a basis for replay detection. See (#preventing-replay).
+
 The request syntax is illustrated in the following example:
 
 <{{examples/request/vp_token_type_only.json}}
@@ -149,8 +151,6 @@ RPs can also ask for alternative credentials being presented, which is shown in 
 <{{examples/request/vp_token_alternative_credentials.json}}
 
 ## Response
-
-RPs MUST send a `nonce` parameter complying with the security considerations given in [@!OpenID], Section 15.5.2., with every Authentication Request as a basis for replay detection. See (#preventing-replay).
 
 A `vp_token` MUST be provided in the same response as the `id_token` of the respective OpenID Connect transaction. Depending on the response/grant type, this can be either the authentication response or the token response. 
 
