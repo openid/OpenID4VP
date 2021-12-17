@@ -585,6 +585,7 @@ The technology described in this specification was made available from contribut
    -07
 
    - added text on other credential formats
+   - fixed inconsistency in security consideration regarding nonce
 
    -06
 
