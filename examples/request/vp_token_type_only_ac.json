@@ -23,7 +23,7 @@
                                 ],
                                 "filter": {
                                     "type": "string",
-                                    "pattern": "3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0.1"
+                                    "pattern": "3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0\\.1"
                                 }
                             }
                         ]
