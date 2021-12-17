@@ -1,0 +1,35 @@
+{
+    "id_token": {
+        "email": null
+    },
+    "vp_token": {
+        "presentation_definition": {
+            "id": "vp token example",
+            "input_descriptors": [
+                {
+                    "id": "id card credential",
+                    "format": {
+                        "ldp_ac": {
+                            "proof_type": [
+                                "CLSignature2019"
+                            ]
+                        }
+                    },
+                    "constraints": {
+                        "fields": [
+                            {
+                                "path": [
+                                    "$.identifiers.schema_id"
+                                ],
+                                "filter": {
+                                    "type": "string",
+                                    "pattern": "3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0.1"
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+}
