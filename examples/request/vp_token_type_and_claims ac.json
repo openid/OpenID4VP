@@ -7,7 +7,7 @@
             "id": "vp token example",
             "input_descriptors": [
                 {
-                    "id": "id card credential",
+                    "id": "id card credential with constraints",
                     "format": {
                         "ldp_ac": {
                             "proof_type": [
@@ -16,6 +16,7 @@
                         }
                     },
                     "constraints": {
+                        "limit_disclosure": "required",
                         "fields": [
                             {
                                 "path": [
@@ -25,6 +26,21 @@
                                     "type": "string",
                                     "pattern": "3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0\\.1"
                                 }
+                            },
+                            {
+                                "path": [
+                                    "$.values.given_name"
+                                ]
+                            },
+                            {
+                                "path": [
+                                    "$.values.family_name"
+                                ]
+                            },
+                            {
+                                "path": [
+                                    "$.values.birthdate"
+                                ]
                             }
                         ]
                     }

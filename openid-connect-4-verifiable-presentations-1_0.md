@@ -108,7 +108,7 @@ Both verifiable credentials and verifiable presentations
 
 # Overview 
 
-This specification defines mechanisms to allow RPs to request and OPs to provide Verifiable Presentations via OpenID Connect. 
+This specification defines mechanisms to allow RPs to request and OPs to provide Verifiable Presentations via OpenID Connect. The specification focuses on enabling request and presentation of W3C Verifiable Credentials but the authors also aim at enabling its use with other credential formats. 
 
 Verifiable Presentations are used to present claims along with cryptographic proofs of the link between presenter and subject of the verifiable credentials it contains. A verifiable presentation can contain a subset of claims asserted in a certain credential (selective disclosure) and it can assemble claims from different credentials. 
 
@@ -200,7 +200,7 @@ This specification defines new client metadata parameters according to [@!OpenID
 
 RPs indicate the supported formats using the new parameter `vp_formats`.
 
-* `vp_formats`: REQUIRED. An object defining the formats, proof types and algorithms of verifiable presentation and verifiable credential that an RP supports. Valid values include `jwt_vp`, `ldp_vp`, `jwt_vc` and `ldp_vc`.
+* `vp_formats`: REQUIRED. An object defining the formats, proof types and algorithms of verifiable presentation and verifiable credential that a RP supports. Valid values include `jwt_vp`, `ldp_vp`, `jwt_vc` and `ldp_vc`. Other formats may be supported. 
 
 The `format` property inside a `presentation_definition` object as defined in [@!DIF.PresentationExchange] MAY be used to specify concrete format in which the RP is requesting verifiable presentations to be presented. The OP MUST ignore `format` property inside a `presentation_definition` object if that `format` was not included in the `vp_formats` property of the client metadata.
 
