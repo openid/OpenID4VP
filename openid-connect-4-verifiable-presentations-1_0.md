@@ -232,7 +232,7 @@ The OP publishes the formats it supports using the `vp_formats` metadata paramet
 
 ## Preventing Replay Attacks {#preventing-replay}
 
-To prevent replay attacks, verifiable presentation container objects MUST be linked to `client_id` and optionally provided `nonce` from the Authentication Request. The `client_id` is used 
+To prevent replay attacks, verifiable presentation container objects MUST be linked to `client_id` and `nonce` from the Authentication Request. The `client_id` is used 
 to detect presentation of credentials to a different party other than the intended. The `nonce` value binds the presentation to a certain authentication transaction and allows
 the verifier to detect injection of a presentation in the OpenID Connect flow, which is especially important in flows where the presentation is passed through the front-channel. 
 
