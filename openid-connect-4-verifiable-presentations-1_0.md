@@ -111,7 +111,7 @@ This specification introduces a new token type, "VP Token", used as a generic co
 
 Note that when both ID Token and VP Token are returned, each has a different function. The ID Token serves as an Authentication receipt that carries information regarding the Authentication Event of the End-user. The VP Token provides proof of possession of a third-party attested claims and carries claims about the user.
 
-Verifiers request verifiable presentations using the `claims` parameter as defined in (@!OpenID) and syntax as defined in DIF Presentation Exchange [@!DIF.PresentationExchange].
+Verifiers request verifiable presentations using the `claims` parameter as defined in (@!OpenID), using a syntax that they specify, for example, the syntax defined in DIF Presentation Exchange [@!DIF.PresentationExchange].
 
 # vp_token {#vp_token}
 
@@ -121,7 +121,51 @@ This specification defines the following parameter `vp_token` that is used to re
 
 ## Request {#vp_token_request}
 
-A VP Token is requested by adding a new top-level element `vp_token` to the `claims` parameter. This element contains a `presentation_definition` element as defined in Section 4 of [@!DIF.PresentationExchange].
+A VP Token is requested by adding a new top-level element `vp_token` to the `claims` parameter. This element contains a `presentation_definition` element as defined below.
+
+`presentation_definition` comprises an `identifier` and a `value`. The `identifier` is a short string that identifies the type of `presentation_definition`, and the `value` is a JSON object whose contents are determined from the  definition of the `identifier`, i.e.
+
+
+	"vp_token": {
+		"presentation_definition": {
+			"identifier": "e.g. pev1|pev2....|remote",
+			"value": {
+				"as required": "by the definition of identifier"
+			}
+		}
+	}
+
+This document defines 2 `presentation_definition` `identifier`s. Other documents may define additional `presentation_definition` `identifier`s, or an IANA registry may be established for publishing these `identifier`s.
+
+### The remote identifier
+
+The purpose of the remote identifier is to tell the recipient where the `presentation_definition` can be obtained, and in what syntaxes it can be obtained.
+
+The `identifier` string is "remote".
+
+The value MUST contain:
+
+- a "policy_server" property whose value is a https URL referencing a `presentation_definition` on a policy server, and
+- a "policy_formats" property containing an array that lists the different syntaxes supported for downloading this `presentation_definition`.
+
+
+	"vp_token": {
+		"presentation_definition": {
+			"identifier": "remote",
+			"value": {
+				"policy_server": "https://host/path?policyRef=<string reference to policy>",
+				"policy_formats": ["format1", "format2", "pev1", "etc"]
+			}
+		}
+	}
+
+### Presentation Exchange v1 identifier
+
+The purpose of the presentation exchange v1 identifier is to include a `presentation_definition` in the syntax that is specified in Section 4 of [@!DIF.PresentationExchange].
+
+The `identifier` string is "pev1".
+
+The value MUST be a `presentation_definition` element as defined in Section 4 of [@!DIF.PresentationExchange].
 
 Please note this draft defines a profile of [@!DIF.PresentationExchange] as follows: 
 
