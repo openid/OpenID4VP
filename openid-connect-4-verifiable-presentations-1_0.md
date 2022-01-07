@@ -121,51 +121,31 @@ This specification defines the following parameter `vp_token` that is used to re
 
 ## Request {#vp_token_request}
 
-A VP Token is requested by adding a new top-level element `vp_token` to the `claims` parameter. This element contains a `presentation_definition` element as defined below.
+A VP Token is requested by adding a new top-level element, either `vp_token` or `vp_token_uri`, to the `claims` parameter. This element contains either a `presentation_definition` element or a reference to a `presentation_definition` element. The 'presentation_definition' element is defined below.
 
-`presentation_definition` comprises an `identifier` and a `value`. The `identifier` is a short string that identifies the type of `presentation_definition`, and the `value` is a JSON object whose contents are determined from the  definition of the `identifier`, i.e.
+### Passing a presentation definition by value
 
+This is achieved by adding the `vp_token` element to the `claims` parameter. Support for `vp_token` is OPTIONAL.
 
-	"vp_token": {
-		"presentation_definition": {
-			"identifier": "e.g. pev1|pev2....|remote",
-			"value": {
-				"as required": "by the definition of identifier"
-			}
-		}
-	}
+For example
 
-This document defines 2 `presentation_definition` `identifier`s. Other documents may define additional `presentation_definition` `identifier`s, or an IANA registry may be established for publishing these `identifier`s.
-
-### The remote identifier
-
-The purpose of the remote identifier is to tell the recipient where the `presentation_definition` can be obtained, and in what syntaxes it can be obtained.
-
-The `identifier` string is "remote".
-
-The value MUST contain:
-
-- a "policy_server" property whose value is a https URL referencing a `presentation_definition` on a policy server, and
-- a "policy_formats" property containing an array that lists the different syntaxes supported for downloading this `presentation_definition`.
+	"vp_token": {"presentation_definition": {.... } } 
 
 
-	"vp_token": {
-		"presentation_definition": {
-			"identifier": "remote",
-			"value": {
-				"policy_server": "https://host/path?policyRef=<string reference to policy>",
-				"policy_formats": ["format1", "format2", "pev1", "etc"]
-			}
-		}
-	}
+### Passing a presentation definition by reference
 
-### Presentation Exchange v1 identifier
+This is achieved by adding the `vp_token_uri` element to the `claims` parameter. Support for `vp_token_uri` is OPTIONAL. 
 
-The purpose of the presentation exchange v1 identifier is to include a `presentation_definition` in the syntax that is specified in Section 4 of [@!DIF.PresentationExchange].
+`vp_token_uri` is used identically to the `vp_token` parameter, other than that the `presentation_definition` value is retrieved from the resource at the specified URL, rather than passed by value. 
 
-The `identifier` string is "pev1".
+For example
 
-The value MUST be a `presentation_definition` element as defined in Section 4 of [@!DIF.PresentationExchange].
+	"vp_token_uri": "https://host/path?ref=<string reference to presentation definition>"
+
+
+### Presentation definition
+
+This element contains a `presentation_definition` as defined in Section 4 of [@!DIF.PresentationExchange].
 
 Please note this draft defines a profile of [@!DIF.PresentationExchange] as follows: 
 
