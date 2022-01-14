@@ -198,7 +198,7 @@ In order to facilitate this we need to standardise how an issuer can indicate in
 
 Indicating the federations/trust schemes that an issuer is a member of can be achieved by defining a `termsOfUse` property [@!W3C.VerifiableCredentials].
 
-Note. [@!W3C.VerifiableCredentials] describes terms of use as "can be utilized by an issuer ... to communicate the terms under which a verifiable credential ... was issued."
+Note. [@!VC_DATA] describes terms of use as "can be utilized by an issuer ... to communicate the terms under which a verifiable credential ... was issued."
 
 The following terms of use is defined:
 
@@ -584,6 +584,28 @@ Note: in accordance with (#security_considerations) the verifiable presentation'
             <organization>Microsoft</organization>
           </author>
           <date day="8" month="Nov" year="2014"/>
+        </front>
+ </reference>
+
+<reference anchor="OpenID.Federation" target="https://openid.net/specs/openid-connect-federation-1_0.html">
+        <front>
+          <title>OpenID Connect Federation 1.0 - draft 17>
+		  <author fullname="R. Hedberg, Ed.">
+            <organization>Independent</organization>
+          </author>
+          <author fullname="Michael B. Jones">
+            <organization>Microsoft</organization>
+          </author>
+          <author fullname="A. Solberg">
+            <organization>Uninett</organization>
+          </author>
+          <author fullname="S. Gulliksson">
+            <organization>Schibsted</organization>
+          </author>
+          <author fullname="John Bradley">
+            <organization>Yubico</organization>
+          </author>
+          <date day="9" month="Sept" year="2021"/>
         </front>
  </reference>
 
