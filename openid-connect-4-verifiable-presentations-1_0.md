@@ -190,6 +190,31 @@ with a matching `_vp_token` in the corresponding `id_token`.
 
 Note: Authentication event information is conveyed via the ID Token while it is up to the RP to determine what (additional) claims are allocated to `id_token` and `vp_token`, respectively, via the `claims` parameter.
 
+## Support for Federations/Trust Schemes
+
+Often RPs will want to request verifiable credentials from an issuer who is a member of a federation or trust scheme, rather than from a specific issuer, for example, a BSc Chemistry Degree credential from a US University rather than from a specifically named university.
+
+In order to facilitate this we need to standardise how an issuer can indicate in a verifiable credential that they are a member of one or more federations/trust schemes. Once this is done, the RP will be able to create a `presentation_definition` that includes this filtering criteria. This will enable the wallet to select all the verifiable credentials that match this criteria and then by some means (for example, by asking the user) determine which matching verifiable credential to return to the RP. Upon receiving this verifiable credential, the RP will be able to call its federation API to determine if the issuer is indeed a member of the federation/trust scheme that they say they are.
+
+Indicating the federations/trust schemes that an issuer is a member of can be achieved by defining a `termsOfUse` property [@!W3C.VerifiableCredentials].
+
+Note. [@!W3C.VerifiableCredentials] describes terms of use as "can be utilized by an issuer ... to communicate the terms under which a verifiable credential ... was issued."
+
+The following terms of use is defined:
+
+{
+	"termsOfUse": [{
+		"type": "<uri that identifies this type of terms of use>",
+		"federations": ["<list of federations/trust schemes the issuer asserts it is a member of>"]
+	}]
+}
+ 
+Federations that conform to those specified in [@!OpenID.Federation] are identified by the `type` "urn:ietf:params:oauth:federation". Individual federations are identified by {??? need to complete this ??}.
+
+Trust schemes that conform to the TRAIN [ref needed] trust scheme are identified by the `type` "https://train.trust-scheme.de/info". Individual federations are identified by their DNS names.
+
+Note. We could include an example of a `presentation_definition' that filters VCs based on their federation memberships.
+
 # Metadata {#metadata}
 
 This specification introduces additional metadata to enable RP and OP to determine the verifiable presentation and verifiable credential formats, proof types and algorithms to be used in a protocol exchange. 
