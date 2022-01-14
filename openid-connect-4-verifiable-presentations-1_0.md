@@ -121,11 +121,11 @@ This specification defines the following parameter `vp_token` that is used to re
 
 ## Request {#vp_token_request}
 
-A VP Token is requested by adding a new top-level element, either `vp_token` or `vp_token_uri`, to the `claims` parameter. This element contains either a `presentation_definition` element or a reference to a `presentation_definition` element. The 'presentation_definition' element is defined below.
+A VP Token is requested by adding a new top-level element `vp_token` to the `claims` parameter. This element contains either a `presentation_definition` element or a `presentation_definition_uri` element, which is a reference to a `presentation_definition`. The 'presentation_definition' element is defined below.
 
 ### Passing a presentation definition by value
 
-This is achieved by adding the `vp_token` element to the `claims` parameter. Support for `vp_token` is OPTIONAL.
+This is achieved by adding the `presentation_definition` element to the `vp_token` parameter. Support for `presentation_definition` is OPTIONAL.
 
 For example
 
@@ -134,13 +134,13 @@ For example
 
 ### Passing a presentation definition by reference
 
-This is achieved by adding the `vp_token_uri` element to the `claims` parameter. Support for `vp_token_uri` is OPTIONAL. 
+This is achieved by adding the `presentation_definition_uri` element to the `vp_token` parameter. Support for `presentation_definition_uri` is OPTIONAL. 
 
-`vp_token_uri` is used identically to the `vp_token` parameter, other than that the `presentation_definition` value is retrieved from the resource at the specified URL, rather than passed by value. 
+`presentation_definition_uri` is used to the retrieve the `presentation_definition` from the resource at the specified URL, rather than being passed by value. 
 
 For example
 
-	"vp_token_uri": "https://host/path?ref=<string reference to presentation definition>"
+	"vp_token": {"presentation_definition_uri": "https://host/path?ref=<string reference to presentation definition>"}
 
 
 ### Presentation definition
@@ -315,6 +315,12 @@ This requirement holds true even if those verifiable presentations are embedded 
 Note: Some of the available mechanisms are outlined in Section 4.3.2 of [@!DIF.PresentationExchange].
 
 It is NOT RECOMMENDED for the Subject to delegate the presentation of the credential to a third party.
+
+## Fetching Presentation Definitions by Reference
+
+The protocol for the `presentation_definition_uri` MUST be https.
+
+In many instances the referenced server will be operated by a known federation or other trusted operator, and the URL's domain name will already be widely known. OPs (including SIOPs) using this URI can mitigate request forgeries by having a pre-configured set of trusted domain names and only fetching presentation_definitions from these sources. In addition, the presentation definitions could be signed by a trusted authority, such as the ICO or federation operator.
 
 #  Examples 
 
