@@ -213,11 +213,13 @@ Here is an example for an RP registering with a SIOP (see [@SIOPv2]) with the `r
 
 ## RP Metadata Error Response
 
+Error response MUST be made in the same manner as defined in [@!OpenID].
+
+## RP Metadata Error Response Codes
+
 This extension defines the following error codes that MUST be returned when the OP does not support client metadata parameters:
 
 * `vp_formats_not_supported`: The OP does not support any of the VP formats supported by the RP such as those included in the `vp_formats` registration parameter.
-
-Error response must be made in the same manner as defined in [@!OpenID].
 
 ## OP Metadata
 
