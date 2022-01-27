@@ -231,11 +231,11 @@ The OP publishes the formats it supports using the `vp_formats` metadata paramet
 
 ## Preventing Replay Attacks {#preventing-replay}
 
-To prevent replay attacks, verifiable presentation container objects MUST be linked to `client_id` and `nonce` from the Authentication Request. The `client_id` is used 
-to detect presentation of credentials to a different party other than the intended. The `nonce` value binds the presentation to a certain authentication transaction and allows
-the verifier to detect injection of a presentation in the OpenID Connect flow, which is especially important in flows where the presentation is passed through the front-channel. 
+To prevent replay attacks, verifiable presentation container objects MUST be linked to `client_id` and `nonce` from the Authentication Request. The `client_id` is used to detect presentation of credentials to a different party other than the intended. The `nonce` value binds the presentation to a certain authentication transaction and allows the verifier to detect injection of a presentation in the OpenID Connect flow, which is especially important in flows where the presentation is passed through the front-channel. 
 
 Note: These values MAY be represented in different ways in a verifiable presentation (directly as claims or indirectly be incorporation in proof calculation) according to the selected proof format denoted by the format claim in the verifiable presentation container.
+
+Note: This specification does not support presentation of a VC that is not cryptographically protected by a VP. The presentation itself is bound to the transaction as described in this section.
 
 Here is a non-normative example for format=`jwt_vp` (only relevant part):
 
