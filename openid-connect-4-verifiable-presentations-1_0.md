@@ -119,11 +119,11 @@ Verifiers request verifiable presentations using the `claims` parameter as defin
 
 # vp_token {#vp_token}
 
-The response parameter `vp_token` is defined as follows:
+This specification defines a following parameter `vp_token` that is used to request and return VP Token as specified in (#vp_token_request) and (#vp_token_request).
 
 * `vp_token`: a parameter that either directly contains a verifiable presentation or a JSON array with multiple verifiable presentations. 
 
-## Request
+## Request {#vp_token_request}
 
 A VP Token is requested by adding a new top-level element `vp_token` to the `claims` parameter. This element contains a `presentation_definition` element as defined in Section 4 of [@!DIF.PresentationExchange].
 
@@ -147,7 +147,7 @@ RPs can also ask for alternative credentials being presented, which is shown in 
 
 <{{examples/request/vp_token_alternative_credentials.json}}
 
-## Response
+## Response {#vp_token_response}
 
 A `vp_token` MUST be provided in the same response as the `id_token` of the respective OpenID Connect transaction. Depending on the response/grant type, this can be either the authentication response or the token response. 
 
