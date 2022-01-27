@@ -86,13 +86,10 @@ This approach dramatically reduces latency and reduces load on the OP's servers.
 
 # Terminology
 
-Credential
-
-A set of one or more claims made by an issuer. (see [@VC_DATA])
-
 Verifiable Credential (VC)
 
 A verifiable credential is a tamper-evident credential that has authorship that can be cryptographically verified. Verifiable credentials can be used to build verifiable presentations, which can also be cryptographically verified. The claims in a credential can be about different subjects. (see [@VC_DATA])
+Note that this specification uses a term "credential" as defined in Section 2 of [@VC_DATA], which is a different definition than in [@!OpenID].
 
 Presentation
 
