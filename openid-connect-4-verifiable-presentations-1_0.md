@@ -125,7 +125,7 @@ A VP Token is requested by adding a new top-level element `vp_token` to the `cla
 
 ### Passing a presentation definition by value
 
-This is achieved by adding the `presentation_definition` element to the `vp_token` parameter. Support for `presentation_definition` is OPTIONAL.
+This is achieved by adding the `presentation_definition` element to the `vp_token` parameter. Support for `presentation_definition` is CONDITIONAL. It MUST be present if `presentation_definition_uri` is not present.
 
 For example
 
@@ -134,7 +134,7 @@ For example
 
 ### Passing a presentation definition by reference
 
-This is achieved by adding the `presentation_definition_uri` element to the `vp_token` parameter. Support for `presentation_definition_uri` is OPTIONAL. 
+This is achieved by adding the `presentation_definition_uri` element to the `vp_token` parameter. Support for `presentation_definition_uri` is CONDITIONAL. It MUST be present if `presentation_definition` is not present.
 
 `presentation_definition_uri` is used to the retrieve the `presentation_definition` from the resource at the specified URL, rather than being passed by value. 
 
