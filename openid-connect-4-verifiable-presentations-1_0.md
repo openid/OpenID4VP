@@ -111,7 +111,7 @@ This specification introduces a new token type, "VP Token", used as a generic co
 
 Note that when both ID Token and VP Token are returned, each has a different function. The ID Token serves as an Authentication receipt that carries information regarding the Authentication Event of the End-user. The VP Token provides proof of possession of a third-party attested claims and carries claims about the user.
 
-Verifiers request verifiable presentations using the `claims` parameter as defined in (@!OpenID), using a syntax that they specify, for example, the syntax defined in DIF Presentation Exchange [@!DIF.PresentationExchange].
+Verifiers request verifiable presentations using the `claims` parameter as defined in (@!OpenID), using the syntax defined in DIF Presentation Exchange [@!DIF.PresentationExchange].
 
 # vp_token {#vp_token}
 
@@ -215,13 +215,15 @@ This specification introduces additional metadata to enable RP and OP to determi
 
 This specification defines new client metadata parameters according to [@!OpenID.Registration].
 
-RPs indicate the supported formats using the new parameter `vp_formats`.
+### VP Formats
 
-* `vp_formats`: REQUIRED. An object defining the formats, proof types and algorithms of verifiable presentation and verifiable credential that a RP supports. Valid values include `jwt_vp`, `ldp_vp`, `jwt_vc` and `ldp_vc`. Other formats may be supported. 
+RPs indicate the supported VP formats using the new parameter `vp_formats`.
 
-The `format` property inside a `presentation_definition` object as defined in [@!DIF.PresentationExchange] MAY be used to specify concrete format in which the RP is requesting verifiable presentations to be presented. The OP MUST ignore `format` property inside a `presentation_definition` object if that `format` was not included in the `vp_formats` property of the client metadata.
+* `vp_formats`: REQUIRED. An object defining the formats, proof types and algorithms of verifiable presentations and verifiable credentials that a RP supports. Valid values include `jwt_vp`, `ldp_vp`, `jwt_vc` and `ldp_vc`. Other formats may be supported. 
 
-Note that version 2.0.0 of [@!DIF.PresentationExchange] allows the RP to specify format of each requested credential using the `formats` property inside the `input_descriptor` object, in addition to communicating the supported presentation formats using the `vp_formats` parameter in the RP metadata.
+The `format` property inside a `presentation_definition` object as defined in [@!DIF.PresentationExchange] MAY be used to specify the concrete format in which the RP is requesting verifiable presentations to be presented. The OP MUST ignore the `format` property inside a `presentation_definition` object if that `format` was not included in the `vp_formats` property of the client metadata.
+
+Note that version 2.0.0 of [@!DIF.PresentationExchange] allows the RP to specify the format of each requested credential using the `formats` property inside the `input_descriptor` object, in addition to communicating the supported presentation formats using the `vp_formats` parameter in the RP metadata.
 
 Here is an example for an RP registering with a Standard OP via dynamic client registration:
 
@@ -230,6 +232,14 @@ Here is an example for an RP registering with a Standard OP via dynamic client r
 Here is an example for an RP registering with a SIOP (see [@SIOPv2]) with the `registration` request parameter:
 
 <{{examples/client_metadata/client_siop_format.json}}
+
+### Presentation Definition Transfer
+
+RPs indicate their support for transferring presentation definitions by value and/or by reference, by using the following parameters:
+
+* `pd_value_supported`: OPTIONAL. Boolean value specifying whether the RP supports the transfer of `presentation_definition` by value, with true indicating support. If omitted, the default value is false. 
+
+* `pd_reference_supported`: OPTIONAL. Boolean value specifying whether the RP supports the transfer of `presentation_definition` by reference, with true indicating support. If omitted, the default value is true. 
 
 ## RP Metadata Error Response
 
