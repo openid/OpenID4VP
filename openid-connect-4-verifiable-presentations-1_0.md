@@ -231,7 +231,7 @@ To prevent replay attacks, verifiable presentation container objects MUST be lin
 
 Note: These values MAY be represented in different ways in a verifiable presentation (directly as claims or indirectly be incorporation in proof calculation) according to the selected proof format denoted by the format claim in the verifiable presentation container.
 
-Note: This specification assumes that a verifiable credential is always presented with a cryptographic proof of possession which can be a Verifiable presentation. The VP itself is bound to the transaction as described in this section.
+Note: This specification assumes that a verifiable credential is always presented with a cryptographic proof of possession which can be a Verifiable presentation. This cryptographic proof of possession is bound to audience and transaction as described in this section.
 
 Here is a non-normative example for format=`jwt_vp` (only relevant part):
 
