@@ -60,7 +60,7 @@ This specification defines an extension of OpenID Connect to allow presentation 
 
 # Introduction
 
-This specification extends OpenID Connect with support for presentation of claims via W3C Verifiable Credentials. This allows existing OpenID Connect RPs to extend their reach towards claims sources asserting claims in this format. It also allows new applications built using Verifiable Credentials to utilize OpenID Connect as integration and interoperability layer towards credential holders.
+This specification extends OpenID Connect with support for presentation of claims via W3C Verifiable Credentials. This allows existing OpenID Connect RPs to extend their reach towards claims sources asserting claims in this format. It also allows new applications built using verifiable credentials to utilize OpenID Connect as integration and interoperability layer towards credential holders.
 
 This specification enables requesting and delivery of verifiable presentations in conjunction with Self-Issued OpenID Providers (see [@SIOPv2]) as well as traditional OpenID  Providers (see [@!OpenID.Core]).
 
@@ -78,10 +78,6 @@ Data derived from one or more verifiable credentials, issued by one or more issu
 Verifiable Presentation (VP)
 
 A verifiable presentation is a tamper-evident presentation encoded in such a way that authorship of the data can be trusted after a process of cryptographic verification. Certain types of verifiable presentations might contain data that is synthesized from, but do not contain, the original verifiable credentials (for example, zero-knowledge proofs). (see [@VC_DATA])
-
-W3C Verifiable Credential Objects
-
-Both verifiable credentials and verifiable presentations
 
 # Use Cases
 
@@ -105,9 +101,9 @@ This approach dramatically reduces latency and reduces load on the OP's servers.
 
 # Overview 
 
-This specification defines mechanisms to allow RPs to request and OPs to provide Verifiable Presentations via OpenID Connect. The specification focuses on enabling request and presentation of W3C Verifiable Credentials but the authors also aim at enabling its use with other credential formats. 
+This specification defines mechanisms to allow RPs to request and OPs to provide verifiable presentations via OpenID Connect. The specification focuses on enabling request and presentation of W3C Verifiable Credentials but the authors also aim at enabling its use with other credential formats. 
 
-Verifiable Presentations are used to present claims along with cryptographic proofs of the link between presenter and subject of the verifiable credentials it contains. A verifiable presentation can contain a subset of claims asserted in a certain credential (selective disclosure) and it can assemble claims from different credentials. 
+Verifiable presentations are used to present claims along with cryptographic proofs of the link between presenter and subject of the verifiable credentials it contains. A verifiable presentation can contain a subset of claims asserted in a certain credential (selective disclosure) and it can assemble claims from different credentials. 
 
 There are two credential formats for VCs and VPs: JSON and JSON-LD. There are also two proof formats for VCs and VPs: JWT and Linked Data Proofs. Each of those formats has different properties and capabilities and each of them comes with different proof types. Proof formats are agnostic to the credential format chosen. However, the JSON credential format is commonly used with JSON Web Signatures (see [@VC_DATA], section 6.3.1). JSON-LD is commonly used with different kinds of Linked Data Proofs and JSON Web Signatures (see [@VC_DATA], section 6.3.2). Applications can use all beforementioned assertion and proof formats with this specification.
 
@@ -235,7 +231,7 @@ To prevent replay attacks, verifiable presentation container objects MUST be lin
 
 Note: These values MAY be represented in different ways in a verifiable presentation (directly as claims or indirectly be incorporation in proof calculation) according to the selected proof format denoted by the format claim in the verifiable presentation container.
 
-Note: This specification assumes that verifiable credential is presented only with a cryptographic proof of possession which can be a VP. The VP itself is bound to the transaction as described in this section.
+Note: This specification assumes that a verifiable credential is always presented with a cryptographic proof of possession which can be a Verifiable presentation. The VP itself is bound to the transaction as described in this section.
 
 Here is a non-normative example for format=`jwt_vp` (only relevant part):
 
@@ -298,7 +294,7 @@ It is NOT RECOMMENDED for the Subject to delegate the presentation of the creden
 
 #  Examples 
 
-This Section illustrates examples when W3C Verifiable Credentials objects are requested using the `claims` parameter and returned in a VP Token.
+This Section illustrates examples when W3C verifiable credentials objects are requested using the `claims` parameter and returned in a VP Token.
 
 ## Self-Issued OpenID Provider (SIOP)
 This Section illustrates the protocol flow for the case of communication through the front-channel with SIOP.
