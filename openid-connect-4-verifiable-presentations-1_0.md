@@ -62,20 +62,20 @@ This specification defines an extension of OpenID Connect to allow presentation 
 
 This specification extends OpenID Connect with support for presentation of claims via W3C Verifiable Credentials. This allows existing OpenID Connect RPs to extend their reach towards claims sources asserting claims in this format. It also allows new applications built using Verifiable Credentials to utilize OpenID Connect as integration and interoperability layer towards credential holders.
 
-This specification enables requesting and delivery of verifiable presentations in conjunction with Self-Issued OpenID Providers (see [@SIOPv2]) as well as traditional OpenID  Providers (see [@!OpenID]).
+This specification enables requesting and delivery of verifiable presentations in conjunction with Self-Issued OpenID Providers (see [@SIOPv2]) as well as traditional OpenID  Providers (see [@!OpenID.Core]).
 
 # Terminology
 
 Verifiable Credential (VC)
 
 A verifiable credential is a tamper-evident credential that has authorship that can be cryptographically verified. Verifiable credentials can be used to build verifiable presentations, which can also be cryptographically verified. The claims in a credential can be about different subjects. (see [@VC_DATA])
-Note that this specification uses a term "credential" as defined in Section 2 of [@VC_DATA], which is a different definition than in [@!OpenID].
+Note that this specification uses a term "credential" as defined in Section 2 of [@VC_DATA], which is a different definition than in [@!OpenID.Core].
 
 Presentation
 
 Data derived from one or more verifiable credentials, issued by one or more issuers, that is shared with a specific verifier. (see [@VC_DATA])
 
-Verified Presentation (VP)
+Verifiable Presentation (VP)
 
 A verifiable presentation is a tamper-evident presentation encoded in such a way that authorship of the data can be trusted after a process of cryptographic verification. Certain types of verifiable presentations might contain data that is synthesized from, but do not contain, the original verifiable credentials (for example, zero-knowledge proofs). (see [@VC_DATA])
 
@@ -119,7 +119,7 @@ Verifiers request verifiable presentations using the `claims` parameter as defin
 
 # vp_token {#vp_token}
 
-This specification defines a following parameter `vp_token` that is used to request and return VP Token as specified in (#vp_token_request) and (#vp_token_request).
+This specification defines the following parameter `vp_token` that is used to request and return VP Token as specified in (#vp_token_request) and (#vp_token_request).
 
 * `vp_token`: a parameter that either directly contains a verifiable presentation or a JSON array with multiple verifiable presentations. 
 
@@ -131,7 +131,7 @@ Please note this draft defines a profile of [@!DIF.PresentationExchange] as foll
 
 * The `format` element in the `presentation_definition` that represents supported presentation formats, proof types, and algorithms is not supported. Those are determined using new RP and OP metadata (see (#metadata)). 
 
-RPs MUST send a `nonce` parameter complying with the security considerations given in [@!OpenID], Section 15.5.2., with every Authentication Request as a basis for replay detection. See (#preventing-replay).
+RPs MUST send a `nonce` parameter complying with the security considerations given in [@!OpenID.Core], Section 15.5.2., with every Authentication Request as a basis for replay detection. See (#preventing-replay).
 
 The request syntax is illustrated in the following example:
 
@@ -213,7 +213,7 @@ Here is an example for an RP registering with a SIOP (see [@SIOPv2]) with the `r
 
 ## RP Metadata Error Response
 
-Error response MUST be made in the same manner as defined in [@!OpenID].
+Error response MUST be made in the same manner as defined in [@!OpenID.Core].
 
 ## RP Metadata Error Response Codes
 
@@ -235,7 +235,7 @@ To prevent replay attacks, verifiable presentation container objects MUST be lin
 
 Note: These values MAY be represented in different ways in a verifiable presentation (directly as claims or indirectly be incorporation in proof calculation) according to the selected proof format denoted by the format claim in the verifiable presentation container.
 
-Note: This specification does not support presentation of a VC that is not cryptographically protected by a VP. The presentation itself is bound to the transaction as described in this section.
+Note: This specification assumes that verifiable credential is presented only with a cryptographic proof of possession which can be a VP. The VP itself is bound to the transaction as described in this section.
 
 Here is a non-normative example for format=`jwt_vp` (only relevant part):
 
@@ -486,7 +486,7 @@ Note: in accordance with (#security_considerations) the verifiable presentation'
   </front>
 </reference>
 
-<reference anchor="OpenID" target="http://openid.net/specs/openid-connect-core-1_0.html">
+<reference anchor="OpenID.Core" target="http://openid.net/specs/openid-connect-core-1_0.html">
   <front>
     <title>OpenID Connect Core 1.0 incorporating errata set 1</title>
     <author initials="N." surname="Sakimura" fullname="Nat Sakimura">
