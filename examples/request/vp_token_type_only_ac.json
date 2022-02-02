@@ -9,7 +9,7 @@
                 {
                     "id": "id card credential",
                     "format": {
-                        "ldp_ac": {
+                        "anoncred": {
                             "proof_type": [
                                 "CLSignature2019"
                             ]
