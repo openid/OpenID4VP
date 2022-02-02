@@ -1,6 +1,5 @@
 {
     "vp_token": {
-        "comment": "Example showing matching a VC issued by a federation member",
         "presentation_definition": {
             "id": "32f54163-7166-48f1",
             "input_descriptors": [
