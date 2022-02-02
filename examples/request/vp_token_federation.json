@@ -1,0 +1,42 @@
+{
+    "vp_token": {
+        "comment": "Example showing matching a VC issued by a federation member",
+        "presentation_definition": {
+            "id": "32f54163-7166-48f1",
+            "input_descriptors": [
+                {
+                    "id": "federationExample",
+                    "purpose": "To pick a UK or a US university that is a member of their respective academic federations",
+                    "constraints": {
+                        "fields": [
+                            {
+                                "path": [
+                                    "$.termsOfUse.type"
+                                ],
+                                "filter": {
+                                    "type": "string",
+                                    "const": "https://train.trust-scheme.de/info"
+                                }
+                            },
+                            {
+                                "path": [
+                                    "$.termsOfUse.federations"
+                                ],
+                                "filter": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    },
+                                    "oneOf": [
+                                        "ukuniversities.ac.uk",
+                                        "usuniversities.edu"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+}

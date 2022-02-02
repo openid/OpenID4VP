@@ -233,61 +233,38 @@ The OP publishes the formats it supports using the `vp_formats` metadata paramet
 
 ## Support for Federations/Trust Schemes
 
-Often RPs will want to request verifiable credentials from an issuer who is a member of a federation or trust scheme, rather than from a specific issuer, for example, a BSc Chemistry Degree credential from a US University rather than from a specifically named university.
+Often RPs will want to request verifiable credentials from an issuer who is a member of a federation or trust scheme, rather than from a specific issuer, for example, a "BSc Chemistry Degree" credential from a US University rather than from a specifically named university.
 
 In order to facilitate this we need to standardise how an issuer can indicate in a verifiable credential that they are a member of one or more federations/trust schemes. Once this is done, the RP will be able to create a `presentation_definition` that includes this filtering criteria. This will enable the wallet to select all the verifiable credentials that match this criteria and then by some means (for example, by asking the user) determine which matching verifiable credential to return to the RP. Upon receiving this verifiable credential, the RP will be able to call its federation API to determine if the issuer is indeed a member of the federation/trust scheme that they say they are.
 
-Indicating the federations/trust schemes that an issuer is a member of can be achieved by defining a `termsOfUse` property [@!W3C.VerifiableCredentials].
+Indicating the federations/trust schemes that an issuer is a member of can be achieved by defining a `termsOfUse` property [@!VC_DATA].
 
 Note. [@!VC_DATA] describes terms of use as "can be utilized by an issuer ... to communicate the terms under which a verifiable credential ... was issued."
 
 The following terms of use can be defined:
 
+```json
 {
-	"termsOfUse": [{
-		"type": "<uri that identifies this type of terms of use>",
-		"federations": ["<list of federations/trust schemes the issuer asserts it is a member of>"]
-	}]
+   "termsOfUse":[
+      {
+         "type":"<uri that identifies this type of terms of use>",
+         "federations":[
+            "<list of federations/trust schemes the issuer asserts it is a member of>"
+         ]
+      }
+   ]
 }
- 
-Federations that conform to those specified in [@!OpenID.Federation] are identified by the `type` "urn:ietf:params:oauth:federation". Individual federations are identified by {??? need to complete this ??}.
+```
 
-Trust schemes that conform to the TRAIN [ref needed] trust scheme are identified by the `type` "https://train.trust-scheme.de/info". Individual federations are identified by their DNS names.
+Federations that conform to those specified in [@!OpenID.Federation] are identified by the `type` `urn:ietf:params:oauth:federation`. Individual federations are identified by {??? need to complete this ??}.
 
-An example of a `presentation_definition' that filters VCs based on their federation memberships is given below.
+Trust schemes that conform to the TRAIN [ref needed] trust scheme are identified by the `type` `https://train.trust-scheme.de/info`. Individual federations are identified by their DNS names.
 
-{
-	"comment": "Example showing matching a VC issued by a federation member",
-	"presentation_definition": {
-		"id": "32f54163-7166-48f1",
-		"input_descriptors": [{
-			"id": "federationExample",
-			"purpose": "To pick a UK or a US university that is a member of their respective academic federations",
-			"constraints": {
-				"fields": [{
-						"path": ["$.termsOfUse.type"],
-						"filter": {
-							"type": "string",
-							"const": "https://train.trust-scheme.de/info"
-						}
-					},
-					{
-						"path": ["$.termsOfUse.federations"],
-						"filter": {
-							"type": "array",
-							"items": {
-								"type": "string"
-							},
-							"oneOf": ["ukuniversities.ac.uk", "usuniversities.edu"]
-						}
-					}
-				]
-			}
-		}]
-	}
-}
+An example `claims` parameter containing a `presentation_definition` that filters VCs based on their federation memberships is given below.
 
-This example will chose a VC that has been issued by a university that is either a member of the ukuniversities.ac.uk federation or the usuniversities.edu federation and that uses the TRAIN terms of use specification for asserting federation memberships.
+<{{examples/request/vp_token_federation.json}}
+
+This example will chose a VC that has been issued by a university that is either a member of the `ukuniversities.ac.uk` federation or the `usuniversities.edu` federation and that uses the TRAIN terms of use specification for asserting federation memberships.
 
 
 # Security Considerations {#security_considerations}
@@ -626,7 +603,7 @@ Note: in accordance with (#security_considerations) the verifiable presentation'
 
 <reference anchor="OpenID.Federation" target="https://openid.net/specs/openid-connect-federation-1_0.html">
         <front>
-          <title>OpenID Connect Federation 1.0 - draft 17>
+          <title>OpenID Connect Federation 1.0 - draft 17></title>
 		  <author fullname="R. Hedberg, Ed.">
             <organization>Independent</organization>
           </author>
