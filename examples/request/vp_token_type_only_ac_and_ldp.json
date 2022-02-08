@@ -7,7 +7,30 @@
             "id": "vp token example",
             "input_descriptors": [
                 {
-                    "id": "id card credential with constraints",
+                    "id": "id card credential",
+                    "format": {
+                        "ldp_vc": {
+                            "proof_type": [
+                                "Ed25519Signature2018"
+                            ]
+                        }
+                    },
+                    "constraints": {
+                        "fields": [
+                            {
+                                "path": [
+                                    "$.type"
+                                ],
+                                "filter": {
+                                    "type": "string",
+                                    "pattern": "IDCardCredential"
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "id": "next cloud test credential",
                     "format": {
                         "anoncred": {
                             "proof_type": [
@@ -16,7 +39,6 @@
                         }
                     },
                     "constraints": {
-                        "limit_disclosure": "required",
                         "fields": [
                             {
                                 "path": [
@@ -26,21 +48,6 @@
                                     "type": "string",
                                     "pattern": "did:indy:idu:test:3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0\\.1"
                                 }
-                            },
-                            {
-                                "path": [
-                                    "$.values.given_name"
-                                ]
-                            },
-                            {
-                                "path": [
-                                    "$.values.family_name"
-                                ]
-                            },
-                            {
-                                "path": [
-                                    "$.values.birthdate"
-                                ]
                             }
                         ]
                     }

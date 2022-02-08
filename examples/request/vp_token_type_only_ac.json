@@ -9,7 +9,7 @@
                 {
                     "id": "id card credential",
                     "format": {
-                        "ldp_ac": {
+                        "anoncred": {
                             "proof_type": [
                                 "CLSignature2019"
                             ]
@@ -23,7 +23,7 @@
                                 ],
                                 "filter": {
                                     "type": "string",
-                                    "pattern": "3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0\\.1"
+                                    "pattern": "did:indy:idu:test:3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0\\.1"             
                                 }
                             }
                         ]
