@@ -9,7 +9,7 @@
                 {
                     "id": "id card credential with constraints",
                     "format": {
-                        "anoncred": {
+                        "ac_vc": {
                             "proof_type": [
                                 "CLSignature2019"
                             ]

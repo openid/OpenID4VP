@@ -32,7 +32,7 @@
                 {
                     "id": "next cloud test credential",
                     "format": {
-                        "anoncred": {
+                        "ac_vc": {
                             "proof_type": [
                                 "CLSignature2019"
                             ]

@@ -17,10 +17,10 @@
         "descriptor_map": [
           {
             "path": "$",
-            "format": "anoncred_proof",
+            "format": "ac_vp",
             "path_nested": {
               "path": "$.requested_proof.revealed_attr_groups.ref2",
-              "format": "anoncred"
+              "format": "ac_vc"
             },
             "id": "ref2"
           }
