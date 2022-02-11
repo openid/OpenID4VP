@@ -121,27 +121,7 @@ This specification defines the following parameter `vp_token` that is used to re
 
 ## Request {#vp_token_request}
 
-A VP Token is requested by adding a new top-level element `vp_token` to the `claims` parameter. This element contains either a `presentation_definition` element or a `presentation_definition_uri` element, which is a reference to a `presentation_definition`. The 'presentation_definition' element is defined below.
-
-### Passing a presentation definition by value
-
-This is achieved by adding the `presentation_definition` element to the `vp_token` parameter. Support for `presentation_definition` is CONDITIONAL. It MUST be present if `presentation_definition_uri` is not present.
-
-For example
-
-	"vp_token": {"presentation_definition": {.... } } 
-
-
-### Passing a presentation definition by reference
-
-This is achieved by adding the `presentation_definition_uri` element to the `vp_token` parameter. Support for `presentation_definition_uri` is CONDITIONAL. It MUST be present if `presentation_definition` is not present.
-
-`presentation_definition_uri` is used to the retrieve the `presentation_definition` from the resource at the specified URL, rather than being passed by value. 
-
-For example
-
-	"vp_token": {"presentation_definition_uri": "https://host/path?ref=<string reference to presentation definition>"}
-
+A VP Token is requested by adding a new top-level element `vp_token` to the `claims` parameter. This element refers to a `presentation_definition` which is defined below.
 
 ### Presentation definition
 
@@ -166,6 +146,27 @@ The following example shows how the RP can request selective disclosure or certa
 RPs can also ask for alternative credentials being presented, which is shown in the next example:
 
 <{{examples/request/vp_token_alternative_credentials.json}}
+
+
+### Passing a presentation definition by value
+
+This is achieved by adding the `presentation_definition` element to the `vp_token` parameter. Support for `presentation_definition` is CONDITIONAL. It MUST be present if `presentation_definition_uri` is not present.
+
+For example
+
+	"vp_token": {"presentation_definition": {.... } } 
+
+
+### Passing a presentation definition by reference
+
+This is achieved by adding the `presentation_definition_uri` element to the `vp_token` parameter. Support for `presentation_definition_uri` is CONDITIONAL. It MUST be present if `presentation_definition` is not present.
+
+`presentation_definition_uri` is used to the retrieve the `presentation_definition` from the resource at the specified URL, rather than being passed by value. 
+
+For example
+
+	"vp_token": {"presentation_definition_uri": "https://host/path?ref=<string reference to presentation definition>"}
+
 
 ## Response {#vp_token_response}
 
