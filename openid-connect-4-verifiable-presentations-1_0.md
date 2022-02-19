@@ -235,13 +235,13 @@ The OP publishes the formats it supports using the `vp_formats` metadata paramet
 
 Often RPs will want to request verifiable credentials from an issuer who is a member of a federation or trust scheme, rather than from a specific issuer, for example, a "BSc Chemistry Degree" credential from a US University rather than from a specifically named university.
 
-In order to facilitate this we need to standardise how an issuer can indicate in a verifiable credential that they are a member of one or more federations/trust schemes. Once this is done, the RP will be able to create a `presentation_definition` that includes this filtering criteria. This will enable the wallet to select all the verifiable credentials that match this criteria and then by some means (for example, by asking the user) determine which matching verifiable credential to return to the RP. Upon receiving this verifiable credential, the RP will be able to call its federation API to determine if the issuer is indeed a member of the federation/trust scheme that they say they are.
+In order to facilitate this, federations will need to determine how an issuer can indicate in a verifiable credential that they are a member of one or more federations/trust schemes. Once this is done, the RP will be able to create a `presentation_definition` that includes this filtering criteria. This will enable the wallet to select all the verifiable credentials that match this criteria and then by some means (for example, by asking the user) determine which matching verifiable credential to return to the RP. Upon receiving this verifiable credential, the RP will be able to call its federation API to determine if the issuer is indeed a member of the federation/trust scheme that it says it is.
 
-Indicating the federations/trust schemes that an issuer is a member of can be achieved by defining a `termsOfUse` property [@!VC_DATA].
+Indicating the federations/trust schemes that an issuer is a member of may be achieved by defining a `termsOfUse` property [@!VC_DATA].
 
 Note. [@!VC_DATA] describes terms of use as "can be utilized by an issuer ... to communicate the terms under which a verifiable credential ... was issued."
 
-The following terms of use can be defined:
+The following terms of use may be defined:
 
 ```json
 {
@@ -264,7 +264,7 @@ An example `claims` parameter containing a `presentation_definition` that filter
 
 <{{examples/request/vp_token_federation.json}}
 
-This example will chose a VC that has been issued by a university that is either a member of the `ukuniversities.ac.uk` federation or the `usuniversities.edu` federation and that uses the TRAIN terms of use specification for asserting federation memberships.
+This example will chose a VC that has been issued by a university that is a member of the `ukuniversities.ac.uk` federation and that uses the TRAIN terms of use specification for asserting federation memberships.
 
 
 # Security Considerations {#security_considerations}

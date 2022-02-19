@@ -5,7 +5,7 @@
             "input_descriptors": [
                 {
                     "id": "federationExample",
-                    "purpose": "To pick a UK or a US university that is a member of their respective academic federations",
+                    "purpose": "To pick a UK university that is a member of the UK academic federation",
                     "constraints": {
                         "fields": [
                             {
@@ -22,14 +22,8 @@
                                     "$.termsOfUse.federations"
                                 ],
                                 "filter": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string"
-                                    },
-                                    "oneOf": [
-                                        "ukuniversities.ac.uk",
-                                        "usuniversities.edu"
-                                    ]
+                                    "type": "string",
+                                    "const": "ukuniversities.ac.uk"
                                 }
                             }
                         ]
