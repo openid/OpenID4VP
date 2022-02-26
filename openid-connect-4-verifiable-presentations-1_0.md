@@ -258,7 +258,7 @@ The following terms of use may be defined:
 
 Federations that conform to those specified in [@!OpenID.Federation] are identified by the `type` `urn:ietf:params:oauth:federation`. Individual federations are identified by {??? need to complete this ??}.
 
-Trust schemes that conform to the TRAIN [ref needed] trust scheme are identified by the `type` `https://train.trust-scheme.de/info`. Individual federations are identified by their DNS names.
+Trust schemes that conform to the TRAIN [@!TRAIN] trust scheme are identified by the `type` `https://train.trust-scheme.de/info`. Individual federations are identified by their DNS names.
 
 An example `claims` parameter containing a `presentation_definition` that filters VCs based on their federation memberships is given below.
 
@@ -563,6 +563,23 @@ Note: in accordance with (#security_considerations) the verifiable presentation'
           <author fullname="Kim Hamilton Duffy">
             <organization>Centre Consortium</organization>
           </author>
+        </front>
+</reference>
+
+<reference anchor="TRAIN" target="https://oid2022.compute.dtu.dk/index.html">
+        <front>
+          <title>A novel approach to establish trust in verifiable credential
+issuers in Self-Sovereign Identity ecosystems using TRAIN</title>	  
+           <author fullname="Isaac Henderson Johnson Jeyakumar">
+            <organization>University of Stuttgart</organization>
+          </author>
+          <author fullname="David W Chadwick">
+            <organization>Crossword Cybersecurity</organization>
+          </author>
+          <author fullname="Michael Kubach">
+            <organization>Fraunhofer IAO</organization>
+          </author>
+   <date day="8" month="July" year="2022"/>
         </front>
 </reference>
 
