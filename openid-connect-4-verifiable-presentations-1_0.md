@@ -221,7 +221,7 @@ This extension defines the following error codes that MUST be returned when the 
 
 This specification defines new server metadata parameters according to [@!OpenID-Discovery].
 
-The OP publishes the formats it supports using the `vp_formats` metadata parameter as defined above in its "openid-configuration". 
+The OP publishes the formats it supports using the `vp_formats_supported` metadata parameter as defined above in its "openid-configuration". 
 
 # Security Considerations {#security_considerations}
 
