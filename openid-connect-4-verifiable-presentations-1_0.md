@@ -183,6 +183,7 @@ with a matching `_vp_token` in the corresponding `id_token`.
 
 Note: Authentication event information is conveyed via the ID Token while it is up to the RP to determine what (additional) claims are allocated to `id_token` and `vp_token`, respectively, via the `claims` parameter.
 
+
 # Metadata {#metadata}
 
 This specification introduces additional metadata to enable RP and OP to determine the verifiable presentation and verifiable credential formats, proof types and algorithms to be used in a protocol exchange. 
@@ -222,6 +223,44 @@ This extension defines the following error codes that MUST be returned when the 
 This specification defines new server metadata parameters according to [@!OpenID-Discovery].
 
 The OP publishes the formats it supports using the `vp_formats_supported` metadata parameter as defined above in its "openid-configuration". 
+
+# Implementation Considerations
+
+## Support for Federations/Trust Schemes
+
+Often RPs will want to request verifiable credentials from an issuer who is a member of a federation or trust scheme, rather than from a specific issuer, for example, a "BSc Chemistry Degree" credential from a US University rather than from a specifically named university.
+
+In order to facilitate this, federations will need to determine how an issuer can indicate in a verifiable credential that they are a member of one or more federations/trust schemes. Once this is done, the RP will be able to create a `presentation_definition` that includes this filtering criteria. This will enable the wallet to select all the verifiable credentials that match this criteria and then by some means (for example, by asking the user) determine which matching verifiable credential to return to the RP. Upon receiving this verifiable credential, the RP will be able to call its federation API to determine if the issuer is indeed a member of the federation/trust scheme that it says it is.
+
+Indicating the federations/trust schemes that an issuer is a member of may be achieved by defining a `termsOfUse` property [@!VC_DATA].
+
+Note. [@!VC_DATA] describes terms of use as "can be utilized by an issuer ... to communicate the terms under which a verifiable credential ... was issued."
+
+The following terms of use may be defined:
+
+```json
+{
+   "termsOfUse":[
+      {
+         "type":"<uri that identifies this type of terms of use>",
+         "federations":[
+            "<list of federations/trust schemes the issuer asserts it is a member of>"
+         ]
+      }
+   ]
+}
+```
+
+Federations that conform to those specified in [@!OpenID.Federation] are identified by the `type` `urn:ietf:params:oauth:federation`. Individual federations are identified by the entity id of the trust anchor. If the federation decides to use trust marks as signs of whether an entity belongs to a federation or not then the federation is identified by the `type` `urn:ietf:params:oauth:federation_trust_mark` and individual federations are identified by the entity id of the trust mark issuer.
+
+Trust schemes that conform to the TRAIN [@!TRAIN] trust scheme are identified by the `type` `https://train.trust-scheme.de/info`. Individual federations are identified by their DNS names.
+
+An example `claims` parameter containing a `presentation_definition` that filters VCs based on their federation memberships is given below.
+
+<{{examples/request/vp_token_federation.json}}
+
+This example will chose a VC that has been issued by a university that is a member of the `ukuniversities.ac.uk` federation and that uses the TRAIN terms of use specification for asserting federation memberships.
+
 
 # Security Considerations {#security_considerations}
 
@@ -522,6 +561,23 @@ Note: in accordance with (#security_considerations) the verifiable presentation'
         </front>
 </reference>
 
+<reference anchor="TRAIN" target="https://oid2022.compute.dtu.dk/index.html">
+        <front>
+          <title>A novel approach to establish trust in verifiable credential
+issuers in Self-Sovereign Identity ecosystems using TRAIN</title>	  
+           <author fullname="Isaac Henderson Johnson Jeyakumar">
+            <organization>University of Stuttgart</organization>
+          </author>
+          <author fullname="David W Chadwick">
+            <organization>Crossword Cybersecurity</organization>
+          </author>
+          <author fullname="Michael Kubach">
+            <organization>Fraunhofer IAO</organization>
+          </author>
+   <date day="8" month="July" year="2022"/>
+        </front>
+</reference>
+
 <reference anchor="OpenID-Discovery" target="https://openid.net/specs/openid-connect-discovery-1_0.html">
   <front>
     <title>OpenID Connect Discovery 1.0 incorporating errata set 1</title>
@@ -554,6 +610,28 @@ Note: in accordance with (#security_considerations) the verifiable presentation'
             <organization>Microsoft</organization>
           </author>
           <date day="8" month="Nov" year="2014"/>
+        </front>
+ </reference>
+
+<reference anchor="OpenID.Federation" target="https://openid.net/specs/openid-connect-federation-1_0.html">
+        <front>
+          <title>OpenID Connect Federation 1.0 - draft 17></title>
+		  <author fullname="R. Hedberg, Ed.">
+            <organization>Independent</organization>
+          </author>
+          <author fullname="Michael B. Jones">
+            <organization>Microsoft</organization>
+          </author>
+          <author fullname="A. Solberg">
+            <organization>Uninett</organization>
+          </author>
+          <author fullname="S. Gulliksson">
+            <organization>Schibsted</organization>
+          </author>
+          <author fullname="John Bradley">
+            <organization>Yubico</organization>
+          </author>
+          <date day="9" month="Sept" year="2021"/>
         </front>
  </reference>
 
