@@ -121,7 +121,9 @@ This specification defines the following parameter `vp_token` that is used to re
 
 ## Request {#vp_token_request}
 
-A VP Token is requested by adding a new top-level element `vp_token` to the `claims` parameter. This element refers to a `presentation_definition` which is defined below.
+A VP Token is requested by adding a new top-level element `vp_token` to the `claims` parameter. This element either contains a `presentation_definition` element or refers to a presentation definition via an URI as defined below.
+
+NOTE: RPs MUST send a `nonce` parameter complying with the security considerations given in [@!OpenID.Core], Section 15.5.2., with every Authentication Request as a basis for replay detection. See (#preventing-replay).
 
 ### Presentation definition
 
@@ -130,8 +132,6 @@ This element contains a `presentation_definition` as defined in Section 4 of [@!
 Please note this draft defines a profile of [@!DIF.PresentationExchange] as follows: 
 
 * The `format` element in the `presentation_definition` that represents supported presentation formats, proof types, and algorithms is not supported. Those are determined using new RP and OP metadata (see (#metadata)). 
-
-RPs MUST send a `nonce` parameter complying with the security considerations given in [@!OpenID.Core], Section 15.5.2., with every Authentication Request as a basis for replay detection. See (#preventing-replay).
 
 The request syntax is illustrated in the following example:
 
@@ -146,7 +146,6 @@ The following example shows how the RP can request selective disclosure or certa
 RPs can also ask for alternative credentials being presented, which is shown in the next example:
 
 <{{examples/request/vp_token_alternative_credentials.json}}
-
 
 ### Passing a presentation definition by value
 
