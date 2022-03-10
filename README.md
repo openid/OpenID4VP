@@ -35,3 +35,4 @@ docker run -v `pwd`:/data danielfett/markdown2rfc openid-connect-4-verifiable-pr
 ### Who do I talk to? ###
 
 * The WG can be reached via the mailing list openid-specs-ekyc-ida@lists.openid.net
+
