@@ -641,7 +641,7 @@ TBD
 
 # Acknowledgements {#Acknowledgements}
 
-We would like to thank Daniel Fett, Fabian Hauck, Alen Horvat, Edmund Jay, Ronald Koenig, and Michael B. Jones for their valuable feedback and contributions that helped to evolve this specification.
+We would like to thank David Chadwick, Daniel Fett, Fabian Hauck, Alen Horvat, Edmund Jay, Ronald Koenig, and Michael B. Jones for their valuable feedback and contributions that helped to evolve this specification.
 
 # Notices
 
