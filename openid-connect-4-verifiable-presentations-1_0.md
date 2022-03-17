@@ -696,11 +696,20 @@ The technology described in this specification was made available from contribut
 # Document History
 
    [[ To be removed from the final specification ]]
+  
+   -09
+
+   * added support for passing presentation_definition by reference
+   * added description how to requset credential issued by a member of a federation
+
+   -08
+
+   * reflected editorial comments received during pre-implementer's draft review period
 
    -07
 
-   - added text on other credential formats
-   - fixed inconsistency in security consideration regarding nonce
+   * added text on other credential formats
+   * fixed inconsistency in security consideration regarding nonce
 
    -06
 
