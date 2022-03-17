@@ -121,7 +121,7 @@ This specification defines the following parameter `vp_token` that is used to re
 
 ## Request {#vp_token_request}
 
-A VP Token is requested by adding a new top-level element `vp_token` to the `claims` parameter. This element either contains a `presentation_definition` element or refers to a presentation definition via an URI as defined below.
+A VP Token is requested by adding a new top-level element `vp_token` to the `claims` parameter. By default, this element contains a `presentation_definition` element, but can also refer to a presentation definition via an URI as defined below.
 
 NOTE: RPs MUST send a `nonce` parameter complying with the security considerations given in [@!OpenID.Core], Section 15.5.2., with every Authentication Request as a basis for replay detection. See (#preventing-replay).
 
@@ -149,11 +149,13 @@ RPs can also ask for alternative credentials being presented, which is shown in 
 
 ### Passing a presentation definition by value
 
-This is achieved by adding the `presentation_definition` element to the `vp_token` parameter. Support for `presentation_definition` is CONDITIONAL. It MUST be present if `presentation_definition_uri` is not present.
+This is achieved by adding the `presentation_definition` element to the `vp_token` parameter. Support for `presentation_definition` is REQUIRED. It MUST be present if `presentation_definition_uri` is not present.
 
 For example
 
-	"vp_token": {"presentation_definition": {.... } } 
+	"vp_token": {
+    "presentation_definition": {.... } 
+  } 
 
 
 ### Passing a presentation definition by reference
@@ -164,7 +166,9 @@ This is achieved by adding the `presentation_definition_uri` element to the `vp_
 
 For example
 
-	"vp_token": {"presentation_definition_uri": "https://host/path?ref=<string reference to presentation definition>"}
+	"vp_token": {
+    "presentation_definition_uri": "https://host/path?ref=<string reference to presentation definition>"
+  }
 
 
 ## Response {#vp_token_response}
@@ -237,9 +241,7 @@ Here is an example for an RP registering with a SIOP (see [@SIOPv2]) with the `r
 
 RPs indicate their support for transferring presentation definitions by value and/or by reference, by using the following parameters:
 
-* `pd_value_supported`: OPTIONAL. Boolean value specifying whether the RP supports the transfer of `presentation_definition` by value, with true indicating support. If omitted, the default value is false. 
-
-* `pd_reference_supported`: OPTIONAL. Boolean value specifying whether the RP supports the transfer of `presentation_definition` by reference, with true indicating support. If omitted, the default value is true. 
+* `presentation_definition_uri`: OPTIONAL. Boolean value specifying whether the RP supports the transfer of `presentation_definition` by reference, with true indicating support. If omitted, the default value is true. 
 
 ## RP Metadata Error Response
 
