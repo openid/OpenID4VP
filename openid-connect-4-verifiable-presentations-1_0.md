@@ -7,7 +7,7 @@ keyword = ["security", "openid", "ssi"]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "openid-connect-4-verifiable-presentations-1_0-09"
+value = "openid-connect-4-verifiable-presentations-1_0-10"
 status = "standard"
 
 [[author]]
@@ -655,6 +655,18 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </front>
  </reference>
 
+
+<reference anchor="Hyperledger.Indy" target="https://www.hyperledger.org/use/hyperledger-indy">
+        <front>
+          <title>Hyperledger Indy Project</title>
+          <author>
+            <organization>Hyperledger Indy Project</organization>
+          </author>
+          <date year="2022"/>
+        </front>
+</reference>
+
+
 <reference anchor="OpenID.Federation" target="https://openid.net/specs/openid-connect-federation-1_0.html">
         <front>
           <title>OpenID Connect Federation 1.0 - draft 17></title>
@@ -677,6 +689,242 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </front>
  </reference>
 
+# Alternative Credential Formats
+
+OpenID Connect for Verifiable Presentations is credential format agnostic, i.e. it is designed to allow applications to request and receive verifiable presentations and credentials in other formats then those defined in [@!VC_DATA]. This shall be illustrated with examples utilizing other credential formats. Customization of OpenID Connect 4 Verifiable Presentation for other credential formats uses extensions points of Presentation Exchange [@!DIF.PresentationExchange]. 
+
+## Anoncreds
+
+Anoncreds are part of the Hyperledger Indy project [@Hyperledger.Indy].
+
+To be able to request AnonCreds, there needs to a set of identifiers for credentials, presentations ("proofs" in Indy terminology) and crypto schemes. For the purpose of this example, the following identifiers are used: 
+
+* `ac_vc`: designates a credential in Anoncreds format. 
+* `ac_vp`: designates a presentation in Anoncreds format.
+* `CLSignature2019`: identifies the CL-signature scheme used in conjunction with Anoncreds.
+
+### Example Credential
+
+The following is an example Anoncred that will be used through this section. 
+
+```json
+{
+    "schema_id": "3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0.1",
+    "cred_def_id": "CsiDLAiFkQb9N4NDJKUagd:3:CL:4687:awesome_cred",
+    "rev_reg_id": null,
+    "values": {
+        "first_name": {
+            "raw": "Alice",
+            "encoded": "6874ecdbdb214ee888e37c8c983e2f1c9c0ed16907b519704db42bb6"
+        },
+        "last_name": {
+            "raw": "Wonderland",
+            "encoded": "f5e16db78511f23bf2bcf0f450f20180951557cd75efe88b276988fd"
+        },
+        "email": {
+            "raw": "alice@example.com",
+            "encoded": "0fbaa7f92a47fe3c5201e97f063983c702432e90dd7bf0c723386543"
+        }
+    },
+    "signature": {
+        "p_credential": {
+            "m_2": "99219524012997799443220800218760023447537107640621419137185629243278403921312",
+            "a": "54855652574677988116650236306088516361537734570414909367032672219103444197205489674846545082012012711261249754371310495367475614729209653850720034913398482184757254920537051297936910125023613323255317515823974231493572903991640659741108603715378490408836507643191051986137793268856316333600932915078337920001692235029278931184173692694366223663131943657834349339828618978436402973046999961539444380116581314372906598415014528562207334745774098097000567515212222894771357044500544552372314335894883000614144994856702181141090905033428221403654636324918343808136750040908443212492359485782471636294013062295153997068252",
+            "e": "259344723055062059907025491480697571938277889515152306249728583105665800713306759149981690559193987143012367913206299323899696942213235956742930239825562861075148170278284639129199",
+            "v": "9774232256179658261610308745866736090602538333363396375105120427156273261155207775732400073422905045147609169788952804683922921383859274758479842100138659865591976937215264032734277416744113491766616076612368115891637834588143840477778776159325514034900968730327459279564615858068472282705529798808334108833124505594371791348317639533993310391511620579199112357959170076753792711700533312522910797352842323445933004238048599164039686432144165884599052061538014126710866075791210006585893465085621395503182710866197817129408546193805893321161372355187962990595781339533851533077334790530438016817333603675910702146635975282253747819810788129751055728368937483121363992748831475139233180853145906108476753713239644943541916540123456371366974874702598201796929261151925643543132170495933035112012082080893049915977209167597"
+        },
+        "r_credential": null
+    },
+    "signature_correctness_proof": {
+        "se": "8986500246928105545119249693120482606913996376875337975817228090569777886100120575851444392132175485176800946276729875298747664099989412623249056022784348808658577491758644556594901203598819936532435225959211617545841036816799892165118015169512229910557670483101499028188851318984001732266955939801843049852569586066803442690248386970226324039561954050567607010646624132392374280640663854092050106203821468403658338788408023014151088931308776669398184180228869449717267624484235796469721889284094131533549692106113602342932288350356591343546227828642494647872633442330361211149649432468143339518371824496555067302935",
+        "c": "93582993140981799598406702841334282100000866001274710165299804498679784215598"
+    },
+    "rev_reg": null,
+    "witness": null
+}
+```
+
+The most impportant parts for the purpose of this example are `scheme_id` and the `values` element, which contains the actual End-user claims. 
+
+### Presentation Request 
+
+The following is an example request for a verifiable presentation in Anoncred format.
+
+```json
+{
+    "id_token": {
+        "email": null
+    },
+    "vp_token": {
+        "presentation_definition": {
+            "id": "vp token example",
+            "input_descriptors": [
+                {
+                    "id": "id card credential",
+                    "format": {
+                        "ac_vc": {
+                            "proof_type": [
+                                "CLSignature2019"
+                            ]
+                        }
+                    },
+                    "constraints": {
+                        "fields": [
+                            {
+                                "path": [
+                                    "$.schema_id"
+                                ],
+                                "filter": {
+                                    "type": "string",
+                                    "pattern": "did:indy:idu:test:3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0\\.1"             
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+}
+```
+
+The explanation in the following will focus on the elements in the `input_descriptor` object in the `claims` parameter.
+
+The `format` object uses the format identifier `ac_vc` as defined above and sets the `proof_type` to `CLSignature2019` to denote this descriptor requires a credential in Anoncreds format signed with a CL signature. The rest of the expressions operate on the Anoncreds JSON structure . 
+
+The `constraints` object requires the selected credential to conform with a certain schema, which is denoted as a constraint over the Anoncred's`schema_id` element. 
+
+The next example leverages the Anoncred's capabilities for selective disclosure by requesting a subset of the claims in the credential to be disclosed to the verifier.
+
+```json
+{
+    "id_token": {
+        "email": null
+    },
+    "vp_token": {
+        "presentation_definition": {
+            "id": "vp token example",
+            "input_descriptors": [
+                {
+                    "id": "id card credential with constraints",
+                    "format": {
+                        "ac_vc": {
+                            "proof_type": [
+                                "CLSignature2019"
+                            ]
+                        }
+                    },
+                    "constraints": {
+                        "limit_disclosure": "required",
+                        "fields": [
+                            {
+                                "path": [
+                                    "$.schema_id"
+                                ],
+                                "filter": {
+                                    "type": "string",
+                                    "pattern": "did:indy:idu:test:3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0\\.1"
+                                }
+                            },
+                            {
+                                "path": [
+                                    "$.values.given_name"
+                                ]
+                            },
+                            {
+                                "path": [
+                                    "$.values.family_name"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+}
+```
+
+In addition to the previous example, it uses the PE elememt `limit_disclosure` to `require` and adds two more constraints for the individual claims `given_name` and `family_name`. Since such claims are stored underneath a `values` container in an Anoncred, `values` is part of the path to identify the respective claim. 
+
+### Presentation Response
+
+The response contains an ID Token and a VP tokens. 
+
+The following show how the `presentation submission` in the ID token helps the verifier to obtain the Anoncred proof in the VP token.
+
+```json
+{
+  "aud": "https://example.com/callback",
+  "sub": "9wgU5CR6PdgGmvBfgz_CqAtBxJ33ckMEwvij-gC6Bcw",
+  "auth_time": 1638483344,
+  "iss": "https://self-issued.me/v2",
+  "sub_jwk": {
+    "x": "cQ5fu5VmG…dA_5lTMGcoyQE78RrqQ6",
+    "kty": "EC",
+    "y": "XHpi27YMA…rnF_-f_ASULPTmUmTS",
+    "crv": "P-384"
+  },
+  "exp": 1638483944,
+  "iat": 1638483344,
+  "nonce": "67473895393019470130",
+  "_vp_token": {
+    "presentation_submission": {
+      "descriptor_map": [
+        {
+          "id": "ref2",
+          "path": "$",
+          "format": "ac_vp",
+          "path_nested": {
+            "path": "$.requested_proof.revealed_attr_groups.ref2",
+            "format": "ac_vc"
+          }
+        }
+      ],
+      "definition_id": "NextcloudLogin",
+      "id": "NexcloudCredentialPresentationSubmission"
+    }
+  }
+}
+```
+
+The `descriptor_map` refers to the input descriptor `ref2` and tells the verifier that there is a Anoncred proof (`format` is `ac_vp`) directly in the vp_token (path is the root designated by `$`). Furthermore as a nested path, it also indicates that the user claims can be found embedded in the proof underneath `requested_proof.revealed_attr_groups.ref2`.
+
+And here is the corresponding VP token.
+
+```json
+{
+   "proof": {...},
+   "requested_proof": {
+       "revealed_attrs": {},
+       "revealed_attr_groups": {
+           "ref2": {
+               "sub_proof_index": 0,
+               "values": {
+                   "last_name": {
+                       "raw": "Wonderland",
+                       "encoded": "167908493…94017654562035"
+                   },
+                   "first_name": {
+                       "raw": "Alice",
+                       "encoded": "270346400…99344178781507"
+                   }
+               }
+           }
+       },
+       …
+   },
+   "identifiers": [
+       {
+           "schema_id": "3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0.1",
+           "cred_def_id": "CsiDLAiFkQb9N4NDJKUagd:3:CL:4687:awesome_cred",
+           "rev_reg_id": null,
+           "timestamp": null
+       }
+   ]
+}
+```
+
 # IANA Considerations
 
 TBD
@@ -697,6 +945,10 @@ The technology described in this specification was made available from contribut
 
    [[ To be removed from the final specification ]]
   
+   -10
+
+   * Added Anoncreds example
+
    -09
 
    * added support for passing presentation_definition by reference
