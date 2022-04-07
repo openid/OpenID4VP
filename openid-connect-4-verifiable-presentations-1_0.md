@@ -691,21 +691,21 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
 
 # Alternative Credential Formats
 
-OpenID Connect for Verifiable Presentations is credential format agnostic, i.e. it is designed to allow applications to request and receive verifiable presentations and credentials in other formats then those defined in [@!VC_DATA]. This shall be illustrated with examples utilizing other credential formats. Customization of OpenID Connect 4 Verifiable Presentation for other credential formats uses extensions points of Presentation Exchange [@!DIF.PresentationExchange]. 
+OpenID Connect for Verifiable Presentations is credential format agnostic, i.e. it is designed to allow applications to request and receive verifiable presentations and credentials in any format, not limited to the formats defined in [@!VC_DATA]. This section aims to illustrate this with examples utilizing other credential formats. Customization of OpenID Connect for Verifiable Presentation for other credential formats uses extensions points of Presentation Exchange [@!DIF.PresentationExchange]. 
 
-## Anoncreds
+## AnonCreds
 
-Anoncreds are part of the Hyperledger Indy project [@Hyperledger.Indy].
+AnonCreds is a credential format defined as part of the Hyperledger Indy project [@Hyperledger.Indy].
 
-To be able to request AnonCreds, there needs to a set of identifiers for credentials, presentations ("proofs" in Indy terminology) and crypto schemes. For the purpose of this example, the following identifiers are used: 
+To be able to request AnonCreds, there needs to be a set of identifiers for credentials, presentations ("proofs" in Indy terminology) and crypto schemes. For the purpose of this example, the following identifiers are used: 
 
-* `ac_vc`: designates a credential in Anoncreds format. 
-* `ac_vp`: designates a presentation in Anoncreds format.
-* `CLSignature2019`: identifies the CL-signature scheme used in conjunction with Anoncreds.
+* `ac_vc`: designates a credential in AnonCreds format. 
+* `ac_vp`: designates a presentation in AnonCreds format.
+* `CLSignature2019`: identifies the CL-signature scheme used in conjunction with AnonCreds.
 
 ### Example Credential
 
-The following is an example Anoncred that will be used through this section. 
+The following is an example AnonCred credential that will be used through this section. 
 
 ```json
 {
@@ -744,11 +744,13 @@ The following is an example Anoncred that will be used through this section.
 }
 ```
 
-The most impportant parts for the purpose of this example are `scheme_id` and the `values` element, which contains the actual End-user claims. 
+The most important parts for the purpose of this example are `scheme_id` element and `values` element that contains the actual End-user claims. 
 
 ### Presentation Request 
 
-The following is an example request for a verifiable presentation in Anoncred format.
+#### Request Example without Selective Release of Claims
+
+The following is an example request for a presentation of a credential in AnonCreds format.
 
 ```json
 {
@@ -788,13 +790,15 @@ The following is an example request for a verifiable presentation in Anoncred fo
 }
 ```
 
-The explanation in the following will focus on the elements in the `input_descriptor` object in the `claims` parameter.
+The following explanation will focus on the elements in the `input_descriptor` object in the `claims` parameter.
 
-The `format` object uses the format identifier `ac_vc` as defined above and sets the `proof_type` to `CLSignature2019` to denote this descriptor requires a credential in Anoncreds format signed with a CL signature. The rest of the expressions operate on the Anoncreds JSON structure . 
+The `format` object uses the format identifier `ac_vc` as defined above and sets the `proof_type` to `CLSignature2019` to denote this descriptor requires a credential in AnonCreds format signed with a CL signature (Camenisch-Lysyanskaya siganture). The rest of the expressions operate on the AnonCreds JSON structure.
 
-The `constraints` object requires the selected credential to conform with a certain schema, which is denoted as a constraint over the Anoncred's`schema_id` element. 
+The `constraints` object requires the selected credential to conform with a certain schema, which is denoted as a constraint over the AnonCred's `schema_id` element. 
 
-The next example leverages the Anoncred's capabilities for selective disclosure by requesting a subset of the claims in the credential to be disclosed to the verifier.
+#### Request Example with Selective Release of Claims
+
+The next example leverages the AnonCreds' capabilities for selective disclosure by requesting a subset of the claims in the credential to be disclosed to the verifier.
 
 ```json
 {
@@ -845,13 +849,13 @@ The next example leverages the Anoncred's capabilities for selective disclosure 
 }
 ```
 
-In addition to the previous example, it uses the PE elememt `limit_disclosure` to `require` and adds two more constraints for the individual claims `given_name` and `family_name`. Since such claims are stored underneath a `values` container in an Anoncred, `values` is part of the path to identify the respective claim. 
+This example is identic to the previous one with the following exceptions. It sets the PE elememt `limit_disclosure` to `require` and adds two more constraints for the individual claims `given_name` and `family_name`. Since such claims are stored underneath a `values` container in an AnonCred, `values` is part of the path to identify the respective claim. 
 
 ### Presentation Response
 
 The response contains an ID Token and a VP tokens. 
 
-The following show how the `presentation submission` in the ID token helps the verifier to obtain the Anoncred proof in the VP token.
+The following is an ID Token example. It shows how the `presentation submission` helps the Verifier to locate proof of AnonCred credential in the VP token.
 
 ```json
 {
@@ -888,9 +892,9 @@ The following show how the `presentation submission` in the ID token helps the v
 }
 ```
 
-The `descriptor_map` refers to the input descriptor `ref2` and tells the verifier that there is a Anoncred proof (`format` is `ac_vp`) directly in the vp_token (path is the root designated by `$`). Furthermore as a nested path, it also indicates that the user claims can be found embedded in the proof underneath `requested_proof.revealed_attr_groups.ref2`.
+The `descriptor_map` refers to the input descriptor `ref2` and tells the verifier that there is a proof of AnonCred credential (`format` is `ac_vp`) directly in the vp_token (path is the root designated by `$`). Furthermore it indicates using `nested_path` parameter that the user claims can be found embedded in the proof underneath `requested_proof.revealed_attr_groups.ref2`.
 
-And here is the corresponding VP token.
+The following is a VP Token example.
 
 ```json
 {
@@ -947,7 +951,7 @@ The technology described in this specification was made available from contribut
   
    -10
 
-   * Added Anoncreds example
+   * Added AnonCreds example
 
    -09
 
