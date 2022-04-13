@@ -666,6 +666,15 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </front>
 </reference>
 
+<reference anchor="ISO.18013-5" target="https://www.iso.org/standard/69084.html">
+        <front>
+          <title>ISO/IEC 18013-5:2021 Personal identification — ISO-compliant driving licence — Part 5: Mobile driving licence (mDL)  application</title>
+          <author>
+            <organization> ISO/IEC JTC 1/SC 17 Cards and security devices for personal identification</organization>
+          </author>
+          <date year="2021"/>
+        </front>
+</reference>
 
 <reference anchor="OpenID.Federation" target="https://openid.net/specs/openid-connect-federation-1_0.html">
         <front>
@@ -810,7 +819,7 @@ The next example leverages the AnonCreds' capabilities for selective disclosure 
             "id": "vp token example",
             "input_descriptors": [
                 {
-                    "id": "id card credential with constraints",
+                    "id": "ref2",
                     "format": {
                         "ac_vc": {
                             "proof_type": [
@@ -929,6 +938,123 @@ The following is a VP Token example.
 }
 ```
 
+## ISO mobile Driving Licence (mDL)
+
+This section illustrates how a mobile driving licence (mDL) credential expressed using a data model and data sets defined in ISO/IEC 18013-5:2021 specification [@!ISO.18013-5] can be presented from the End-User's device directly to the RP using [@!SIOPv2] and [@!OIDC4VP].
+
+To request an ISO/IEC 18013-5:2021 mDL, following identifiers for credentials are used for the purposes of this example:
+
+* `mdl_iso`: designates a mobile driving licence (mDL) credential expressed using a data model and data sets defined in ISO/IEC 18013-5:2021 specification [@!ISO.18013-5].
+
+### Presentation Request 
+
+#### Request Example without Selective Release of Claims
+
+To request user claims in ISO/IEC 18013-5:2021 mDL, a `doctype` and `namespace` of the claim needs to be specified.
+Moreover, RP needs to indicate whether it intends to retain obtained user claims or not, using `intent_to_retain` property.
+
+Below is a non-formative example of how `claims` parameter is used in the authorization request to request an mDL credential in ISO/IEC 18013-5:2021 format:
+
+```json
+"claims": {
+  "vp_token": {
+    "presentation_definition": {
+      "id": "mDL-sample-req",
+      "input_descriptors": [
+        {
+          "id": "mDL",
+          "format": {
+            "mdl_iso": {
+              "alg": ["EdDSA", "ES256"]
+            },
+          "intent_to_retain": "false",
+          "constraints": {
+            "limit_disclosure": "required",
+            "fields": [
+              {"path": 
+                ["$.mdoc.doctype"],
+               "filter": {
+                 "type": "string",
+                 "const": "org.iso.18013.5.1.mDL"
+               }             
+              },
+             {"path": 
+                ["$.mdoc.namespace"],
+               "filter": {
+                 "type": "string",
+                 "const": "org.iso.18013.5.1"
+               }             
+              },
+             {"path": ["$.mdoc.family_name"]},
+             {"path": ["$.mdoc.portrait"]},
+             {"path": ["$.mdoc.driving_privileges"]}
+            ]       
+           }         
+         }
+        } 
+      ]
+    } 
+   }
+ }
+```
+
+Setting `limit_disclosure` property defined in [@!DIF.PresentationExchange] to `required`, enables selective release by instructing SIOP to submit only the data elements specified in the fields array.
+
+### Presentation Response
+
+The response contains an ID Token and a VP token. In a following example a single ISO/IEC 18013-5:2021 mDL is returned as a VP Token. Note that a ISO/IEC 18013-5:2021 mDL could be encoded both in CBOR or JSON. 
+
+The following is a non-normative example of a successful authorization request when [@!SIOPv2] and [@!OIDC4VP] is used.
+
+```
+POST /callback HTTP/1.1
+Host: client.example.org
+Content-Type: application/x-www-form-urlencoded
+
+id_token=<<Base64URL encoded ID Token>>
+  &vp_token=<<Base64URL encoded ISO/IEC 18013-5:2021 mDL (could be either CBOR or JSON)>>
+```
+
+The following is an ID Token example. It shows how the `presentation_submission` helps the RP to locate in the VP Token an ISO/IEC 18013-5:2021 mDL expressed in CBOR:
+
+```json
+{
+  "aud": "https://client.example.org/callback",
+  "sub": "9wgU5CR6PdgGmvBfgz_CqAtBxJ33ckMEwvij-gC6Bcw",
+  "iss": "9wgU5CR6PdgGmvBfgz_CqAtBxJ33ckMEwvij-gC6Bcw",
+  "sub_jwk": {
+    "x": "cQ5fu5VmG…dA_5lTMGcoyQE78RrqQ6",
+    "kty": "EC",
+    "y": "XHpi27YMA…rnF_-f_ASULPTmUmTS",
+    "crv": "P-384"
+  },
+  "exp": 1638483944,
+  "iat": 1638483344,
+  "nonce": "67473895393019470130",
+  "_vp_token": {
+    "presentation_submission": {
+      "descriptor_map": [
+        {
+          "id": "mDL",
+          "path": "$",
+          "format": "mdl_iso"
+        }
+      ],
+      "definition_id": "mDL-sample-req",
+      "id": "mDL-sample-res"
+    }
+  }
+}
+```
+
+The `descriptor_map` refers to the input descriptor `mDL` and tells the verifier that there is an ISO/IEC 18013-5:2021 mDL (`format` is `mdl_iso`) directly in the vp_token (path is the root designated by `$`). 
+
+When ISO/IEC 18013-5:2021 mDL is expressed in CBOR `nested_path` parameter cannot be used to point to the location of the requested claims. The user claims will be included in the `issuerSigned` item. `nested_path` parameter is useful when a JSON-encoded ISO/IEC 18013-5:2021 mDL is returned.
+
+An example of a ISO/IEC 18013-5:2021 mDL can be found in Annex D.4 of [@!ISO.18013-5]. 
+
+Note that the example in this section is also applicable to the electronic Identification credentials expressed using data models defined in ISO/IEC TR 23220-2.
+
 # IANA Considerations
 
 TBD
@@ -952,6 +1078,7 @@ The technology described in this specification was made available from contribut
    -10
 
    * Added AnonCreds example
+   * Added ISO mobile Driving Licence (mDL) example
 
    -09
 
