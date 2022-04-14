@@ -1000,6 +1000,8 @@ Below is a non-formative example of how `claims` parameter is used in the author
 
 Setting `limit_disclosure` property defined in [@!DIF.PresentationExchange] to `required`, enables selective release by instructing SIOP to submit only the data elements specified in the fields array.
 
+Note that if an RP wants to request user claims from another namespace, another `input_descriptor` object should be used, even if the namespaces belong to the same doctype.
+
 ### Presentation Response
 
 The response contains an ID Token and a VP token. In a following example a single ISO/IEC 18013-5:2021 mDL is returned as a VP Token. Note that a ISO/IEC 18013-5:2021 mDL could be encoded both in CBOR or JSON. 
