@@ -1062,7 +1062,7 @@ In the `issueSigned` item, `issuerAuth` item includes Issuer's signature over th
 
 Note that user claims in the `deviceSigned` item correspond to self-attested claims inside a Self-Issued ID Token (none in the example below), and user claims in the `issuerSigned` item correspond to the user claims included in a VP Token signed by a trusted third party.
 
-Note that the reson why hashes of the user claims are included in the `issuerAuth` item lies in the selective release mechanism. selective release of the user claims in an ISO/IEC 18013-5:2021 mDL is performed by the Issuer signing over the hashes of all the user claims during the issuance, and only the actual values of the claims that the End-User has agreed to reveal to teh Verifier being included during the presentation. Hence why the hashes of the 
+Note that the reson why hashes of the user claims are included in the `issuerAuth` item lies in the selective release mechanism. selective release of the user claims in an ISO/IEC 18013-5:2021 mDL is performed by the Issuer signing over the hashes of all the user claims during the issuance, and only the actual values of the claims that the End-User has agreed to reveal to teh Verifier being included during the presentation. 
 
 {
     "status": 0,
