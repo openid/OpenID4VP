@@ -940,7 +940,7 @@ The following is a VP Token example.
 
 ## ISO mobile Driving Licence (mDL)
 
-This section illustrates how a mobile driving licence (mDL) credential expressed using a data model and data sets defined in ISO/IEC 18013-5:2021 specification [@!ISO.18013-5] can be presented from the End-User's device directly to the RP using [@!SIOPv2] and [@!OIDC4VP].
+This section illustrates how a mobile driving licence (mDL) credential expressed using a data model and data sets defined in ISO/IEC 18013-5:2021 specification [@!ISO.18013-5] can be presented from the End-User's device directly to the RP using [@!SIOPv2] and this specification.
 
 To request an ISO/IEC 18013-5:2021 mDL, following identifiers for credentials are used for the purposes of this example:
 
@@ -1007,7 +1007,7 @@ Note that if an RP wants to request user claims from another namespace, another 
 
 The response contains an ID Token and a VP token. In a following example a single ISO/IEC 18013-5:2021 mDL is returned as a VP Token. Note that a ISO/IEC 18013-5:2021 mDL could be encoded both in CBOR or JSON. 
 
-The following is a non-normative example of a successful authorization request when [@!SIOPv2] and [@!OIDC4VP] is used.
+The following is a non-normative example of a successful authorization request when [@!SIOPv2] and this specification is used.
 
 ```
 POST /callback HTTP/1.1
@@ -1064,6 +1064,7 @@ Note that user claims in the `deviceSigned` item correspond to self-attested cla
 
 Note that the reson why hashes of the user claims are included in the `issuerAuth` item lies in the selective release mechanism. selective release of the user claims in an ISO/IEC 18013-5:2021 mDL is performed by the Issuer signing over the hashes of all the user claims during the issuance, and only the actual values of the claims that the End-User has agreed to reveal to teh Verifier being included during the presentation. 
 
+```json
 {
     "status": 0,
     "version": "1.0",
@@ -1232,6 +1233,7 @@ Note that the reson why hashes of the user claims are included in the `issuerAut
         }
     ]
 }
+```
 
 Note that the example in this section is also applicable to the electronic Identification credentials expressed using data models defined in ISO/IEC TR 23220-2.
 
