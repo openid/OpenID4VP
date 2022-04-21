@@ -944,14 +944,14 @@ This section illustrates how a mobile driving licence (mDL) credential expressed
 
 To request an ISO/IEC 18013-5:2021 mDL, following identifiers for credentials are used for the purposes of this example:
 
-* `mdl_iso`: designates a mobile driving licence (mDL) credential encoded as CBOR, expressed using a data model and data sets defined in ISO/IEC 18013-5:2021 specification [@!ISO.18013-5].
+* `mdl_iso_cbor`: designates a mobile driving licence (mDL) credential encoded as CBOR, expressed using a data model and data sets defined in ISO/IEC 18013-5:2021 specification [@!ISO.18013-5].
 * `mdl_iso_json`: designates a mobile driving licence (mDL) credential encoded as JSON, expressed using a data model and data sets defined in ISO/IEC 18013-5:2021 specification [@!ISO.18013-5].
 
 ### Presentation Request 
 
 #### Request Example
 
-Below is a non-formative example of how `claims` parameter is used in the authorization request to request an mDL credential in ISO/IEC 18013-5:2021 format:
+Below is a non-normative example of how `claims` parameter is used in the authorization request to request an mDL credential in ISO/IEC 18013-5:2021 format:
 
 ```json
 "claims": {
@@ -962,30 +962,38 @@ Below is a non-formative example of how `claims` parameter is used in the author
         {
           "id": "mDL",
           "format": {
-            "mdl_iso": {
+            "mdl_iso_cbor": {
               "alg": ["EdDSA", "ES256"]
             },
-          "intent_to_retain": "false",
           "constraints": {
             "limit_disclosure": "required",
             "fields": [
-              {"path": 
-                ["$.mdoc.doctype"],
-               "filter": {
-                 "type": "string",
-                 "const": "org.iso.18013.5.1.mDL"
-               }             
+              {
+                "path": ["$.mdoc.doctype"],
+                "filter": {
+                  "type": "string",
+                  "const": "org.iso.18013.5.1.mDL"
+                }             
               },
-             {"path": 
-                ["$.mdoc.namespace"],
-               "filter": {
-                 "type": "string",
-                 "const": "org.iso.18013.5.1"
-               }             
+              {
+                "path": ["$.mdoc.namespace"],
+                "filter": {
+                  "type": "string",
+                  "const": "org.iso.18013.5.1"
+                }             
               },
-             {"path": ["$.mdoc.family_name"]},
-             {"path": ["$.mdoc.portrait"]},
-             {"path": ["$.mdoc.driving_privileges"]}
+              {
+                "path": ["$.mdoc.family_name"],
+                "intent_to_retain": "false"
+              },
+              {
+                "path": ["$.mdoc.portrait"],
+                "intent_to_retain": "false"
+              },
+              {
+                "path": ["$.mdoc.driving_privileges"],
+                "intent_to_retain": "false"
+              }
             ]       
            }         
          }
@@ -1010,7 +1018,7 @@ Note that `intent_to_retain` is a property introduced to [@!DIF.PresentationExch
 
 ### Presentation Response
 
-The response contains an ID Token and a VP token. In a following example a single ISO/IEC 18013-5:2021 mDL is returned as a VP Token. Note that a ISO/IEC 18013-5:2021 mDL could be encoded both in CBOR or JSON. 
+The response contains an ID Token and a VP Token. In the following example, a single ISO/IEC 18013-5:2021 mDL is returned as a VP Token. Note that a ISO/IEC 18013-5:2021 mDL could be encoded both in CBOR or JSON. 
 
 The following is a non-normative example of a successful authorization request when [@!SIOPv2] and this specification is used.
 
@@ -1238,9 +1246,9 @@ In the `issueSigned` item, `issuerAuth` item includes Issuer's signature over th
 
 Note that user claims in the `deviceSigned` item correspond to self-attested claims inside a Self-Issued ID Token (none in the example below), and user claims in the `issuerSigned` item correspond to the user claims included in a VP Token signed by a trusted third party.
 
-Note that the reson why hashes of the user claims are included in the `issuerAuth` item lies in the selective release mechanism. selective release of the user claims in an ISO/IEC 18013-5:2021 mDL is performed by the Issuer signing over the hashes of all the user claims during the issuance, and only the actual values of the claims that the End-User has agreed to reveal to teh Verifier being included during the presentation. 
+Note that the reason why hashes of the user claims are included in the `issuerAuth` item lies in the selective release mechanism. Selective release of the user claims in an ISO/IEC 18013-5:2021 mDL is performed by the Issuer signing over the hashes of all the user claims during the issuance, and only the actual values of the claims that the End-User has agreed to reveal to teh Verifier being included during the presentation. 
 
-The example in this section is also applicable to the electronic Identification credentials expressed using data models defined in ISO/IEC TR 23220-2.
+The example in this section is also applicable to the electronic identification credentials expressed using data models defined in ISO/IEC TR 23220-2.
 
 # IANA Considerations
 
