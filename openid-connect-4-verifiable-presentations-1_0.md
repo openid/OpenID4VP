@@ -940,7 +940,7 @@ The following is a VP Token example.
 
 ## ISO mobile Driving Licence (mDL)
 
-This section illustrates how a mobile driving licence (mDL) credential expressed using a data model and data sets defined in ISO/IEC 18013-5:2021 specification [@!ISO.18013-5] can be presented from the End-User's device directly to the RP using [@!SIOPv2] and [@!OIDC4VP].
+This section illustrates how a mobile driving licence (mDL) credential expressed using a data model and data sets defined in ISO/IEC 18013-5:2021 specification [@!ISO.18013-5] can be presented from the End-User's device directly to the RP using [@!SIOPv2] and this specification.
 
 To request an ISO/IEC 18013-5:2021 mDL, following identifiers for credentials are used for the purposes of this example:
 
@@ -1012,7 +1012,7 @@ Note that `intent_to_retain` is a property introduced to [@!DIF.PresentationExch
 
 The response contains an ID Token and a VP token. In a following example a single ISO/IEC 18013-5:2021 mDL is returned as a VP Token. Note that a ISO/IEC 18013-5:2021 mDL could be encoded both in CBOR or JSON. 
 
-The following is a non-normative example of a successful authorization request when [@!SIOPv2] and [@!OIDC4VP] is used.
+The following is a non-normative example of a successful authorization request when [@!SIOPv2] and this specification is used.
 
 ```
 POST /callback HTTP/1.1
@@ -1230,6 +1230,7 @@ The following is a non-normative example of an ISO/IEC 18013-5:2021 mDL encoded 
         }
     ]
 }
+```
 
 In the `deviceSigned` item, `deviceAuth` item includes a signature by the deviceKey the belongs to the End-User. It is used to prove legitimate possession of the crdential, since the Issuer has signed over the deviceKey during the issuance of the credential. Note that deviceKey does not have to be HW-bound.
 
