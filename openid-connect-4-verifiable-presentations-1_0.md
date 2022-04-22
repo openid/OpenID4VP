@@ -54,13 +54,13 @@ organization="Mattr"
 
 .# Abstract
 
-This specification defines an extension of OpenID Connect to allow presentation of claims in the form of W3C Verifiable Credentials as part of the protocol flow in addition to claims provided in the `id_token` and/or via UserInfo responses.
+This specification defines an extension of OpenID Connect to allow presentation of claims in the form of Verifiable Credentials as part of the protocol flow in addition to claims provided in the `id_token` and/or via UserInfo responses.
 
 {mainmatter}
 
 # Introduction
 
-This specification extends OpenID Connect with support for presentation of claims via W3C Verifiable Credentials. This allows existing OpenID Connect RPs to extend their reach towards claims sources asserting claims in this format. It also allows new applications built using verifiable credentials to utilize OpenID Connect as integration and interoperability layer towards credential holders.
+This specification extends OpenID Connect with support for presentation of claims via Verifiable Credentials, supporting W3C formats as well as other credential formats. This allows existing OpenID Connect RPs to extend their reach towards claims sources asserting claims in this format. It also allows new applications built using verifiable credentials to utilize OpenID Connect as integration and interoperability layer towards credential holders.
 
 This specification enables requesting and delivery of verifiable presentations in conjunction with Self-Issued OpenID Providers (see [@SIOPv2]) as well as traditional OpenID  Providers (see [@!OpenID.Core]).
 
@@ -101,7 +101,7 @@ This approach dramatically reduces latency and reduces load on the OP's servers.
 
 # Overview 
 
-This specification defines mechanisms to allow RPs to request and OPs to provide verifiable presentations via OpenID Connect. The specification focuses on enabling request and presentation of W3C Verifiable Credentials but the authors also aim at enabling its use with other credential formats. 
+This specification defines mechanisms to allow RPs to request and OPs to provide verifiable presentations via OpenID Connect. The specification currently focuses on W3C Verifiable Credentials but it can also be used with other credential formats as illustrated in (#alternative_credential_formats). 
 
 Verifiable presentations are used to present claims along with cryptographic proofs of the link between presenter and subject of the verifiable credentials it contains. A verifiable presentation can contain a subset of claims asserted in a certain credential (selective disclosure) and it can assemble claims from different credentials. 
 
@@ -287,9 +287,9 @@ The following terms of use may be defined:
 }
 ```
 
-Federations that conform to those specified in [@!OpenID.Federation] are identified by the `type` `urn:ietf:params:oauth:federation`. Individual federations are identified by the entity id of the trust anchor. If the federation decides to use trust marks as signs of whether an entity belongs to a federation or not then the federation is identified by the `type` `urn:ietf:params:oauth:federation_trust_mark` and individual federations are identified by the entity id of the trust mark issuer.
+Federations that conform to those specified in [@OpenID.Federation] are identified by the `type` `urn:ietf:params:oauth:federation`. Individual federations are identified by the entity id of the trust anchor. If the federation decides to use trust marks as signs of whether an entity belongs to a federation or not then the federation is identified by the `type` `urn:ietf:params:oauth:federation_trust_mark` and individual federations are identified by the entity id of the trust mark issuer.
 
-Trust schemes that conform to the TRAIN [@!TRAIN] trust scheme are identified by the `type` `https://train.trust-scheme.de/info`. Individual federations are identified by their DNS names.
+Trust schemes that conform to the TRAIN [@TRAIN] trust scheme are identified by the `type` `https://train.trust-scheme.de/info`. Individual federations are identified by their DNS names.
 
 An example `claims` parameter containing a `presentation_definition` that filters VCs based on their federation memberships is given below.
 
@@ -698,7 +698,7 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </front>
  </reference>
 
-# Alternative Credential Formats
+# Alternative Credential Formats {#alternative_credential_formats}
 
 OpenID Connect for Verifiable Presentations is credential format agnostic, i.e. it is designed to allow applications to request and receive verifiable presentations and credentials in any format, not limited to the formats defined in [@!VC_DATA]. This section aims to illustrate this with examples utilizing other credential formats. Customization of OpenID Connect for Verifiable Presentation for other credential formats uses extensions points of Presentation Exchange [@!DIF.PresentationExchange]. 
 
@@ -940,12 +940,12 @@ The following is a VP Token example.
 
 ## ISO mobile Driving Licence (mDL)
 
-This section illustrates how a mobile driving licence (mDL) credential expressed using a data model and data sets defined in ISO/IEC 18013-5:2021 specification [@!ISO.18013-5] can be presented from the End-User's device directly to the RP using [@!SIOPv2] and this specification.
+This section illustrates how a mobile driving licence (mDL) credential expressed using a data model and data sets defined in ISO/IEC 18013-5:2021 specification [@ISO.18013-5] can be presented from the End-User's device directly to the RP using [@!SIOPv2] and this specification.
 
 To request an ISO/IEC 18013-5:2021 mDL, following identifiers for credentials are used for the purposes of this example:
 
-* `mdl_iso_cbor`: designates a mobile driving licence (mDL) credential encoded as CBOR, expressed using a data model and data sets defined in ISO/IEC 18013-5:2021 specification [@!ISO.18013-5].
-* `mdl_iso_json`: designates a mobile driving licence (mDL) credential encoded as JSON, expressed using a data model and data sets defined in ISO/IEC 18013-5:2021 specification [@!ISO.18013-5].
+* `mdl_iso_cbor`: designates a mobile driving licence (mDL) credential encoded as CBOR, expressed using a data model and data sets defined in ISO/IEC 18013-5:2021 specification [@ISO.18013-5].
+* `mdl_iso_json`: designates a mobile driving licence (mDL) credential encoded as JSON, expressed using a data model and data sets defined in ISO/IEC 18013-5:2021 specification [@ISO.18013-5].
 
 ### Presentation Request 
 
@@ -1013,7 +1013,7 @@ Selective release of claims is a requirement built into an ISO/IEC 18013-5:2021 
 
 If an RP wants to request user claims from another namespace, another `input_descriptor` object should be used, even if the namespaces belong to the same doctype.
 
-Note that `intent_to_retain` is a property introduced to [@!DIF.PresentationExchange] to meet requirements of [@!ISO.18013-5].
+Note that `intent_to_retain` is a property introduced to [@!DIF.PresentationExchange] to meet requirements of [@ISO.18013-5].
 
 
 ### Presentation Response
