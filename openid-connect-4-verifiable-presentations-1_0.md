@@ -1069,6 +1069,7 @@ When ISO/IEC 18013-5:2021 mDL is expressed in CBOR `nested_path` parameter canno
 
 The following is a non-normative example of an ISO/IEC 18013-5:2021 mDL encoded as CBOR in diagnostic notation (line wraps within values are for display purposes only).
 
+```json
 {
     "status": 0,
     "version": "1.0",
