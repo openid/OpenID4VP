@@ -1,51 +1,44 @@
 {
-    "id_token": {
-        "email": null
-    },
-    "vp_token": {
-        "presentation_definition": {
-            "id": "vp token example",
-            "input_descriptors": [
-                {
-                    "id": "id card credential with constraints",
-                    "format": {
-                        "ldp_vc": {
-                            "proof_type": [
-                                "Ed25519Signature2018"
-                            ]
+    "id": "vp token example",
+    "input_descriptors": [
+        {
+            "id": "id card credential with constraints",
+            "format": {
+                "ldp_vc": {
+                    "proof_type": [
+                        "Ed25519Signature2018"
+                    ]
+                }
+            },
+            "constraints": {
+                "limit_disclosure": "required",
+                "fields": [
+                    {
+                        "path": [
+                            "$.type"
+                        ],
+                        "filter": {
+                            "type": "string",
+                            "pattern": "IDCardCredential"
                         }
                     },
-                    "constraints": {
-                        "limit_disclosure": "required",
-                        "fields": [
-                            {
-                                "path": [
-                                    "$.type"
-                                ],
-                                "filter": {
-                                    "type": "string",
-                                    "pattern": "IDCardCredential"
-                                }
-                            },
-                            {
-                                "path": [
-                                    "$.credentialSubject.given_name"
-                                ]
-                            },
-                            {
-                                "path": [
-                                    "$.credentialSubject.family_name"
-                                ]
-                            },
-                            {
-                                "path": [
-                                    "$.credentialSubject.birthdate"
-                                ]
-                            }
+                    {
+                        "path": [
+                            "$.credentialSubject.given_name"
+                        ]
+                    },
+                    {
+                        "path": [
+                            "$.credentialSubject.family_name"
+                        ]
+                    },
+                    {
+                        "path": [
+                            "$.credentialSubject.birthdate"
                         ]
                     }
-                }
-            ]
+                ]
+            }
         }
-    }
+    ]
 }

@@ -1,0 +1,24 @@
+{
+    "id": "Selective disclosure example presentation",
+    "definition_id": "Selective disclosure example",
+    "descriptor_map": [
+        {
+            "id": "ID Card with constraints",
+            "format": "ldp_vp",
+            "path": "$[0]",
+            "path_nested": {
+                "format": "ldp_vc",
+                "path": "$[0].verifiableCredential[0]"
+            }
+        },
+        {
+            "id": "Ontario Health Insurance Plan",
+            "format": "jwt_vp",
+            "path": "$[1].presentation",
+            "path_nested": {
+                "format": "jwt_vc",
+                "path": "$[1].presentation.vp.verifiableCredential[0]"
+            }
+        }
+    ]
+}

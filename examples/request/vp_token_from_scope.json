@@ -1,15 +1,8 @@
 {
-    "id": "vp token example",
+    "id": "scope_IDCardCredential",
     "input_descriptors": [
         {
-            "id": "id card credential",
-            "format": {
-                "ldp_vc": {
-                    "proof_type": [
-                        "Ed25519Signature2018"
-                    ]
-                }
-            },
+            "id": "scope_IDCardCredential",
             "constraints": {
                 "fields": [
                     {
