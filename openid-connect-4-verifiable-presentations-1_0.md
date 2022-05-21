@@ -430,6 +430,10 @@ The protocol for the `presentation_definition_uri` MUST be https.
 
 In many instances the referenced server will be operated by a known federation or other trusted operator, and the URL's domain name will already be widely known. OPs (including SIOPs) using this URI can mitigate request forgeries by having a pre-configured set of trusted domain names and only fetching presentation_definitions from these sources. In addition, the presentation definitions could be signed by a trusted authority, such as the ICO or federation operator.
 
+## User Authentication using Verifiable Credentials
+
+Clients intending to authenticate the end-user utilizing a claim in a verifable credential MUST ensure this claim is stable for the end-user as well locally unique and never reassigned within the credential issuer to another end-user. Such a claim MUST also only be used in combination with the issuer identifier to ensure global uniqueness and to prevent attacks where an attacker obtains the same claim from a different issuer and tries to impersonate the legimate user. 
+
 #  Examples 
 
 This Section illustrates examples when W3C verifiable credentials objects are requested using the `claims` parameter and returned in a VP Token.
