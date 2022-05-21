@@ -54,13 +54,13 @@ organization="Mattr"
 
 .# Abstract
 
-This specification defines a mechanism on top of OAuth to allow presentation of claims in the form of Verifiable Credentials as part of the protocol flow. 
+This specification defines a mechanism on top of OAuth to allow presentation of claims in the form of verifiable credentials as part of the protocol flow. 
 
 {mainmatter}
 
 # Introduction
 
-This specification defines a mechanism on top of OAuth [@!RFC6749] for presentation of claims via Verifiable Credentials, supporting W3C formats as well as other credential formats. This allows existing OpenID Connect RPs to extend their reach towards claims sources asserting claims in this format. It also allows new applications built using verifiable credentials to utilize OAuth or OpenID Connect as integration and interoperability layer towards credential holders.
+This specification defines a mechanism on top of OAuth [@!RFC6749] for presentation of claims via verifiable credentials, supporting W3C formats as well as other credential formats. This allows existing OpenID Connect RPs to extend their reach towards claims sources asserting claims in this format. It also allows new applications built using verifiable credentials to utilize OAuth or OpenID Connect as integration and interoperability layer towards credential holders.
 
 OpenID Connect would be an obvious choice for this use case since it already allows Relying Parties to request identity assertions. However, early implementation experience suggests there are use cases where the presentation of verifiable presentations is sufficient and mandating [@OpenID.Core] features, such as issuance of ID tokens, would unnecessary increase implementation complexity. Thus the working group decided to use OAuth as a base protocol. Deployments can nevertheless add this specification to an OpenID Connect implementation, especially Self-Issued OpenID Providers (see [@SIOPv2]), since OpenID Connect is built on top of OAuth. 
 
@@ -95,28 +95,28 @@ An existing OpenID Connect may extend its service by maintaining credentials iss
 
 ## Federated OpenID Connect OP adds device-local mode
 
-An existing OpenID Connect OP with a native user experience (PWA or native app) issues Verifiable Credentials and stores them on the user's device linked to a private key residing on this device under the user's control. For every authentication request, the native user experience first checks whether this request can be fulfilled using the locally stored credentials. If so, it generates a presentation signed with the user's keys in order to prevent replay of the credential. 
+An existing OpenID Connect OP with a native user experience (PWA or native app) issues verifiable credentials and stores them on the user's device linked to a private key residing on this device under the user's control. For every authentication request, the native user experience first checks whether this request can be fulfilled using the locally stored credentials. If so, it generates a presentation signed with the user's keys in order to prevent replay of the credential. 
 
 This approach dramatically reduces latency and reduces load on the OP's servers. Moreover, the user identification, authentication, and authorization can be done even in situations with unstable or no internet connectivity. 
 
 # Overview 
 
-This specification defines a mechanism on top of OAuth to request and provide Verifiable Presentations. Since OpenID Connect is based on OAuth, implementations can also be build on top of OpenID Connect, e.g. Self-Issued OP v2 [@SIOPv2].
+This specification defines a mechanism on top of OAuth to request and provide verifiable presentations. Since OpenID Connect is based on OAuth, implementations can also be build on top of OpenID Connect, e.g. Self-Issued OP v2 [@SIOPv2].
 
-The specification supports all kinds of Verifiable Credentials, such as W3C Verifiable Credentials but also ISO mDL or AnonCreds. The examples given in the main part of the specification use W3C Verifiable Credentials, examples in other credential formats are given in  (#alternative_credential_formats). 
+The specification supports all kinds of verifiable credentials, such as W3C Verifiable Credentials but also ISO mDL or AnonCreds. The examples given in the main part of the specification use W3C Verifiable Credentials, examples in other credential formats are given in  (#alternative_credential_formats). 
 
 Verifiable Presentations are requested by adding a parameter `presentation_definition` or a scope value `openid_presentation:<credential_type>` to an OAuth authorization request.
 This specification introduces a new token type, "VP Token", used as a generic container for verifiable presentation objects, that is returned in authorization and token responses.  
 
 # Request {#vp_token_request}
 
-The parameters comprising a request for Verifiable Presentations are given in the following: 
+The parameters comprising a request for verifiable presentations are given in the following: 
 
 * `response_type`: REQUIRED. this parameter is defined in [@!RFC6749]. The possible values are determined by the response type registry established by [@!RFC6749]. This specification introduces the response type "vp_token". This response type asks the Authorization Server to only return a VP Token in the authorization response. 
 * `scope`: OPTIONAL. this parameter is defined in [@!RFC6749]. For the purpose of requesting a verifiable presentation, the client adds a scope value of the form `openid_presentation:<credential_type>`, e.g. `openid_presentation:healthcard`. See (#request_scope) for more details.
 * `presentation_definition`: OPTIONAL. A string containing a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange]. See (#request_presentation_definition) for more details.
 * `presentation_definition_uri`: OPTIONAL. A string containing a URL pointing to a resource where a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange] can be retrieved . See (#request_presentation_definition_uri) for more details.
-* `nonce`: REQUIRED. This parameter follows the definition given in [@!OpenID.Core]. It is used to securely bind the Verifiable Presentation(s) provided by the authorization server to the particular transaction.
+* `nonce`: REQUIRED. This parameter follows the definition given in [@!OpenID.Core]. It is used to securely bind the verifiable presentation(s) provided by the authorization server to the particular transaction.
 
 Note: An request MAY contain `scope`, `presentation_definition`, and `presentation_definition_uri`. The authorization server MUST merge the requirements passed by this different parameters. If the same credential type is requested by `scope` and one of the other parameters, they are treated separately since they belong to different (explicitely or implicitely determined) input descriptors. 
 
@@ -194,7 +194,7 @@ Content-Type: application/json
 
 ## openid_presentation scope values {#request_scope}
 
-A Verifiable Presentation can be requested by adding a scope value of the form `openid_presentation:<credential_type>` to the `scope` request parameter. Such a scope value is a default presentation request, i.e. it is resolved by the authorization server to a presentation definition and input descriptor of the following form:
+A verifiable presentation can be requested by adding a scope value of the form `openid_presentation:<credential_type>` to the `scope` request parameter. Such a scope value is a default presentation request, i.e. it is resolved by the authorization server to a presentation definition and input descriptor of the following form:
 
 ```JSON
 {
@@ -239,7 +239,7 @@ In all other cases, the `vp_token` is provided on the token response.
 
 The `vp_token` either contains a single verifiable presentation or an array of verifiable presentations. 
 
-Each of those verifiable presentations MAY contain a `presentation_submission` element as defined in [@!DIF.PresentationExchange]. This `presentation_submission` element links the input descriptor identifiers as specified in the corresponding request to the respective verifiable presentations within the `vp_token` along with format information. The root of the path expressions in the descriptor map is the respective verifiable presentation, pointing to the respective Verifiable Credentials.
+Each of those verifiable presentations MAY contain a `presentation_submission` element as defined in [@!DIF.PresentationExchange]. This `presentation_submission` element links the input descriptor identifiers as specified in the corresponding request to the respective verifiable presentations within the `vp_token` along with format information. The root of the path expressions in the descriptor map is the respective verifiable presentation, pointing to the respective verifiable credentials.
 
 This is shown in the following example:
 
@@ -436,7 +436,7 @@ Clients intending to authenticate the end-user utilizing a claim in a verifable 
 
 #  Examples 
 
-This Section illustrates examples when W3C verifiable credentials objects are requested using the `claims` parameter and returned in a VP Token.
+This Section illustrates examples when W3C Verifiable Credentials objects are requested using the `claims` parameter and returned in a VP Token.
 
 ## Self-Issued OpenID Provider (SIOP)
 This Section illustrates the protocol flow for the case of communication through the front-channel with SIOP.
@@ -761,7 +761,7 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
 
 # Alternative Credential Formats {#alternative_credential_formats}
 
-OpenID Connect for Verifiable Presentations is credential format agnostic, i.e. it is designed to allow applications to request and receive verifiable presentations and credentials in any format, not limited to the formats defined in [@!VC_DATA]. This section aims to illustrate this with examples utilizing other credential formats. Customization of OpenID Connect for Verifiable Presentation for other credential formats uses extensions points of Presentation Exchange [@!DIF.PresentationExchange]. 
+OpenID for Verifiable Presentations is credential format agnostic, i.e. it is designed to allow applications to request and receive verifiable presentations and credentials in any format, not limited to the formats defined in [@!VC_DATA]. This section aims to illustrate this with examples utilizing other credential formats. Customization of OpenID for Verifiable Presentation for other credential formats uses extensions points of Presentation Exchange [@!DIF.PresentationExchange]. 
 
 ## AnonCreds
 
