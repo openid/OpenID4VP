@@ -432,7 +432,7 @@ In many instances the referenced server will be operated by a known federation o
 
 ## User Authentication using Verifiable Credentials
 
-Clients intending to authenticate the end-user utilizing a claim in a verifable credential MUST ensure this claim is stable for the end-user as well locally unique and never reassigned within the credential issuer to another end-user. Such a claim MUST also only be used in combination with the issuer identifier to ensure global uniqueness and to prevent attacks where an attacker obtains the same claim from a different issuer and tries to impersonate the legimate user. 
+Clients intending to authenticate the end-user utilizing a claim in a verifable credential MUST ensure this claim is stable for the end-user as well locally unique and never reassigned within the credential issuer to another end-user. Such a claim MUST also only be used in combination with the issuer identifier to ensure global uniqueness and to prevent attacks where an attacker obtains the same claim from a different issuer and tries to impersonate the legitimate user. 
 
 #  Examples 
 
