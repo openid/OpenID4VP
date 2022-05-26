@@ -105,7 +105,7 @@ This specification defines a mechanism on top of OAuth to request and provide ve
 
 The specification supports all kinds of verifiable credentials, such as W3C Verifiable Credentials but also ISO mDL or AnonCreds. The examples given in the main part of the specification use W3C Verifiable Credentials, examples in other credential formats are given in  (#alternative_credential_formats). 
 
-Verifiable Presentations are requested by adding a parameter `presentation_definition` or a scope value `openid_presentation:<credential_type>` to an OAuth authorization request.
+Verifiable Presentations are requested by adding a parameter `presentation_definition` to an OAuth authorization request.
 This specification introduces a new token type, "VP Token", used as a generic container for verifiable presentation objects, that is returned in authorization and token responses.  
 
 # Request {#vp_token_request}
@@ -113,14 +113,11 @@ This specification introduces a new token type, "VP Token", used as a generic co
 The parameters comprising a request for verifiable presentations are given in the following: 
 
 * `response_type`: REQUIRED. this parameter is defined in [@!RFC6749]. The possible values are determined by the response type registry established by [@!RFC6749]. This specification introduces the response type "vp_token". This response type asks the Authorization Server to only return a VP Token in the authorization response. 
-* `scope`: OPTIONAL. this parameter is defined in [@!RFC6749]. For the purpose of requesting a verifiable presentation, the client adds a scope value of the form `openid_presentation:<credential_type>`, e.g. `openid_presentation:healthcard`. See (#request_scope) for more details. This mechanism is supported for ease of use in cases, where the verifier only wants to specific the credential type. If the use case requires more details, e.g. a list of the claims to be disclosed, one of the other options MUST be used.
-* `presentation_definition`: OPTIONAL. A string containing a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange]. See (#request_presentation_definition) for more details.
-* `presentation_definition_uri`: OPTIONAL. A string containing a URL pointing to a resource where a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange] can be retrieved . See (#request_presentation_definition_uri) for more details.
+* `presentation_definition`: CONDITIONAL. A string containing a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange]. See (#request_presentation_definition) for more details. 
+* `presentation_definition_uri`: CONDITIONAL. A string containing a URL pointing to a resource where a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange] can be retrieved . See (#request_presentation_definition_uri) for more details.
 * `nonce`: REQUIRED. This parameter follows the definition given in [@!OpenID.Core]. It is used to securely bind the verifiable presentation(s) provided by the authorization server to the particular transaction.
 
-Note: An request MAY contain `scope`, `presentation_definition`, and `presentation_definition_uri`. The authorization server MUST merge the requirements passed by this different parameters. If the same credential type is requested by `scope` and one of the other parameters, they are treated separately since they belong to different (explicitely or implicitely determined) input descriptors. 
-
-TBD: this will result in multple presentation_defintion, which requires multiple presentation_submissions. That will be hard to be mapped since either we have multiple presentation submissions response parameters (all referring to the same vp_token) or a single presentation submussion parameter may contain an array of presentation submissions. It might be better to make the parameters mutual exclusive. 
+Note: A request MUST contain a `presentation_definition` or a `presentation_definition_uri` but both are mutually exclusive. 
 
 ## presentation_definition {#request_presentation_definition}
 
@@ -191,43 +188,6 @@ Content-Type: application/json
     ]
 }
 ```
-
-## openid_presentation scope values {#request_scope}
-
-A verifiable presentation can be requested by adding a scope value of the form `openid_presentation:<credential_type>` to the `scope` request parameter. Such a scope value is a default presentation request, i.e. it is resolved by the authorization server to a presentation definition and input descriptor of the following form:
-
-```JSON
-{
-    "id": "scope_<credential_type>",
-    "input_descriptors": [
-        {
-            "id": "scope_<credential_type>"
-            },
-            "constraints": {
-                "fields": [
-                    {
-                        "path": [
-                            "$.type"
-                        ],
-                        "filter": {
-                            "type": "string",
-                            "pattern": "<credential_type>"
-                        }
-                    }
-                ]
-            }
-        }
-    ]
-}
-```
-
-Here is an example for the scope value `openid_presentation:IDCardCredential`:
-
-<{{examples/request/vp_token_from_scope.json}}
-
-Note: the credential type is used "as is" without any lower or upper casing. 
-
-TBD: credential type selection is format specific. This transformation function thus is format specific -> make it a credential_format/AS defined default published in metadata?
 
 ## VP Token Response {#vp_token_response}
 
