@@ -54,15 +54,15 @@ organization="Mattr"
 
 .# Abstract
 
-This specification defines a mechanism on top of OAuth to allow presentation of claims in the form of verifiable credentials as part of the protocol flow. 
+This specification defines a mechanism on top of OAuth 2.0 to allow presentation of claims in the form of verifiable credentials as part of the protocol flow. 
 
 {mainmatter}
 
 # Introduction
 
-This specification defines a mechanism on top of OAuth [@!RFC6749] for presentation of claims via verifiable credentials, supporting W3C formats as well as other credential formats. This allows existing OpenID Connect RPs to extend their reach towards claims sources asserting claims in this format. It also allows new applications built using verifiable credentials to utilize OAuth or OpenID Connect as integration and interoperability layer towards credential holders.
+This specification defines a mechanism on top of OAuth 2.0 [@!RFC6749] for presentation of claims via verifiable credentials, supporting W3C formats as well as other credential formats. This allows existing OpenID Connect RPs to extend their reach towards claims sources asserting claims in this format. It also allows new applications built using verifiable credentials to utilize OAuth 2.0 or OpenID Connect as integration and interoperability layer towards credential holders.
 
-OpenID Connect would be an obvious choice for this use case since it already allows Relying Parties to request identity assertions. However, early implementation experience suggests there are use cases where the presentation of verifiable presentations is sufficient and mandating [@OpenID.Core] features, such as issuance of ID tokens, would unnecessary increase implementation complexity. Thus the working group decided to use OAuth as a base protocol. Deployments can nevertheless add this specification to an OpenID Connect implementation, especially Self-Issued OpenID Providers (see [@SIOPv2]), since OpenID Connect is built on top of OAuth. 
+OAuth 2.0 [@!RFC6749] is used as a base protocol to enable use cases where the presentation of verifiable presentations alone is sufficient. This keeps this specification simple, whilst also enabling more complex use cases. Deployments that require [@!OpenID.Core] features, such as issuance of ID tokens can nevertheless use this specification to extend their OpenID Connect implementations with the ability to transport verifiable credentials, since OpenID Connect is built on top of OAuth 2.0. Especially Self-Issued OpenID Providers (see [@!SIOPv2]) would benefit from combining this specification.
 
 # Terminology
 
@@ -83,7 +83,7 @@ A verifiable presentation is a tamper-evident presentation encoded in such a way
 
 ## Verifier accesses Wallet via OpenID Connect
 
-A Verifier uses OpenID Connect to obtain verifiable presentations. This is a simple and mature way to obtain identity data. From a technical perspective, this also makes integration with OAuth-protected APIs easier as OpenID Connect is based on OAuth.  
+A Verifier uses OpenID Connect to obtain verifiable presentations. This is a simple and mature way to obtain identity data. From a technical perspective, this also makes integration with OAuth-protected APIs easier as OpenID Connect is based on OAuth 2.0.  
 
 ## Existing OpenID Connect RP integrates SSI wallets
 
@@ -101,21 +101,21 @@ This approach dramatically reduces latency and reduces load on the OP's servers.
 
 # Overview 
 
-This specification defines a mechanism on top of OAuth to request and provide verifiable presentations. Since OpenID Connect is based on OAuth, implementations can also be build on top of OpenID Connect, e.g. Self-Issued OP v2 [@SIOPv2].
+This specification defines a mechanism on top of OAuth 2.0 to request and provide verifiable presentations. Since OpenID Connect is based on OAuth 2.0, implementations can also be build on top of OpenID Connect, e.g. Self-Issued OP v2 [@SIOPv2].
 
 The specification supports all kinds of verifiable credentials, such as W3C Verifiable Credentials but also ISO mDL or AnonCreds. The examples given in the main part of the specification use W3C Verifiable Credentials, examples in other credential formats are given in  (#alternative_credential_formats). 
 
-Verifiable Presentations are requested by adding a parameter `presentation_definition` to an OAuth authorization request.
+Verifiable Presentations are requested by adding a parameter `presentation_definition` to an OAuth 2.0 authorization request.
 This specification introduces a new token type, "VP Token", used as a generic container for verifiable presentation objects, that is returned in authorization and token responses.  
 
 # Request {#vp_token_request}
 
 The parameters comprising a request for verifiable presentations are given in the following: 
 
-* `response_type`: REQUIRED. this parameter is defined in [@!RFC6749]. The possible values are determined by the response type registry established by [@!RFC6749]. This specification introduces the response type "vp_token". This response type asks the Authorization Server to only return a VP Token in the authorization response. 
+* `response_type`: REQUIRED. this parameter is defined in [@!RFC6749]. The possible values are determined by the response type registry established by [@!RFC6749]. This specification introduces the response type "vp_token". This response type asks the Authorization Server (AS) to return only a VP Token in the authorization response. 
 * `presentation_definition`: CONDITIONAL. A string containing a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange]. See (#request_presentation_definition) for more details. 
 * `presentation_definition_uri`: CONDITIONAL. A string containing a URL pointing to a resource where a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange] can be retrieved . See (#request_presentation_definition_uri) for more details.
-* `nonce`: REQUIRED. This parameter follows the definition given in [@!OpenID.Core]. It is used to securely bind the verifiable presentation(s) provided by the authorization server to the particular transaction.
+* `nonce`: REQUIRED. This parameter follows the definition given in [@!OpenID.Core]. It is used to securely bind the verifiable presentation(s) provided by the AS to the particular transaction.
 
 Note: A request MUST contain a `presentation_definition` or a `presentation_definition_uri` but both are mutually exclusive. 
 
@@ -143,7 +143,7 @@ RPs can also ask for alternative credentials being presented, which is shown in 
 
 ## presentation_definition\_uri {#request_presentation_definition_uri}
 
-`presentation_definition_uri` is used to the retrieve the `presentation_definition` from the resource at the specified URL, rather than being passed by value. The authorization server will send a GET request without additional parameters. The resource MUST be exposed without further need to authenticate or authorize. 
+`presentation_definition_uri` is used to the retrieve the `presentation_definition` from the resource at the specified URL, rather than being passed by value. The AS will send a GET request without additional parameters. The resource MUST be exposed without further need to authenticate or authorize. 
 
 For example the parameter value "https://server.example.com/presentationdefs?ref=idcard_presentation_request" will result in the following request 
 
@@ -191,27 +191,27 @@ Content-Type: application/json
 
 ## VP Token Response {#vp_token_response}
 
-The response used to provide the `vp_token` to the client depends on the grant and response type used in the request.
+The response used to provide the VP Token to the client depends on the grant and response type used in the request.
 
-If the `response_type` `vp_token` is used, the `vp_token` is provided in the authorization response. 
-If the `response_type` `id_token` is used, the `vp_token` is provided in the OpenID Connect authentication response along with the `id_token`. 
-In all other cases, the `vp_token` is provided on the token response. 
+If only `vp_token` is used as the `response_type`, the VP Token is provided in the authorization response. 
+If the `id_token` is used as the `response_type` alongside `vp_token`, the VP Token is provided in the OpenID Connect authentication response along with the ID Token. 
+In all other cases, the VP Token is provided in the token response. 
 
-The `vp_token` either contains a single verifiable presentation or an array of verifiable presentations. 
+The VP Token either contains a single verifiable presentation or an array of verifiable presentations. 
 
-Each of those verifiable presentations MAY contain a `presentation_submission` element as defined in [@!DIF.PresentationExchange]. This `presentation_submission` element links the input descriptor identifiers as specified in the corresponding request to the respective verifiable presentations within the `vp_token` along with format information. The root of the path expressions in the descriptor map is the respective verifiable presentation, pointing to the respective verifiable credentials.
+Each of those verifiable presentations MAY contain a `presentation_submission` element as defined in [@!DIF.PresentationExchange]. This `presentation_submission` element links the input descriptor identifiers as specified in the corresponding request to the respective verifiable presentations within the VP Token along with format information. The root of the path expressions in the descriptor map is the respective verifiable presentation, pointing to the respective verifiable credentials.
 
 This is shown in the following example:
 
 <{{examples/response/vp_token_ldp_vp_with_ps.json}}
 
-The OP MAY also add a `presentation_submission` response parameter along with the `vp_token` response parameter, which contains a JSON object conforming to the `presentation_submission` element as defined in [@!DIF.PresentationExchange]. This `presentation_submission` element links the input descriptor identifiers as specified in the corresponding request to the respective verifiable presentations within the `vp_token` along with format information. The root of the path expressions in the descriptor map is the respective `vp_token`. 
+The OP MAY also add a `presentation_submission` response parameter along with the `vp_token` response parameter, which contains a JSON object conforming to the `presentation_submission` element as defined in [@!DIF.PresentationExchange]. This `presentation_submission` element links the input descriptor identifiers as specified in the corresponding request to the respective verifiable presentations within the VP Token along with format information. The root of the path expressions in the descriptor map is the respective VP Token. 
 
-This element might, for example, be used if the particular format of the provided presentations does not allow for the direct inclusion of `presentation_submission` elements or if the AS wants to provide the RP with additional information about the format and structure in advance of the processing of the `vp_token`.
+This element might, for example, be used if the particular format of the provided presentations does not allow for the direct inclusion of `presentation_submission` elements or if the AS wants to provide the RP with additional information about the format and structure in advance of the processing of the VP Token.
 
-In case the AS returns a single verifiable presentation in the `vp_token`, the descriptor map would then contain a simple path expression "$".
+In case the AS returns a single verifiable presentation in the VP Token, the descriptor map would then contain a simple path expression "$".
 
-This is an example of a `vp_token` containing a single verifiable presentation
+This is an example of a VP Token containing a single verifiable presentation
 
 <{{examples/response/vp_token_raw_ldp_vp.json}}
 
@@ -221,7 +221,7 @@ with a matching `presentation_submission`.
 
 A `descriptor_map` element MAY also contain a `path_nested` element referring to the actual credential carried in the respective verifiable presentation. 
 
-This is an example of a `vp_token` containing multiple verifiable presentations,   
+This is an example of a VP Token containing multiple verifiable presentations,   
 
 <{{examples/response/vp_token_multiple_vps.json}}
 
@@ -403,7 +403,7 @@ This Section illustrates the protocol flow for the case of communication through
 
 ### Authentication request
 
-The following is a non-normative example of how an RP would use the `claims` parameter to request claims in the `vp_token`:
+The following is a non-normative example of how an RP would use the `claims` parameter to request claims in the VP Token:
 
 ```
   HTTP/1.1 302 Found
@@ -481,7 +481,7 @@ This is the example ID Token:
 
 #### vp_token content
 
-This is the example `vp_token` containing a verifiable presentation (and credential) in LD Proof format. 
+This is the example VP Token containing a verifiable presentation (and credential) in LD Proof format. 
 
 Note: in accordance with (#security_considerations) the verifiable presentation's `challenge` claim is set to the value of the `nonce` request parameter value and the `domain` claim contains the RP's `client_id`. 
 
@@ -531,7 +531,7 @@ HTTP/1.1 302 Found
 
 ### Token Response (including vp_token)
 
-This is the example token response containing a `vp_token` which contains a verifiable presentation (and credential) in LD Proof format. 
+This is the example token response containing a VP Token which contains a verifiable presentation (and credential) in LD Proof format. 
 
 Note: in accordance with (#security_considerations) the verifiable presentation's `challenge` claim is set to the value of the `nonce` request parameter value and the `domain` claim contains the RP's `client_id`. 
 
@@ -1294,7 +1294,7 @@ The technology described in this specification was made available from contribut
 
    -11
 
-   * changed base protocol to OAuth
+   * changed base protocol to OAuth 2.0
   
    -10
 
@@ -1338,7 +1338,7 @@ The technology described in this specification was made available from contribut
 
    -02
 
-   * added `presentation_definition` as sub element of `verifiable_presentation` and `vp_token`
+   * added `presentation_definition` as sub element of `verifiable_presentation` and VP Token
 
    -01
 
