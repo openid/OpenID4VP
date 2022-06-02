@@ -396,153 +396,6 @@ In many instances the referenced server will be operated by a known federation o
 
 Clients intending to authenticate the end-user utilizing a claim in a verifable credential MUST ensure this claim is stable for the end-user as well locally unique and never reassigned within the credential issuer to another end-user. Such a claim MUST also only be used in combination with the issuer identifier to ensure global uniqueness and to prevent attacks where an attacker obtains the same claim from a different issuer and tries to impersonate the legitimate user. 
 
-#  Examples 
-
-This Section illustrates examples when W3C Verifiable Credentials objects are requested using the `claims` parameter and returned in a VP Token.
-
-## Self-Issued OpenID Provider (SIOP)
-This Section illustrates the protocol flow for the case of communication through the front-channel with SIOP.
-
-### Authentication request
-
-The following is a non-normative example of how an RP would use the `claims` parameter to request claims in the VP Token:
-
-```
-  HTTP/1.1 302 Found
-  Location: openid://?
-    response_type=id_token
-    &client_id=https%3A%2F%2Fclient.example.org%2Fcb
-    &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
-    &scope=openid
-    &claims=...
-    &state=af0ifjsldkj
-    &nonce=n-0S6_WzA2Mj
-    &registration_uri=https%3A%2F%2F
-      client.example.org%2Frf.txt%22%7D
-      
-```
-
-#### claims parameter
-
-<{{examples/request/vp_token_type_and_claims.json}}
-
-### Authentication Response (including vp_token)
-
-The successful authentication response contains a `vp_token` parameter along with  `id_token` and `state`.
-```
-  HTTP/1.1 302 Found
-  Location: https://client.example.org/cb#
-    id_token=eyJ0 ... NiJ9.eyJ1c ... I6IjIifX0.DeWt4Qu ... ZXso
-    &vp_token=...
-    &state=af0ifjsldkj
-      
-```
-
-#### id_token
-
-This is the example ID Token:
-
-```json
-{
-   "iss":"https://self-issued.me/v2",
-   "aud":"https://client.example.org/cb",
-   "iat":1615910538,
-   "exp":1615911138,
-   "sub":"NzbLsXh8uDCcd-6MNwXF4W_7noWXFZAfHkxZsRGC9Xs",
-   "auth_time":1615910535,
-   "nonce":"n-0S6_WzA2Mj",
-   "sub_jwk": {
-     "kty":"RSA",
-     "n": "0vx7agoebGcQSuuPiLJXZptN9nndrQmbXEps2aiAFbWhM78LhWx
-     4cbbfAAtVT86zwu1RK7aPFFxuhDR1L6tSoc_BJECPebWKRXjBZCiFV4n3oknjhMs
-     tn64tZ_2W-5JsGY4Hc5n9yBXArwl93lqt7_RN5w6Cf0h4QyQ5v-65YGjQR0_FDW2
-     QvzqY368QQMicAtaSqzs8KJZgnYb9c7d0zgdAZHzu6qMQvRL5hajrn1n91CbOpbI
-     SD08qNLyrdkt-bFTWhAI4vMQFh6WeZu0fM4lFd2NcRwr3XPksINHaQ-G_xBniIqb
-     w0Ls1jF44-csFCur-kEgU8awapJzKnqDKgw",
-     "e":"AQAB"
-    }
-    "_vp_token": {
-        "presentation_submission": {
-            "id": "Selective disclosure example presentation",
-            "definition_id": "Selective disclosure example",
-            "descriptor_map": [
-                {
-                    "id": "ID Card with constraints",
-                    "format": "ldp_vp",
-                    "path": "$",
-                    "path_nested": {
-                        "format": "ldp_vc",
-                        "path": "$.verifiableCredential[0]"
-                    }
-                }
-            ]
-        }
-    }
-}
-```
-
-#### vp_token content
-
-This is the example VP Token containing a verifiable presentation (and credential) in LD Proof format. 
-
-Note: in accordance with (#security_considerations) the verifiable presentation's `challenge` claim is set to the value of the `nonce` request parameter value and the `domain` claim contains the RP's `client_id`. 
-
-<{{examples/response/vp_token_ldp_vp.json}}
-
-## Authorization Code Flow with vp_token
-
-This Section illustrates the protocol flow for the case of communication using front-channel and backchannel (utilizing the authorization code flow).
-
-### Authentication Request
-
-```
-  GET /authorize?
-    response_type=code
-    &client_id=s6BhdRkqt3 
-    &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
-    &scope=openid
-    &claims=...
-    &state=af0ifjsldkj
-    &nonce=n-0S6_WzA2Mj HTTP/1.1
-  Host: server.example.com
-```
-
-#### Claims parameter
-
-<{{examples/request/vp_token_type_and_claims.json}}
-
-### Authentication Response
-```
-HTTP/1.1 302 Found
-  Location: https://client.example.org/cb?
-    code=SplxlOBeZQQYbYS6WxSbIA
-    &state=af0ifjsldkj
-```
-
-### Token Request
-```
-  POST /token HTTP/1.1
-  Host: server.example.com
-  Content-Type: application/x-www-form-urlencoded
-  Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
-
-  grant_type=authorization_code
-  &code=SplxlOBeZQQYbYS6WxSbIA
-  &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
-```
-
-### Token Response (including vp_token)
-
-This is the example token response containing a VP Token which contains a verifiable presentation (and credential) in LD Proof format. 
-
-Note: in accordance with (#security_considerations) the verifiable presentation's `challenge` claim is set to the value of the `nonce` request parameter value and the `domain` claim contains the RP's `client_id`. 
-
-<{{examples/response/token_response_vp_token_ldp_vp.json}}
-
-#### id_token
-
-<{{examples/response/id_token_ref_vp_token_code.json}}
-
 {backmatter}
 
 <reference anchor="VC_DATA" target="https://www.w3.org/TR/vc-data-model">
@@ -678,7 +531,6 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </front>
  </reference>
 
-
 <reference anchor="Hyperledger.Indy" target="https://www.hyperledger.org/use/hyperledger-indy">
         <front>
           <title>Hyperledger Indy Project</title>
@@ -721,9 +573,136 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </front>
  </reference>
 
-# Alternative Credential Formats {#alternative_credential_formats}
+# Examples {#alternative_credential_formats}
 
-OpenID for Verifiable Presentations is credential format agnostic, i.e. it is designed to allow applications to request and receive verifiable presentations and credentials in any format, not limited to the formats defined in [@!VC_DATA]. This section aims to illustrate this with examples utilizing other credential formats. Customization of OpenID for Verifiable Presentation for other credential formats uses extensions points of Presentation Exchange [@!DIF.PresentationExchange]. 
+OpenID for Verifiable Presentations is credential format agnostic, i.e. it is designed to allow applications to request and receive verifiable presentations and credentials in any format, not limited to the formats defined in [@!VC_DATA]. This section aims to illustrate this with examples utilizing different credential formats. Customization of OpenID for Verifiable Presentation for credential formats other than those defined in [@!VC_DATA] uses extensions points of Presentation Exchange [@!DIF.PresentationExchange]. 
+
+## JWT VCs
+
+### Example Credential
+
+The following is an JWT-based Verifiable Credential that we will use thorugh this section.
+
+```json
+{
+    "iss": "https://example.gov/issuers/565049",
+    "nbf": 1262304000,
+    "jti": "http://example.gov/credentials/3732",
+    "sub": "did:example:ebfeb1f712ebc6f1c276e12ec21",
+    "vc": {
+        "@context": [
+            "https://www.w3.org/2018/credentials/v1",
+            "https://www.w3.org/2018/credentials/examples/v1"
+        ],
+        "id": "http://example.gov/credentials/3732",
+        "type": [
+            "VerifiableCredential",
+            "IDCredential"
+        ],
+        "issuer": "https://example.gov/issuers/565049",
+        "issuanceDate": "2010-01-01T00:00:00Z",
+        "credentialSubject": {
+            "given_name": "Max",
+            "family_name": "Mustermann",
+            "birthdate": "1998-01-11",
+            "address": {
+                "street_address": "Sandanger 25",
+                "locality": "Musterstadt",
+                "postal_code": "123456",
+                "country": "DE"
+            }
+        }
+    }
+}
+```
+
+### Presentation Request
+
+The following presentation definition requests this JWT VC.
+
+```json
+{
+    "id": "vp token example",
+    "input_descriptors": [
+        {
+            "id": "id card credential",
+            "format": {
+                "jwt_vc": {
+                    "proof_type": [
+                        "JsonWebSignature2020"
+                    ]
+                }
+            },
+            "constraints": {
+                "fields": [
+                    {
+                        "path": [
+                            "$.vc.type"
+                        ],
+                        "filter": {
+                            "type": "array",
+                            "contains": {
+                                "const": "IDCredential"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}
+```
+
+### Presentation Response
+
+This is the content of the `presentation_submission` parameter in the presentation response. 
+
+```json
+{
+      "descriptor_map": [
+        {
+          "id": "id card credential",
+          "path": "$",
+          "format": "jwt_vp",
+          "path_nested": {
+            "path": "$.vp.verifiableCredential[0]",
+            "format": "jwt_vc"
+          }
+        }
+      ],
+      "definition_id": "vp token example",
+      "id": " vp token example PresentationSubmission"
+    }
+}
+```
+
+It refers to the VP in thge `vp_token`, which looks as follows.
+
+```json
+{
+    "iss": "did:example:ebfeb1f712ebc6f1c276e12ec21",
+    "jti": "urn:uuid:3978344f-8596-4c3a-a978-8fcaba3903c5",
+    "aud": "did:example:4a57546973436f6f6c4a4a57573",
+    "nbf": 1541493724,
+    "iat": 1541493724,
+    "exp": 1573029723,
+    "nonce": "343s$FSFDa-",
+    "vp": {
+        "@context": [
+            "https://www.w3.org/2018/credentials/v1",
+            "https://www.w3.org/2018/credentials/examples/v1"
+        ],
+        "type": [
+            "VerifiablePresentation"
+        ],
+        "verifiableCredential": [
+            "eyJhbGci...Qssw5c"
+        ]
+    }
+}
+```
+
+## LDP VCs
 
 ## AnonCreds
 
