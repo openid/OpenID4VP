@@ -1138,6 +1138,7 @@ To request an ISO/IEC 18013-5:2021 mDL, following identifiers for credentials ar
 ### Presentation Request 
 
 The presentation request looks the same as for the other examples since the difference is in the content of the `presentation_definition` parameter. 
+
 ```
   GET /authorize?
     response_type=vp_token
@@ -1436,6 +1437,60 @@ Note that the reason why hashes of the user claims are included in the `issuerAu
 The example in this section is also applicable to the electronic identification credentials expressed using data models defined in ISO/IEC TR 23220-2.
 
 TBD: are `nonce` and `client_id` included into the mDL to detect replay?
+
+## SIOP & OpenID 4 VPs
+
+This section shows how SIOP and OpenID 4 Verifiable Presentations can be combined to present credentials and pseudonymously authenticate an end-user using subject controlled key material.
+
+### Request
+
+This is an example request.
+
+```
+  GET /authorize?
+    response_type=id_token
+    &scope=openid
+    &id_token_type=subject_signed
+    &client_id=https%3A%2F%2Fclient.example.org%2Fcb
+    &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
+    &presentation_definition=...
+    &nonce=n-0S6_WzA2Mj HTTP/1.1
+  Host: wallet.example.com
+```
+
+The differences to the example requests in the previous sections are:
+
+* `response_type` is set to `id_token`. If the request also includes a `presentation_definition` parameter, the wallet is supposed to return the `presentation_submission` and `vp_token` parameters in the same response as the `id_token` parameter. 
+* The request includes the `scope` parameter with value `openid` making this a OpenID Connect request. Additionally, the request also contains the parameter `id_token_type` with value `subject_signed` requesting a Self-Issuer ID Token, i.e. the request is a SIOP request. 
+
+### Response
+
+The example response looks like this.
+
+```
+  HTTP/1.1 302 Found
+  Location: https://client.example.org/cb#
+    id_token=
+    &presentation_submission=...
+    &vp_token=...
+```
+
+In addition to the `presentation_submission` and `vp_token`, it also contains an `id_token`.
+
+The `id_token` content is shown in the following.
+
+```json
+{
+  "iss": "did:example:NzbLsXh8uDCcd6MNwXF4W7noWXFZAfHkxZsRGC9Xs",
+  "sub": "did:example:NzbLsXh8uDCcd6MNwXF4W7noWXFZAfHkxZsRGC9Xs",
+  "aud": "https://client.example.org/cb",
+  "nonce": "n-0S6_WzA2Mj",
+  "exp": 1311281970,
+  "iat": 1311280970
+}
+```
+
+Note: the `nonce` and `aud` are set to the `nonce` of the request and the client id of the verifier, respectively, in the same way as for the verifier presentations to prevent replay. 
 
 # IANA Considerations
 
