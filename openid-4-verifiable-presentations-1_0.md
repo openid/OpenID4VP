@@ -581,7 +581,7 @@ OpenID for Verifiable Presentations is credential format agnostic, i.e. it is de
 
 ### Example Credential
 
-The following is an JWT-based Verifiable Credential that we will use thorugh this section.
+The following is an JWT-based Verifiable Credential that will be used through this section.
 
 ```json
 {
@@ -618,14 +618,26 @@ The following is an JWT-based Verifiable Credential that we will use thorugh thi
 
 ### Presentation Request
 
-The following presentation definition requests this JWT VC.
+This is an example presentation request. 
+
+```
+  GET /authorize?
+    response_type=vp_token
+    &client_id=https%3A%2F%2Fclient.example.org%2Fcb
+    &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
+    &presentation_definition=...
+    &nonce=n-0S6_WzA2Mj HTTP/1.1
+  Host: wallet.example.com
+```
+
+The requirements regarding the credential to be presented are conveyed in the `presentation_definition` parameter. It's content is is given in the following example.
 
 ```json
 {
-    "id": "vp token example",
+    "id": "example_jwt_vc",
     "input_descriptors": [
         {
-            "id": "id card credential",
+            "id": "id_credential",
             "format": {
                 "jwt_vc": {
                     "proof_type": [
@@ -653,15 +665,26 @@ The following presentation definition requests this JWT VC.
 }
 ```
 
+It contains a single `input_descriptor`, which sets the desired format to JWT VC and defines a constraint over the `vc.type` element to select credentials of type `IDCredential`. 
+
 ### Presentation Response
 
-This is the content of the `presentation_submission` parameter in the presentation response. 
+An example presentation response look like this:
+
+```
+  HTTP/1.1 302 Found
+  Location: https://client.example.org/cb#
+    presentation_submission=...
+    &vp_token=...
+```
+
+The content of the `presentation_submission` is given in the following: 
 
 ```json
 {
       "descriptor_map": [
         {
-          "id": "id card credential",
+          "id": "id_card_credential",
           "path": "$",
           "format": "jwt_vp",
           "path_nested": {
@@ -670,23 +693,23 @@ This is the content of the `presentation_submission` parameter in the presentati
           }
         }
       ],
-      "definition_id": "vp token example",
-      "id": " vp token example PresentationSubmission"
+      "definition_id": "example_jwt_vc",
+      "id": "example_jwt_vc_presentation_submission"
     }
 }
 ```
 
-It refers to the VP in thge `vp_token`, which looks as follows.
+It refers to the VP in the `vp_token` parameter provided in the same response, which looks as follows.
 
 ```json
 {
     "iss": "did:example:ebfeb1f712ebc6f1c276e12ec21",
     "jti": "urn:uuid:3978344f-8596-4c3a-a978-8fcaba3903c5",
-    "aud": "did:example:4a57546973436f6f6c4a4a57573",
+    "aud": "https://client.example.org/cb",
     "nbf": 1541493724,
     "iat": 1541493724,
     "exp": 1573029723,
-    "nonce": "343s$FSFDa-",
+    "nonce": "n-0S6_WzA2Mj",
     "vp": {
         "@context": [
             "https://www.w3.org/2018/credentials/v1",
@@ -702,7 +725,180 @@ It refers to the VP in thge `vp_token`, which looks as follows.
 }
 ```
 
+Note: the VP's `nonce` claim contains the value of the `nonce` of the presentation request and the `aud` claims contains the client id of the verifier. This allows the verifier to detect replay of a presentation as recommened in (#preventing-replay). 
+
 ## LDP VCs
+
+The following is an LDP-based Verifiable Credential that will be used through this section.
+
+```json
+{
+    "@context": [
+        "https://www.w3.org/2018/credentials/v1",
+        "https://www.w3.org/2018/credentials/examples/v1"
+    ],
+    "id": "https://example.com/credentials/1872",
+    "type": [
+        "VerifiableCredential",
+        "IDCardCredential"
+    ],
+    "issuer": {
+        "id": "did:example:issuer"
+    },
+    "issuanceDate": "2010-01-01T19:23:24Z",
+    "credentialSubject": {
+        "given_name": "Fredrik",
+        "family_name": "Strömberg",
+        "birthdate": "1949-01-22"
+    },
+    "proof": {
+        "type": "Ed25519Signature2018",
+        "created": "2021-03-19T15:30:15Z",
+        "jws": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..PT8yCqVjj5ZHD0W36zsBQ47oc3El07WGPWaLUuBTOT48IgKI5HDoiFUt9idChT_Zh5s8cF_2cSRWELuD8JQdBw",
+        "proofPurpose": "assertionMethod",
+        "verificationMethod": "did:example:issuer#keys-1"
+    }
+}
+```
+
+### Presentation Request
+
+This is an example presentation request. 
+
+```
+  GET /authorize?
+    response_type=vp_token
+    &client_id=https%3A%2F%2Fclient.example.org%2Fcb
+    &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
+    &presentation_definition=...
+    &nonce=n-0S6_WzA2Mj HTTP/1.1
+  Host: wallet.example.com
+```
+
+The requirements regarding the credential to be presented are conveyed in the `presentation_definition` parameter. It's content is is given in the following example.
+
+```json
+{
+    "id": "example_ldp_vc",
+    "input_descriptors": [
+        {
+            "id": "id_card_credential",
+            "format": {
+                "ldp_vc": {
+                    "proof_type": [
+                        "Ed25519Signature2018"
+                    ]
+                }
+            },
+            "constraints": {
+                "fields": [
+                    {
+                        "path": [
+                            "$.type"
+                        ],
+                        "filter": {
+                            "type": "array",
+                            "contains": {
+                                "const": "IDCardCredential"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}
+```
+
+It contains a single `input_descriptor`, which sets the desired format to LDP VC and defines a constraint over the `type` element to select credentials of type `IDCardCredential`. 
+
+### Presentation Response
+
+An example presentation response look like this:
+
+```
+  HTTP/1.1 302 Found
+  Location: https://client.example.org/cb#
+    presentation_submission=...
+    &vp_token=...
+```
+
+The content of the `presentation_submission` is given in the following: 
+
+```json
+{
+      "descriptor_map": [
+        {
+          "id": "id_card_credential",
+          "path": "$",
+          "format": "ldp_vp",
+            "path": "$",
+            "path_nested": {
+                "format": "ldp_vc",
+                "path": "$.verifiableCredential[0]"
+            }
+        }
+      ],
+      "definition_id": "example_ldp_vc",
+      "id": "example_ldp_vc_presentation_submission"
+    }
+}
+```
+
+It refers to the VP in the `vp_token` parameter provided in the same response, which looks as follows.
+
+```json
+{
+    "@context": [
+        "https://www.w3.org/2018/credentials/v1"
+    ],
+    "type": [
+        "VerifiablePresentation"
+    ],
+    "verifiableCredential": [
+        {
+            "@context": [
+                "https://www.w3.org/2018/credentials/v1",
+                "https://www.w3.org/2018/credentials/examples/v1"
+            ],
+            "id": "https://example.com/credentials/1872",
+            "type": [
+                "VerifiableCredential",
+                "IDCardCredential"
+            ],
+            "issuer": {
+                "id": "did:example:issuer"
+            },
+            "issuanceDate": "2010-01-01T19:23:24Z",
+            "credentialSubject": {
+                "given_name": "Fredrik",
+                "family_name": "Strömberg",
+                "birthdate": "1949-01-22"
+            },
+            "proof": {
+                "type": "Ed25519Signature2018",
+                "created": "2021-03-19T15:30:15Z",
+                "jws": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..PT8yCqVjj5ZHD0W36zsBQ47oc3El07WGPWaLUuBTOT48IgKI5HDoiFUt9idChT_Zh5s8cF_2cSRWELuD8JQdBw",
+                "proofPurpose": "assertionMethod",
+                "verificationMethod": "did:example:issuer#keys-1"
+            }
+        }
+    ],
+    "id": "ebc6f1c2",
+    "holder": "did:example:holder",
+    "proof": {
+        "type": "Ed25519Signature2018",
+        "created": "2021-03-19T15:30:15Z",
+        "challenge": "n-0S6_WzA2Mj",
+        "domain": "https://client.example.org/cb",
+        "jws": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..GF5Z6TamgNE8QjE3RbiDOj3n_t25_1K7NVWMUASe_OEzQV63GaKdu235MCS3hIYvepcNdQ_ZOKpGNCf0vIAoDA",
+        "proofPurpose": "authentication",
+        "verificationMethod": "did:example:holder#key-1"
+    }
+}
+```
+
+Note: the VP's `challenge` claim contains the value of the `nonce` of the presentation request and the `domain` claims contains the client id of the verifier. This allows the verifier to detect replay of a presentation as recommened in (#preventing-replay). 
 
 ## AnonCreds
 
@@ -761,145 +957,135 @@ The most important parts for the purpose of this example are `scheme_id` element
 
 #### Request Example without Selective Release of Claims
 
-The following is an example request for a presentation of a credential in AnonCreds format.
+The example presentation request looks as follows:
+
+```
+  GET /authorize?
+    response_type=vp_token
+    &client_id=https%3A%2F%2Fclient.example.org%2Fcb
+    &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
+    &presentation_definition=...
+    &nonce=n-0S6_WzA2Mj HTTP/1.1
+  Host: wallet.example.com
+```
+
+The following is the content of the `presentation_definition` parameter.
 
 ```json
 {
-    "id_token": {
-        "email": null
-    },
-    "vp_token": {
-        "presentation_definition": {
-            "id": "vp token example",
-            "input_descriptors": [
-                {
-                    "id": "id card credential",
-                    "format": {
-                        "ac_vc": {
-                            "proof_type": [
-                                "CLSignature2019"
-                            ]
-                        }
-                    },
-                    "constraints": {
-                        "fields": [
-                            {
-                                "path": [
-                                    "$.schema_id"
-                                ],
-                                "filter": {
-                                    "type": "string",
-                                    "pattern": "did:indy:idu:test:3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0\\.1"             
-                                }
-                            }
-                        ]
-                    }
-                }
+   "id":"example_vc_ac",
+   "input_descriptors":[
+      {
+         "id":"id_card_credential",
+         "format":{
+            "ac_vc":{
+               "proof_type":[
+                  "CLSignature2019"
+               ]
+            }
+         },
+         "constraints":{
+            "fields":[
+               {
+                  "path":[
+                     "$.schema_id"
+                  ],
+                  "filter":{
+                     "type":"string",
+                     "pattern":"did:indy:idu:test:3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0\\.1"
+                  }
+               }
             ]
-        }
-    }
+         }
+      }
+   ]
 }
 ```
 
-The following explanation will focus on the elements in the `input_descriptor` object in the `claims` parameter.
+The `format` object of the `input_descriptor` uses the format identifier `ac_vc` as defined above and sets the `proof_type` to `CLSignature2019` to denote this descriptor requires a credential in AnonCreds format signed with a CL signature (Camenisch-Lysyanskaya siganture). The rest of the expressions operate on the AnonCreds JSON structure.
 
-The `format` object uses the format identifier `ac_vc` as defined above and sets the `proof_type` to `CLSignature2019` to denote this descriptor requires a credential in AnonCreds format signed with a CL signature (Camenisch-Lysyanskaya siganture). The rest of the expressions operate on the AnonCreds JSON structure.
-
-The `constraints` object requires the selected credential to conform with a certain schema, which is denoted as a constraint over the AnonCred's `schema_id` element. 
+The `constraints` object requires the selected credential to conform with the schema definition `did:indy:idu:test:3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0\\.1`, which is denoted as a constraint over the AnonCred's `schema_id` element. 
 
 #### Request Example with Selective Release of Claims
 
 The next example leverages the AnonCreds' capabilities for selective disclosure by requesting a subset of the claims in the credential to be disclosed to the verifier.
 
+The presentation looks the same as above. The difference is in the `presentation_definition` parameter as shown in the following:
+
 ```json
 {
-    "id_token": {
-        "email": null
-    },
-    "vp_token": {
-        "presentation_definition": {
-            "id": "vp token example",
-            "input_descriptors": [
-                {
-                    "id": "ref2",
-                    "format": {
-                        "ac_vc": {
-                            "proof_type": [
-                                "CLSignature2019"
-                            ]
-                        }
-                    },
-                    "constraints": {
-                        "limit_disclosure": "required",
-                        "fields": [
-                            {
-                                "path": [
-                                    "$.schema_id"
-                                ],
-                                "filter": {
-                                    "type": "string",
-                                    "pattern": "did:indy:idu:test:3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0\\.1"
-                                }
-                            },
-                            {
-                                "path": [
-                                    "$.values.given_name"
-                                ]
-                            },
-                            {
-                                "path": [
-                                    "$.values.family_name"
-                                ]
-                            }
-                        ]
-                    }
-                }
+   "id":"example_vc_ac",
+   "input_descriptors":[
+      {
+         "id":"id_card_credential",
+         "format":{
+            "ac_vc":{
+               "proof_type":[
+                  "CLSignature2019"
+               ]
+            }
+         },
+         "constraints":{
+            "limit_disclosure":"required",
+            "fields":[
+               {
+                  "path":[
+                     "$.schema_id"
+                  ],
+                  "filter":{
+                     "type":"string",
+                     "pattern":"did:indy:idu:test:3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0\\.1"
+                  }
+               },
+               {
+                  "path":[
+                     "$.values.given_name"
+                  ]
+               },
+               {
+                  "path":[
+                     "$.values.family_name"
+                  ]
+               }
             ]
-        }
-    }
+         }
+      }
+   ]
 }
 ```
 
-This example is identic to the previous one with the following exceptions. It sets the PE elememt `limit_disclosure` to `require` and adds two more constraints for the individual claims `given_name` and `family_name`. Since such claims are stored underneath a `values` container in an AnonCred, `values` is part of the path to identify the respective claim. 
+This example is identic to the previous one with the following exceptions: It sets the elememt `limit_disclosure` of the constraint to `require` and adds two more constraints for the individual claims `given_name` and `family_name`. Since such claims are stored underneath a `values` container in an AnonCred, `values` is part of the path to identify the respective claim. 
 
 ### Presentation Response
 
-The response contains an ID Token and a VP tokens. 
+The presentation response looks the same as fot the other examples.
 
-The following is an ID Token example. It shows how the `presentation submission` helps the Verifier to locate proof of AnonCred credential in the VP token.
+```
+  HTTP/1.1 302 Found
+  Location: https://client.example.org/cb#
+    presentation_submission=...
+    &vp_token=...
+```
+
+It contains the `presentation_submission` and `vp_token` parameters.  
+
+The `presentation submission` looks like this:
 
 ```json
 {
-  "aud": "https://example.com/callback",
-  "sub": "9wgU5CR6PdgGmvBfgz_CqAtBxJ33ckMEwvij-gC6Bcw",
-  "auth_time": 1638483344,
-  "iss": "https://self-issued.me/v2",
-  "sub_jwk": {
-    "x": "cQ5fu5VmG…dA_5lTMGcoyQE78RrqQ6",
-    "kty": "EC",
-    "y": "XHpi27YMA…rnF_-f_ASULPTmUmTS",
-    "crv": "P-384"
-  },
-  "exp": 1638483944,
-  "iat": 1638483344,
-  "nonce": "67473895393019470130",
-  "_vp_token": {
-    "presentation_submission": {
-      "descriptor_map": [
-        {
-          "id": "ref2",
-          "path": "$",
-          "format": "ac_vp",
-          "path_nested": {
-            "path": "$.requested_proof.revealed_attr_groups.ref2",
-            "format": "ac_vc"
-          }
-        }
-      ],
-      "definition_id": "NextcloudLogin",
-      "id": "NexcloudCredentialPresentationSubmission"
-    }
-  }
+   "descriptor_map":[
+      {
+         "id":"id_card_credential",
+         "path":"$",
+         "format":"ac_vp",
+         "path_nested":{
+            "path":"$.requested_proof.revealed_attr_groups.id_card_credential",
+            "format":"ac_vc"
+         }
+      }
+   ],
+   "definition_id":"example_vc_ac",
+   "id":"example_vc_ac_presentation_submission"
 }
 ```
 
@@ -913,7 +1099,7 @@ The following is a VP Token example.
    "requested_proof": {
        "revealed_attrs": {},
        "revealed_attr_groups": {
-           "ref2": {
+           "id_card_credential": {
                "sub_proof_index": 0,
                "values": {
                    "last_name": {
@@ -942,134 +1128,130 @@ The following is a VP Token example.
 
 ## ISO mobile Driving Licence (mDL)
 
-This section illustrates how a mobile driving licence (mDL) credential expressed using a data model and data sets defined in ISO/IEC 18013-5:2021 specification [@ISO.18013-5] can be presented from the End-User's device directly to the RP using [@SIOPv2] and this specification.
+This section illustrates how a mobile driving licence (mDL) credential expressed using a data model and data sets defined in [@ISO.18013-5] can be presented from the End-User's device directly to the RP using this specification.
 
 To request an ISO/IEC 18013-5:2021 mDL, following identifiers for credentials are used for the purposes of this example:
 
-* `mdl_iso_cbor`: designates a mobile driving licence (mDL) credential encoded as CBOR, expressed using a data model and data sets defined in ISO/IEC 18013-5:2021 specification [@ISO.18013-5].
-* `mdl_iso_json`: designates a mobile driving licence (mDL) credential encoded as JSON, expressed using a data model and data sets defined in ISO/IEC 18013-5:2021 specification [@ISO.18013-5].
+* `mdl_iso_cbor`: designates a mobile driving licence (mDL) credential encoded as CBOR, expressed using a data model and data sets defined in [@ISO.18013-5].
+* `mdl_iso_json`: designates a mobile driving licence (mDL) credential encoded as JSON, expressed using a data model and data sets defined in [@ISO.18013-5].
 
 ### Presentation Request 
 
-#### Request Example
-
-Below is a non-normative example of how `claims` parameter is used in the authorization request to request an mDL credential in ISO/IEC 18013-5:2021 format:
-
-```json
-"claims": {
-  "vp_token": {
-    "presentation_definition": {
-      "id": "mDL-sample-req",
-      "input_descriptors": [
-        {
-          "id": "mDL",
-          "format": {
-            "mdl_iso_cbor": {
-              "alg": ["EdDSA", "ES256"]
-            },
-          "constraints": {
-            "limit_disclosure": "required",
-            "fields": [
-              {
-                "path": ["$.mdoc.doctype"],
-                "filter": {
-                  "type": "string",
-                  "const": "org.iso.18013.5.1.mDL"
-                }             
-              },
-              {
-                "path": ["$.mdoc.namespace"],
-                "filter": {
-                  "type": "string",
-                  "const": "org.iso.18013.5.1"
-                }             
-              },
-              {
-                "path": ["$.mdoc.family_name"],
-                "intent_to_retain": "false"
-              },
-              {
-                "path": ["$.mdoc.portrait"],
-                "intent_to_retain": "false"
-              },
-              {
-                "path": ["$.mdoc.driving_privileges"],
-                "intent_to_retain": "false"
-              }
-            ]       
-           }         
-         }
-        } 
-      ]
-    } 
-   }
- }
+The presentation request looks the same as for the other examples since the difference is in the content of the `presentation_definition` parameter. 
+```
+  GET /authorize?
+    response_type=vp_token
+    &client_id=https%3A%2F%2Fclient.example.org%2Fcb
+    &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
+    &presentation_definition=...
+    &nonce=n-0S6_WzA2Mj HTTP/1.1
+  Host: wallet.example.com
 ```
 
-To request user claims in ISO/IEC 18013-5:2021 mDL, a `doctype` and `namespace` of the claim needs to be specified.
-Moreover, RP needs to indicate whether it intends to retain obtained user claims or not, using `intent_to_retain` property.
-
-Setting `limit_disclosure` property defined in [@!DIF.PresentationExchange] to `required` enables selective release by instructing SIOP to submit only the data elements specified in the fields array.
-
-Selective release of claims is a requirement built into an ISO/IEC 18013-5:2021 mDL data model.
-
-If an RP wants to request user claims from another namespace, another `input_descriptor` object should be used, even if the namespaces belong to the same doctype.
-
-Note that `intent_to_retain` is a property introduced to [@!DIF.PresentationExchange] to meet requirements of [@ISO.18013-5].
-
-
-### Presentation Response
-
-The response contains an ID Token and a VP Token. In the following example, a single ISO/IEC 18013-5:2021 mDL is returned as a VP Token. Note that a ISO/IEC 18013-5:2021 mDL could be encoded both in CBOR or JSON. 
-
-The following is a non-normative example of a successful authorization request when [@SIOPv2] and this specification is used.
-
-```
-POST /callback HTTP/1.1
-Host: client.example.org
-Content-Type: application/x-www-form-urlencoded
-
-id_token=<<Base64URL encoded ID Token>>
-  &vp_token=<<Base64URL encoded ISO/IEC 18013-5:2021 mDL (CBOR in this example since the requested format was `mdl_iso`)>>
-```
-
-The following is an ID Token example. It shows how the `presentation_submission` helps the RP to locate in the VP Token an ISO/IEC 18013-5:2021 mDL expressed in CBOR:
+The content of the `presentation_definition` parameter is as follows:
 
 ```json
 {
-  "aud": "https://client.example.org/callback",
-  "sub": "9wgU5CR6PdgGmvBfgz_CqAtBxJ33ckMEwvij-gC6Bcw",
-  "iss": "9wgU5CR6PdgGmvBfgz_CqAtBxJ33ckMEwvij-gC6Bcw",
-  "sub_jwk": {
-    "x": "cQ5fu5VmG…dA_5lTMGcoyQE78RrqQ6",
-    "kty": "EC",
-    "y": "XHpi27YMA…rnF_-f_ASULPTmUmTS",
-    "crv": "P-384"
-  },
-  "exp": 1638483944,
-  "iat": 1638483344,
-  "nonce": "67473895393019470130",
-  "_vp_token": {
-    "presentation_submission": {
-      "descriptor_map": [
-        {
-          "id": "mDL",
-          "path": "$",
-          "format": "mdl_iso"
-        }
-      ],
-      "definition_id": "mDL-sample-req",
-      "id": "mDL-sample-res"
-    }
-  }
+   "id":"mDL-sample-req",
+   "input_descriptors":[
+      {
+         "id":"mDL",
+         "format":{
+            "mdl_iso_cbor":{
+               "alg":[
+                  "EdDSA",
+                  "ES256"
+               ]
+            },
+            "constraints":{
+               "limit_disclosure":"required",
+               "fields":[
+                  {
+                     "path":[
+                        "$.mdoc.doctype"
+                     ],
+                     "filter":{
+                        "type":"string",
+                        "const":"org.iso.18013.5.1.mDL"
+                     }
+                  },
+                  {
+                     "path":[
+                        "$.mdoc.namespace"
+                     ],
+                     "filter":{
+                        "type":"string",
+                        "const":"org.iso.18013.5.1"
+                     }
+                  },
+                  {
+                     "path":[
+                        "$.mdoc.family_name"
+                     ],
+                     "intent_to_retain":"false"
+                  },
+                  {
+                     "path":[
+                        "$.mdoc.portrait"
+                     ],
+                     "intent_to_retain":"false"
+                  },
+                  {
+                     "path":[
+                        "$.mdoc.driving_privileges"
+                     ],
+                     "intent_to_retain":"false"
+                  }
+               ]
+            }
+         }
+      }
+   ]
 }
 ```
 
-The `descriptor_map` refers to the input descriptor `mDL` and tells the verifier that there is an ISO/IEC 18013-5:2021 mDL (`format` is `mdl_iso`) directly in the vp_token (path is the root designated by `$`). 
+To start with, the `format` element of the `input_descriptor` is set to `mdl_iso_cbor`, i.e. it requests presentation of a mDL in CBOR format. 
 
-When ISO/IEC 18013-5:2021 mDL is expressed in CBOR `nested_path` parameter cannot be used to point to the location of the requested claims. The user claims will be included in the `issuerSigned` item. `nested_path` parameter is useful when a JSON-encoded ISO/IEC 18013-5:2021 mDL is returned.
+To request user claims in ISO/IEC 18013-5:2021 mDL, a `doctype` and `namespace` of the claim needs to be specified. Moreover, the verifiers needs to indicate whether it intends to retain obtained user claims or not, using `intent_to_retain` property.
 
-The following is a non-normative example of an ISO/IEC 18013-5:2021 mDL encoded as CBOR in diagnostic notation (line wraps within values are for display purposes only).
+Note: `intent_to_retain` is a property introduced in this example to meet requirements of [@ISO.18013-5].
+
+Setting `limit_disclosure` property defined in [@!DIF.PresentationExchange] to `required` enables selective release by instructing the wallet to submit only the data elements specified in the fields array. Selective release of claims is a requirement built into an ISO/IEC 18013-5:2021 mDL data model.
+
+### Presentation Response
+
+The presentation response looks the same as for the other examples.
+
+```
+  HTTP/1.1 302 Found
+  Location: https://client.example.org/cb#
+    presentation_submission=...
+    &vp_token=...
+```
+
+The following shows the `presentation_submission` content:
+
+```json
+{
+   "descriptor_map":[
+      {
+         "id":"mDL",
+         "path":"$",
+         "format":"mdl_iso_cbor"
+      }
+   ],
+   "definition_id":"mDL-sample-req",
+   "id":"mDL-sample-res"
+}
+```
+
+The `descriptor_map` refers to the input descriptor `mDL` and tells the verifier that there is an ISO/IEC 18013-5:2021 mDL (`format` is `mdl_iso_cbor`) in CBOR encoding directly in the `vp_token` (path is the root designated by `$`). 
+
+When ISO/IEC 18013-5:2021 mDL is expressed in CBOR the `nested_path` element cannot be used to point to the location of the requested claims. The user claims will always be included in the `issuerSigned` item. `nested_path` parameter can be used, however, when a JSON-encoded ISO/IEC 18013-5:2021 mDL is returned.
+
+The following is a non-normative example of an ISO/IEC 18013-5:2021 mDL encoded as CBOR in diagnostic notation (line wraps within values are for display purposes only) as conveyed in the `vp_token`parameter.
+
+TBD: shouldn't the vp_token parameter be base64url encoded?
 
 ```json
 {
@@ -1252,6 +1434,8 @@ Note that user claims in the `deviceSigned` item correspond to self-attested cla
 Note that the reason why hashes of the user claims are included in the `issuerAuth` item lies in the selective release mechanism. Selective release of the user claims in an ISO/IEC 18013-5:2021 mDL is performed by the Issuer signing over the hashes of all the user claims during the issuance, and only the actual values of the claims that the End-User has agreed to reveal to teh Verifier being included during the presentation. 
 
 The example in this section is also applicable to the electronic identification credentials expressed using data models defined in ISO/IEC TR 23220-2.
+
+TBD: are `nonce` and `client_id` included into the mDL to detect replay?
 
 # IANA Considerations
 
