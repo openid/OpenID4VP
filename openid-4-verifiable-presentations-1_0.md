@@ -189,7 +189,7 @@ Content-Type: application/json
 }
 ```
 
-## VP Token Response {#vp_token_response}
+# Response {#vp_token_response}
 
 The response used to provide the VP Token to the client depends on the grant and response type used in the request.
 
