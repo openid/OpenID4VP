@@ -1,0 +1,11 @@
+{
+    "definition_id": "mDL-sample-req",
+    "id": "mDL-sample-res",
+    "descriptor_map": [
+        {
+            "id": "mDL",
+            "format": "mdl_iso_cbor",
+            "path": "$"
+        }
+    ]
+}

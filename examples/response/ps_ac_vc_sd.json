@@ -1,0 +1,15 @@
+{
+    "definition_id": "example_vc_ac_sd",
+    "id": "example_vc_ac_sd_presentation_submission",
+    "descriptor_map": [
+        {
+            "id": "id_credential",
+            "path": "$",
+            "format": "ac_vp",
+            "path_nested": {
+                "path": "$.requested_proof.revealed_attr_groups.id_card_credential",
+                "format": "ac_vc"
+            }
+        }
+    ]
+}

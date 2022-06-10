@@ -189,7 +189,7 @@ Content-Type: application/json
 }
 ```
 
-## VP Token Response {#vp_token_response}
+# Response {#vp_token_response}
 
 The response used to provide the VP Token to the client depends on the grant and response type used in the request.
 
@@ -396,153 +396,6 @@ In many instances the referenced server will be operated by a known federation o
 
 Clients intending to authenticate the end-user utilizing a claim in a verifable credential MUST ensure this claim is stable for the end-user as well locally unique and never reassigned within the credential issuer to another end-user. Such a claim MUST also only be used in combination with the issuer identifier to ensure global uniqueness and to prevent attacks where an attacker obtains the same claim from a different issuer and tries to impersonate the legitimate user. 
 
-#  Examples 
-
-This Section illustrates examples when W3C Verifiable Credentials objects are requested using the `claims` parameter and returned in a VP Token.
-
-## Self-Issued OpenID Provider (SIOP)
-This Section illustrates the protocol flow for the case of communication through the front-channel with SIOP.
-
-### Authentication request
-
-The following is a non-normative example of how an RP would use the `claims` parameter to request claims in the VP Token:
-
-```
-  HTTP/1.1 302 Found
-  Location: openid://?
-    response_type=id_token
-    &client_id=https%3A%2F%2Fclient.example.org%2Fcb
-    &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
-    &scope=openid
-    &claims=...
-    &state=af0ifjsldkj
-    &nonce=n-0S6_WzA2Mj
-    &registration_uri=https%3A%2F%2F
-      client.example.org%2Frf.txt%22%7D
-      
-```
-
-#### claims parameter
-
-<{{examples/request/vp_token_type_and_claims.json}}
-
-### Authentication Response (including vp_token)
-
-The successful authentication response contains a `vp_token` parameter along with  `id_token` and `state`.
-```
-  HTTP/1.1 302 Found
-  Location: https://client.example.org/cb#
-    id_token=eyJ0 ... NiJ9.eyJ1c ... I6IjIifX0.DeWt4Qu ... ZXso
-    &vp_token=...
-    &state=af0ifjsldkj
-      
-```
-
-#### id_token
-
-This is the example ID Token:
-
-```json
-{
-   "iss":"https://self-issued.me/v2",
-   "aud":"https://client.example.org/cb",
-   "iat":1615910538,
-   "exp":1615911138,
-   "sub":"NzbLsXh8uDCcd-6MNwXF4W_7noWXFZAfHkxZsRGC9Xs",
-   "auth_time":1615910535,
-   "nonce":"n-0S6_WzA2Mj",
-   "sub_jwk": {
-     "kty":"RSA",
-     "n": "0vx7agoebGcQSuuPiLJXZptN9nndrQmbXEps2aiAFbWhM78LhWx
-     4cbbfAAtVT86zwu1RK7aPFFxuhDR1L6tSoc_BJECPebWKRXjBZCiFV4n3oknjhMs
-     tn64tZ_2W-5JsGY4Hc5n9yBXArwl93lqt7_RN5w6Cf0h4QyQ5v-65YGjQR0_FDW2
-     QvzqY368QQMicAtaSqzs8KJZgnYb9c7d0zgdAZHzu6qMQvRL5hajrn1n91CbOpbI
-     SD08qNLyrdkt-bFTWhAI4vMQFh6WeZu0fM4lFd2NcRwr3XPksINHaQ-G_xBniIqb
-     w0Ls1jF44-csFCur-kEgU8awapJzKnqDKgw",
-     "e":"AQAB"
-    }
-    "_vp_token": {
-        "presentation_submission": {
-            "id": "Selective disclosure example presentation",
-            "definition_id": "Selective disclosure example",
-            "descriptor_map": [
-                {
-                    "id": "ID Card with constraints",
-                    "format": "ldp_vp",
-                    "path": "$",
-                    "path_nested": {
-                        "format": "ldp_vc",
-                        "path": "$.verifiableCredential[0]"
-                    }
-                }
-            ]
-        }
-    }
-}
-```
-
-#### vp_token content
-
-This is the example VP Token containing a verifiable presentation (and credential) in LD Proof format. 
-
-Note: in accordance with (#security_considerations) the verifiable presentation's `challenge` claim is set to the value of the `nonce` request parameter value and the `domain` claim contains the RP's `client_id`. 
-
-<{{examples/response/vp_token_ldp_vp.json}}
-
-## Authorization Code Flow with vp_token
-
-This Section illustrates the protocol flow for the case of communication using front-channel and backchannel (utilizing the authorization code flow).
-
-### Authentication Request
-
-```
-  GET /authorize?
-    response_type=code
-    &client_id=s6BhdRkqt3 
-    &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
-    &scope=openid
-    &claims=...
-    &state=af0ifjsldkj
-    &nonce=n-0S6_WzA2Mj HTTP/1.1
-  Host: server.example.com
-```
-
-#### Claims parameter
-
-<{{examples/request/vp_token_type_and_claims.json}}
-
-### Authentication Response
-```
-HTTP/1.1 302 Found
-  Location: https://client.example.org/cb?
-    code=SplxlOBeZQQYbYS6WxSbIA
-    &state=af0ifjsldkj
-```
-
-### Token Request
-```
-  POST /token HTTP/1.1
-  Host: server.example.com
-  Content-Type: application/x-www-form-urlencoded
-  Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
-
-  grant_type=authorization_code
-  &code=SplxlOBeZQQYbYS6WxSbIA
-  &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
-```
-
-### Token Response (including vp_token)
-
-This is the example token response containing a VP Token which contains a verifiable presentation (and credential) in LD Proof format. 
-
-Note: in accordance with (#security_considerations) the verifiable presentation's `challenge` claim is set to the value of the `nonce` request parameter value and the `domain` claim contains the RP's `client_id`. 
-
-<{{examples/response/token_response_vp_token_ldp_vp.json}}
-
-#### id_token
-
-<{{examples/response/id_token_ref_vp_token_code.json}}
-
 {backmatter}
 
 <reference anchor="VC_DATA" target="https://www.w3.org/TR/vc-data-model">
@@ -678,7 +531,6 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </front>
  </reference>
 
-
 <reference anchor="Hyperledger.Indy" target="https://www.hyperledger.org/use/hyperledger-indy">
         <front>
           <title>Hyperledger Indy Project</title>
@@ -721,9 +573,79 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </front>
  </reference>
 
-# Alternative Credential Formats {#alternative_credential_formats}
+# Examples {#alternative_credential_formats}
 
-OpenID for Verifiable Presentations is credential format agnostic, i.e. it is designed to allow applications to request and receive verifiable presentations and credentials in any format, not limited to the formats defined in [@!VC_DATA]. This section aims to illustrate this with examples utilizing other credential formats. Customization of OpenID for Verifiable Presentation for other credential formats uses extensions points of Presentation Exchange [@!DIF.PresentationExchange]. 
+OpenID for Verifiable Presentations is credential format agnostic, i.e. it is designed to allow applications to request and receive verifiable presentations and credentials in any format, not limited to the formats defined in [@!VC_DATA]. This section aims to illustrate this with examples utilizing different credential formats. Customization of OpenID for Verifiable Presentation for credential formats other than those defined in [@!VC_DATA] uses extensions points of Presentation Exchange [@!DIF.PresentationExchange]. 
+
+## JWT VCs
+
+### Example Credential
+
+The following is an JWT-based Verifiable Credential that will be used through this section.
+
+<{{examples/credentials/jwt_vc.json}}
+
+### Presentation Request
+
+This is an example presentation request. 
+
+<{{examples/request/request.txt}}
+
+The requirements regarding the credential to be presented are conveyed in the `presentation_definition` parameter. It's content is is given in the following example.
+
+<{{examples/request/pd_jwt_vc.json}}
+
+It contains a single `input_descriptor`, which sets the desired format to JWT VC and defines a constraint over the `vc.type` element to select credentials of type `IDCredential`. 
+
+### Presentation Response
+
+An example presentation response look like this:
+
+<{{examples/response/response.txt}}
+
+The content of the `presentation_submission` is given in the following: 
+
+<{{examples/response/ps_jwt_vc.json}}
+
+It refers to the VP in the `vp_token` parameter provided in the same response, which looks as follows.
+
+<{{examples/response/jwt_vp.json}}
+
+Note: the VP's `nonce` claim contains the value of the `nonce` of the presentation request and the `aud` claims contains the client id of the verifier. This allows the verifier to detect replay of a presentation as recommened in (#preventing-replay). 
+
+## LDP VCs
+
+The following is an LDP-based Verifiable Credential that will be used through this section.
+
+<{{examples/credentials/ldp_vc.json}}
+
+### Presentation Request
+
+This is an example presentation request. 
+
+<{{examples/request/request.txt}}
+
+The requirements regarding the credential to be presented are conveyed in the `presentation_definition` parameter. It's content is is given in the following example.
+
+<{{examples/request/pd_ldp_vc.json}}
+
+It contains a single `input_descriptor`, which sets the desired format to LDP VC and defines a constraint over the `type` element to select credentials of type `IDCardCredential`. 
+
+### Presentation Response
+
+An example presentation response look like this:
+
+<{{examples/response/response.txt}}
+
+The content of the `presentation_submission` is given in the following: 
+
+<{{examples/response/ps_ldp_vc.json}}
+
+It refers to the VP in the `vp_token` parameter provided in the same response, which looks as follows.
+
+<{{examples/response/ldp_vp.json}}
+
+Note: the VP's `challenge` claim contains the value of the `nonce` of the presentation request and the `domain` claims contains the client id of the verifier. This allows the verifier to detect replay of a presentation as recommened in (#preventing-replay). 
 
 ## AnonCreds
 
@@ -739,530 +661,100 @@ To be able to request AnonCreds, there needs to be a set of identifiers for cred
 
 The following is an example AnonCred credential that will be used through this section. 
 
-```json
-{
-    "schema_id": "3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0.1",
-    "cred_def_id": "CsiDLAiFkQb9N4NDJKUagd:3:CL:4687:awesome_cred",
-    "rev_reg_id": null,
-    "values": {
-        "first_name": {
-            "raw": "Alice",
-            "encoded": "6874ecdbdb214ee888e37c8c983e2f1c9c0ed16907b519704db42bb6"
-        },
-        "last_name": {
-            "raw": "Wonderland",
-            "encoded": "f5e16db78511f23bf2bcf0f450f20180951557cd75efe88b276988fd"
-        },
-        "email": {
-            "raw": "alice@example.com",
-            "encoded": "0fbaa7f92a47fe3c5201e97f063983c702432e90dd7bf0c723386543"
-        }
-    },
-    "signature": {
-        "p_credential": {
-            "m_2": "99219524012997799443220800218760023447537107640621419137185629243278403921312",
-            "a": "54855652574677988116650236306088516361537734570414909367032672219103444197205489674846545082012012711261249754371310495367475614729209653850720034913398482184757254920537051297936910125023613323255317515823974231493572903991640659741108603715378490408836507643191051986137793268856316333600932915078337920001692235029278931184173692694366223663131943657834349339828618978436402973046999961539444380116581314372906598415014528562207334745774098097000567515212222894771357044500544552372314335894883000614144994856702181141090905033428221403654636324918343808136750040908443212492359485782471636294013062295153997068252",
-            "e": "259344723055062059907025491480697571938277889515152306249728583105665800713306759149981690559193987143012367913206299323899696942213235956742930239825562861075148170278284639129199",
-            "v": "9774232256179658261610308745866736090602538333363396375105120427156273261155207775732400073422905045147609169788952804683922921383859274758479842100138659865591976937215264032734277416744113491766616076612368115891637834588143840477778776159325514034900968730327459279564615858068472282705529798808334108833124505594371791348317639533993310391511620579199112357959170076753792711700533312522910797352842323445933004238048599164039686432144165884599052061538014126710866075791210006585893465085621395503182710866197817129408546193805893321161372355187962990595781339533851533077334790530438016817333603675910702146635975282253747819810788129751055728368937483121363992748831475139233180853145906108476753713239644943541916540123456371366974874702598201796929261151925643543132170495933035112012082080893049915977209167597"
-        },
-        "r_credential": null
-    },
-    "signature_correctness_proof": {
-        "se": "8986500246928105545119249693120482606913996376875337975817228090569777886100120575851444392132175485176800946276729875298747664099989412623249056022784348808658577491758644556594901203598819936532435225959211617545841036816799892165118015169512229910557670483101499028188851318984001732266955939801843049852569586066803442690248386970226324039561954050567607010646624132392374280640663854092050106203821468403658338788408023014151088931308776669398184180228869449717267624484235796469721889284094131533549692106113602342932288350356591343546227828642494647872633442330361211149649432468143339518371824496555067302935",
-        "c": "93582993140981799598406702841334282100000866001274710165299804498679784215598"
-    },
-    "rev_reg": null,
-    "witness": null
-}
-```
+<{{examples/credentials/ac_vc.json}}
 
 The most important parts for the purpose of this example are `scheme_id` element and `values` element that contains the actual End-user claims. 
 
 ### Presentation Request 
 
-#### Request Example without Selective Release of Claims
+#### Request Example
 
-The following is an example request for a presentation of a credential in AnonCreds format.
+The example presentation request looks as follows:
 
-```json
-{
-    "id_token": {
-        "email": null
-    },
-    "vp_token": {
-        "presentation_definition": {
-            "id": "vp token example",
-            "input_descriptors": [
-                {
-                    "id": "id card credential",
-                    "format": {
-                        "ac_vc": {
-                            "proof_type": [
-                                "CLSignature2019"
-                            ]
-                        }
-                    },
-                    "constraints": {
-                        "fields": [
-                            {
-                                "path": [
-                                    "$.schema_id"
-                                ],
-                                "filter": {
-                                    "type": "string",
-                                    "pattern": "did:indy:idu:test:3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0\\.1"             
-                                }
-                            }
-                        ]
-                    }
-                }
-            ]
-        }
-    }
-}
-```
+<{{examples/request/request.txt}}
 
-The following explanation will focus on the elements in the `input_descriptor` object in the `claims` parameter.
+The following is the content of the `presentation_definition` parameter.
 
-The `format` object uses the format identifier `ac_vc` as defined above and sets the `proof_type` to `CLSignature2019` to denote this descriptor requires a credential in AnonCreds format signed with a CL signature (Camenisch-Lysyanskaya siganture). The rest of the expressions operate on the AnonCreds JSON structure.
+<{{examples/request/pd_ac_vc.json}}
 
-The `constraints` object requires the selected credential to conform with a certain schema, which is denoted as a constraint over the AnonCred's `schema_id` element. 
+The `format` object of the `input_descriptor` uses the format identifier `ac_vc` as defined above and sets the `proof_type` to `CLSignature2019` to denote this descriptor requires a credential in AnonCreds format signed with a CL signature (Camenisch-Lysyanskaya siganture). The rest of the expressions operate on the AnonCreds JSON structure.
+
+The `constraints` object requires the selected credential to conform with the schema definition `did:indy:idu:test:3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0\\.1`, which is denoted as a constraint over the AnonCred's `schema_id` element. 
 
 #### Request Example with Selective Release of Claims
 
 The next example leverages the AnonCreds' capabilities for selective disclosure by requesting a subset of the claims in the credential to be disclosed to the verifier.
 
-```json
-{
-    "id_token": {
-        "email": null
-    },
-    "vp_token": {
-        "presentation_definition": {
-            "id": "vp token example",
-            "input_descriptors": [
-                {
-                    "id": "ref2",
-                    "format": {
-                        "ac_vc": {
-                            "proof_type": [
-                                "CLSignature2019"
-                            ]
-                        }
-                    },
-                    "constraints": {
-                        "limit_disclosure": "required",
-                        "fields": [
-                            {
-                                "path": [
-                                    "$.schema_id"
-                                ],
-                                "filter": {
-                                    "type": "string",
-                                    "pattern": "did:indy:idu:test:3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0\\.1"
-                                }
-                            },
-                            {
-                                "path": [
-                                    "$.values.given_name"
-                                ]
-                            },
-                            {
-                                "path": [
-                                    "$.values.family_name"
-                                ]
-                            }
-                        ]
-                    }
-                }
-            ]
-        }
-    }
-}
-```
+The presentation looks the same as above. The difference is in the `presentation_definition` parameter as shown in the following:
 
-This example is identic to the previous one with the following exceptions. It sets the PE elememt `limit_disclosure` to `require` and adds two more constraints for the individual claims `given_name` and `family_name`. Since such claims are stored underneath a `values` container in an AnonCred, `values` is part of the path to identify the respective claim. 
+<{{examples/request/pd_ac_vc_sd.json}}
+
+This example is identic to the previous one with the following exceptions: It sets the elememt `limit_disclosure` of the constraint to `require` and adds two more constraints for the individual claims `given_name` and `family_name`. Since such claims are stored underneath a `values` container in an AnonCred, `values` is part of the path to identify the respective claim. 
 
 ### Presentation Response
 
-The response contains an ID Token and a VP tokens. 
+The presentation response looks the same as fot the other examples.
 
-The following is an ID Token example. It shows how the `presentation submission` helps the Verifier to locate proof of AnonCred credential in the VP token.
+<{{examples/response/response.txt}}
 
-```json
-{
-  "aud": "https://example.com/callback",
-  "sub": "9wgU5CR6PdgGmvBfgz_CqAtBxJ33ckMEwvij-gC6Bcw",
-  "auth_time": 1638483344,
-  "iss": "https://self-issued.me/v2",
-  "sub_jwk": {
-    "x": "cQ5fu5VmG…dA_5lTMGcoyQE78RrqQ6",
-    "kty": "EC",
-    "y": "XHpi27YMA…rnF_-f_ASULPTmUmTS",
-    "crv": "P-384"
-  },
-  "exp": 1638483944,
-  "iat": 1638483344,
-  "nonce": "67473895393019470130",
-  "_vp_token": {
-    "presentation_submission": {
-      "descriptor_map": [
-        {
-          "id": "ref2",
-          "path": "$",
-          "format": "ac_vp",
-          "path_nested": {
-            "path": "$.requested_proof.revealed_attr_groups.ref2",
-            "format": "ac_vc"
-          }
-        }
-      ],
-      "definition_id": "NextcloudLogin",
-      "id": "NexcloudCredentialPresentationSubmission"
-    }
-  }
-}
-```
+It contains the `presentation_submission` and `vp_token` parameters.  
+
+The `presentation submission` looks like this:
+
+<{{examples/response/ps_ac_vc_sd.json}}
 
 The `descriptor_map` refers to the input descriptor `ref2` and tells the verifier that there is a proof of AnonCred credential (`format` is `ac_vp`) directly in the vp_token (path is the root designated by `$`). Furthermore it indicates using `nested_path` parameter that the user claims can be found embedded in the proof underneath `requested_proof.revealed_attr_groups.ref2`.
 
 The following is a VP Token example.
 
-```json
-{
-   "proof": {...},
-   "requested_proof": {
-       "revealed_attrs": {},
-       "revealed_attr_groups": {
-           "ref2": {
-               "sub_proof_index": 0,
-               "values": {
-                   "last_name": {
-                       "raw": "Wonderland",
-                       "encoded": "167908493…94017654562035"
-                   },
-                   "first_name": {
-                       "raw": "Alice",
-                       "encoded": "270346400…99344178781507"
-                   }
-               }
-           }
-       },
-       …
-   },
-   "identifiers": [
-       {
-           "schema_id": "3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0.1",
-           "cred_def_id": "CsiDLAiFkQb9N4NDJKUagd:3:CL:4687:awesome_cred",
-           "rev_reg_id": null,
-           "timestamp": null
-       }
-   ]
-}
-```
+<{{examples/response/ac_vp_sd.json}}
 
 ## ISO mobile Driving Licence (mDL)
 
-This section illustrates how a mobile driving licence (mDL) credential expressed using a data model and data sets defined in ISO/IEC 18013-5:2021 specification [@ISO.18013-5] can be presented from the End-User's device directly to the RP using [@SIOPv2] and this specification.
+This section illustrates how a mobile driving licence (mDL) credential expressed using a data model and data sets defined in [@ISO.18013-5] can be presented from the End-User's device directly to the RP using this specification.
 
 To request an ISO/IEC 18013-5:2021 mDL, following identifiers for credentials are used for the purposes of this example:
 
-* `mdl_iso_cbor`: designates a mobile driving licence (mDL) credential encoded as CBOR, expressed using a data model and data sets defined in ISO/IEC 18013-5:2021 specification [@ISO.18013-5].
-* `mdl_iso_json`: designates a mobile driving licence (mDL) credential encoded as JSON, expressed using a data model and data sets defined in ISO/IEC 18013-5:2021 specification [@ISO.18013-5].
+* `mdl_iso_cbor`: designates a mobile driving licence (mDL) credential encoded as CBOR, expressed using a data model and data sets defined in [@ISO.18013-5].
+* `mdl_iso_json`: designates a mobile driving licence (mDL) credential encoded as JSON, expressed using a data model and data sets defined in [@ISO.18013-5].
 
 ### Presentation Request 
 
-#### Request Example
+The presentation request looks the same as for the other examples since the difference is in the content of the `presentation_definition` parameter. 
 
-Below is a non-normative example of how `claims` parameter is used in the authorization request to request an mDL credential in ISO/IEC 18013-5:2021 format:
+<{{examples/request/request.txt}}
 
-```json
-"claims": {
-  "vp_token": {
-    "presentation_definition": {
-      "id": "mDL-sample-req",
-      "input_descriptors": [
-        {
-          "id": "mDL",
-          "format": {
-            "mdl_iso_cbor": {
-              "alg": ["EdDSA", "ES256"]
-            },
-          "constraints": {
-            "limit_disclosure": "required",
-            "fields": [
-              {
-                "path": ["$.mdoc.doctype"],
-                "filter": {
-                  "type": "string",
-                  "const": "org.iso.18013.5.1.mDL"
-                }             
-              },
-              {
-                "path": ["$.mdoc.namespace"],
-                "filter": {
-                  "type": "string",
-                  "const": "org.iso.18013.5.1"
-                }             
-              },
-              {
-                "path": ["$.mdoc.family_name"],
-                "intent_to_retain": "false"
-              },
-              {
-                "path": ["$.mdoc.portrait"],
-                "intent_to_retain": "false"
-              },
-              {
-                "path": ["$.mdoc.driving_privileges"],
-                "intent_to_retain": "false"
-              }
-            ]       
-           }         
-         }
-        } 
-      ]
-    } 
-   }
- }
-```
+The content of the `presentation_definition` parameter is as follows:
 
-To request user claims in ISO/IEC 18013-5:2021 mDL, a `doctype` and `namespace` of the claim needs to be specified.
-Moreover, RP needs to indicate whether it intends to retain obtained user claims or not, using `intent_to_retain` property.
+<{{examples/request/pd_mdl_iso_cbor.json}}
 
-Setting `limit_disclosure` property defined in [@!DIF.PresentationExchange] to `required` enables selective release by instructing SIOP to submit only the data elements specified in the fields array.
+To start with, the `format` element of the `input_descriptor` is set to `mdl_iso_cbor`, i.e. it requests presentation of a mDL in CBOR format. 
 
-Selective release of claims is a requirement built into an ISO/IEC 18013-5:2021 mDL data model.
+To request user claims in ISO/IEC 18013-5:2021 mDL, a `doctype` and `namespace` of the claim needs to be specified. Moreover, the verifiers needs to indicate whether it intends to retain obtained user claims or not, using `intent_to_retain` property.
 
-If an RP wants to request user claims from another namespace, another `input_descriptor` object should be used, even if the namespaces belong to the same doctype.
+Note: `intent_to_retain` is a property introduced in this example to meet requirements of [@ISO.18013-5].
 
-Note that `intent_to_retain` is a property introduced to [@!DIF.PresentationExchange] to meet requirements of [@ISO.18013-5].
-
+Setting `limit_disclosure` property defined in [@!DIF.PresentationExchange] to `required` enables selective release by instructing the wallet to submit only the data elements specified in the fields array. Selective release of claims is a requirement built into an ISO/IEC 18013-5:2021 mDL data model.
 
 ### Presentation Response
 
-The response contains an ID Token and a VP Token. In the following example, a single ISO/IEC 18013-5:2021 mDL is returned as a VP Token. Note that a ISO/IEC 18013-5:2021 mDL could be encoded both in CBOR or JSON. 
+The presentation response looks the same as for the other examples.
 
-The following is a non-normative example of a successful authorization request when [@SIOPv2] and this specification is used.
+<{{examples/response/response.txt}}
 
-```
-POST /callback HTTP/1.1
-Host: client.example.org
-Content-Type: application/x-www-form-urlencoded
+The following shows the `presentation_submission` content:
 
-id_token=<<Base64URL encoded ID Token>>
-  &vp_token=<<Base64URL encoded ISO/IEC 18013-5:2021 mDL (CBOR in this example since the requested format was `mdl_iso`)>>
-```
+<{{examples/response/ps_mdl_iso_cbor.json}}
 
-The following is an ID Token example. It shows how the `presentation_submission` helps the RP to locate in the VP Token an ISO/IEC 18013-5:2021 mDL expressed in CBOR:
+The `descriptor_map` refers to the input descriptor `mDL` and tells the verifier that there is an ISO/IEC 18013-5:2021 mDL (`format` is `mdl_iso_cbor`) in CBOR encoding directly in the `vp_token` (path is the root designated by `$`). 
 
-```json
-{
-  "aud": "https://client.example.org/callback",
-  "sub": "9wgU5CR6PdgGmvBfgz_CqAtBxJ33ckMEwvij-gC6Bcw",
-  "iss": "9wgU5CR6PdgGmvBfgz_CqAtBxJ33ckMEwvij-gC6Bcw",
-  "sub_jwk": {
-    "x": "cQ5fu5VmG…dA_5lTMGcoyQE78RrqQ6",
-    "kty": "EC",
-    "y": "XHpi27YMA…rnF_-f_ASULPTmUmTS",
-    "crv": "P-384"
-  },
-  "exp": 1638483944,
-  "iat": 1638483344,
-  "nonce": "67473895393019470130",
-  "_vp_token": {
-    "presentation_submission": {
-      "descriptor_map": [
-        {
-          "id": "mDL",
-          "path": "$",
-          "format": "mdl_iso"
-        }
-      ],
-      "definition_id": "mDL-sample-req",
-      "id": "mDL-sample-res"
-    }
-  }
-}
-```
+When ISO/IEC 18013-5:2021 mDL is expressed in CBOR the `nested_path` element cannot be used to point to the location of the requested claims. The user claims will always be included in the `issuerSigned` item. `nested_path` parameter can be used, however, when a JSON-encoded ISO/IEC 18013-5:2021 mDL is returned.
 
-The `descriptor_map` refers to the input descriptor `mDL` and tells the verifier that there is an ISO/IEC 18013-5:2021 mDL (`format` is `mdl_iso`) directly in the vp_token (path is the root designated by `$`). 
+The following is a non-normative example of an ISO/IEC 18013-5:2021 mDL encoded as CBOR in diagnostic notation (line wraps within values are for display purposes only) as conveyed in the `vp_token`parameter.
 
-When ISO/IEC 18013-5:2021 mDL is expressed in CBOR `nested_path` parameter cannot be used to point to the location of the requested claims. The user claims will be included in the `issuerSigned` item. `nested_path` parameter is useful when a JSON-encoded ISO/IEC 18013-5:2021 mDL is returned.
+TBD: shouldn't the vp_token parameter be base64url encoded?
 
-The following is a non-normative example of an ISO/IEC 18013-5:2021 mDL encoded as CBOR in diagnostic notation (line wraps within values are for display purposes only).
-
-```json
-{
-    "status": 0,
-    "version": "1.0",
-    "documents": [
-        {
-            "docType": "org.iso.18013.5.1.mDL",
-            "deviceSigned": {
-                "deviceAuth": {
-                    "deviceMac": [
-                        << {1: 5} >>,
-                        {},
-                        null, h'A574C64F18902BFE18B742F17C581218F88EA279AA96D0F5888123843461A3B6'
-                    ]
-                },
-                "nameSpaces": 24(h'A0')
-            },
-            "issuerSigned": {
-                "issuerAuth": [
-                  << {1: -7} >>,
-                    {
-                        33: h'30820215308201BCA003020102021404AD06A30C1A6DC6E93BE0E2E8F78DCAFA7907C2300A06082A8648CE3D040302305B310B3009060355040613025A45312E302C060355040A0C25465053204D6F62696C69747920616E64205472616E73706F7274206F66205A65746F706961311C301A06035504030C1349414341205A65746573436F6E666964656E73301E170D3231303932393033333034355A170D3232313130333033333034345A3050311A301806035504030C114453205A65746573436F6E666964656E7331253023060355040A0C1C5A65746F70696120436974792044657074206F662054726166666963310B3009060355040613025A453059301306072A8648CE3D020106082A8648CE3D030107034200047C5545E9A0B15F4FF3CE5015121E8AD3257C28D541C1CD0D604FC9D1E352CCC38ADEF5F7902D44B7A6FC1F99F06EEDF7B0018FD9DA716AEC2F1FFAC173356C7DA3693067301F0603551D23041830168014BBA2A53201700D3C97542EF42889556D15B7AC4630150603551D250101FF040B3009060728818C5D050102301D0603551D0E04160414CE5FD758A8E88563E625CF056BFE9F692F4296FD300E0603551D0F0101FF040403020780300A06082A8648CE3D0403020347003044022012B06A3813FFEC5679F3B8CDDB51EAA4B95B0CBB1786B09405E2000E9C46618C02202C1F778AD252285ED05D9B55469F1CB78D773671F30FE7AB815371942328317C'
-                    }, 
-                    <<
-                      24(<<
-                          {
-                            "docType": "org.iso.18013.5.1.mDL",
-                            "version": "1.0",
-                            "validityInfo": {
-                                "signed": 0("2022-04-15T06:23:56Z"),
-                                "validFrom": 0("2022-04-15T06:23:56Z"),
-                                "validUntil": 0("2027-01-02T00:00:00Z")
-                            },
-                            "valueDigests": {
-                                "org.iso.18013.5.1": {
-                                    1: h'0F1571A97FFB799CC8FCDF2BA4FC29099290AAD37AE37ACE3C3BAE85C6379AD5',
-                                    2: h'0CDFE077400432C055A2B69596C90AAA47277C9678BFFC32BBC7F0CF82713B8E',
-                                    3: h'E2382149255AE8E955AF9B8984395315F3A38427C267F910A637D3FC81F25BB4',
-                                    4: h'BBC77E6CCA981A3AD0C3E544EDF8B68F19F4DACF1AF2AA0E6436401B4539ABA2',
-                                    6: h'BB6E6C68D1B4B4EC5A2AE9206F5F976A32061FA878BD5B44476F96D35462F6B2',
-                                    8: h'F8A5966E6DAC9970E0334D8F75E24DC63832E73A56AEF21C0D4B91487FC6AB03',
-                                    9: h'EAD5E8B5E543BD31F3BE57DE4ED6CCF7BB635221725F80538165DA7DC0BF92BB',
-                                    11: h'38CE9A09DC0121E1A9C2EF3EE2456530C2183AA8326FBE13B7D19A17DF77E980',
-                                    12: h'DEFDF1AA746718016EF1B94BFE5FB7774B8665F57D48ADAB83ABE0B28C22DB59',
-                                    13: h'A8868DF71AA4FB7D0AD3459C2E75E63767FE477B5A8FDF45537E936AFAB59C44',
-                                    15: h'95B651F1BA60EF5867E63E8DB1B0328464E5B66775E213B743A1E31F8EFBD9CB',
-                                    16: h'364E3C65D46D06FEDEB0E7293A86BA45FDFA99AA1A6DA3C3289B6E073B589922',
-                                    17: h'B584E5D5EF4CFC93FDB1E4EE8F3996090EF0B1E8FD2AC594D7D8793093BB328F',
-                                    18: h'677468F3E28CAAB521337E0FEF7FFEB067D2A2704F88B5D50D84CAF17209BA25',
-                                    19: h'95501E3E769230DC945CFBDC707C45218459F1129EFD5088BDA672CEF5991598',
-                                    20: h'677FACBBCA2EB9306BD649227B9AD66DF4A9AF6A5AB7D073F1BAAC23254B6D78',
-                                    22: h'BCCFB15CB36125BF1ECBFDE32FF908BD3BAA2DC0BA949B673E96CBA26902059F',
-                                    23: h'F9EE4D36F67DBD75E23311AC1C294C563992463A30B47039D25E03B6C6EFFCA3',
-                                    25: h'AFC5A127BE44753172844B13491D880C3768691A4C9916E5257CEFA4BAA74654',
-                                    26: h'1E1DA854356D3CFB7D983B8105F8A081057D4D01E910F263143BDC9AF1EF363C'
-                                }
-                            },
-                            "deviceKeyInfo": {
-                                "deviceKey": {
-                                    1: 2,
-                                    -1: 1,
-                                    -2: h'B820963964E53AF064686DD9218303494A5B23A175C34CC54AD1D9244EFD0BA5',
-                                    -3: h'0A6DA0AF437E2943F1836F31C678D89298E93D7E95057FD4D04E8E3EC2BBA935'
-                                }
-                            },
-                            "digestAlgorithm": "SHA-256"
-                          }
-                      >>)
-                    >>,
-                    h'1AD0D6A7313EFDC38FCD765852FA2BD43DEBF48BF5A516960A685162B2B8242935861329ECB54F68234FC88A0228EC5DF22CB9689EC5053C80EDC59CC99EE80D'
-                ],
-                "nameSpaces": {
-                    "org.iso.18013.5.1": [
-                        24(<<
-                            {
-                              "digestID": 1,
-                              "random": h'E0B70BCEFBD43686F345C9ED429343AA',
-                              "elementIdentifier": "expiry_date",
-                              "elementValue": 1004("2030-02-22")
-                            }
-                        >>),
-                        24(<<
-                            {
-                              "digestID": 6,
-                              "random": h'AE84834F389EE69888665B90A3E4FCCE',
-                              "elementIdentifier": "given_name",
-                              "elementValue": "Doe"
-                            }
-                        >>),
-                        24(<<
-                            {
-                              "digestID": 11,
-                              "random": h'960CB15A2EA9B68E5233CE902807AA95',
-                              "elementIdentifier": "issuing_country",
-                              "elementValue": "UT"
-                            }
-                        >>),
-                        24(<<
-                            {
-                              "digestID": 13,
-                              "random": h'9D3774BD5994CCFED248674B32A4F76A',
-                              "elementIdentifier": "document_number",
-                              "elementValue": "ES24689"
-                            }
-                        >>),
-                        24(<<
-                            {
-                              "digestID": 15,
-                              "random": h'EB12193DC66C6174530CDC29B274381F',
-                              "elementIdentifier": "portrait",
-                              "elementValue": h'89504E470D0A1A0A0000000D49484452000001F3000001F20803000000C88DD7DC0000001974455874536F6674776172650041646F626520496D616765526561647971C9653C00000180504C5445336D82D0B293417E9A4848484684A24A8CAE306A7ED1C8D144809D357085407D993F7B96B3B3B0275D718687864765734886A54A8BAC3E7A954A8AAB38738ACFA8CE4686A53C7993FEE6CF4787A74785A44584A33D7A94A18B7655555543819E3A768F498AACE4D6E339748D4B8CADAC67AA71706F74878436718845565D4545454A5F68FEF0E3395965E2C5A545748A2E5A69FDDCBCB0AA9737515A515151F1CAA33B77904C4C4C3E7B96939B986D929EB79C824783A044494BD1BDA35B899BA0A5A2466D7D4C839AFDD2A84F879F424D524C8DAF515B5FFFFFFF467E9AA458A25357594888A840778F42809C4989A94582A04583A1417F9B40748B4482A043819D4483A14888A7407C973C78913A758D3E79934889AA3B7891427F9C42809D4889A9498AAA3A758E417E994988A843809D39748CBA82B9E9E6E98E7C6CF3F3F3E6BD9E50555773685D5E5E5FFDD5AE5C5651504D4BF9F4F9F3EAF3FEFCF9675F57FEF8F14170845C7A7E38748E6A4E69487F9B467B94925591816E80534A530E2CDF5E00001E3B4944415478DAECDDEB6313C77600F031A212B13D1675E340C15EA7BAB588A41819635FD72832288A6AC55CA879A55052726FD35BD960630C01737BDDF65FAF64F9A1C7AE761E6766CE91E77C49F20556FBCB397366667796FD33C2F89BC8F8C793F8DB88F887BF0B8D3FFDE9E79F7FFEE31FFFA533FED015FFF9877F6DC6DFF7C5E5767C751447FF7AAD372E5E3F8D8B47F1E8347E3A8AA7EDD83C89E6BFCF76C7B3A3F8F3A54B977EF9E56167BC3A89C7EDB8D015BF8E76C6F3EE18EB89C9C9C9E9664C4E324F7EDEC8319A7B72B3E4D3CC939F37727CE69EDC34393A734F6E9C1C9BB927374F8ECCDC935B20C765EEC96D90A332F7E456C831997B723BE45798273F6FE42F99273F6FE468CC3DB935722CE69EDC1E3912734F6E911C87B927B7498EA26FF7E456C931987B72BBE408CC3DB96572F7E69EDC36B973734F6E9DDCB5B927B74FEED8DC933B20776BEEC95D903B35F7E44EC85D9A7B7237E40ECD3DB923F217CC939F377267E69EDC19B92B734FEE8EDC91B9277748EEC6DC93BB247762EEC99D92BB30F7E46EC91D987B72C7E4F6CD3DB96B72EBE69EDC39F9BF334F7EDEC82D9B7B7204E476CD3D390672ABE69E1C05B94D734F8E83FCF7CC939F37727BE69E1C0BB935734F8E86DC96B927C7436EC9DC932322B763EEC931915B31F7E4A8C86D987B725CE416CC3D393272F3E69E1C1BB971734F8E8EDCB4B927C7476ED8DC932324FF9A79F2F3466ED4DC93A3243769EEC971921B34F7E448C9CD997B72ACE4C6CC3D395A7253E69E1C2FB921734F8E98DC8CB927C74C6EC4DC93A3263761EEC971931B30F7E4C8C9FF839D1FF2C362259DCE35A3963F895AEB3FD3E974B1788EC8C1CD31926F36B173E57C4CD49AF8C54BE7801CDA1C1DF961A523AD05A29C4B1F1C0E37F9BFB12126FFB1129FDD51F0C5E1258735C7447E98AEE5B5A2E93E9CE4A0E678C8B5C14FDD0F878F1CD21C0BF9771518F0E3D62E5D1C3272407324E43FA6CB79E0A8158AC3440E678E83FCC742DE48D45A457E48C8C1CC51909B126F8FED0743420E658E817CD3A4783BD97F1D067220730CE49572DE7C140EE993C39823203FACE5ED44AE489DFC776C38C8D3797BD154274D0E61EE9EDC5A929FAA5326FF2F3604E45646F21EF543BAE4FAE6EEC90B79175138A44AAE6DEE9C7CB3967713E50A51725D73D7E4C58A2BF256817F40925CD3DC297931EDD0BB1D698AE47AE60EC98B85721E419CA63A21722D7367E4DF556A792451AE9023D7317745FE5DBA9C4714056AE41AE6AEC82BA8C45BF5FD392D72757347E4C55A1E5DD41E902257367743FE5D3A8F31CA4F2891AB9ABB213FACE5F378D1A9907FC9089157F268A3894E865CCDDC09F977853CE2288F9121573277435ECBA38EDA181572157327E47F454EDE9CB25121573077427E58CEA38F34117279734F1E194F68904B9BFBB17CC0904E835CD6DC930FACEE24C825CDDDCCCB73792AF18402B99CB91BF23419F27C8E02B994B95F7D8B8DF931FCE432E66EC8FF5AA6645EE663E8C925CC1D6D9ED6F2A4E2361FC34E2E6EEE883C9D27169C8F2127173677447E488DBC99E8FC9F70938B9ABB7A102A47CEBC99E8FCF7A8C905CD9D3DFB468FBC95E827E838C9C5CC9D3DE15A23685EE627E848C985CC9D3DC79ECEE789267A0B1D2BB988B9BB5717CA24CD6BFC081D2DB980B9BB179468A6793EBF7084FE2556F2787377E444D3FCB8B873FE0D52F2587387AF2156F25483F7A2A3228F3377F9B2718DACF9420F3A2EF2187397E445B2E4C75DDC293A32F26F18DA23050A74CD4F8A3BE70C21F94073A7E49B65C2E6B74FD193F8C80799BB3D2BA64298FCACB837D1D1910F30777C3C508EB2F95971EF4547401E6DEEFA4428D2E4A79D7B2F3A06F24873E78780D136BFCD3BD1AFA0228F32777ED45F9AB6799977C5154CE411E6EE0FF4ACE587A7B89FA023210F37774FBE499CBCBBB8B7D1B190879A23388F5D6538DFDF456CCEAFA0210F33C7F0A10DC9E17C3F5B1AA956AB25B4037A335E60210F3147F10525A9D9F976A97A1C25B4037A33FE8284BCDF1CC777D2C4175EF76796AB67B18DB7B8B7D05190F799E320DF5413C7841E62CE7F8782BCD71CC90730455BB8ED1E7144E8651E868E81BCC71CCB676EC53658DE8D544302CB98CE07A03B25EF3647F331EBB4629263425F0845FFC63D7997399EEF978B3C2F51AA46C5C83ED601BD195F3827EF34C7432E3055DB1FA946C79B8F78CDF917AEC93BCC1191C79B0F24AF5697117472351E85EE98FCCC1C13F9E59A1E796B50DFC7D9C41DA3BB243F3547457E599BBC39A87FC4D9C4B5CBBB4BF22F1846F23873017204F53DDA9C275D921F9B2323BFACDAB1F7A4FA3B944D5C27BA0BF2B63936F2C1E6DB55D1709BEA83CC8FD19D901F99A3231F68BE5B950897A37A8DC7A1BB216F99E3231F64BEFFA62A15EE1AF8328F417744DE344748FE15C0607E56E067D04DD68ED1BF7643FE05C348FE1550653F5996DB4669CEF9D74EC807983B24FF0AACB23B555F1043B74D1E6DEE923CDA7CA6AA182ED4E3CD5BE8D6C923CD9D92479ABF5BAE56D5D5F7314DD64ED0ED934799BB25FF0AAC81EBE9E6DEA1333F42B74B1E61EE98FC72C42390EFAABA51CA6233E77FB14D1E6EEE9AFC72CE449A1F97F812C832CDFEEECCCC4CCC68511332E75F5A260F35774E1E61FEAE0A1323DB9A35FE63E96497A7F44EDFBC13DD067998B97BF208F352152C46D4B3FDDDCC1BC125FD329745B7421E628E803CDC7C7FB90A19CB2585747FB73D22F170359744B743DE6F8E81FC5A4E6F3F4D6270DF96C8F7DD52E8C6FDB6BE791BDD12799F390AF270F391AA9918296DC7BFD1BABB5D8A2C33DBFAE62D745BE4BDE638C8AF853DDFFEB16A32DE8C9466B2BB6149BF9B9D29C53C71F9517D21EEEC24396BE43DE648C843CD4B552BF166A415CD8958A9F54FB1E5FD1100F34E74B3E4DDE658C843CDDF54F1C60C80F919BA61F22E7334E461E61FAB98E31D80F909BA69F24E733CE461E625D4E62508F336BA71F20E7344E461E66FAAF4125DD6BC856E9EFCCC1C13F9B5A2B17557AB23BAB4394F5A203F3547451E62BE8DDCFC0D8C7913DD38F989392EF210F31272F3EA4718739E344E7E6C8E8C3CC47C19BB7909C8FC14DD1879DB1C1B79BFF92E76F2D0E2AE647E8C6E8EFCC81C1DF9B5436AC37978E7AE667E846E90BC658E8FFCDA3572C379E84E8BA27913DD2479D31C23F93562B3F388015DD59CF32F0D927FC150925F24363B8FD8685137EF4407276728C9AF936BE19A016A7E860E4FCE50925F2F03BDBEE2B689D3313F413740CE50925FCF916BE1AAD55D58F336BA09728692BCD77C8482F936B0790BDD08394349DE6B4E813C649B45D39C7F69869CA124EF31FF48C2BCA4F30C64C4A16246C8194AF2EB057A6D7BC8648D1B42D7246728C9AFA7A9ADBC1A320F45D7256728C97BCC494CD5FA27E8656E045D9B9CA124EF311FA1695EE326D0F5C9194AF28B456F7EF6901C34394349DE63BE4CC37C57E9CC01397408728692BCC7BC7ABECD3BD041C8194AF28B17BD79D7863A2839C3497E91DEF4BCDF7C8103A30391339CE48F6A04CDB7CD991FA14391339CE4773ACFFEA0623E03BF24D3890E46CE5092AFB61E24DDA5B50CD76D9E2D2D571761D1C1C81956F28E4D8B1972E6BBEDE7F7CCA32B913384E47797BB77AAC8999F3EE2F1D930BA1A39C347FE68BC677B929AF9D9533D37B951744572868FFC87DE56988A79A9FF41AE1B26D155C9193AF247F73AEED9F23B2A4FC39D6EA6765D2DEC88DE8DAE4CCED0913FBAD97B1F472899F74C32B831747572868EFC51DF420725F3DEC7B83E9B42D72067E8C8EF74DFB437B4CC7BAF75959B41D72167D8C8BB86F376A21332EF6B3717B911742D72868DBC63A67692E854CC97438E211EE126D0F5C81936F2476B7D5B1754CCAB61330C6E025D8F9C6123EF371F21631EF6FA2C3782CE74C81936F2EEA95ABB6652312FD932E79C6990336CE43F55872B3E5B478F2567D8C8BDB9267A3C39C346EECDF5D099AAB943F26133AF70ABE84CD5DC25F94F3787CB9C739BE84CD5DC29F94F6BDE5C199DA99ABB257FEACD95D199AAB963F2A7E34345BEC6EDA1335573D7E44FEF0D95F908B7862E2A9E64D8C89FAE0E95F9A269F3D3C57761F25E73F7E44FEF0C95F92AB7842E4EDE638E80FCE90F7E4946015D82BCDB1C03F9D3CDA19AA057B8157419F22E731CE49BC334595BE656222943DE698E847C73981AF7118E093DD96B8E857CF38E6FE1CCA0277BCDD1906F6EFA16CE087AB2D71C11F9300DE89CA3414FF69A63221FA2017D91A3414FF69AA3221FA201FD06C7829EEC35C745FEF4E9D0CCD02B1C097AB2D71C1BF9D06CADAD718E033DD96B8E8E7C76588AFB04C7819EEC35C7473E3B3B24C53DC951A0277BCD3192CF0E47E7BEC83906F464BF3942F2D9E1D85BFBCC31A027FBCD3192CFCE0E431777937304E8C9507384E4B377FDE41C063D196A8E917C7676CDA739047A32D41C27F9104CD726B87BF46484394A72FA89EE30CD4FD19311E648C9C98FE837B873F4A4883922F2D9678BFE01193DF4A488392AF2673F905E8CAB70E7E822E6B8C89F3DA3DCC6AD728E179DA1257F46B8BAAF718E189DE125FFF325AAD57DB9C231A333C4E4977E58A669FE9973CCE80C31F9A55FEE9044BFC1396A748699FC978714D1119187A333D4E40F1FDEA136A62FA3220F4567B8C91F3EFC9E56F73E52E11C3B3A434EDE8CBBE3640AFCE2678E2F42CCB1933F2453E12B1C67F49953207FF88A42815FE39C063A2341FE8AC23AEC2A2782CE4890BFFADEAFC4C0A13312E4AF5EE17F8462997322E88C06F92BFC27882D722AE88C06F92BFC8FCDDCE054D0190DF257AFD0CFD6929C0A3A2342FE18FB6C6D8D732AE88C08F963ECB3B5094E069D11217FFC187971AF7032E88C0A39F2E2BEC639197446851C79719FE09C8C3AA342FEF8C24D5FDA61D01919F20B8BBEB403BDED4086FCC25D5FDA61829121BF80B9B8274999D321BF8077CD7D91533327428EB8B8DFA0664E85FCC205AC1BAACB9C98391D72B4C57D91983921F20B17903E005BA16E8E98FC02CE23C4D6387173CCE448BBB81BC4CD5193FF3A8A718ABE9CA46D8E9C7C74D57770D0E6D8C94747977D07076B8E9F7C14DF89CF239CB23901F2D1BBBE838334A7403E3A8A6DBA76931336A7413E8AED719909C2E644C84747D7FC440DC89C0C39B2E9DA2A276B4E877CF4F94D3F518330A744FE1C53A22F72AAE6A4C89F634AF40A557362E488129D649AB7CCA9913FFF7ED9A7B99E3939F2E7CFEFF934D73227488E26D12BA4CD49916319D189A6F9B13931F2E7777C9AEB9A5323C7614E35CD8FCCC991E330AF1036A747FE7CCCAFB46B99532447604E7143EDC49C243902F3094EDC9C1AB97BF39B9CB83939F231E70F4E7C266E4E8FDCBD39A76D4E90DC9BEB995324F7E6FA6BAFD4C8BDB9B63939F2B17BDE5CCF9C1EB937D7342748EECDF5CC29927B732D7392E4DE1CD49C04F9D81D6F0E674E83DC9B039A13219FF4E660E654C8BD39983919726F0E654E877CDA9BC39813229FBEEBCD21CC29914F4F7B7300735AE493FED1287D7362E4AECD4786C09C1AB937D73627473EEDCD35CDE9917B734D7382E4DE5CCF9C22F9F4B237D73027493EBDE6CDD5CD69927B731D739AE4DE1CC49C14B93787302745FEFD1DC76741AEDD4DD237A7447E2755AF5F756B7EB55E4FDD256E4E88FCE06DBD8EC1BCBE555BA06C4E883C9DB8D732FFD6BD797DA27C9BAE391DF2835A22F11A8B7926912099EA8C14793A914864EB58CCEB6F13098AA9CE08913F692679A25DDA71984FB4AEA746D09C0C79BADCBAC589141EF3F1A30B2A53ABEF8C0AF9EF7389766CE1314F1D5FD26D8AE6F8C90F6AC7F73751C763BE75724DB45A3946833C7D7277136FDBE675B7E69FDA17717A55E57962E6E8C94FEBFA69DBEE7851E656BDC79C547D6704C80FCA897E73A7C5FDDBE38BC8765C189DFACEF093A7138910F3FA2D77E47BF510733AA9CEB0933FC925C2CD3FB94FF31E732A5375869CBC524E4498BB1BD16FD523CC894CD5196AF207854422D2FC3747D57DEFB748731AF59D61263F9B948799D73FEDB9ADEC61E6145A3986983C5D4E0C3477D3BB7790B73659FA027F7D6768C91FE41289187317E8573BFFFED02B445FDF1956F24A39116F6E1FBD8B3CC21C7BAA339CE411497EB6DEEE08BD9BBC1E7991B7919B23240F6BDEC2CDEDA2F79067A2AF12732BC7109287CCD03AE2752FFA9E93F6AD732F9558AA3384599E1B742B8F9F99A8DB9FB2EDF5920F36C78BCE10B66F92E69616676E7DEAFB8BEF0DBCD01A6A7364F3F2817732315EEF0F0BCBB0B77EAB0F9339B635F6C1E6F742CC8D0FEA7B57C3FED62C5973743B6983CD27C2EEBEE1FA1E52D7E3CD1378CD91EF97C72CCA74D4F73D5B53B4F8E939727364E44FD2EB4B31B73202A0FEE996D524AFD75FC75C68909B5F406C8E635E5E29DC0F8220CEFC7514BA91517DEF6AE45F978AB9D0A5E68FD9C92D203547405E49AF07EDD88FB995A94884FA6F57AD25F9E92B0D83CD8FD891A53B4340FEE0205D08CE6225213F593B4BF55B6697613A6355CC1C9D3B734CFEE02CBF45CD57EB0303AEC00F28EB226D7B62BFFB77A171670EC99BE97D3FE88F38F3EC608966818751BFFA5BCC5F14C899A381676EC80F2A85F520221271ED703D2E3E5D353B908BB5ED8995A85F989B770ACFAC930FE216323F7E4BD1A8FAAD6FE3FF8E94B2F971C2BB826716C95F16D331DC62E6A97ADDACBA8878DC6A7B9CF971C6BB28F5CC0E79B35513E10E04A6E7112BEE70EA62E2C7270E689A3B8167C6C98B95F0564DDD7CA25E37A77EF593E89F9E8DBD50895F7DD4DC2DD8343743FEB258114D6E29F3B775E190ECE1F7C4C56357DB25CD2D0EF2CC0CF95831ADC02DB40C3770F5556B95662F767626D5C22998DBA9F5CC00F958A510A8878079AA2E159F84925D7418175D79ED5E8853C87893E6C0E463E9402B5612504D5C47898F5B9C934B71B1164ECBBCC5BE60CC1C98BCB81E18379FA8CBC720F5BD6F15FEC0B7A6CD9B45DEDC7A3B24B966928B9907759588ACF0F2392EB20A07601EEC983207241F2B68930702F75264254EF8A18ABD4F4A7F98400B17BAE08EA0BE3350F2F5C08E79AAAE1657C59E6705598503313782CEB0910B99AFD6A1D0AFAAFE495981CB5C0950A2336CE44B22E6D93A10BA6A96C76FA442991B4067C8C8C5CC13CAE6DDC74DED29936712B6CCE11B3906D6B1C3900B9AA794CD3F0D7AE910744506CA1C1C9DE199A4092FC3A9ACCA8456F75BEA7FCA84D06502DD939C31732DF24A60D55C7940FF90C9BC398EE5EA2775F3B736CD837943E67AAB6F50BF4E6449467E40DFCA4C4D351A731B7DD1684C4D653EC8936F25AC9A070B46CCF5D6D8EFDB36171ED03F34B537E2A2319531309C039AEF9830D7DB492B04B6CDC74575E2C1DB3137B5053E9CEB2FBE1A19D21904F9011C7920763385B759DE6F88C7FB0F5BB0C339A039E490CE20F6CBEFDB3717DD66C948983736E63E800EE790E63BC0E69A4FC500567661F34406B6B49FB0BF871CCE21CD01AB3BD32787ACEC824B32C203FAD48664342087735073B8DE9D699303ADB9CA9A4F4057F6E398021CCE2136D60C5477A6FDB8633A70622E3243FF30276FBEB105379CC39A83B5714C97FC41E0C83C053E981F4FDADE830DE7C0E63BA0E61ACFB11760CDF785CDEFC10FE6A2D55D743887DA64016EE39826793170659E3552D95B113B25081C9903B5714CF36D15E034175D861379B3A1A1481E5BDD330957E63928731D72E83497314F19A9EC02D57DDC99394CA233BD77D2D61D9AAF9AA9ECF1D53DEBCE1C24D19916792570689E3553D9E35766C42F3111604C74A6F5E629789A0712F773E053EE990DAD98D27CB2DD98790EC65C9D1C3ECDA5CC072DBFCEE9990FDA6C5975690E91E84CE74881825BF309230D5C6CA2679D9A03243AD3202F066ECD03330D5C4C1BB795706A0E90E84CE3E0100369BE247343A3F753B5D37C401B37EED85C3FD1993AB989349733BF67A6816B474A77E1157C33F53860CDE58E072A3837CF9A98A7C5ADC605AECDE721CDE5C81F04CECD23965F41D23CAA8DCB245C9BEF009A4B1E02963661BE2F673E6E629E3638D1EF3937D74E74A67CEEDB7D04E6A1B3B5D4C686C144CFBA37DF81329725AF0408CCC3666BEFE7A0CC373EA81D2962DA5C77BAC6540FF42C60300F9BAD4D8191CFA534676AA6CC7320E6D2E445233F46668B2562B60696E68DD47BDD999A29F300C25CFED8DE020EF3ACA1346FA43E00CCD48C99CFEB9BCB93BFBC8FC3BC7F6F6D4A7B723EE885C5540285F98EB6B9C2E1DC663A3805F3B0D95A66AAA158E0E7E25E505D95BCBC7D43F76941D35CE53CF60216F3C8BDB54C2AFC8DF3E899594AE075A8B748CC737AE64A47F00758CCE3DE55DCCA6404ABBDC8EB895B0924E65A5D1C53FAD0461A8DB9C8AB0D1F84CA3AE4BB89E6CDE721CCA5BEADB26EEAA748930B1D0F38A5F79084F24CCDA0F90E80B9147931C0632EF2D1868CC6D6A9C6229C49739D2E8EA97C41A980C85CE845F406CC703E8EC87C5ED75CF2A359F731998BBC88BE05F3DEF90422F31D4D7349F2830093B9D051715320C3B9FCE52D05088B3B53F81A620195B9D861EE71E82223442A81C93CA7632E4BFE32C0652E74CA4806C05C6E116E65DF20B8567167F2DF3CAD203307396544A46D7F8B855BB38B63F29FB92D203317FADCDA94FE789EC1C3AD57DC9934B9C9D2AE669E02306F00CCD45696AC796B157726FD316B93A53D58DA5F3153DCA7F4975EB331E081ED98D73197FA7E79C1F86F596ACAAF74DAAF74FFA7CA9990B1AB325AFB2B2B818BC869984B913F70F2F396564C1F2195D12AED4ED077D4CDA5C8CD96762571A17D9686F67AFB84E52325CC157726496EA1B4CB8A0BEDB368EFABC5EFAFAC5029EE4C927CEC3E3A71A17D16ED057791FD15DB7DDC0E84793CB9E5D22EF8FE5A6C717FAFFDCC84D8FE8A65F5057DF378F2B1B4CD9FB402B6CF22B0830EB5BFB28FBEB83339F2B1755C455D749F45C03C03B6BF622FD97774CD45C88B18C105F65952BA0FCA486E9DAF602EEE4C8ADCD2702EBF1697D5DD3F8F6BDC516D9D6BCED69814B985D2BEB4AFB4E6BEA56DDE00DE3AB7C29ED33117237F80ACA40B17F786E6C3CEABAAD7657A6CD7301723375DDA95C563F759445E6B807C7FC55A1F3FAF6C2E486E7A116E49FDCEC66CA28B9867204EEFB65DE073AAE6A2E4A617E174CC0717F739BD27DC57352E0CDF6C8DC9901B9FA9254C1577CDE33EDFA2355799AD310972F38B702BA68ABBDE01DE3AA5DDF44C7D5EC55C9CDCFC9E9AA9E29ED17B4B7115ED70AE54DC9904B985C7250C1577B1530229967695D91A1327B7B108973053DCC5CC33044BBB4A7167E2E436F6D456CC1477B183855260AF26E25E8A63E2E49316F6D496CC147731F3298043FAED9BEFE898C7913FB1B169A053DC75CD1B40078A581DCE15666B4C987CD2CA9E9A4E714F697E84690EBEB4DBD8539D57368F259FB4F2F4A399E22E78661CC5D2AE30A03361F2693B8FC8E8D451DDAF3065289676F9019D09935B19CEF506F494CE325C54E38EBDB4CB0FE84C947CDAD213AFFB268ABBBD03DB1D3C2B233DA03351F2694B2F332C1928EE5B82E60D8AA55D7E4067A2E4D3B65E663050DC453FD03247B2B44B2FBF3251724BC3B9DE6C6D42F3DB5B244BBBF480CE04C927ADBDC062A0B80B9FE99EA158DAA5077426483E69EFDD44F8E22E6C9E2259DA65077426483E69EF0516F8E22E6C3E45B2B4CB0EE84C90DCDA706EA2B80B7FBAA141B2B4CB0EE84C8C7CDAE6FBA8E0C55DD87C8E6469971DD09918F9B4CDA306C0D7DCC53FD142B3B44B0EE84C8C7C7A3D2092E8AFD597E1FA1B7722A55D72406762E4764F0E827E5A46F903D8444ABBE480CE84C8A7ED1E2F015CDC3F889B4FC13DFC68F5C4897915F3C1E4D3568F97802EEE12DFC66E803DFC68B5B4CB0DE84C887CDAF26951B0C55DC27C0EECB9F67DAB376C47DE3C8E7CDA2E39707197F99CE67B32CFB5AB0FE84C88FCC0F22F802DEE32E61932CFB5AB0FE84C84DCF6700EFC12938CF91491579674067426427EC5FEE18F90C5BDA1684EA8B44B0DE84C84FCE5BA7573C8375465CC1B344BBBD480CE44C89F58FF05A0C55DC67C8EC241039A033A13207FE9E22C678D1B9E555E86EB6ADCDF524A7399019D0990BF4C07B4127D4BC33CA3773C989B0E4EC73C9CFC6521A095E8E392E7FB86367113A44ABBCC360B13207FE9E227E8747159D565B84E738DFFE9F65DDCAF0525F328F20327E660C55DCEBC0150DA9DDCAF7915F328F22B1527BF01ACB8A7A4CCE7F44B3BF62FF2B078F22BE9805AA2BF555D863B6BDC03521D9CD4AA0C8B27BFB21E904BF48CBA798666699768E2583CF91547BF41E775C55575F329DDD2BEE4E8762D489A0F223F70651EC014F78682F96B7A692EDEC4B1587257C3B9DE742DA36CDED07C106EDFD5DDCA49990F24BF52080826FAAAF421135D8DFB04BD34176FE2582CB9B3164E2BD103C5A5D776E3FE9ADA444D6A4067B1E457DCFD089DE95A4AD93CA355DA1DDEAD7961F338F20387BF42A3B84FA82DC3B59BB82CC53417378F2377D8C269257AA061BE456FA226D3C4B13872972D9C56A2A754CD1B1AA5DD659A0B37712C8EDCB1F99276719F92359FD328ED4B4E6F966013C7E2C85F0401D1447FAD68BE9122D9C1890FE82C8EFCC0B1B9FA02ECB8AAF9FF124D7309F381E42F2A01D5449F505A866BC6FF114D73D1268EC590BF480764137D4BCDFC7FA8A6B96813C762C85FAC0764137D5C65E97563E3BFA9A6B96813F7FF020C008EA9ADF1AC1529080000000049454E44AE426082'
-                            }
-                        >>)),
-                        24(<<
-                            {
-                              "digestID": 19,
-                              "random": h'DB143143538F3C8D41DC024F9CB25C9D',
-                              "elementIdentifier": "birth_date",
-                              "elementValue": 1004("1980-02-05")
-                            }
-                        >>),
-                        24(<<
-                            {
-                              "digestID": 20,
-                              "random": h'6059FF1CE27B4997B4ADE1DE7B01DC60',
-                              "elementIdentifier": "family_name",
-                              "elementValue": "John"
-                            }
-                        >>),
-                        24(<<
-                            {
-                              "digestID": 22,
-                              "random": h'1E69C89C81B21A1BA56ACA3E026A2A3F',
-                              "elementIdentifier": "issue_date",
-                              "elementValue": 1004("2020-02-23")
-                            }
-                        >>),
-                        24(<<
-                            {
-                              "digestID": 25,
-                              "random": h'CAD1F6A38F603451F1FA653F81FF309D',
-                              "elementIdentifier": "driving_privileges",
-                              "elementValue": [
-                                  {
-                                      "issue_date": 1004("2018-08-09"),
-                                      "expiry_date": 1004("2024-10-20"),
-                                      "vehicle_category_code": "A"
-                                  },
-                                  {
-                                      "issue_date": 1004("2017-02-20"),
-                                      "expiry_date": 1004("2024-10-20"),
-                                      "vehicle_category_code": "B"
-                                  }
-                              ]
-                            }
-                        >>),
-                        24(<<
-                            {
-                              "digestID": 26,
-                              "random": h'53C15C57B3B076E788795829190220B4',
-                              "elementIdentifier": "issuing_authority",
-                              "elementValue": "UTOPIA"
-                            }
-                        >>)
-                    ]
-                }
-            }
-        }
-    ]
-}
-```
+<{{examples/response/mdl_iso_cbor.json}}
 
 In the `deviceSigned` item, `deviceAuth` item includes a signature by the deviceKey the belongs to the End-User. It is used to prove legitimate possession of the crdential, since the Issuer has signed over the deviceKey during the issuance of the credential. Note that deviceKey does not have to be HW-bound.
 
@@ -1273,6 +765,62 @@ Note that user claims in the `deviceSigned` item correspond to self-attested cla
 Note that the reason why hashes of the user claims are included in the `issuerAuth` item lies in the selective release mechanism. Selective release of the user claims in an ISO/IEC 18013-5:2021 mDL is performed by the Issuer signing over the hashes of all the user claims during the issuance, and only the actual values of the claims that the End-User has agreed to reveal to teh Verifier being included during the presentation. 
 
 The example in this section is also applicable to the electronic identification credentials expressed using data models defined in ISO/IEC TR 23220-2.
+
+TBD: are `nonce` and `client_id` included into the mDL to detect replay?
+
+## SIOP & OpenID 4 VPs
+
+This section shows how SIOP and OpenID 4 Verifiable Presentations can be combined to present credentials and pseudonymously authenticate an end-user using subject controlled key material.
+
+### Request
+
+This is an example request.
+
+```
+  GET /authorize?
+    response_type=id_token
+    &scope=openid
+    &id_token_type=subject_signed
+    &client_id=https%3A%2F%2Fclient.example.org%2Fcb
+    &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
+    &presentation_definition=...
+    &nonce=n-0S6_WzA2Mj HTTP/1.1
+  Host: wallet.example.com
+```
+
+The differences to the example requests in the previous sections are:
+
+* `response_type` is set to `id_token`. If the request also includes a `presentation_definition` parameter, the wallet is supposed to return the `presentation_submission` and `vp_token` parameters in the same response as the `id_token` parameter. 
+* The request includes the `scope` parameter with value `openid` making this a OpenID Connect request. Additionally, the request also contains the parameter `id_token_type` with value `subject_signed` requesting a Self-Issuer ID Token, i.e. the request is a SIOP request. 
+
+### Response
+
+The example response looks like this.
+
+```
+  HTTP/1.1 302 Found
+  Location: https://client.example.org/cb#
+    id_token=
+    &presentation_submission=...
+    &vp_token=...
+```
+
+In addition to the `presentation_submission` and `vp_token`, it also contains an `id_token`.
+
+The `id_token` content is shown in the following.
+
+```json
+{
+  "iss": "did:example:NzbLsXh8uDCcd6MNwXF4W7noWXFZAfHkxZsRGC9Xs",
+  "sub": "did:example:NzbLsXh8uDCcd6MNwXF4W7noWXFZAfHkxZsRGC9Xs",
+  "aud": "https://client.example.org/cb",
+  "nonce": "n-0S6_WzA2Mj",
+  "exp": 1311281970,
+  "iat": 1311280970
+}
+```
+
+Note: the `nonce` and `aud` are set to the `nonce` of the request and the client id of the verifier, respectively, in the same way as for the verifier presentations to prevent replay. 
 
 # IANA Considerations
 
@@ -1297,6 +845,7 @@ The technology described in this specification was made available from contribut
    -11
 
    * changed base protocol to OAuth 2.0
+   * consolidated the examples
   
    -10
 
