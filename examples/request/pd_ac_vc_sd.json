@@ -1,0 +1,39 @@
+{
+   "id": "example_vc_ac_sd",
+   "input_descriptors": [
+      {
+         "id": "id_credential",
+         "format": {
+            "ac_vc": {
+               "proof_type": [
+                  "CLSignature2019"
+               ]
+            }
+         },
+         "constraints": {
+            "limit_disclosure": "required",
+            "fields": [
+               {
+                  "path": [
+                     "$.schema_id"
+                  ],
+                  "filter": {
+                     "type": "string",
+                     "const": "did:indy:idu:test:3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0\\.1"
+                  }
+               },
+               {
+                  "path": [
+                     "$.values.first_name"
+                  ]
+               },
+               {
+                  "path": [
+                     "$.values.last_name"
+                  ]
+               }
+            ]
+         }
+      }
+   ]
+}

@@ -1,0 +1,57 @@
+{
+    "id": "mDL-sample-req",
+    "input_descriptors": [
+        {
+            "id": "mDL",
+            "format": {
+                "mdl_iso_cbor": {
+                    "alg": [
+                        "EdDSA",
+                        "ES256"
+                    ]
+                },
+                "constraints": {
+                    "limit_disclosure": "required",
+                    "fields": [
+                        {
+                            "path": [
+                                "$.mdoc.doctype"
+                            ],
+                            "filter": {
+                                "type": "string",
+                                "const": "org.iso.18013.5.1.mDL"
+                            }
+                        },
+                        {
+                            "path": [
+                                "$.mdoc.namespace"
+                            ],
+                            "filter": {
+                                "type": "string",
+                                "const": "org.iso.18013.5.1"
+                            }
+                        },
+                        {
+                            "path": [
+                                "$.mdoc.family_name"
+                            ],
+                            "intent_to_retain": "false"
+                        },
+                        {
+                            "path": [
+                                "$.mdoc.portrait"
+                            ],
+                            "intent_to_retain": "false"
+                        },
+                        {
+                            "path": [
+                                "$.mdoc.driving_privileges"
+                            ],
+                            "intent_to_retain": "false"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
