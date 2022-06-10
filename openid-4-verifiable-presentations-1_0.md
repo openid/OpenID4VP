@@ -845,6 +845,7 @@ The technology described in this specification was made available from contribut
    -11
 
    * changed base protocol to OAuth 2.0
+   * consolidated the examples
   
    -10
 
