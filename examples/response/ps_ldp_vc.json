@@ -1,0 +1,15 @@
+{
+    "definition_id": "example_ldp_vc",
+    "id": "example_ldp_vc_presentation_submission",
+    "descriptor_map": [
+        {
+            "id": "id_credential",
+            "path": "$",
+            "format": "ldp_vp",
+            "path_nested": {
+                "format": "ldp_vc",
+                "path": "$.verifiableCredential[0]"
+            }
+        }
+    ]
+}

@@ -1,0 +1,30 @@
+{
+    "id": "example_ldp_vc",
+    "input_descriptors": [
+        {
+            "id": "id_credential",
+            "format": {
+                "ldp_vc": {
+                    "proof_type": [
+                        "Ed25519Signature2018"
+                    ]
+                }
+            },
+            "constraints": {
+                "fields": [
+                    {
+                        "path": [
+                            "$.type"
+                        ],
+                        "filter": {
+                            "type": "array",
+                            "contains": {
+                                "const": "IDCredential"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}
