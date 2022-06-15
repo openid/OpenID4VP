@@ -115,7 +115,7 @@ The parameters comprising a request for verifiable presentations are given in th
 * `response_type`: REQUIRED. this parameter is defined in [@!RFC6749]. The possible values are determined by the response type registry established by [@!RFC6749]. This specification introduces the response type "vp_token". This response type asks the Authorization Server (AS) to return only a VP Token in the authorization response. 
 * `presentation_definition`: CONDITIONAL. A string containing a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange]. See (#request_presentation_definition) for more details. 
 * `presentation_definition_uri`: CONDITIONAL. A string containing a URL pointing to a resource where a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange] can be retrieved . See (#request_presentation_definition_uri) for more details.
-* `nonce`: REQUIRED. This parameter follows the definition given in [@!OpenID.Core]. It is used to securely bind the verifiable presentation(s) provided by the AS to the particular transaction.
+* `nonce`: REQUIRED. This parameter follows the definition given in [@!OpenID.Core]. It is used to securely bind the verifiable presentation(s) provided by the Authorization Server (AS) to the particular transaction.
 
 Note: A request MUST contain a `presentation_definition` or a `presentation_definition_uri` but both are mutually exclusive. 
 
@@ -233,11 +233,17 @@ with a matching `presentation_submission` parameter.
 
 # Metadata {#metadata}
 
-This specification introduces additional metadata to enable RP and OP to determine the verifiable presentation and verifiable credential formats, proof types and algorithms to be used in a protocol exchange. 
+This specification introduces additional metadata to enable Client and AS to determine the verifiable presentation and verifiable credential formats, proof types and algorithms to be used in a protocol exchange. 
 
-## RP Metadata
+## Authorization Server Metadata
 
-This specification defines new client metadata parameters according to [@!OpenID.Registration].
+This specification defines new server metadata parameters according to [@!OpenID-Discovery].
+
+The OP publishes the formats it supports using the `vp_formats_supported` metadata parameter as defined above in its "openid-configuration". 
+
+## Client Metadata
+
+This specification defines new client metadata parameters according to [@!7591].
 
 ### VP Formats
 
@@ -273,11 +279,20 @@ This extension defines the following error codes that MUST be returned when the 
 
 * `vp_formats_not_supported`: The OP does not support any of the VP formats supported by the RP such as those included in the `vp_formats` registration parameter.
 
-## OP Metadata
+# Providing Client Metadata Just-in-time 
 
-This specification defines new server metadata parameters according to [@!OpenID-Discovery].
+The specification defines mechanisms how the Client can provide metadata to the AS just-in-time of the Authorization Request, without any prior registration. The specification also defines an Authorization Endpoint that the Client can use when it cannot obtain Authorization Server metdata prior to the Authorization Request. 
 
-The OP publishes the formats it supports using the `vp_formats_supported` metadata parameter as defined above in its "openid-configuration". 
+Just like in conventional OAuth 2.0 protocol flows, Client and the AS can exchange metadata prior to the transaction, either using [@!RFC8414] and [@!RFC7591], or out-of-band mechanisms. 
+
+However, in OpenID for VP protocol flows, such mechanisms may be unavailable if the AS does not have API endpoints for that purpose.
+
+When the Client is unable to perform pre-discovery of the AS, a set of static metadata to be used with `openid4vp:` as an `authorization_endpoint` is defined in this specification.
+
+When the AS is unable to perform pre-registration of the RPs, mechanisms to obtain Client metadata depend on whether the request is signed or not. When the request is not signed, `client_id` equals `redirect_url` and Client metadata can be obtained from the `registration` parameter or using out-of-band mechanisms. When the request is signed, the mechanism depends on the syntax of `client_id` and the resolution method used. If `client_id` is a HTTPS URL, `client_id` is resolved to obtain all Client metadata from an Entity Statement as defined in [@!OpenID.Federation]. If `client_id` is a Decentralized Identifier, the public key is obtained from a DID Doc as defined in [@!DID-Core] and the rest of the metadata is obtained from the `registration` parameter.
+
+Note: discuss if we want to modify the name of the parameter `registration`.
+Note: move sections on the metadata resolution here.
 
 # Implementation Considerations
 
