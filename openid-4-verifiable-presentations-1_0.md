@@ -231,6 +231,14 @@ with a matching `presentation_submission` parameter.
 
 <{{examples/response/presentation_submission_multiple_vps.json}}
 
+## Encoding of Presented Verifiable Presentations
+
+Presented credentials MUST be returned in the VP Token as defined in Section 6.7.3. of [OpenID for Credential Issuance Specification](https://openid.net/specs/openid-connect-4-verifiable-credential-issuance-1_0.html), based on the credential format and the signature scheme. This specification does not require any additional encoding when credential format is already represented as a JSON object or a JSON string.
+
+Credential formats expressed as binary formats MUST be base64url-encoded and returned as a JSON string.
+
+Table in Section 6.7.3. of [OpenID for Credential Issuance Specification](https://openid.net/specs/openid-connect-4-verifiable-credential-issuance-1_0.html) might be superceded by a registry in the future.
+
 # Metadata {#metadata}
 
 This specification introduces additional metadata to enable RP and OP to determine the verifiable presentation and verifiable credential formats, proof types and algorithms to be used in a protocol exchange. 
