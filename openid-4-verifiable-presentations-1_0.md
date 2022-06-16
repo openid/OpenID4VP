@@ -7,7 +7,7 @@ keyword = ["security", "openid", "ssi"]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "openid-4-verifiable-presentations-1_0-11"
+value = "openid-4-verifiable-presentations-1_0-12"
 status = "standard"
 
 [[author]]
@@ -267,19 +267,28 @@ verifier-initiated cross device flows. This response mode asks the AS to deliver
 process to the URL conveyed in the `redirect_uri` parameter using the HTTP `POST` method instead of redirecting 
 the user agent.
 
-The following is a non-normative example of a request with response mode `post`:
+The following is a non-normative example request object with response mode `post`:
+
+```json
+{
+   "client_id": "https://client.example.org/post",
+   "redirect_uris": ["https://client.example.org/post"],
+   "response_types": "vp_token",
+   "response_mode": "post"
+   "presentation_definition": {...},
+   "nonce": "n-0S6_WzA2Mj"
+}
+```
+
+that could be used in a request URL like this (either directly or as QR Code). 
 
 ```
-  GET /authorize?
-    response_type=vp_token
-    response_mode=post
-    &client_id=https%3A%2F%2Fclient.example.org%2Fpost
-    &redirect_uri=https%3A%2F%2Fclient.example.org%2post
-    &presentation_definition=...
-    &nonce=n-0S6_WzA2Mj HTTP/1.1
+https://wallet.example.com?
+    client_id=https%3A%2F%2Fclient.example.org%2Fcb
+    &request_uri=https%3A%2F%2Fclient.example.org%2F567545564
 ```
 
-the respective "response" would look like this:
+The respective HTTP POST response to the verifier would look like this:
 
 ```
   POST /post HTTP/1.1
@@ -920,6 +929,10 @@ The technology described in this specification was made available from contribut
 # Document History
 
    [[ To be removed from the final specification ]]
+
+   -12
+
+   * add cross device flow (using SIOP v2 text)
 
    -11
 
