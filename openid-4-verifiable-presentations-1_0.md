@@ -106,7 +106,16 @@ This specification defines a mechanism on top of OAuth 2.0 to request and provid
 The specification supports all kinds of verifiable credentials, such as W3C Verifiable Credentials but also ISO mDL or AnonCreds. The examples given in the main part of the specification use W3C Verifiable Credentials, examples in other credential formats are given in  (#alternative_credential_formats). 
 
 Verifiable Presentations are requested by adding a parameter `presentation_definition` to an OAuth 2.0 authorization request.
-This specification introduces a new token type, "VP Token", used as a generic container for verifiable presentation objects, that is returned in authorization and token responses.  
+This specification introduces a new token type, "VP Token", used as a generic container for verifiable presentation objects, that is returned in authorization and token responses.
+
+## Cross-Device
+
+There are two models of protocol flows using OpenID for Verifiable Presentations:
+
+* Same-Device model: AS is on the same device on which the End-User's user interactions are occurring. The Client might be a Web site on a different machine and still use the same-device model for authentication.
+* Cross-device model: AS is on a different device than the one on which the End-User's user interactions are occurring.
+
+Usage of AS in cross-device scenarios is similar to what is defined in Section 5 of [@!SIOPv2].
 
 # Request {#vp_token_request}
 
