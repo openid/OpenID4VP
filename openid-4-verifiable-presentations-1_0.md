@@ -279,7 +279,7 @@ This extension defines the following error codes that MUST be returned when the 
 
 * `vp_formats_not_supported`: The OP does not support any of the VP formats supported by the RP such as those included in the `vp_formats` registration parameter.
 
-# Obtaining Metadata Just-in-time 
+# Obtaining Metadata Just-in-time of the Request
 
 The specification defines mechanisms how the Client can provide metadata to the AS just-in-time of the Authorization Request, without any prior registration. The specification also defines an Authorization Endpoint that the Client can use when it cannot obtain Authorization Server metdata prior to the Authorization Request. 
 
@@ -298,8 +298,6 @@ When the AS is unable to perform pre-registration of the RPs, mechanisms to obta
 When the request is not signed, `client_id` equals `redirect_url` and Client metadata can be obtained from the `registration` (or `registration_uri`) parameter defined in Section 9.2.1 of [@!SIOPv2] or using out-of-band mechanisms. 
 
 When the request is signed, the mechanism depends on the syntax of `client_id` and the resolution method used. Resolution methods are defined in Section 9.2.2 og [@!SIOPv2]. If `client_id` is a HTTPS URL, `client_id` is resolved to obtain all Client metadata from an Entity Statement as defined in [@!OpenID.Federation]. If `client_id` is a Decentralized Identifier, the public key is obtained from a DID Doc as defined in [@!DID-Core] and the rest of the metadata is obtained from the `registration` (or `registration_uri`) parameter.
-
-To obtain
 
 Note: discuss if we want to modify the name of the parameter `registration`.
 Note: move sections on the metadata resolution here.
@@ -871,6 +869,7 @@ The technology described in this specification was made available from contribut
 
    * changed base protocol to OAuth 2.0
    * consolidated the examples
+   * Added Client Metada Section referencing Relying Party Metadata Resolution Methods section in SIOP v2
   
    -10
 
