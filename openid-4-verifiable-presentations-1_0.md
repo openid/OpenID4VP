@@ -243,7 +243,7 @@ The OP publishes the formats it supports using the `vp_formats_supported` metada
 
 ## Client Metadata
 
-This specification defines new client metadata parameters according to [@!7591].
+This specification defines new client metadata parameters according to [@!RFC7591].
 
 ### VP Formats
 
@@ -259,9 +259,9 @@ Here is an example for an RP registering with a Standard OP via dynamic client r
 
 <{{examples/client_metadata/client_code_format.json}}
 
-Here is an example for an RP registering with a SIOP (see [@SIOPv2]) with the `registration` request parameter:
+Here is an example for an RP registering with the `registration` request parameter as defined below:
 
-<{{examples/client_metadata/client_siop_format.json}}
+<{{examples/client_metadata/client_ondemand_format.json}}
 
 ### Presentation Definition Transfer
 
@@ -499,6 +499,25 @@ Clients intending to authenticate the end-user utilizing a claim in a verifable 
           <author fullname="Kim Hamilton Duffy">
             <organization>Centre Consortium</organization>
           </author>
+        </front>
+</reference>
+
+<reference anchor="DID-Core" target="https://www.w3.org/TR/2021/PR-did-core-20210803/">
+        <front>
+        <title>Decentralized Identifiers (DIDs) v1.0</title>
+        <author fullname="Manu Sporny">
+            <organization>Digital Bazaar</organization>
+        </author>
+        <author fullname="Amy Guy">
+            <organization>Digital Bazaar</organization>
+        </author>
+        <author fullname="Markus Sabadello">
+            <organization>Danube Tech</organization>
+        </author>
+        <author fullname="Drummond Reed">
+            <organization>Evernym</organization>
+        </author>
+        <date day="3" month="Aug" year="2021"/>
         </front>
 </reference>
 
