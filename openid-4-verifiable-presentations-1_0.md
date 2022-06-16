@@ -7,7 +7,7 @@ keyword = ["security", "openid", "ssi"]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "openid-4-verifiable-presentations-1_0-11"
+value = "openid-4-verifiable-presentations-1_0-12"
 status = "standard"
 
 [[author]]
@@ -902,11 +902,13 @@ The technology described in this specification was made available from contribut
 
    [[ To be removed from the final specification ]]
 
+   -12
+   * Added Client Metada Section (based on SIOP v2 text)
+
    -11
 
    * changed base protocol to OAuth 2.0
    * consolidated the examples
-   * Added Client Metada Section referencing Relying Party Metadata Resolution Methods section in SIOP v2
   
    -10
 
