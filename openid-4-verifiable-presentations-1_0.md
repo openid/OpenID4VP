@@ -251,7 +251,7 @@ This specification defines new client metadata parameters according to [@!OpenID
 
 RPs indicate the supported VP formats using the new parameter `vp_formats`.
 
-* `vp_formats`: REQUIRED. An object defining the formats, proof types and algorithms of verifiable presentations and verifiable credentials that a RP supports. Valid values include `jwt_vp`, `ldp_vp`, `jwt_vc` and `ldp_vc`. Other formats may be supported. 
+* `vp_formats`: REQUIRED. An object defining the formats, proof types and algorithms of verifiable presentations and verifiable credentials that a RP supports. Valid values are defined in the table in Section 6.7.3. of [OpenID for Credential Issuance Specification](https://openid.net/specs/openid-connect-4-verifiable-credential-issuance-1_0.html) and include `jwt_vp` and `ldp_vp`. Formats identifiers not in the table may be supported. 
 
 The `format` property inside a `presentation_definition` object as defined in [@!DIF.PresentationExchange] MAY be used to specify the concrete format in which the RP is requesting verifiable presentations to be presented. The OP MUST ignore the `format` property inside a `presentation_definition` object if that `format` was not included in the `vp_formats` property of the client metadata.
 
