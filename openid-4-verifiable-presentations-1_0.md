@@ -244,29 +244,22 @@ with a matching `presentation_submission` parameter.
 
 <{{examples/response/presentation_submission_multiple_vps.json}}
 
-<<<<<<< HEAD
 # Verifier-initiated Cross Device Flow 
 
-A Verified-initiated Cross Device flow possses two challenges:
+A Verified-initiated Cross Device flow poses two challenges:
 
 1. The Verifier needs to pass an authorization request to a Wallet across devices. 
 2. The Wallet needs to pass the result back to the Verifier. 
 
 ## Authorization Request
 
-One option to cope with the first challenge is to render the authorization request as a QR Code. Since 
-authorization requests might be large and result in a large QR code, clients MAY consider using a `request_uri` 
-in such a case.
+One option to address the first challenge is to render the authorization request as a QR Code. Since authorization requests might be large and result in a large QR code, the usage of `request_uri` is RECOMMENDED.
 
 ## Authorization Response {#response_mode_post}
 
-The solution to cope with the second challenge facilitated by this specification is to send the results from 
-the Wallet via an HTTPS connection, for example over the Internet. This is facilitated by a new response mode `post`. 
+The solution to the second challenge facilitated by this specification is to send the results from the Wallet via an HTTPS connection, for example over the Internet. This is facilitated by a new response mode `post`. 
 
-This specification defines the response mode `post` in accordance with [@!OAuth.Responses] to support 
-verifier-initiated cross device flows. This response mode asks the AS to deliver the result of an authorization 
-process to the URL conveyed in the `redirect_uri` parameter using the HTTP `POST` method instead of redirecting 
-the user agent.
+This specification defines the response mode `post` in accordance with [@!OAuth.Responses] to support verifier-initiated cross device flows. This response mode asks the AS to deliver the result of an authorization process to the URL conveyed in the `redirect_uri` parameter using the HTTP `POST` method instead of redirecting the user agent to the Client.
 
 The following is a non-normative example request object with response mode `post`:
 
@@ -300,7 +293,6 @@ The respective HTTP POST response to the verifier would look like this:
     vp_token=...
 
 ```
-=======
 ## Encoding of Presented Verifiable Presentations
 
 Presented credentials MUST be returned in the VP Token as defined in Section 6.7.3. of [OpenID for Credential Issuance Specification](https://openid.net/specs/openid-connect-4-verifiable-credential-issuance-1_0.html), based on the credential format and the signature scheme. This specification does not require any additional encoding when credential format is already represented as a JSON object or a JSON string.
@@ -308,7 +300,6 @@ Presented credentials MUST be returned in the VP Token as defined in Section 6.7
 Credential formats expressed as binary formats MUST be base64url-encoded and returned as a JSON string.
 
 Table in Section 6.7.3. of [OpenID for Credential Issuance Specification](https://openid.net/specs/openid-connect-4-verifiable-credential-issuance-1_0.html) might be superceded by a registry in the future.
->>>>>>> b77d03505d5a00d06a8f3c2673dce43bd21b1f1c
 
 # Metadata {#metadata}
 
