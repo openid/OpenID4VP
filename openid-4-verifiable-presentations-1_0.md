@@ -106,7 +106,11 @@ This specification defines a mechanism on top of OAuth 2.0 to request and provid
 The specification supports all kinds of verifiable credentials, such as W3C Verifiable Credentials but also ISO mDL or AnonCreds. The examples given in the main part of the specification use W3C Verifiable Credentials, examples in other credential formats are given in  (#alternative_credential_formats). 
 
 Verifiable Presentations are requested by adding a parameter `presentation_definition` to an OAuth 2.0 authorization request.
-This specification introduces a new token type, "VP Token", used as a generic container for verifiable presentation objects, that is returned in authorization and token responses.  
+This specification introduces a new token type, "VP Token", used as a generic container for verifiable presentation objects, that is returned in authorization and token responses.
+
+OpenID for Verifiable Presentations supports scenarios where Authorization Request is sent from the Verifier to the Wallet using redirects (same-device flow) and when it is passed an across devices (cross-device flow).
+
+Deployments can use any pre-existing OAuth grant type and response type in conjunction with this specifications to support those scenarios in the context of different deployment architectures. This specification also introduces a new OAuth response mode to support cross device scenarios initiated by the verifier (see {#response_mode_post}). 
 
 # Request {#vp_token_request}
 
@@ -118,6 +122,17 @@ The parameters comprising a request for verifiable presentations are given in th
 * `nonce`: REQUIRED. This parameter follows the definition given in [@!OpenID.Core]. It is used to securely bind the verifiable presentation(s) provided by the AS to the particular transaction.
 
 Note: A request MUST contain a `presentation_definition` or a `presentation_definition_uri` but both are mutually exclusive. 
+
+This is an example request: 
+
+```
+  GET /authorize?
+    response_type=vp_token
+    &client_id=https%3A%2F%2Fclient.example.org%2Fcb
+    &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
+    &presentation_definition=...
+    &nonce=n-0S6_WzA2Mj HTTP/1.1
+```
 
 ## presentation_definition {#request_presentation_definition}
 
@@ -229,6 +244,55 @@ with a matching `presentation_submission` parameter.
 
 <{{examples/response/presentation_submission_multiple_vps.json}}
 
+# Verifier-initiated Cross Device Flow 
+
+A Verified-initiated Cross Device flow poses two challenges:
+
+1. The Verifier needs to pass an authorization request to a Wallet across devices. 
+2. The Wallet needs to pass the result back to the Verifier. 
+
+## Authorization Request
+
+One option to address the first challenge is to render the authorization request as a QR Code. Since authorization requests might be large and result in a large QR code, the usage of `request_uri` is RECOMMENDED.
+
+## Authorization Response {#response_mode_post}
+
+The solution to the second challenge facilitated by this specification is to send the results from the Wallet via an HTTPS connection, for example over the Internet. This is facilitated by a new response mode `post`. 
+
+This specification defines the response mode `post` in accordance with [@!OAuth.Responses] to support verifier-initiated cross device flows. This response mode asks the AS to deliver the result of an authorization process to the URL conveyed in the `redirect_uri` parameter using the HTTP `POST` method instead of redirecting the user agent to the Client.
+
+The following is a non-normative example request object with response mode `post`:
+
+```json
+{
+   "client_id": "https://client.example.org/post",
+   "redirect_uris": ["https://client.example.org/post"],
+   "response_types": "vp_token",
+   "response_mode": "post"
+   "presentation_definition": {...},
+   "nonce": "n-0S6_WzA2Mj"
+}
+```
+
+that could be used in a request URL like this (either directly or as QR Code). 
+
+```
+https://wallet.example.com?
+    client_id=https%3A%2F%2Fclient.example.org%2Fcb
+    &request_uri=https%3A%2F%2Fclient.example.org%2F567545564
+```
+
+The respective HTTP POST response to the verifier would look like this:
+
+```
+  POST /post HTTP/1.1
+    Host: client.example.org
+    Content-Type: application/x-www-form-urlencoded
+
+    presentation_submission=...&
+    vp_token=...
+
+```
 ## Encoding of Presented Verifiable Presentations
 
 Presented credentials MUST be returned in the VP Token as defined in Section 6.7.3. of [OpenID for Credential Issuance Specification](https://openid.net/specs/openid-connect-4-verifiable-credential-issuance-1_0.html), based on the credential format and the signature scheme. This specification does not require any additional encoding when credential format is already represented as a JSON object or a JSON string.
@@ -619,6 +683,25 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </front>
 </reference>
 
+<reference anchor="OAuth.Responses" target="https://openid.net/specs/oauth-v2-multiple-response-types-1_0.html">
+        <front>
+        <title>OAuth 2.0 Multiple Response Type Encoding Practices</title>
+        <author initials="B." surname="de Medeiros" fullname="Breno de Medeiros">
+            <organization>Google</organization>
+        </author>
+        <author initials="M." surname="Scurtescu" fullname="M. Scurtescu">
+            <organization>Google</organization>
+        </author>        
+        <author initials="P." surname="Tarjan" fullname="Facebook">
+            <organization>Evernym</organization>
+        </author>
+        <author initials="M." surname="Jones" fullname="Michael B. Jones">
+            <organization>Microsoft</organization>
+        </author>
+        <date day="25" month="Feb" year="2014"/>
+        </front>
+</reference>
+
 <reference anchor="OpenID.Federation" target="https://openid.net/specs/openid-connect-federation-1_0.html">
         <front>
           <title>OpenID Connect Federation 1.0 - draft 17></title>
@@ -911,6 +994,8 @@ The technology described in this specification was made available from contribut
    [[ To be removed from the final specification ]]
 
    -12
+
+   * add cross device flow (using SIOP v2 text)
    * Added Client Metada Section (based on SIOP v2 text)
 
    -11
