@@ -295,11 +295,11 @@ The respective HTTP POST response to the verifier would look like this:
 ```
 ## Encoding of Presented Verifiable Presentations
 
-Presented credentials MUST be returned in the VP Token as defined in Section 6.7.3. of [OpenID for Credential Issuance Specification](https://openid.net/specs/openid-connect-4-verifiable-credential-issuance-1_0.html), based on the credential format and the signature scheme. This specification does not require any additional encoding when credential format is already represented as a JSON object or a JSON string.
+Presented credentials MUST be returned in the VP Token as defined in Section 6.7.3. of [OpenID for Verifiable Credential Issuance](https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html), based on the credential format and the signature scheme. This specification does not require any additional encoding when credential format is already represented as a JSON object or a JSON string.
 
 Credential formats expressed as binary formats MUST be base64url-encoded and returned as a JSON string.
 
-Table in Section 6.7.3. of [OpenID for Credential Issuance Specification](https://openid.net/specs/openid-connect-4-verifiable-credential-issuance-1_0.html) might be superceded by a registry in the future.
+Table in Section 6.7.3. of [OpenID for Verifiable Credential Issuance](https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html) might be superceded by a registry in the future.
 
 # Metadata {#metadata}
 
@@ -376,7 +376,7 @@ This specification defines new client metadata parameters according to [@!RFC759
 
 RPs indicate the supported VP formats using the new parameter `vp_formats`.
 
-* `vp_formats`: REQUIRED. An object defining the formats, proof types and algorithms of verifiable presentations and verifiable credentials that a RP supports. Valid values are defined in the table in Section 6.7.3. of [OpenID for Credential Issuance Specification](https://openid.net/specs/openid-connect-4-verifiable-credential-issuance-1_0.html) and include `jwt_vc`, `ldp_vc`, `jwt_jp` and `ldp_vp`. Formats identifiers not in the table may be supported. 
+* `vp_formats`: REQUIRED. An object defining the formats, proof types and algorithms of verifiable presentations and verifiable credentials that a RP supports. Valid values are defined in the table in Section 6.7.3. of [OpenID for Verifiable Credential Issuance](https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html) and include `jwt_vc`, `ldp_vc`, `jwt_jp` and `ldp_vp`. Formats identifiers not in the table may be supported.
 
 Here is an example for an RP registering with a Standard OP via dynamic client registration:
 
@@ -702,6 +702,22 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </front>
 </reference>
 
+<reference anchor="OpenID.VCI" target="https://openid.net/specs/openid-4-verifiable-credential-issuance.html">
+        <front>
+          <title>OpenID for Verifiable Credential Issuance</title>
+          <author initials="T." surname="Lodderstedt" fullname="Torsten Lodderstedt">
+            <organization>yes.com</organization>
+          </author>
+          <author initials="K." surname="Yasuda" fullname="Kristina Yasuda">
+            <organization>Microsoft</organization>
+          </author>
+          <author initials="T." surname="Looker" fullname="Tobias Looker">
+            <organization>Mattr</organization>
+          </author>
+          <date day="20" month="June" year="2022"/>
+        </front>
+</reference>
+
 <reference anchor="OpenID.Federation" target="https://openid.net/specs/openid-connect-federation-1_0.html">
         <front>
           <title>OpenID Connect Federation 1.0 - draft 17></title>
@@ -996,7 +1012,7 @@ The technology described in this specification was made available from contribut
    -12
 
    * add cross device flow (using SIOP v2 text)
-   * Added Client Metada Section (based on SIOP v2 text)
+   * Added Client Metadata Section (based on SIOP v2 text)
 
    -11
 
