@@ -702,6 +702,22 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </front>
 </reference>
 
+<reference anchor="OpenID.VCI" target="https://openid.net/specs/openid-4-verifiable-credential-issuance.html">
+        <front>
+          <title>OpenID for Verifiable Credential Issuance</title>
+          <author initials="T." surname="Lodderstedt" fullname="Torsten Lodderstedt">
+            <organization>yes.com</organization>
+          </author>
+          <author initials="K." surname="Yasuda" fullname="Kristina Yasuda">
+            <organization>Microsoft</organization>
+          </author>
+          <author initials="T." surname="Looker" fullname="Tobias Looker">
+            <organization>Mattr</organization>
+          </author>
+          <date day="20" month="June" year="2022"/>
+        </front>
+</reference>
+
 <reference anchor="OpenID.Federation" target="https://openid.net/specs/openid-connect-federation-1_0.html">
         <front>
           <title>OpenID Connect Federation 1.0 - draft 17></title>
