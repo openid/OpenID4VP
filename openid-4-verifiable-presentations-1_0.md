@@ -295,11 +295,11 @@ The respective HTTP POST response to the verifier would look like this:
 ```
 ## Encoding of Presented Verifiable Presentations
 
-Presented credentials MUST be returned in the VP Token as defined in Section 6.7.3. of [OpenID for Verifiable Credential Issuance](https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html), based on the credential format and the signature scheme. This specification does not require any additional encoding when credential format is already represented as a JSON object or a JSON string.
+Presented credentials MUST be returned in the VP Token as defined in Section 6.7.3. of [@!OpenID.VCI], based on the credential format and the signature scheme. This specification does not require any additional encoding when credential format is already represented as a JSON object or a JSON string.
 
 Credential formats expressed as binary formats MUST be base64url-encoded and returned as a JSON string.
 
-Table in Section 6.7.3. of [OpenID for Verifiable Credential Issuance](https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html) might be superceded by a registry in the future.
+Table in Section 6.7.3. of [@!OpenID.VCI] might be superceded by a registry in the future.
 
 # Metadata {#metadata}
 
@@ -376,7 +376,7 @@ This specification defines new client metadata parameters according to [@!RFC759
 
 RPs indicate the supported VP formats using the new parameter `vp_formats`.
 
-* `vp_formats`: REQUIRED. An object defining the formats, proof types and algorithms of verifiable presentations and verifiable credentials that a RP supports. Valid values are defined in the table in Section 6.7.3. of [OpenID for Verifiable Credential Issuance](https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html) and include `jwt_vc`, `ldp_vc`, `jwt_jp` and `ldp_vp`. Formats identifiers not in the table may be supported.
+* `vp_formats`: REQUIRED. An object defining the formats, proof types and algorithms of verifiable presentations and verifiable credentials that a RP supports. Valid values are defined in the table in Section 6.7.3. of [@!OpenID.VCI] and include `jwt_vc`, `ldp_vc`, `jwt_jp` and `ldp_vp`. Formats identifiers not in the table may be supported.
 
 Here is an example for an RP registering with a Standard OP via dynamic client registration:
 
