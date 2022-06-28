@@ -323,11 +323,11 @@ Client and the AS utilizing this specification can exchange metadata prior to a 
 
 The Client may send one of the following parameters to convey metadata with unsigned authorization requests. 
 
-* `registration` 
-  * OPTIONAL. This parameter enables RP Metadata to be passed in a single, self-contained parameter. The value is a JSON object containing RP Registration Metadata values. The registration parameter value is represented in an OAuth 2.0 request as a UTF-8 encoded JSON object.
+* `client_metadata` 
+  * OPTIONAL. This parameter enables RP Metadata to be passed in a single, self-contained parameter. The value is a JSON object containing RP Registration Metadata values. The client metadata parameter value is represented in an OAuth 2.0 request as a UTF-8 encoded JSON object.
 
-* `registration_uri` 
-  * OPTIONAL. This parameter enables RP Registration Metadata to be passed by reference, rather than by value. The `request_uri` value is a URL referencing a resource containing a RP Registration Metadata Object. The scheme used in the `registration_uri` value MUST be https. The `request_uri` value MUST be reachable by the AS. 
+* `client_metadata_uri` 
+  * OPTIONAL. This parameter enables RP Registration Metadata to be passed by reference, rather than by value. The `request_uri` value is a URL referencing a resource containing a RP Registration Metadata Object. The scheme used in the `client_metadata_uri` value MUST be https. The `request_uri` value MUST be reachable by the AS. 
 
 If one of these parameters is used, the other MUST NOT be used in the same request.
 
@@ -343,7 +343,7 @@ The following is a non-normative example of a request.
     &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
     &presentation_definition=...
     &nonce=n-0S6_WzA2Mj
-    &registration=%7B%22vp_formats%22:%7B%22jwt_vp%22:%
+    &client_metadata=%7B%22vp_formats%22:%7B%22jwt_vp%22:%
     7B%22alg%22:%5B%22EdDSA%22,%22ES256K%22%5D%7D,%22ldp
     _vp%22:%7B%22proof_type%22:%5B%22Ed25519Signature201
     8%22%5D%7D%7D%7D
@@ -355,9 +355,9 @@ When the request is signed, the mechanism depends on the syntax of `client_id` a
 
 If `client_id` is a HTTPS URL, `client_id` is resolved to obtain all Client metadata from an Entity Statement as defined in [@!OpenID.Federation]. 
 
-If `client_id` is a Decentralized Identifier, the public key is obtained from a DID Doc as defined in [@!DID-Core] and the rest of the metadata is obtained from the `registration` (or `registration_uri`) parameter.
+If `client_id` is a Decentralized Identifier, the public key is obtained from a DID Doc as defined in [@!DID-Core] and the rest of the metadata is obtained from the `client_metadata` (or `client_metadata_uri`) parameter.
 
-Note: discuss if we want to modify the name of the parameter `registration`.
+Note: discuss if we want to modify the name of the parameter `client_metadata`.
 Note: move sections on the metadata resolution here.
 
 ### Client Registration Error Response
@@ -366,7 +366,7 @@ Error response MUST be made as defined in [@!RFC7591].
 
 This extension defines the following additional error codes and error descriptions:
 
-`vp_formats_not_supported`: The OP does not support any of the VP formats supported by the RP such as those included in the `vp_formats` registration parameter.
+`vp_formats_not_supported`: The OP does not support any of the VP formats supported by the RP such as those included in the `vp_formats` client metadata parameter.
 
 ### Client Metadata Parameters {#client_metadata_parameters}
 
@@ -382,7 +382,7 @@ Here is an example for an RP registering with a Standard OP via dynamic client r
 
 <{{examples/client_metadata/client_code_format.json}}
 
-Here is an example for an RP sending its metadata with a presentation request (object) in the `registration` request parameter:
+Here is an example for an RP sending its metadata with a presentation request (object) in the `client_metadata` request parameter:
 
 <{{examples/client_metadata/client_ondemand_format.json}}
 
