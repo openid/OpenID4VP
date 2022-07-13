@@ -91,7 +91,7 @@ An application currently utilizing OpenID Connect for accessing various federate
 
 ## Existing OpenID Connect OP as custodian of End-User Credentials
 
-An existing OpenID Connect may extend its service by maintaining credentials issued by other claims sources on behalf of its customers. Customers can mix claims of the OP and from their credentials to fulfil authentication requests. 
+An existing OpenID Connect may extend its service by maintaining credentials issued by other claims sources on behalf of its customers. Customers can mix claims of The AS and from their credentials to fulfil authentication requests. 
 
 ## Federated OpenID Connect OP adds device-local mode
 
@@ -220,7 +220,7 @@ This is shown in the following example:
 
 <{{examples/response/vp_token_ldp_vp_with_ps.json}}
 
-The OP MAY also add a `presentation_submission` response parameter along with the `vp_token` response parameter, which contains a JSON object conforming to the `presentation_submission` element as defined in [@!DIF.PresentationExchange]. This `presentation_submission` element links the input descriptor identifiers as specified in the corresponding request to the respective verifiable presentations within the VP Token along with format information. The root of the path expressions in the descriptor map is the respective VP Token. 
+The AS MAY also add a `presentation_submission` response parameter along with the `vp_token` response parameter, which contains a JSON object conforming to the `presentation_submission` element as defined in [@!DIF.PresentationExchange]. This `presentation_submission` element links the input descriptor identifiers as specified in the corresponding request to the respective verifiable presentations within the VP Token along with format information. The root of the path expressions in the descriptor map is the respective VP Token. 
 
 This element might, for example, be used if the particular format of the provided presentations does not allow for the direct inclusion of `presentation_submission` elements or if the AS wants to provide the RP with additional information about the format and structure in advance of the processing of the VP Token.
 
@@ -360,13 +360,19 @@ If `client_id` is a Decentralized Identifier, the public key is obtained from a 
 Note: discuss if we want to modify the name of the parameter `client_metadata`.
 Note: move sections on the metadata resolution here.
 
-### Client Registration Error Response
+### Client Metadata Error Response
 
 Error response MUST be made as defined in [@!RFC7591].
 
 This extension defines the following additional error codes and error descriptions:
 
-`vp_formats_not_supported`: The OP does not support any of the VP formats supported by the RP such as those included in the `vp_formats` client metadata parameter.
+`vp_formats_not_supported`: The AS does not support any of the VP formats supported by the RP such as those included in the `vp_formats` client metadata parameter.
+
+Moreover, when `client_metadata` or `client_metadata_uri` parameters are present, but the AS recognizes `client_id` and knows metadata associated with it, it MUST return an error. 
+
+ASs compliant to this specification MUST NOT proceed with the transaction when pre-registered client metadata has been found based on the `client_id`, but `client_metadata` parameter has also been present.
+
+Usage of `client_metadata` or `client_metadata_uri` parameters with `client_id` that the AS might be seeing for the first time is mutualy exclusive with the registration mechanism where Self-Issued OP assigns `client_id` to the RP after receiving RP's metadata.
 
 ### Client Metadata Parameters {#client_metadata_parameters}
 
