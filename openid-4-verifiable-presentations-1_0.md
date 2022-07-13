@@ -154,6 +154,8 @@ RPs can also ask for alternative credentials being presented, which is shown in 
 
 The VC and VP formats supported by an AS should be published in its metadata (see (#as_metadata_parameters)). The formats supported by a client may be set up using the client metadata parameter `vp_formats` (see (#client_metadata_parameters)). The AS MUST ignore any `format` property inside a `presentation_definition` object if that `format` was not included in the `vp_formats` property of the client metadata. 
 
+Note that when the Client is requesting presentation of a VP containing a VC, Client MUST indicate in the `vp_formats` parameter, supported formats of both VC and VP.
+
 ## presentation_definition\_uri {#request_presentation_definition_uri}
 
 `presentation_definition_uri` is used to the retrieve the `presentation_definition` from the resource at the specified URL, rather than being passed by value. The AS will send a GET request without additional parameters. The resource MUST be exposed without further need to authenticate or authorize. 
@@ -295,7 +297,7 @@ The respective HTTP POST response to the verifier would look like this:
 ```
 ## Encoding of Presented Verifiable Presentations
 
-Presented credentials MUST be returned in the VP Token as defined in Section 6.7.3. of [@!OpenID.VCI], based on the credential format and the signature scheme. This specification does not require any additional encoding when credential format is already represented as a JSON object or a JSON string.
+Presented credentials MUST be returned in the VP Token as defined in Section 6.7.3. of [@!OpenID.VCI], based on the format and the signature scheme of the credentials and presentations. This specification does not require any additional encoding when credential format is already represented as a JSON object or a JSON string.
 
 Credential formats expressed as binary formats MUST be base64url-encoded and returned as a JSON string.
 
@@ -311,7 +313,7 @@ This specification defines new server metadata parameters according to [@!RFC841
 
 The AS publishes the formats it supports using the `vp_formats_supported` metadata parameter. 
 
-* `vp_formats_supported`: A JSON object defining the formats, proof types and algorithms of verifiable presentations and verifiable credentials that a RP supports. Valid values include `jwt_vp`, `ldp_vp`, `jwt_vc` and `ldp_vc`. Other formats may be supported.
+* `vp_formats_supported`: A JSON object defining the formats and proof types of verifiable credentials and verifiable presentations that a RP supports. Valid values are defined in Section 6.7.3. of [@!OpenID.VCI]. Other values may be used when defined in the profiles of this specification.
 
 ## Client Metadata
 
@@ -366,7 +368,7 @@ Error response MUST be made as defined in [@!RFC7591].
 
 This extension defines the following additional error codes and error descriptions:
 
-`vp_formats_not_supported`: The OP does not support any of the VP formats supported by the RP such as those included in the `vp_formats` registration parameter.
+`vp_formats_not_supported`: The OP does not support any of the formats supported by the RP such as those included in the `vp_formats` registration parameter.
 
 ### Client Metadata Parameters {#client_metadata_parameters}
 
@@ -374,9 +376,9 @@ This specification defines new client metadata parameters according to [@!RFC759
 
 #### vp_formats
 
-RPs indicate the supported VP formats using the new parameter `vp_formats`.
+RPs indicate the supported formats using the new parameter `vp_formats`.
 
-* `vp_formats`: REQUIRED. An object defining the formats, proof types and algorithms of verifiable presentations and verifiable credentials that a RP supports. Valid values are defined in the table in Section 6.7.3. of [@!OpenID.VCI] and include `jwt_vc`, `ldp_vc`, `jwt_jp` and `ldp_vp`. Formats identifiers not in the table may be supported.
+* `vp_formats`: REQUIRED. An object defining the formats and proof types of verifiable presentations and verifiable credentials that a RP supports. Valid values are defined in the table in Section 6.7.3. of [@!OpenID.VCI] and include `jwt_vc`, `ldp_vc`, `jwt_jp` and `ldp_vp`. Formats identifiers not in the table may be supported when defined in the profiles of this specification.
 
 Here is an example for an RP registering with a Standard OP via dynamic client registration:
 
