@@ -357,7 +357,6 @@ If `client_id` is a HTTPS URL, `client_id` is resolved to obtain all Client meta
 
 If `client_id` is a Decentralized Identifier, the public key is obtained from a DID Doc as defined in [@!DID-Core] and the rest of the metadata is obtained from the `client_metadata` (or `client_metadata_uri`) parameter.
 
-Note: discuss if we want to modify the name of the parameter `client_metadata`.
 Note: move sections on the metadata resolution here.
 
 ### Client Metadata Error Response
