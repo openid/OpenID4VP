@@ -211,6 +211,9 @@ Whether VP Token is provided to the Client in the Authorization Response or Toke
 - If only `vp_token` is used as the `response_type`, the VP Token is provided in the authorization response. 
 - If `id_token` is used as the `response_type` alongside `vp_token`, the VP Token is provided in the OpenID Connect authentication response along with the ID Token. 
 - In all other cases, if `vp_token` is not used, but `presentation_definition` parameter is present, the VP Token is provided in the Token Response. 
+- Any combination of `vp_token` with a `response_type` other than `id_token` is undefined.
+
+## `presentation_submission` Element
 
 The VP Token either contains a single verifiable presentation or an array of verifiable presentations. 
 
