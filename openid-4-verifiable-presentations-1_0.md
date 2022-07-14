@@ -91,7 +91,7 @@ An application currently utilizing OpenID Connect for accessing various federate
 
 ## Existing OpenID Connect OP as custodian of End-User Credentials
 
-An existing OpenID Connect may extend its service by maintaining credentials issued by other claims sources on behalf of its customers. Customers can mix claims of the OP and from their credentials to fulfil authentication requests. 
+An existing OpenID Connect may extend its service by maintaining credentials issued by other claims sources on behalf of its customers. Customers can mix claims of The AS and from their credentials to fulfil authentication requests. 
 
 ## Federated OpenID Connect OP adds device-local mode
 
@@ -222,7 +222,7 @@ This is shown in the following example:
 
 <{{examples/response/vp_token_ldp_vp_with_ps.json}}
 
-The OP MAY also add a `presentation_submission` response parameter along with the `vp_token` response parameter, which contains a JSON object conforming to the `presentation_submission` element as defined in [@!DIF.PresentationExchange]. This `presentation_submission` element links the input descriptor identifiers as specified in the corresponding request to the respective verifiable presentations within the VP Token along with format information. The root of the path expressions in the descriptor map is the respective VP Token. 
+The AS MAY also add a `presentation_submission` response parameter along with the `vp_token` response parameter, which contains a JSON object conforming to the `presentation_submission` element as defined in [@!DIF.PresentationExchange]. This `presentation_submission` element links the input descriptor identifiers as specified in the corresponding request to the respective verifiable presentations within the VP Token along with format information. The root of the path expressions in the descriptor map is the respective VP Token. 
 
 This element might, for example, be used if the particular format of the provided presentations does not allow for the direct inclusion of `presentation_submission` elements or if the AS wants to provide the RP with additional information about the format and structure in advance of the processing of the VP Token.
 
@@ -325,11 +325,11 @@ Client and the AS utilizing this specification can exchange metadata prior to a 
 
 The Client may send one of the following parameters to convey metadata with unsigned authorization requests. 
 
-* `registration` 
-  * OPTIONAL. This parameter enables RP Metadata to be passed in a single, self-contained parameter. The value is a JSON object containing RP Registration Metadata values. The registration parameter value is represented in an OAuth 2.0 request as a UTF-8 encoded JSON object.
+* `client_metadata` 
+  * OPTIONAL. This parameter enables RP Metadata to be passed in a single, self-contained parameter. The value is a JSON object containing RP Registration Metadata values. The client metadata parameter value is represented in an OAuth 2.0 request as a UTF-8 encoded JSON object.
 
-* `registration_uri` 
-  * OPTIONAL. This parameter enables RP Registration Metadata to be passed by reference, rather than by value. The `request_uri` value is a URL referencing a resource containing a RP Registration Metadata Object. The scheme used in the `registration_uri` value MUST be https. The `request_uri` value MUST be reachable by the AS. 
+* `client_metadata_uri` 
+  * OPTIONAL. This parameter enables RP Registration Metadata to be passed by reference, rather than by value. The `request_uri` value is a URL referencing a resource containing a RP Registration Metadata Object. The scheme used in the `client_metadata_uri` value MUST be https. The `request_uri` value MUST be reachable by the AS. 
 
 If one of these parameters is used, the other MUST NOT be used in the same request.
 
@@ -345,7 +345,7 @@ The following is a non-normative example of a request.
     &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
     &presentation_definition=...
     &nonce=n-0S6_WzA2Mj
-    &registration=%7B%22vp_formats%22:%7B%22jwt_vp%22:%
+    &client_metadata=%7B%22vp_formats%22:%7B%22jwt_vp%22:%
     7B%22alg%22:%5B%22EdDSA%22,%22ES256K%22%5D%7D,%22ldp
     _vp%22:%7B%22proof_type%22:%5B%22Ed25519Signature201
     8%22%5D%7D%7D%7D
@@ -357,18 +357,23 @@ When the request is signed, the mechanism depends on the syntax of `client_id` a
 
 If `client_id` is a HTTPS URL, `client_id` is resolved to obtain all Client metadata from an Entity Statement as defined in [@!OpenID.Federation]. 
 
-If `client_id` is a Decentralized Identifier, the public key is obtained from a DID Doc as defined in [@!DID-Core] and the rest of the metadata is obtained from the `registration` (or `registration_uri`) parameter.
+If `client_id` is a Decentralized Identifier, the public key is obtained from a DID Doc as defined in [@!DID-Core] and the rest of the metadata is obtained from the `client_metadata` (or `client_metadata_uri`) parameter.
 
-Note: discuss if we want to modify the name of the parameter `registration`.
 Note: move sections on the metadata resolution here.
 
-### Client Registration Error Response
+### Client Metadata Error Response
 
 Error response MUST be made as defined in [@!RFC7591].
 
 This extension defines the following additional error codes and error descriptions:
 
 `vp_formats_not_supported`: The OP does not support any of the formats supported by the RP such as those included in the `vp_formats` registration parameter.
+
+Moreover, when `client_metadata` or `client_metadata_uri` parameters are present, but the AS recognizes `client_id` and knows metadata associated with it, it MUST return an error. 
+
+ASs compliant to this specification MUST NOT proceed with the transaction when pre-registered client metadata has been found based on the `client_id`, but `client_metadata` parameter has also been present.
+
+Usage of `client_metadata` or `client_metadata_uri` parameters with `client_id` that the AS might be seeing for the first time is mutualy exclusive with the registration mechanism where Self-Issued OP assigns `client_id` to the RP after receiving RP's metadata.
 
 ### Client Metadata Parameters {#client_metadata_parameters}
 
@@ -384,7 +389,7 @@ Here is an example for an RP registering with a Standard OP via dynamic client r
 
 <{{examples/client_metadata/client_code_format.json}}
 
-Here is an example for an RP sending its metadata with a presentation request (object) in the `registration` request parameter:
+Here is an example for an RP sending its metadata with a presentation request (object) in the `client_metadata` request parameter:
 
 <{{examples/client_metadata/client_ondemand_format.json}}
 
