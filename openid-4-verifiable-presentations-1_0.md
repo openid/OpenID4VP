@@ -116,7 +116,7 @@ Deployments can use any pre-existing OAuth grant type and response type in conju
 
 The parameters comprising a request for verifiable presentations are given in the following: 
 
-* `response_type`: REQUIRED. this parameter is defined in [@!RFC6749]. The possible values are determined by the response type registry established by [@!RFC6749]. This specification introduces the response type "vp_token". This response type asks the Authorization Server (AS) to return only a VP Token in the authorization response. 
+* `response_type`: REQUIRED. this parameter is defined in [@!RFC6749]. The possible values are determined by the response type registry established by [@!RFC6749]. This specification introduces the response type "vp_token". This response type asks the Authorization Server (AS) to return only a VP Token in the Authorization Response. 
 * `presentation_definition`: CONDITIONAL. A string containing a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange]. See (#request_presentation_definition) for more details. 
 * `presentation_definition_uri`: CONDITIONAL. A string containing a URL pointing to a resource where a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange] can be retrieved . See (#request_presentation_definition_uri) for more details.
 * `nonce`: REQUIRED. This parameter follows the definition given in [@!OpenID.Core]. It is used to securely bind the verifiable presentation(s) provided by the AS to the particular transaction.
@@ -203,6 +203,8 @@ Content-Type: application/json
 ```
 
 # Response {#vp_token_response}
+
+## Response Types
 
 The response used to provide the VP Token to the client depends on the grant and response type used in the request.
 
@@ -991,7 +993,9 @@ Note: the `nonce` and `aud` are set to the `nonce` of the request and the client
 
 # IANA Considerations
 
-TBD
+* Plan to register the following response types in the [OAuth Authorization Endpoint Response Types IANA Registry](https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml#endpoint).
+  * vp_token
+  * vp_token id_token
 
 # Acknowledgements {#Acknowledgements}
 
