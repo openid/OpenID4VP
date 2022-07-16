@@ -7,7 +7,7 @@ keyword = ["security", "openid", "ssi"]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "openid-4-verifiable-presentations-1_0-12"
+value = "openid-4-verifiable-presentations-1_0-13"
 status = "standard"
 
 [[author]]
@@ -117,11 +117,12 @@ Deployments can use any pre-existing OAuth grant type and response type in conju
 The parameters comprising a request for verifiable presentations are given in the following: 
 
 * `response_type`: REQUIRED. this parameter is defined in [@!RFC6749]. The possible values are determined by the response type registry established by [@!RFC6749]. This specification introduces the response type "vp_token". This response type asks the Authorization Server (AS) to return only a VP Token in the authorization response. 
+* `scope`: OPTIONAL. this parameter is defined in [@!RFC6749]. The wallet MAY allows verifiers to request presentation of credentials be utilizing a pre-defined scope value. See (#request_scope) for more details. 
 * `presentation_definition`: CONDITIONAL. A string containing a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange]. See (#request_presentation_definition) for more details. 
 * `presentation_definition_uri`: CONDITIONAL. A string containing a URL pointing to a resource where a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange] can be retrieved . See (#request_presentation_definition_uri) for more details.
 * `nonce`: REQUIRED. This parameter follows the definition given in [@!OpenID.Core]. It is used to securely bind the verifiable presentation(s) provided by the AS to the particular transaction.
 
-Note: A request MUST contain a `presentation_definition` or a `presentation_definition_uri` but both are mutually exclusive. 
+Note: A request MUST contain either a `presentation_definition` or a `presentation_definition_uri` or a single `scope` value representing a presentation definition, those three ways to request credential presentation are mutually exclusive. The wallet MUST refuse any request violating this requirement. 
 
 This is an example request: 
 
@@ -202,6 +203,38 @@ Content-Type: application/json
 }
 ```
 
+## scope {#request_scope}
+
+Wallets MAY support requesting presentation of credentials using OAuth 2.0 scope values. 
+
+Such a scope value MUST be an alias for a well-defined presentation definition as it will be 
+refered to in the `presentation_submission` response parameter. 
+
+The concrete scope values and the mapping between a certain scope value and the respective 
+presentation definition is out of scope of this specification. 
+
+Possible options include normative text in a specification defining scope values along with a description of their
+semantics or machine readable definitions in the wallet's server metadata, mapping a scope value to an equivalent 
+`presentation_definition` object as defined in [@!DIF.PresentationExchange]. 
+
+The definition MUST allow the verifier to determine the identifiers for presentation definition and input descriptors 
+used in the respective presentation submission response parameter as well as the credential formats and types in 
+the `vp_token` response parameter.  
+
+It is RECOMMENDED to use collision-resistant scopes values.
+
+Below is a non-normative example of an Authorization Request using the scope value `com.example.IDCardCredential_presentation`, 
+which is an alias for the first presentation definition example given in (#request_presentation_definition):
+
+```
+  GET /authorize?
+    response_type=vp_token
+    &client_id=https%3A%2F%2Fclient.example.org%2Fcb
+    &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
+    &scope=com.example.healthCardCredential_presentation
+    &nonce=n-0S6_WzA2Mj HTTP/1.1
+```
+
 # Response {#vp_token_response}
 
 The response used to provide the VP Token to the client depends on the grant and response type used in the request.
@@ -243,6 +276,14 @@ This is an example of a VP Token containing multiple verifiable presentations,
 with a matching `presentation_submission` parameter.
 
 <{{examples/response/presentation_submission_multiple_vps.json}}
+
+## Error Response
+
+The error response follows the rules as defined in [@!RFC6749]. 
+
+Additionally, if the request contains more then a `presentation_definition` parameter or a `presentation_definition_uri` parameter or a 
+scope value representing a presentation definition, the wallet MUST refuse to process the request and return an `invalid_request` error
+as defined in [@!RFC6749]. 
 
 # Verifier-initiated Cross Device Flow 
 
@@ -1013,6 +1054,10 @@ The technology described in this specification was made available from contribut
 # Document History
 
    [[ To be removed from the final specification ]]
+
+   -13
+
+   * added scope support
 
    -12
 
