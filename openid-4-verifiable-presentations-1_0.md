@@ -212,15 +212,33 @@ In all other cases, the VP Token is provided in the token response.
 
 The VP Token either contains a single verifiable presentation or an array of verifiable presentations. 
 
-`presentation_submission` element as defined in [@!DIF.PresentationExchange] links the input descriptor identifiers as specified in the corresponding request to the respective verifiable presentations within the VP Token along with format information. The root of the path expressions in the descriptor map is the respective verifiable presentation, pointing to the respective verifiable credentials.
+The `presentation_submission` element as defined in [@!DIF.PresentationExchange] links the input descriptor identifiers as specified in the corresponding request to the respective verifiable presentations within the VP Token along with format information. The root of the path expressions in the descriptor map is the respective verifiable presentation, pointing to the respective verifiable credentials.
 
-This `presentation_submission` element MUST be included either in each of the verifiable presentations, or as a separate response parameter alongside vp_token. When processing the response, Client MUST first look for a `presentation_submission` response parameter, and if not found, look for `presentation_submission` elements inside each verifiable presentation.
+This `presentation_submission` element MUST be included either in each of the verifiable presentations, or as a separate response parameter alongside vp_token. When processing the response, the Client MUST first look for a `presentation_submission` response parameter, and if not found, look for `presentation_submission` elements inside each verifiable presentation.
 
-This is shown in the following example:
+This is an example response to a request for a VP Token, where the presentation_submission is a separate response parameter: 
+
+```
+HTTP/1.1 302 Found
+     Location: https://client.example.com/cb?code=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImRpZDpleGFtcGxlOjB4YWJjI2tleTEifQ.eV05xQXhmdDdFVDZsa0gtNFM2VXgzclNHQW1jek1vaEVFZjhlQ2VOLWpDOFdla2RQbDZ6S1pRa.ft_Eq4IniBrr7gtzRfrYj8Vy1aPXuFZU%20-%206_%20ai0wvaKcsrzI4JkQEKTvbJwdvIeuGuTqy7ipO
+&presentation_submission=%7B
+%22id%22%3A%20%22Selective%20disclosure%20example%20presentation%22%2C
+%22definition_id%22%3A%20%22Selective%20disclosure%20example%22%2C
+%22descriptor_map%22%3A%20%5B%7B
+%22id%22%3A%20%22ID%20Card%20with%20constraints%22%2C
+%22format%22%3A%20%22jwt_vp%22%2C
+%22path%22%3A%20%22%24%22%2C
+%22path_nested%22%3A%20%7B
+%22format%22%3A%20%22jwt_vc%22%2C
+%22path%22%3A%20%22%24.verifiableCredential%5B0%5D%22
+%7D
+```
+
+The following example is a VP with an embedded presentation_submission:
 
 <{{examples/response/vp_token_ldp_vp_with_ps.json}}
 
-The AS MAY also add a `presentation_submission` response parameter along with the `vp_token` response parameter, which contains a JSON object conforming to the `presentation_submission` element as defined in [@!DIF.PresentationExchange]. This `presentation_submission` element links the input descriptor identifiers as specified in the corresponding request to the respective verifiable presentations within the VP Token along with format information. The root of the path expressions in the descriptor map is the respective VP Token. 
+The `presentation_submission` response parameter contains a JSON object conforming to the `presentation_submission` element as defined in [@!DIF.PresentationExchange]. This `presentation_submission` element links the input descriptor identifiers as specified in the corresponding request to the respective verifiable presentations within the VP Token along with format information. The root of the path expressions in the descriptor map is the respective VP Token. 
 
 This element might, for example, be used if the particular format of the provided presentations does not allow for the direct inclusion of `presentation_submission` elements or if the AS wants to provide the RP with additional information about the format and structure in advance of the processing of the VP Token.
 
