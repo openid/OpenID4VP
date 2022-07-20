@@ -996,9 +996,15 @@ Note: the `nonce` and `aud` are set to the `nonce` of the request and the client
 
 # IANA Considerations
 
-* Plan to register the following response types in the [OAuth Authorization Endpoint Response Types IANA Registry](https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml#endpoint).
-  * vp_token
-  * vp_token id_token
+* Response Type Name: `vp_token`
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Specification Document(s): https://openid.net/specs/openid-4-verifiable-presentations-1_0.html
+
+* Response Type Name: `vp_token id_token`
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Specification Document(s): https://openid.net/specs/openid-4-verifiable-presentations-1_0.html
+
+Note: Plan to register the following response types in the [OAuth Authorization Endpoint Response Types IANA Registry](https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml#endpoint).
 
 # Acknowledgements {#Acknowledgements}
 
