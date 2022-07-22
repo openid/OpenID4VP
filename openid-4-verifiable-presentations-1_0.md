@@ -223,19 +223,28 @@ Whether VP Token is provided to the Client in the Authorization Response or Toke
 
 The VP Token either contains a single verifiable presentation or an array of verifiable presentations. 
 
-`presentation_submission` element as defined in [@!DIF.PresentationExchange] links the input descriptor identifiers as specified in the corresponding request to the respective verifiable presentations within the VP Token along with format information. The root of the path expressions in the descriptor map is the respective verifiable presentation, pointing to the respective verifiable credentials.
+The `presentation_submission` element as defined in [@!DIF.PresentationExchange] links the input descriptor identifiers as specified in the corresponding request to the respective verifiable presentations within the VP Token along with format information. The root of the path expressions in the descriptor map is the respective verifiable presentation, pointing to the respective verifiable credentials.
 
-This `presentation_submission` element MUST be included either in each of the verifiable presentations, or as a separate response parameter alongside vp_token. When processing the response, Client MUST first look for a `presentation_submission` response parameter, and if not found, look for `presentation_submission` elements inside each verifiable presentation.
+This `presentation_submission` element MUST be included either in each of the verifiable presentations, or as a separate response parameter alongside vp_token.
 
-This is shown in the following example:
+`presentation_submission` element might, for example, be included inside each verifiable presentation, if the particular format of the provided presentations does not allow for the direct inclusion of `presentation_submission` elements, or if the AS wants to provide the RP with additional information about the format and structure in advance of the processing of the VP Token.
+
+When processing the response, the Client MUST first look for a `presentation_submission` response parameter, and if not found, look for `presentation_submission` elements inside each verifiable presentation.
+
+In case the AS returns a single verifiable presentation in the VP Token, the `descriptor_map` would then contain a simple path expression "$".
+
+The following is an example response to a request of a response type `vp_token`, where the `presentation_submission` is a separate response parameter: 
+
+```
+  HTTP/1.1 302 Found
+  Location: https://client.example.org/cb#
+    presentation_submission=...
+    &vp_token=...
+```
+
+The following is an example of a VP with an embedded presentation_submission:
 
 <{{examples/response/vp_token_ldp_vp_with_ps.json}}
-
-The AS MAY also add a `presentation_submission` response parameter along with the `vp_token` response parameter, which contains a JSON object conforming to the `presentation_submission` element as defined in [@!DIF.PresentationExchange]. This `presentation_submission` element links the input descriptor identifiers as specified in the corresponding request to the respective verifiable presentations within the VP Token along with format information. The root of the path expressions in the descriptor map is the respective VP Token. 
-
-This element might, for example, be used if the particular format of the provided presentations does not allow for the direct inclusion of `presentation_submission` elements or if the AS wants to provide the RP with additional information about the format and structure in advance of the processing of the VP Token.
-
-In case the AS returns a single verifiable presentation in the VP Token, the descriptor map would then contain a simple path expression "$".
 
 This is an example of a VP Token containing a single verifiable presentation
 
