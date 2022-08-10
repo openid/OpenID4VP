@@ -372,12 +372,69 @@ This specification defines new server metadata parameters according to [@!RFC841
 The AS publishes the formats it supports using the `vp_formats_supported` metadata parameter. 
 
 * `vp_formats_supported`: A JSON object defining the formats and proof types of verifiable credentials and verifiable presentations that a RP supports. Valid values are defined in Section 6.7.3. of [@!OpenID.VCI]. Other values may be used when defined in the profiles of this specification.
+* `vp_token_signing_alg_values_supported`: 
+
+### Sets of Static Configuration Value
+
+This document defines two sets of static configuration values that can be used by the RP when it is unable to perform pre-discovery of the Authorization Server metadata.
+
+One set of static configuration values is used with `vp_token` as a supported `response_type`, bound to `openid://vptoken` as an `authorization_endpoint`. 
+
+- "authorization_endpoint" MUST be `openid://vptoken`
+- "response_types_supported" MUST be
+    "vp_token"
+  ],
+  "vp_formats_supported": [
+    "jwt_vc",
+    "jwt_vp"
+  ],
+  "vp_token_signing_alg_values_supported": [
+    "ES256"
+  ],
+  "request_object_signing_alg_values_supported": [
+    "ES256"
+  ]
+}
+
+
+Another set of static configuration values is used with `vp_token` and `id_token` as supported `response_type`, bound to `openid://` as an `authorization_endpoint`. 
+
+```json
+{
+  "authorization_endpoint": "openid://",
+  "response_types_supported": [
+    "vp_token",
+    "id_token"
+  ],
+  "scopes_supported": [
+    "openid"
+  ],
+  "subject_types_supported": [
+    "pairwise"
+  ],
+  "id_token_signing_alg_values_supported": [
+    "ES256"
+  ],
+  "vp_token_signing_alg_values_supported": [
+    "ES256"
+  ],
+  "request_object_signing_alg_values_supported": [
+    "ES256"
+  ],
+  "subject_syntax_types_supported": [
+    "urn:ietf:params:oauth:jwk-thumbprint"
+  ],
+  "id_token_types_supported": [
+    "subject_signed"
+  ]
+}
+```
 
 ## Client Metadata
 
 ### Obtaining Client Metadata 
 
-Client and the AS utilizing this specification can exchange metadata prior to a transaction, e.g using [@!RFC7591] or out-of-band mechanisms. However, in OpenID for VP can be used in deployments models where the AS does not support those mechanisms. This specification therefore defines additional mechanisms where the Client can provide metadata to the AS just-in-time with the Authorization Request. 
+Client and the AS utilizing this specification can exchange metadata prior to a transaction, e.g using [@!RFC7591] or out-of-band mechanisms. However, OpenID for VP can be used in deployments models where the AS does not support those mechanisms. This specification therefore defines additional mechanisms where the Client can provide metadata to the AS just-in-time with the Authorization Request. 
 
 #### Request Parameter
 
