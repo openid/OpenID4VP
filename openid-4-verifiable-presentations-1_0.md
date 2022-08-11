@@ -376,59 +376,7 @@ The AS publishes the formats it supports using the `vp_formats_supported` metada
 
 ### Sets of Static Configuration Value
 
-This document defines two sets of static configuration values that can be used by the RP when it is unable to perform pre-discovery of the Authorization Server metadata.
-
-One set of static configuration values is used with `vp_token` as a supported `response_type`, bound to `openid://vptoken` as an `authorization_endpoint`. 
-
-- "authorization_endpoint" MUST be `openid://vptoken`
-- "response_types_supported" MUST be
-    "vp_token"
-  ],
-  "vp_formats_supported": [
-    "jwt_vc",
-    "jwt_vp"
-  ],
-  "vp_token_signing_alg_values_supported": [
-    "ES256"
-  ],
-  "request_object_signing_alg_values_supported": [
-    "ES256"
-  ]
-}
-
-
-Another set of static configuration values is used with `vp_token` and `id_token` as supported `response_type`, bound to `openid://` as an `authorization_endpoint`. 
-
-```json
-{
-  "authorization_endpoint": "openid://",
-  "response_types_supported": [
-    "vp_token",
-    "id_token"
-  ],
-  "scopes_supported": [
-    "openid"
-  ],
-  "subject_types_supported": [
-    "pairwise"
-  ],
-  "id_token_signing_alg_values_supported": [
-    "ES256"
-  ],
-  "vp_token_signing_alg_values_supported": [
-    "ES256"
-  ],
-  "request_object_signing_alg_values_supported": [
-    "ES256"
-  ],
-  "subject_syntax_types_supported": [
-    "urn:ietf:params:oauth:jwk-thumbprint"
-  ],
-  "id_token_types_supported": [
-    "subject_signed"
-  ]
-}
-```
+WIP
 
 ## Client Metadata
 
@@ -515,6 +463,70 @@ RPs indicate their support for transferring presentation definitions by value an
 * `presentation_definition_uri`: OPTIONAL. Boolean value specifying whether the RP supports the transfer of `presentation_definition` by reference, with true indicating support. If omitted, the default value is true. 
 
 # Implementation Considerations
+
+## Static Configuration Values of the Authorization Servers
+
+### Profiles that Define Static Configuration Values
+
+Below is a non-exhaustive list of profiles known to date that define static configuration values of Authorization Servers:
+
+- [JWT VC Presentation Profile](https://identity.foundation/jwt-vc-presentation-profile/)
+
+### Two Sets of Static Configuration Values Defined in This Specification
+
+This document defines two sets of static configuration values that can be used by the RP when it is unable to perform pre-discovery of the Authorization Server metadata.
+
+One set of static configuration values is used with `vp_token` as a supported `response_type`, bound to `openid://vptoken` as an `authorization_endpoint`. 
+
+- "authorization_endpoint" is `openid://vptoken`
+- "response_types_supported" MUST be
+    "vp_token"
+  ],
+  "vp_formats_supported": [
+    "jwt_vc",
+    "jwt_vp"
+  ],
+  "vp_token_signing_alg_values_supported": [
+    "ES256"
+  ],
+  "request_object_signing_alg_values_supported": [
+    "ES256"
+  ]
+}
+
+
+Another set of static configuration values is used with `vp_token` and `id_token` as supported `response_type`, bound to `openid://` as an `authorization_endpoint`. 
+
+```json
+{
+  "authorization_endpoint": "openid://",
+  "response_types_supported": [
+    "vp_token",
+    "id_token"
+  ],
+  "scopes_supported": [
+    "openid"
+  ],
+  "subject_types_supported": [
+    "pairwise"
+  ],
+  "id_token_signing_alg_values_supported": [
+    "ES256"
+  ],
+  "vp_token_signing_alg_values_supported": [
+    "ES256"
+  ],
+  "request_object_signing_alg_values_supported": [
+    "ES256"
+  ],
+  "subject_syntax_types_supported": [
+    "urn:ietf:params:oauth:jwk-thumbprint"
+  ],
+  "id_token_types_supported": [
+    "subject_signed"
+  ]
+}
+```
 
 ## Support for Federations/Trust Schemes
 
