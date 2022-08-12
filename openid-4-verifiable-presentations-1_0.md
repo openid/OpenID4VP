@@ -372,11 +372,6 @@ This specification defines new server metadata parameters according to [@!RFC841
 The AS publishes the formats it supports using the `vp_formats_supported` metadata parameter. 
 
 * `vp_formats_supported`: A JSON object defining the formats and proof types of verifiable credentials and verifiable presentations that a RP supports. Valid values are defined in Section 6.7.3. of [@!OpenID.VCI]. Other values may be used when defined in the profiles of this specification.
-* `vp_token_signing_alg_values_supported`: 
-
-### Sets of Static Configuration Value
-
-WIP
 
 ## Client Metadata
 
