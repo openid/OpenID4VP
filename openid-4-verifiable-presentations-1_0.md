@@ -371,7 +371,27 @@ This specification defines new server metadata parameters according to [@!RFC841
 
 The AS publishes the formats it supports using the `vp_formats_supported` metadata parameter. 
 
-* `vp_formats_supported`: A JSON object defining the formats and proof types of verifiable credentials and verifiable presentations that a RP supports. Valid values are defined in Section 6.7.3. of [@!OpenID.VCI]. Other values may be used when defined in the profiles of this specification.
+* `vp_formats_supported`:  An object containing a list of key value pairs, where the key is a string identifying a credential format supported by the AS. Valid values to express credential formats are defined in Section 6.7.3. of [@!OpenID.VCI]. The value is an object containing a parameter defined below:
+  * `alg_values_supported`: An object where the value is an array of case sensitive strings that identify the cryptographic suites that are supported. Cryptosuites for Credentials in `jwt_vc` format should use algorithm names defined in [IANA JOSE Algorithms Registry](https://www.iana.org/assignments/jose/jose.xhtml#web-signature-encryption-algorithms). Cryptosuites for Credentials in `ldp_vc` format should use signature suites names defined in [Linked Data Cryptographic Suite Registry](https://w3c-ccg.github.io/ld-cryptosuite-registry/). Cryptosuites for Credentials in `mdl_iso_cbor` format should use signature suites names defined in ISO/IEC 18013-5:2021. Parties using other credential formats will need to agree upon the meanings of the values used, which may be context-specidic. 
+
+Below is a non-normative example of a `vp_formats_supported` parameter:
+
+```
+vp_formats_supported": {
+‌ "jwt_vc": {
+  ‌ "alg_values_supported": [
+    ‌ "ES256K",
+    ‌ "ES384"
+  ‌ ]
+‌ },
+‌ "jwt_vp": {
+  ‌ "alg_values_supported": [
+    ‌ "ES256K",
+     "EdDSA"
+  ‌ ]
+‌ }
+}
+```
 
 ## Client Metadata
 
