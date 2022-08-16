@@ -494,6 +494,9 @@ An example `claims` parameter containing a `presentation_definition` that filter
 
 This example will chose a VC that has been issued by a university that is a member of the `ukuniversities.ac.uk` federation and that uses the TRAIN terms of use specification for asserting federation memberships.
 
+## Nested Verifiable Presentations
+
+Current version of OpenID4VP does not support presentation of a VP nested inside another VP, even though [@!DIF.PresentationExchange] specification theoretically supports this by defining a `path_nested` property.
 
 # Security Considerations {#security_considerations}
 
