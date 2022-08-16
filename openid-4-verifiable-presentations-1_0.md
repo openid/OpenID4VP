@@ -304,6 +304,8 @@ Additionally, if the request contains more then a `presentation_definition` para
 scope value representing a presentation definition, the wallet MUST refuse to process the request and return an `invalid_request` error
 as defined in [@!RFC6749]. 
 
+When the requested scope value is invalid, unknown, or malformed, the AS should respond with the error code `invalid_scope` defined in Section 4.1.2.1 of [@!RFC6749].
+
 # Verifier-initiated Cross Device Flow 
 
 A Verified-initiated Cross Device flow poses two challenges:
