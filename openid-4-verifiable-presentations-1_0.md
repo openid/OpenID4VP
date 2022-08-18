@@ -83,6 +83,10 @@ Wallet
 
 Entity that receives, stores, presents, and manages Credentials and key material of the End-User. There is no single deployment model of a Wallet: Credentials and keys can both be stored/managed locally by the end-user, or by using a remote self-hosted service, or a remote third party service. In the context of this specification, the Wallet acts as an OAuth 2.0 Authorization Server (see [@!RFC6749]) towards the Credential Verifier which acts as the OAuth 2.0 Client. 
 
+Base64url Encoding
+
+Base64 encoding using the URL- and filename-safe character set defined in Section 5 of [@!RFC4648], with all trailing '=' characters omitted (as permitted by Section 3.2 of [@!RFC4648]) and without the inclusion of any line breaks, whitespace, or other additional characters. Note that the base64url encoding of the empty octet sequence is the empty string. (See Appendix C of [@!RFC7515] for notes on implementing base64url encoding without padding.)
+
 # Use Cases
 
 ## Verifier accesses Wallet via OpenID Connect
@@ -353,7 +357,7 @@ The respective HTTP POST response to the verifier would look like this:
 
 Presented credentials MUST be returned in the VP Token as defined in Section 6.7.3. of [@!OpenID.VCI], based on the format and the signature scheme of the credentials and presentations. This specification does not require any additional encoding when credential format is already represented as a JSON object or a JSON string.
 
-Credential formats expressed as binary formats MUST be base64url-encoded and returned as a JSON string.
+Credential formats expressed as binary formats MUST be Base64url encoded and returned as a JSON string.
 
 Table in Section 6.7.3. of [@!OpenID.VCI] might be superceded by a registry in the future.
 
