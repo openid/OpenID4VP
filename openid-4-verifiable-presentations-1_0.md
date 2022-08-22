@@ -471,14 +471,14 @@ Below is a non-exhaustive list of profiles known to date that define static conf
 
 This document defines two sets of static configuration values that can be used by the RP when it is unable to perform dynamic discovery and is not using any of the profiles listed above.
 
-One set of static configuration values is used with `vp_token` as a supported `response_type`, bound to `openid://vptoken` as an `authorization_endpoint`:
+One set of static configuration values is used with `vp_token` as a supported `response_type`, bound to a custom URL scheme with a ertain path `openid://vptoken` as an `authorization_endpoint`:
 
 - "authorization_endpoint" is `openid://vptoken`
 - "response_types_supported" is "vp_token"
 - "vp_formats_supported" is "jwt_vc" and "jwt_vp" with supported algorithm "ES256" for both
 - "request_object_signing_alg_values_supported": "ES256"
 
-Another set of static configuration values is used with `vp_token` and `id_token` as supported `response_type`, bound to `openid://` as an `authorization_endpoint`:
+Another set of static configuration values is used with `vp_token` and `id_token` as supported `response_type`, bound to a custom URL scheme `openid://` as an `authorization_endpoint`:
 
 - "authorization_endpoint" is `openid://`
 - "response_types_supported" is "vp_token" and "id_token"
