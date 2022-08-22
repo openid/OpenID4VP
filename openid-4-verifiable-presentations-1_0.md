@@ -461,6 +461,8 @@ RPs indicate their support for transferring presentation definitions by value an
 
 ## Static Configuration Values of the Authorization Servers
 
+This document lists profiles known to date that define static configuration values of Authorization Servers and defines two sets of static configuration values that can be used by the RP when it is unable to perform dynamic discovery and is not using any of the profiles listed above.
+
 ### Profiles that Define Static Configuration Values
 
 Below is a non-exhaustive list of profiles known to date that define static configuration values of Authorization Servers:
@@ -469,7 +471,7 @@ Below is a non-exhaustive list of profiles known to date that define static conf
 
 ### Two Sets of Static Configuration Values Defined in This Specification
 
-This document defines two sets of static configuration values that can be used by the RP when it is unable to perform dynamic discovery and is not using any of the profiles listed above.
+Below are two sets of static configuration values that can be used by the RP when it is unable to perform dynamic discovery and is not using any of the profiles listed above.
 
 One set of static configuration values is used with `vp_token` as a supported `response_type`, bound to a custom URL scheme with a ertain path `openid://vptoken` as an `authorization_endpoint`:
 
