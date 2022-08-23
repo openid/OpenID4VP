@@ -261,11 +261,11 @@ The VP Token either contains a single verifiable presentation or an array of ver
 
 The `presentation_submission` element as defined in [@!DIF.PresentationExchange] links the input descriptor identifiers as specified in the corresponding request to the respective verifiable presentations within the VP Token along with format information. The root of the path expressions in the descriptor map is the respective verifiable presentation, pointing to the respective verifiable credentials.
 
-This `presentation_submission` element MUST be included either in each of the verifiable presentations, or as a separate response parameter alongside vp_token.
+This `presentation_submission` element MUST be included as a separate response parameter alongside the vp_token.
 
-`presentation_submission` element might, for example, be included inside each verifiable presentation, if the particular format of the provided presentations does not allow for the direct inclusion of `presentation_submission` elements, or if the AS wants to provide the RP with additional information about the format and structure in advance of the processing of the VP Token.
+Including the `presentation_submission` element as a separate response parameter allows the AS to provide the RP with additional information about the format and structure in advance of the processing of the VP Token, and can be used even with the credential formats that do not allow for the direct inclusion of `presentation_submission` elements inside a credential itself.
 
-When processing the response, the Client MUST first look for a `presentation_submission` response parameter, and if not found, look for `presentation_submission` elements inside each verifiable presentation.
+Clients MUST ignore any `presentation_submission` element included inside a VP.
 
 In case the AS returns a single verifiable presentation in the VP Token, the `descriptor_map` would then contain a simple path expression "$".
 
@@ -278,10 +278,6 @@ The following is an example response to a request of a response type `vp_token`,
     &vp_token=...
 ```
 
-The following is an example of a VP with an embedded presentation_submission:
-
-<{{examples/response/vp_token_ldp_vp_with_ps.json}}
-
 This is an example of a VP Token containing a single verifiable presentation
 
 <{{examples/response/vp_token_raw_ldp_vp.json}}
@@ -290,7 +286,7 @@ with a matching `presentation_submission`.
 
 <{{examples/response/presentation_submission.json}}
 
-A `descriptor_map` element MAY also contain a `path_nested` element referring to the actual credential carried in the respective verifiable presentation. 
+A `descriptor_map` element MUST  contain a `path_nested` element referring to the actual credential carried in the respective verifiable presentation. 
 
 This is an example of a VP Token containing multiple verifiable presentations,   
 
