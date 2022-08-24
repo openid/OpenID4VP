@@ -298,6 +298,8 @@ with a matching `presentation_submission` parameter.
 
 The error response follows the rules as defined in [@!RFC6749]. 
 
+When the requested scope value is invalid, unknown, or malformed, the AS should respond with the error code `invalid_scope` defined in Section 4.1.2.1 of [@!RFC6749].
+
 Additionally, if the request contains more then a `presentation_definition` parameter or a `presentation_definition_uri` parameter or a 
 scope value representing a presentation definition, the wallet MUST refuse to process the request and return an `invalid_request` error
 as defined in [@!RFC6749]. 
