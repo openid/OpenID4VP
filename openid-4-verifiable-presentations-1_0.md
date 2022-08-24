@@ -261,11 +261,9 @@ The VP Token either contains a single verifiable presentation or an array of ver
 
 The `presentation_submission` element as defined in [@!DIF.PresentationExchange] links the input descriptor identifiers as specified in the corresponding request to the respective verifiable presentations within the VP Token along with format information. The root of the path expressions in the descriptor map is the respective verifiable presentation, pointing to the respective verifiable credentials.
 
-This `presentation_submission` element MUST be included as a separate response parameter alongside the vp_token.
+This `presentation_submission` element MUST be included as a separate response parameter alongside the vp_token. Clients MUST ignore any `presentation_submission` element included inside a VP.
 
 Including the `presentation_submission` element as a separate response parameter allows the AS to provide the RP with additional information about the format and structure in advance of the processing of the VP Token, and can be used even with the credential formats that do not allow for the direct inclusion of `presentation_submission` elements inside a credential itself.
-
-Clients MUST ignore any `presentation_submission` element included inside a VP.
 
 In case the AS returns a single verifiable presentation in the VP Token, the `descriptor_map` would then contain a simple path expression "$".
 
@@ -373,7 +371,7 @@ This specification defines new server metadata parameters according to [@!RFC841
 
 The AS publishes the formats it supports using the `vp_formats_supported` metadata parameter. 
 
-* `vp_formats_supported`: A JSON object defining the formats and proof types of verifiable credentials and verifiable presentations that a RP supports. Valid values are defined in Section 6.7.3. of [@!OpenID.VCI]. Other values may be used when defined in the profiles of this specification.
+* `vp_formats_supported`: A JSON object defining the formats and proof types of verifiable credentials and verifiable presentations that a RP supports. Valid format identifier values are defined in Section 9.3. of [@!OpenID.VCI]. Other values may be used when defined in the profiles of this specification.
 
 ## Client Metadata
 
@@ -443,7 +441,7 @@ This specification defines new client metadata parameters according to [@!RFC759
 
 RPs indicate the supported formats using the new parameter `vp_formats`.
 
-* `vp_formats`: REQUIRED. An object defining the formats and proof types of verifiable presentations and verifiable credentials that a RP supports. Valid values are defined in the table in Section 6.7.3. of [@!OpenID.VCI] and include `jwt_vc`, `ldp_vc`, `jwt_jp` and `ldp_vp`. Formats identifiers not in the table may be supported when defined in the profiles of this specification.
+* `vp_formats`: REQUIRED. An object defining the formats and proof types of verifiable presentations and verifiable credentials that a RP supports. Valid format identifier values are defined in the table in Section 9.3. of [@!OpenID.VCI] and include `jwt_vc`, `ldp_vc`, `jwt_jp` and `ldp_vp`. Formats identifiers not in the table may be supported when defined in the profiles of this specification.
 
 Here is an example for an RP registering with a Standard OP via dynamic client registration:
 
