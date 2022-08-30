@@ -475,22 +475,65 @@ Below are two sets of static configuration values that can be used by the RP whe
 
 One set of static configuration values is used with `vp_token` as a supported `response_type`, bound to a custom URL scheme with a ertain path `openid4vp://` as an `authorization_endpoint`:
 
-- "authorization_endpoint" is `openid4vp://`
-- "response_types_supported" is "vp_token"
-- "vp_formats_supported" is "jwt_vc" and "jwt_vp" with supported algorithm "ES256" for both
 - "request_object_signing_alg_values_supported": "ES256"
+
+```json
+{
+  "authorization_endpoint": "openid4vp:",
+  "response_types_supported": [
+    "vp_token"
+  ],
+  "vp_formats_supported": {
+    "jwt_vp": {
+      "alg": ["ES256"]
+    },
+    "jwt_vc": {
+      "alg": ["ES256"]
+    }
+  },
+  "request_object_signing_alg_values_supported": [
+    "ES256"
+  ]
+}
+```
 
 Another set of static configuration values is used with `vp_token` and `id_token` as supported `response_type`, bound to a custom URL scheme `openid://` as an `authorization_endpoint`:
 
-- "authorization_endpoint" is `openid://`
-- "response_types_supported" is "vp_token" and "id_token"
-- "vp_formats_supported" is "jwt_vc" and "jwt_vp" with supported algorithm "ES256" for both
-- "scopes_supported" is "openid"
-- "subject_types_supported" is "pairwise"
-- "id_token_signing_alg_values_supported" is "ES256"
-- "request_object_signing_alg_values_supported" is "ES256"
-- "subject_syntax_types_supported" is "urn:ietf:params:oauth:jwk-thumbprint"
-- "id_token_types_supported" is "subject_signed"
+```json
+{
+  "authorization_endpoint": "openid:",
+  "response_types_supported": [
+    "vp_token",
+    "id_token"
+  ],
+  "vp_formats_supported": {
+    "jwt_vp": {
+      "alg": ["ES256"]
+    },
+    "jwt_vc": {
+      "alg": ["ES256"]
+    }
+  },
+  "scopes_supported": [
+    "openid"
+  ],
+  "subject_types_supported": [
+    "pairwise"
+  ],
+  "id_token_signing_alg_values_supported": [
+    "ES256"
+  ],
+  "request_object_signing_alg_values_supported": [
+    "ES256"
+  ],
+  "subject_syntax_types_supported": [
+    "urn:ietf:params:oauth:jwk-thumbprint"
+  ],
+  "id_token_types_supported": [
+    "subject_signed"
+  ]
+}
+```
 
 ## Support for Federations/Trust Schemes
 
