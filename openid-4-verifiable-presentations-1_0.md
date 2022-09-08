@@ -495,8 +495,6 @@ Below are two sets of static configuration values that can be used by the RP whe
 
 One set of static configuration values is used with `vp_token` as a supported `response_type`, bound to a custom URL scheme with a ertain path `openid4vp://` as an `authorization_endpoint`:
 
-- "request_object_signing_alg_values_supported": "ES256"
-
 ```json
 {
   "authorization_endpoint": "openid4vp:",
