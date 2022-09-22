@@ -244,6 +244,13 @@ which is an alias for the first presentation definition example given in (#reque
     &nonce=n-0S6_WzA2Mj HTTP/1.1
 ```
 
+#### `aud` of a Request Object
+
+When an RP is sending a Request Object as defined in Section 6.1 of [@!OpenID.Core] or [@!RFC9101], the `aud` Claim value depends on whether the recipient of the request can be identified by the RP or not:
+
+- the `aud` claim MUST equal to the `issuer` Claim value, when Dynamic Discovery is performed.
+- the `aud` claim MUST be "https://self-issued.me", when Static Discovery Metadata is used.
+
 # Response {#vp_token_response}
 
 ## Response Types
