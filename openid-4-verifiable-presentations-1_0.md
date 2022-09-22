@@ -481,7 +481,7 @@ RPs indicate their support for transferring presentation definitions by value an
 
 ## Static Configuration Values of the Authorization Servers
 
-This document lists profiles known to date that define static configuration values of Authorization Servers and defines two sets of static configuration values that can be used by the RP when it is unable to perform dynamic discovery and is not using any of the profiles listed above.
+This document lists profiles known to date that define static configuration values of Authorization Servers and defines one set of static configuration values that can be used by the RP when it is unable to perform dynamic discovery and is not using any of the profiles.
 
 ### Profiles that Define Static Configuration Values
 
@@ -489,11 +489,9 @@ Below is a non-exhaustive list of profiles known to date that define static conf
 
 - [JWT VC Presentation Profile](https://identity.foundation/jwt-vc-presentation-profile/)
 
-### Two Sets of Static Configuration Values Defined in This Specification
+### A Set of Static Configuration Values Defined in This Specification
 
-Below are two sets of static configuration values that can be used by the RP when it is unable to perform dynamic discovery and is not using any of the profiles listed above.
-
-One set of static configuration values is used with `vp_token` as a supported `response_type`, bound to a custom URL scheme with a ertain path `openid4vp://` as an `authorization_endpoint`:
+Below is a set of static configuration values that can be used with `vp_token` as a supported `response_type`, bound to a custom URL scheme with a ertain path `openid4vp://` as an `authorization_endpoint`:
 
 ```json
 {
@@ -511,44 +509,6 @@ One set of static configuration values is used with `vp_token` as a supported `r
   },
   "request_object_signing_alg_values_supported": [
     "ES256"
-  ]
-}
-```
-
-Another set of static configuration values is used with `vp_token` and `id_token` as supported `response_type`, bound to a custom URL scheme `openid://` as an `authorization_endpoint`:
-
-```json
-{
-  "authorization_endpoint": "openid:",
-  "response_types_supported": [
-    "vp_token",
-    "id_token"
-  ],
-  "vp_formats_supported": {
-    "jwt_vp": {
-      "alg": ["ES256"]
-    },
-    "jwt_vc": {
-      "alg": ["ES256"]
-    }
-  },
-  "scopes_supported": [
-    "openid"
-  ],
-  "subject_types_supported": [
-    "pairwise"
-  ],
-  "id_token_signing_alg_values_supported": [
-    "ES256"
-  ],
-  "request_object_signing_alg_values_supported": [
-    "ES256"
-  ],
-  "subject_syntax_types_supported": [
-    "urn:ietf:params:oauth:jwk-thumbprint"
-  ],
-  "id_token_types_supported": [
-    "subject_signed"
   ]
 }
 ```
