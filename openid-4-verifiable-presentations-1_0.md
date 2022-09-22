@@ -489,9 +489,9 @@ Below is a non-exhaustive list of profiles known to date that define static conf
 
 - [JWT VC Presentation Profile](https://identity.foundation/jwt-vc-presentation-profile/)
 
-### A Set of Static Configuration Values Defined in This Specification
+### A Set of Static Configuration Values bound to `openid4vp://`
 
-Below is a set of static configuration values that can be used with `vp_token` as a supported `response_type`, bound to a custom URL scheme with a ertain path `openid4vp://` as an `authorization_endpoint`:
+Below is a set of static configuration values that can be used with `vp_token` as a supported `response_type`, bound to a custom URL scheme `openid4vp://` as an `authorization_endpoint`:
 
 ```json
 {
