@@ -481,7 +481,7 @@ RPs indicate their support for transferring presentation definitions by value an
 
 ## Static Configuration Values of the Authorization Servers
 
-This document lists profiles known to date that define static configuration values of Authorization Servers and defines one set of static configuration values that can be used by the RP when it is unable to perform dynamic discovery and is not using any of the profiles.
+This document lists profiles that define static configuration values of Authorization Servers and defines one set of static configuration values that can be used by the RP when it is unable to perform dynamic discovery and is not using any of the profiles.
 
 ### Profiles that Define Static Configuration Values
 
