@@ -406,7 +406,7 @@ vp_formats_supported": {
 
 ### Obtaining Client Metadata 
 
-Client and the AS utilizing this specification can exchange metadata prior to a transaction, e.g using [@!RFC7591] or out-of-band mechanisms. However, in OpenID for VP can be used in deployments models where the AS does not support those mechanisms. This specification therefore defines additional mechanisms where the Client can provide metadata to the AS just-in-time with the Authorization Request. 
+Client and the AS utilizing this specification can exchange metadata prior to a transaction, e.g using [@!RFC7591] or out-of-band mechanisms. However, OpenID for VP can be used in deployments models where the AS does not support those mechanisms. This specification therefore defines additional mechanisms where the Client can provide metadata to the AS just-in-time with the Authorization Request. 
 
 #### Request Parameter
 
@@ -487,6 +487,40 @@ RPs indicate their support for transferring presentation definitions by value an
 * `presentation_definition_uri`: OPTIONAL. Boolean value specifying whether the RP supports the transfer of `presentation_definition` by reference, with true indicating support. If omitted, the default value is true. 
 
 # Implementation Considerations
+
+## Static Configuration Values of the Authorization Servers
+
+This document lists profiles that define static configuration values of Authorization Servers and defines one set of static configuration values that can be used by the RP when it is unable to perform dynamic discovery and is not using any of the profiles.
+
+### Profiles that Define Static Configuration Values
+
+Below is a list of profiles that define static configuration values of Authorization Servers:
+
+- [JWT VC Presentation Profile](https://identity.foundation/jwt-vc-presentation-profile/)
+
+### A Set of Static Configuration Values bound to `openid4vp://`
+
+Below is a set of static configuration values that can be used with `vp_token` as a supported `response_type`, bound to a custom URL scheme `openid4vp://` as an `authorization_endpoint`:
+
+```json
+{
+  "authorization_endpoint": "openid4vp:",
+  "response_types_supported": [
+    "vp_token"
+  ],
+  "vp_formats_supported": {
+    "jwt_vp": {
+      "alg": ["ES256"]
+    },
+    "jwt_vc": {
+      "alg": ["ES256"]
+    }
+  },
+  "request_object_signing_alg_values_supported": [
+    "ES256"
+  ]
+}
+```
 
 ## Support for Federations/Trust Schemes
 
