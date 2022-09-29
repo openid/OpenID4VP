@@ -485,7 +485,7 @@ This document lists profiles that define static configuration values of Authoriz
 
 ### Profiles that Define Static Configuration Values
 
-Below is a non-exhaustive list of profiles that define static configuration values of Authorization Servers:
+Below is a list of profiles that define static configuration values of Authorization Servers:
 
 - [JWT VC Presentation Profile](https://identity.foundation/jwt-vc-presentation-profile/)
 
