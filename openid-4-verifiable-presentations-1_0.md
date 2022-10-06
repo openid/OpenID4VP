@@ -264,9 +264,11 @@ Whether VP Token is provided to the Client in the Authorization Response or Toke
 - In all other cases, if `vp_token` is not used, but `presentation_definition` parameter is present, the VP Token is provided in the Token Response. 
 - Any combination of `vp_token` with a `response_type` other than `id_token` is undefined.
 
-## `presentation_submission` Element
+## VP Token
 
-The VP Token either contains a single verifiable presentation or an array of verifiable presentations. 
+The VP Token MUST either contain a single verifiable presentation or an array of Verifiable Presentations. Section 9.3 of [@!OpenID.VCI] defines whether a Verifiable Presentation must be represented as a JSON string or an object depending on a format. When format of a Verifiable Presentation requires it to be passed as a JSON string, an object in the VP Token MUST contain a key value pair, where the key is `presentation` and the value is a base64url encoded Verifiable Presentation.
+
+## `presentation_submission` Element
 
 The `presentation_submission` element as defined in [@!DIF.PresentationExchange] links the input descriptor identifiers as specified in the corresponding request to the respective verifiable presentations within the VP Token along with format information. The root of the path expressions in the descriptor map is the respective verifiable presentation, pointing to the respective verifiable credentials.
 
