@@ -244,6 +244,15 @@ which is an alias for the first presentation definition example given in (#reque
     &nonce=n-0S6_WzA2Mj HTTP/1.1
 ```
 
+#### `aud` of a Request Object
+
+When an RP is sending a Request Object as defined in Section 6.1 of [@!OpenID.Core] or [@!RFC9101], the `aud` Claim value depends on whether the recipient of the request can be identified by the RP or not:
+
+- the `aud` Claim MUST equal to the `issuer` Claim value, when Dynamic Discovery is performed.
+- the `aud` Claim MUST be "https://self-issued.me/v2", when Static Discovery Metadata is used.
+
+Note: "https://self-issued.me/v2" is a symbolic string and can be used as an `aud` Claim value even when OpenID4VP specification is used standalone, without SIOPv2. 
+
 # Response {#vp_token_response}
 
 ## Response Types
@@ -397,7 +406,7 @@ vp_formats_supported": {
 
 ### Obtaining Client Metadata 
 
-Client and the AS utilizing this specification can exchange metadata prior to a transaction, e.g using [@!RFC7591] or out-of-band mechanisms. However, in OpenID for VP can be used in deployments models where the AS does not support those mechanisms. This specification therefore defines additional mechanisms where the Client can provide metadata to the AS just-in-time with the Authorization Request. 
+Client and the AS utilizing this specification can exchange metadata prior to a transaction, e.g using [@!RFC7591] or out-of-band mechanisms. However, OpenID for VP can be used in deployments models where the AS does not support those mechanisms. This specification therefore defines additional mechanisms where the Client can provide metadata to the AS just-in-time with the Authorization Request. 
 
 #### Request Parameter
 
@@ -479,6 +488,40 @@ RPs indicate their support for transferring presentation definitions by value an
 
 # Implementation Considerations
 
+## Static Configuration Values of the Authorization Servers
+
+This document lists profiles that define static configuration values of Authorization Servers and defines one set of static configuration values that can be used by the RP when it is unable to perform dynamic discovery and is not using any of the profiles.
+
+### Profiles that Define Static Configuration Values
+
+Below is a list of profiles that define static configuration values of Authorization Servers:
+
+- [JWT VC Presentation Profile](https://identity.foundation/jwt-vc-presentation-profile/)
+
+### A Set of Static Configuration Values bound to `openid4vp://`
+
+Below is a set of static configuration values that can be used with `vp_token` as a supported `response_type`, bound to a custom URL scheme `openid4vp://` as an `authorization_endpoint`:
+
+```json
+{
+  "authorization_endpoint": "openid4vp:",
+  "response_types_supported": [
+    "vp_token"
+  ],
+  "vp_formats_supported": {
+    "jwt_vp": {
+      "alg": ["ES256"]
+    },
+    "jwt_vc": {
+      "alg": ["ES256"]
+    }
+  },
+  "request_object_signing_alg_values_supported": [
+    "ES256"
+  ]
+}
+```
+
 ## Support for Federations/Trust Schemes
 
 Often RPs will want to request verifiable credentials from an issuer who is a member of a federation or trust scheme, rather than from a specific issuer, for example, a "BSc Chemistry Degree" credential from a US University rather than from a specifically named university.
@@ -487,7 +530,7 @@ In order to facilitate this, federations will need to determine how an issuer ca
 
 Indicating the federations/trust schemes that an issuer is a member of may be achieved by defining a `termsOfUse` property [@!VC_DATA].
 
-Note. [@!VC_DATA] describes terms of use as "can be utilized by an issuer ... to communicate the terms under which a verifiable credential ... was issued."
+Note: [@!VC_DATA] describes terms of use as "can be utilized by an issuer ... to communicate the terms under which a verifiable credential ... was issued."
 
 The following terms of use may be defined:
 
