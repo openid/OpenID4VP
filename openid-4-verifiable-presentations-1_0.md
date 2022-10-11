@@ -266,7 +266,7 @@ Whether VP Token is provided to the Client in the Authorization Response or Toke
 
 ## VP Token
 
-The VP Token MUST either contain a single verifiable presentation or an array of Verifiable Presentations. Section 9.3 of [@!OpenID.VCI] defines whether a Verifiable Presentation must be represented as a JSON string or an object depending on a format. When format of a Verifiable Presentation requires it to be passed as a JSON string, an object in the VP Token MUST contain a key value pair, where the key is `presentation` and the value is a base64url encoded Verifiable Presentation.
+The VP Token MUST either contain a single verifiable presentation or an array of Verifiable Presentations which MUST be represented as a JSON string or an object depending on a format as defined in Section 9.3 of [@!OpenID.VCI].
 
 ## `presentation_submission` Element
 
