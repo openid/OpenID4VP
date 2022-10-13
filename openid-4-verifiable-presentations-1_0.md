@@ -118,7 +118,7 @@ This specification introduces a new token type, "VP Token", used as a generic co
 
 OpenID for Verifiable Presentations supports scenarios where Authorization Request is sent from the Verifier to the Wallet using redirects (same-device flow) and when it is passed an across devices (cross-device flow).
 
-Deployments can use any pre-existing OAuth grant type and response type in conjunction with this specifications to support those scenarios in the context of different deployment architectures. This specification also introduces a new OAuth 2.0 response mode to support cross device scenarios initiated by the verifier (see {#response_mode_post}). 
+Deployments can use any pre-existing OAuth grant type and response type in conjunction with this specifications to support those scenarios in the context of different deployment architectures. This specification also introduces a new OAuth 2.0 Response Mode to support cross device scenarios initiated by the verifier (see {#response_mode_post}). 
 
 # Request {#vp_token_request}
 
@@ -315,24 +315,24 @@ Additionally, if the request contains more then a `presentation_definition` para
 scope value representing a presentation definition, the wallet MUST refuse to process the request and return an `invalid_request` error
 as defined in [@!RFC6749]. 
 
-# Verifier-initiated Cross Device Flow 
+# Cross Device Flow 
 
-A Verified-initiated Cross Device flow poses two challenges:
+Cross Device flow needs to fulfill the following two requirements:
 
-1. The Verifier needs to pass an authorization request to a Wallet across devices. 
-2. The Wallet needs to pass the result back to the Verifier. 
+1. The Verifier is able to pass an authorization request to a Wallet across devices. 
+2. The Wallet is able to pass the response back to the Verifier. 
 
 ## Authorization Request
 
-One option to address the first challenge is to render the authorization request as a QR Code. Since authorization requests might be large and result in a large QR code, the usage of `request_uri` is RECOMMENDED.
+One option to meet the first requirement is for the Verifier to render the Authorization Request as a QR Code. The usage of `request_uri` is RECOMMENDED, since authorization request size might be large and might not fit in a QR code.
 
 ## Authorization Response {#response_mode_post}
 
-The solution to the second challenge facilitated by this specification is to send the results from the Wallet via an HTTPS connection, for example over the Internet. This is facilitated by a new response mode `post`. 
+To meet the second requirement, this specification defines a new Response Mode `post` to enable the Wallet to send the response to the Verifier via an HTTPS connection, for example over the Internet.
 
-This specification defines the response mode `post` in accordance with [@!OAuth.Responses] to support verifier-initiated cross device flows. This response mode asks the AS to deliver the result of an authorization process to the URL conveyed in the `redirect_uri` parameter using the HTTP `POST` method instead of redirecting the user agent to the Client.
+The Response Mode `post` in accordance with [@!OAuth.Responses] to support verifier-initiated cross device flows. This Response Mode asks the AS to deliver the result of an authorization process to the URL conveyed in the `redirect_uri` parameter using the HTTP `POST` method instead of redirecting the user agent to the Client.
 
-The following is a non-normative example request object with response mode `post`:
+The following is a non-normative example request object with Response Mode `post`:
 
 ```json
 {
