@@ -118,7 +118,7 @@ This specification introduces a new token type, "VP Token", used as a generic co
 
 OpenID for Verifiable Presentations supports scenarios where Authorization Request is sent from the Verifier to the Wallet using redirects (same-device flow) and when it is passed an across devices (cross-device flow).
 
-Deployments can use any pre-existing OAuth grant type and response type in conjunction with this specifications to support those scenarios in the context of different deployment architectures. This specification also introduces a new OAuth response mode to support cross device scenarios initiated by the verifier (see {#response_mode_post}). 
+Deployments can use any pre-existing OAuth grant type and response type in conjunction with this specifications to support those scenarios in the context of different deployment architectures. This specification also introduces a new OAuth 2.0 response mode to support cross device scenarios initiated by the verifier (see {#response_mode_post}). 
 
 # Request {#vp_token_request}
 
@@ -835,7 +835,7 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </front>
 </reference>
 
-<reference anchor="OpenID.VCI" target="https://openid.net/specs/openid-4-verifiable-credential-issuance.html">
+<reference anchor="OpenID.VCI" target="https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html">
         <front>
           <title>OpenID for Verifiable Credential Issuance</title>
           <author initials="T." surname="Lodderstedt" fullname="Torsten Lodderstedt">
