@@ -330,7 +330,12 @@ One option to meet the first requirement is for the Verifier to render the Autho
 
 To meet the second requirement, this specification defines a new Response Mode `post` to enable the Wallet to send the response to the Verifier via an HTTPS connection, for example over the Internet.
 
-The Response Mode `post` in accordance with [@!OAuth.Responses] to support verifier-initiated cross device flows. This Response Mode asks the AS to deliver the result of an authorization process to the URL conveyed in the `redirect_uri` parameter using the HTTP `POST` method instead of redirecting the user agent to the Client.
+This specification defines the following Response Mode in accordance with [@!OAuth.Responses]:
+
+post
+  In this mode, Authorization Response parameters are encoded in the body using the `application/x-www-form-urlencoded` content type and sent using the HTTP `POST` method instead of redirecting back to the Client.
+  
+HTTP POST request MUST be sent to the URL obtained from the `redirect_uri` parameter in the Authorization Request.
 
 The following is a non-normative example request object with Response Mode `post`:
 
@@ -364,7 +369,7 @@ The respective HTTP POST response to the verifier would look like this:
     vp_token=...
 
 ```
-## Encoding of Presented Verifiable Presentations
+# Encoding of Presented Verifiable Presentations
 
 Presented credentials MUST be returned in the VP Token as defined in Section 6.7.3. of [@!OpenID.VCI], based on the format and the signature scheme of the credentials and presentations. This specification does not require any additional encoding when credential format is already represented as a JSON object or a JSON string.
 
@@ -564,6 +569,10 @@ This example will chose a VC that has been issued by a university that is a memb
 Current version of OpenID4VP does not support presentation of a VP nested inside another VP, even though [@!DIF.PresentationExchange] specification theoretically supports this by stating that the nesting of `path_nested` objects "may be any number of levels deep".
 
 One level of nesting `path_nested` objects is sufficient to describe a VC included inside a VP.
+
+## UI in the Cross Device Flow
+
+In the Cross Device Flow, the Wallet can change the UI based on the Verifier's response to the HTTP POST request.
 
 # Security Considerations {#security_considerations}
 
