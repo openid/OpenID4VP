@@ -127,7 +127,7 @@ The parameters comprising a request for verifiable presentations are given in th
 * `response_type`: REQUIRED. this parameter is defined in [@!RFC6749]. The possible values are determined by the response type registry established by [@!RFC6749]. This specification introduces the response type "vp_token". This response type asks the Authorization Server (AS) to return only a VP Token in the Authorization Response. 
 * `scope`: OPTIONAL. this parameter is defined in [@!RFC6749]. The wallet MAY allows verifiers to request presentation of credentials be utilizing a pre-defined scope value. See (#request_scope) for more details.
 * `presentation_definition`: CONDITIONAL. A string containing a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange]. See (#request_presentation_definition) for more details. 
-* `presentation_definition_uri`: CONDITIONAL. A string containing a URL pointing to a resource where a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange] can be retrieved . See (#request_presentation_definition_uri) for more details.
+* `presentation_definition_uri`: CONDITIONAL. A string containing an HTTPS URL pointing to a resource where a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange] can be retrieved . See (#request_presentation_definition_uri) for more details.
 * `nonce`: REQUIRED. This parameter follows the definition given in [@!OpenID.Core]. It is used to securely bind the verifiable presentation(s) provided by the AS to the particular transaction.
 
 Note: A request MUST contain either a `presentation_definition` or a `presentation_definition_uri` or a single `scope` value representing a presentation definition, those three ways to request credential presentation are mutually exclusive. The wallet MUST refuse any request violating this requirement. 
@@ -168,6 +168,8 @@ Note that when the Client is requesting presentation of a VP containing a VC, Cl
 ## presentation_definition\_uri {#request_presentation_definition_uri}
 
 `presentation_definition_uri` is used to the retrieve the `presentation_definition` from the resource at the specified URL, rather than being passed by value. The AS will send a GET request without additional parameters. The resource MUST be exposed without further need to authenticate or authorize. 
+
+The protocol for the `presentation_definition_uri` MUST be HTTPS.
 
 For example the parameter value "https://server.example.com/presentationdefs?ref=idcard_presentation_request" will result in the following request 
 
@@ -264,9 +266,11 @@ Whether VP Token is provided to the Client in the Authorization Response or Toke
 - In all other cases, if `vp_token` is not used, but `presentation_definition` parameter is present, the VP Token is provided in the Token Response. 
 - Any combination of `vp_token` with a `response_type` other than `id_token` is undefined.
 
-## `presentation_submission` Element
+## VP Token
 
-The VP Token either contains a single verifiable presentation or an array of verifiable presentations. 
+The VP Token MUST either contain a single verifiable presentation or an array of Verifiable Presentations which MUST be represented as a JSON string or an object depending on a format as defined in Section 9.3 of [@!OpenID.VCI].
+
+## `presentation_submission` Element
 
 The `presentation_submission` element as defined in [@!DIF.PresentationExchange] links the input descriptor identifiers as specified in the corresponding request to the respective verifiable presentations within the VP Token along with format information. The root of the path expressions in the descriptor map is the respective verifiable presentation, pointing to the respective verifiable credentials.
 
@@ -406,7 +410,7 @@ vp_formats_supported": {
 
 ### Obtaining Client Metadata 
 
-Client and the AS utilizing this specification can exchange metadata prior to a transaction, e.g using [@!RFC7591] or out-of-band mechanisms. However, in OpenID for VP can be used in deployments models where the AS does not support those mechanisms. This specification therefore defines additional mechanisms where the Client can provide metadata to the AS just-in-time with the Authorization Request. 
+Client and the AS utilizing this specification can exchange metadata prior to a transaction, e.g using [@!RFC7591] or out-of-band mechanisms. However, OpenID for VP can be used in deployments models where the AS does not support those mechanisms. This specification therefore defines additional mechanisms where the Client can provide metadata to the AS just-in-time with the Authorization Request. 
 
 #### Request Parameter
 
@@ -487,6 +491,40 @@ RPs indicate their support for transferring presentation definitions by value an
 * `presentation_definition_uri`: OPTIONAL. Boolean value specifying whether the RP supports the transfer of `presentation_definition` by reference, with true indicating support. If omitted, the default value is true. 
 
 # Implementation Considerations
+
+## Static Configuration Values of the Authorization Servers
+
+This document lists profiles that define static configuration values of Authorization Servers and defines one set of static configuration values that can be used by the RP when it is unable to perform dynamic discovery and is not using any of the profiles.
+
+### Profiles that Define Static Configuration Values
+
+Below is a list of profiles that define static configuration values of Authorization Servers:
+
+- [JWT VC Presentation Profile](https://identity.foundation/jwt-vc-presentation-profile/)
+
+### A Set of Static Configuration Values bound to `openid4vp://`
+
+Below is a set of static configuration values that can be used with `vp_token` as a supported `response_type`, bound to a custom URL scheme `openid4vp://` as an `authorization_endpoint`:
+
+```json
+{
+  "authorization_endpoint": "openid4vp:",
+  "response_types_supported": [
+    "vp_token"
+  ],
+  "vp_formats_supported": {
+    "jwt_vp": {
+      "alg": ["ES256"]
+    },
+    "jwt_vc": {
+      "alg": ["ES256"]
+    }
+  },
+  "request_object_signing_alg_values_supported": [
+    "ES256"
+  ]
+}
+```
 
 ## Support for Federations/Trust Schemes
 
@@ -599,8 +637,6 @@ Note: Some of the available mechanisms are outlined in Section 4.3.2 of [@!DIF.P
 It is NOT RECOMMENDED for the Subject to delegate the presentation of the credential to a third party.
 
 ## Fetching Presentation Definitions by Reference
-
-The protocol for the `presentation_definition_uri` MUST be https.
 
 In many instances the referenced server will be operated by a known federation or other trusted operator, and the URL's domain name will already be widely known. OPs (including SIOPs) using this URI can mitigate request forgeries by having a pre-configured set of trusted domain names and only fetching presentation_definitions from these sources. In addition, the presentation definitions could be signed by a trusted authority, such as the ICO or federation operator.
 
