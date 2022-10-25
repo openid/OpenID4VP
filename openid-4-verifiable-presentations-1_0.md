@@ -118,7 +118,7 @@ This specification introduces a new token type, "VP Token", used as a generic co
 
 OpenID for Verifiable Presentations supports scenarios where Authorization Request is sent from the Verifier to the Wallet using redirects (same-device flow) and when it is passed an across devices (cross-device flow).
 
-Deployments can use any pre-existing OAuth grant type and response type in conjunction with this specifications to support those scenarios in the context of different deployment architectures. This specification also introduces a new OAuth 2.0 Response Mode to support cross device scenarios initiated by the verifier (see {#response_mode_post}). 
+Deployments can use any pre-existing OAuth grant type and response type in conjunction with this specifications to support those scenarios in the context of different deployment architectures. This specification also introduces a new OAuth 2.0 Response Mode to support cross device scenarios initiated by the verifier (see (#response_mode_post) ). 
 
 # Request {#vp_token_request}
 
@@ -328,23 +328,23 @@ One option to meet the first requirement is for the Verifier to render the Autho
 
 ## Authorization Response {#response_mode_post}
 
-To meet the second requirement, this specification defines a new Response Mode `post` to enable the Wallet to send the response to the Verifier via an HTTPS connection, for example over the Internet.
+To meet the second requirement, this specification defines a new Response Mode `direct_post` to enable the Wallet to send the response to the Verifier via an HTTPS connection, for example over the Internet.
 
 This specification defines the following Response Mode in accordance with [@!OAuth.Responses]:
 
-post
+direct_post
   In this mode, Authorization Response parameters are encoded in the body using the `application/x-www-form-urlencoded` content type and sent using the HTTP `POST` method instead of redirecting back to the Client.
   
 HTTP POST request MUST be sent to the URL obtained from the `redirect_uri` parameter in the Authorization Request.
 
-The following is a non-normative example request object with Response Mode `post`:
+The following is a non-normative example request object with Response Mode `direct_post`:
 
 ```json
 {
    "client_id": "https://client.example.org/post",
    "redirect_uris": ["https://client.example.org/post"],
    "response_types": "vp_token",
-   "response_mode": "post"
+   "response_mode": "direct_post"
    "presentation_definition": {...},
    "nonce": "n-0S6_WzA2Mj"
 }
