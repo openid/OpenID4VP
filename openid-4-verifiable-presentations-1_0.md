@@ -66,26 +66,41 @@ OAuth 2.0 [@!RFC6749] is used as a base protocol to enable use cases where the p
 
 # Terminology
 
-Verifiable Credential (VC)
+Credential
+  A set of claims about a subject made by an Issuer.
 
-A verifiable credential is a tamper-evident credential that has authorship that can be cryptographically verified. Verifiable credentials can be used to build verifiable presentations, which can also be cryptographically verified. The claims in a credential can be about different subjects. (see [@VC_DATA])
-Note that this specification uses a term "credential" as defined in Section 2 of [@VC_DATA], which is a different definition than in [@!OpenID.Core].
+Note that the definition of a term "credential" in this specification is different from that in [@!OpenID.Core].
+
+Verifiable Credential (VC)
+  A tamper-evident credential that has authorship of the Issuer that can be cryptographically verified. Can be of any format, including those defined in [@VC_DATA], [@ISO.18013-5] and [@Hyperledger.Indy] (AnonCreds).
+
+Note that Verifiable Credentials compliant to the [@VC_DATA] specification will be referred to as W3C Verifiable Credentials.
 
 Presentation
-
-Data derived from one or more verifiable credentials, issued by one or more issuers, that is shared with a specific verifier. (see [@VC_DATA])
+  Data derived from one or more verifiable credentials that can be from the same or different issuers that is shared with a specific verifier.
 
 Verifiable Presentation (VP)
+  A tamper-evident presentation that has authorship of the Holder that can be cryptographically verified. Can be of any format, including those defined in [@VC_DATA], [@ISO.18013-5] and [@Hyperledger.Indy] (AnonCreds).
 
-A verifiable presentation is a tamper-evident presentation encoded in such a way that authorship of the data can be trusted after a process of cryptographic verification. Certain types of verifiable presentations might contain data that is synthesized from, but do not contain, the original verifiable credentials (for example, zero-knowledge proofs). (see [@VC_DATA])
+Note that Verifiable Presentations compliant to the [@VC_DATA] specification will be referred to as W3C Verifiable Presentations.
 
-Wallet
+Issuer
+  An entity that creates Verifiable Credentials.
 
-Entity that receives, stores, presents, and manages Credentials and key material of the End-User. There is no single deployment model of a Wallet: Credentials and keys can both be stored/managed locally by the end-user, or by using a remote self-hosted service, or a remote third party service. In the context of this specification, the Wallet acts as an OAuth 2.0 Authorization Server (see [@!RFC6749]) towards the Credential Verifier which acts as the OAuth 2.0 Client. 
+Holder
+  An entity that receives Verifiable Credentials from the Issuer and has control over them to present them to the Verifier as Verifiable Presentations.
+
+Verifier
+  An entity that requests, checks and extracts the claims from Verifiable Presentations.
+
+Issuer-Holder-Verifier Model
+  An ecosystem where issuance of a Verifiable Credential to the Holder happens asynchronously from it being presented as a Verifiable Presentation to the Verifier. Issued Credential can (but not necessarily) be used multiple times.
 
 Base64url Encoding
+  Base64 encoding using the URL- and filename-safe character set defined in Section 5 of [@!RFC4648], with all trailing '=' characters omitted (as permitted by Section 3.2 of [@!RFC4648]) and without the inclusion of any line breaks, whitespace, or other additional characters. Note that the base64url encoding of the empty octet sequence is the empty string. (See Appendix C of [@!RFC7515] for notes on implementing base64url encoding without padding.)
 
-Base64 encoding using the URL- and filename-safe character set defined in Section 5 of [@!RFC4648], with all trailing '=' characters omitted (as permitted by Section 3.2 of [@!RFC4648]) and without the inclusion of any line breaks, whitespace, or other additional characters. Note that the base64url encoding of the empty octet sequence is the empty string. (See Appendix C of [@!RFC7515] for notes on implementing base64url encoding without padding.)
+Wallet
+  Entity that receives, stores, presents, and manages Credentials and key material of the End-User. There is no single deployment model of a Wallet: Credentials and keys can both be stored/managed locally by the end-user, or by using a remote self-hosted service, or a remote third party service. In the context of this specification, the Wallet acts as an OAuth 2.0 Authorization Server (see [@!RFC6749]) towards the Credential Verifier which acts as the OAuth 2.0 Client. 
 
 # Use Cases
 
