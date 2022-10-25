@@ -60,7 +60,7 @@ This specification defines a mechanism on top of OAuth 2.0 to allow presentation
 
 # Introduction
 
-This specification defines a mechanism on top of OAuth 2.0 [@!RFC6749] that enables presentation of Verifiable Credentials as Verifiable Presentations in the Issuer-Holder-Verifier Model. Credentials of any format including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] and [@Hyperledger.Indy] (AnonCreds) are supported. This allowss existing OpenID Connect Relying Parties to extend their reach towards claim sources asserting claims in new formats. New applications built using Verifiable Credentials are also enabled to utilize OAuth 2.0 and/or OpenID Connect as integration and interoperability layer towards Holders.
+This specification defines a mechanism on top of OAuth 2.0 [@!RFC6749] that enables presentation of Verifiable Credentials as Verifiable Presentations in the Issuer-Holder-Verifier Model. Credentials of any Credential format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] and [@Hyperledger.Indy] (AnonCreds) are supported. This allowss existing OpenID Connect Relying Parties to extend their reach towards claim sources asserting claims in new formats. New applications built using Verifiable Credentials are also enabled to utilize OAuth 2.0 and/or OpenID Connect as integration and interoperability layer towards Holders.
 
 OAuth 2.0 [@!RFC6749] is used as a base protocol, because this specification is focused on enabling exchange of Verifiable Presentations alone, without issuance of an ID Token. This keeps this specification simple, whilst also enabling more complex use cases. OpenID Conect deployments can also extend their implementations using this specification with the ability to transport Verifiable Presentations, since OpenID Connect is built on top of OAuth 2.0. Implementers that require [@!OpenID.Core] features, such as the issuance of subject-signed ID tokens can combine this specification with [@!SIOPv2].
 
@@ -72,7 +72,7 @@ Credential
 Note that the definition of a term "credential" in this specification is different from that in [@!OpenID.Core].
 
 Verifiable Credential (VC)
-  A tamper-evident credential that has authorship of the Issuer that can be cryptographically verified. Can be of any format, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] and [@Hyperledger.Indy] (AnonCreds).
+  A tamper-evident credential that has authorship of the Issuer that can be cryptographically verified. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] and [@Hyperledger.Indy] (AnonCreds).
 
 Note that Verifiable Credentials compliant to the [@VC_DATA] specification will be referred to as W3C Verifiable Credentials.
 
@@ -80,7 +80,7 @@ Presentation
   Data derived from one or more verifiable credentials that can be from the same or different issuers that is shared with a specific verifier.
 
 Verifiable Presentation (VP)
-  A tamper-evident presentation that has authorship of the Holder that can be cryptographically verified. Can be of any format, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] and [@Hyperledger.Indy] (AnonCreds).
+  A tamper-evident presentation that has authorship of the Holder that can be cryptographically verified. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] and [@Hyperledger.Indy] (AnonCreds).
 
 Note that Verifiable Presentations compliant to the [@VC_DATA] specification will be referred to as W3C Verifiable Presentations.
 
@@ -108,9 +108,9 @@ Wallet
 
 A Verifier uses OpenID Connect to obtain verifiable presentations. This is a simple and mature way to obtain identity data. From a technical perspective, this also makes integration with OAuth-protected APIs easier as OpenID Connect is based on OAuth 2.0.  
 
-## Existing OpenID Connect RP integrates SSI wallets
+## Existing OpenID Connect RP integrates with the Wallets
 
-An application currently utilizing OpenID Connect for accessing various federated identity providers can use the same protocol to also integrate with emerging SSI-based wallets. This is a convenient transition path leveraging existing expertise to protect investments made.
+An application currently utilizing OpenID Connect for accessing various federated identity providers can use the same protocol to also integrate with emerging Wallets using Issuer-Holder-Verifier Model. This is a convenient transition path leveraging existing expertise to protect investments made.
 
 ## Existing OpenID Connect OP as custodian of End-User Credentials
 
@@ -124,16 +124,17 @@ This approach dramatically reduces latency and reduces load on the OP's servers.
 
 # Overview 
 
-This specification defines a mechanism on top of OAuth 2.0 to request and provide verifiable presentations. Since OpenID Connect is based on OAuth 2.0, implementations can also be build on top of OpenID Connect, e.g. Self-Issued OP v2 [@SIOPv2].
+This specification defines a mechanism on top of OAuth 2.0 to request and provide Verifiable Presentations. Implementations can also be build on top of OpenID Connect Core, since OpenID Connect Core is based on OAuth 2.0. To benefit from the subject signed ID Token feature, this specification can also be combined with the Self-Issued OP v2 specification [@SIOPv2].
 
-The specification supports all kinds of verifiable credentials, such as W3C Verifiable Credentials but also ISO mDL or AnonCreds. The examples given in the main part of the specification use W3C Verifiable Credentials, examples in other credential formats are given in  (#alternative_credential_formats). 
+This specification supports any Credential format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] and [@Hyperledger.Indy] (AnonCreds). The examples given in the main part of this specification use W3C Verifiable Credentials, but examples in other Credential formats are given in  (#alternative_credential_formats). 
 
-Verifiable Presentations are requested by adding a parameter `presentation_definition` to an OAuth 2.0 authorization request.
-This specification introduces a new token type, "VP Token", used as a generic container for verifiable presentation objects, that is returned in authorization and token responses.
+Verifiable Presentations are requested by adding a parameter `presentation_definition` as defined by [@!DIF.PresentationExchange] to an OAuth 2.0 Authorization Request.
 
-OpenID for Verifiable Presentations supports scenarios where Authorization Request is sent from the Verifier to the Wallet using redirects (same-device flow) and when it is passed an across devices (cross-device flow).
+This specification introduces a new token type, "VP Token", used as a generic container for Verifiable Presentations, that is returned in Authorization and Token Responses.
 
-Deployments can use any pre-existing OAuth grant type and response type in conjunction with this specifications to support those scenarios in the context of different deployment architectures. This specification also introduces a new OAuth response mode to support cross device scenarios initiated by the verifier (see {#response_mode_post}). 
+This specification also introduces a new response mode "post" to enable sending Authorization Response containing Verifiable Presentations across devices in a cross-device flow, in addition to using redirects in a same-device flow, which is already enabled by the existing reponse modes.
+
+Implementations can use any pre-existing OAuth 2.0 grant type and response type in conjunction with this specifications to support those scenarios in the context of different deployment architectures.
 
 # Request {#vp_token_request}
 
