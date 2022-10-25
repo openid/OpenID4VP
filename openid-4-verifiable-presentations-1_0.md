@@ -116,9 +116,9 @@ The specification supports all kinds of verifiable credentials, such as W3C Veri
 Verifiable Presentations are requested by adding a parameter `presentation_definition` to an OAuth 2.0 authorization request.
 This specification introduces a new token type, "VP Token", used as a generic container for verifiable presentation objects, that is returned in authorization and token responses.
 
-OpenID for Verifiable Presentations supports scenarios where Authorization Request is sent from the Verifier to the Wallet using redirects (same-device flow) and when it is passed an across devices (cross-device flow).
+This specification also introduces a new response mode "post" to enable sending Authorization Response containing Verifiable Presentations across devices in a cross-device flow, in addition to using redirects in a same-device flow, which is already enabled by the existing reponse modes.
 
-Deployments can use any pre-existing OAuth grant type and response type in conjunction with this specifications to support those scenarios in the context of different deployment architectures. This specification also introduces a new OAuth 2.0 Response Mode to support cross device scenarios (see (#response_mode_post) ). 
+Implementations can use any pre-existing OAuth grant type and response type in conjunction with this specifications to support those scenarios in the context of different deployment architectures.
 
 Note that the Wallet that acted as an OAuth 2.0 Client to the Authorization Server during the Issuance, for example using [@!OpenID.VCI], acts as an OAuth 2.0 Authorization Server in relation to the Relying Party (RP).
 
