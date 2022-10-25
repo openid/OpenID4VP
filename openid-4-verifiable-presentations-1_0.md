@@ -118,7 +118,7 @@ This specification introduces a new token type, "VP Token", used as a generic co
 
 OpenID for Verifiable Presentations supports scenarios where Authorization Request is sent from the Verifier to the Wallet using redirects (same-device flow) and when it is passed an across devices (cross-device flow).
 
-Deployments can use any pre-existing OAuth grant type and response type in conjunction with this specifications to support those scenarios in the context of different deployment architectures. This specification also introduces a new OAuth 2.0 Response Mode to support cross device scenarios initiated by the verifier (see (#response_mode_post) ). 
+Deployments can use any pre-existing OAuth grant type and response type in conjunction with this specifications to support those scenarios in the context of different deployment architectures. This specification also introduces a new OAuth 2.0 Response Mode to support cross device scenarios (see (#response_mode_post) ). 
 
 Note that the Wallet that acted as an OAuth 2.0 Client to the Authorization Server during the Issuance, for example using [@!OpenID.VCI], acts as an OAuth 2.0 Authorization Server in relation to the Relying Party (RP).
 
