@@ -60,7 +60,7 @@ This specification defines a mechanism on top of OAuth 2.0 to allow presentation
 
 # Introduction
 
-This specification defines a mechanism on top of OAuth 2.0 [@!RFC6749] for presentation of claims via verifiable credentials, supporting W3C formats as well as other credential formats. This allows existing OpenID Connect RPs to extend their reach towards claims sources asserting claims in this format. It also allows new applications built using verifiable credentials to utilize OAuth 2.0 or OpenID Connect as integration and interoperability layer towards credential holders.
+This specification defines a mechanism on top of OAuth 2.0 [@!RFC6749] for presentation of claims via verifiable credentials, supporting W3C formats as well as other credential formats. This allows existing OpenID Connect Relying Parties to extend their reach towards claims sources asserting claims in this format. It also allows new applications built using verifiable credentials to utilize OAuth 2.0 or OpenID Connect as integration and interoperability layer towards credential holders.
 
 OAuth 2.0 [@!RFC6749] is used as a base protocol to enable use cases where the presentation of verifiable presentations alone is sufficient. This keeps this specification simple, whilst also enabling more complex use cases. Deployments that require [@!OpenID.Core] features, such as issuance of ID tokens can nevertheless use this specification to extend their OpenID Connect implementations with the ability to transport verifiable credentials, since OpenID Connect is built on top of OAuth 2.0. Especially Self-Issued OpenID Providers (see [@!SIOPv2]) would benefit from combining this specification.
 
@@ -109,9 +109,9 @@ This approach dramatically reduces latency and reduces load on the OP's servers.
 
 # Overview 
 
-This specification defines a mechanism on top of OAuth 2.0 to request and provide verifiable presentations. Since OpenID Connect is based on OAuth 2.0, implementations can also be build on top of OpenID Connect, e.g. Self-Issued OP v2 [@SIOPv2].
+This specification defines a mechanism on top of OAuth 2.0 to request and provide verifiable presentations. Since OpenID Connect is based on OAuth 2.0, implementations can also be built on top of OpenID Connect, e.g. Self-Issued OP v2 [@SIOPv2].
 
-The specification supports all kinds of verifiable credentials, such as W3C Verifiable Credentials but also ISO mDL or AnonCreds. The examples given in the main part of the specification use W3C Verifiable Credentials, examples in other credential formats are given in  (#alternative_credential_formats). 
+The specification supports all kinds of verifiable credentials, such as W3C Verifiable Credentials but also ISO mDL or AnonCreds. The examples given in the main part of the specification use W3C Verifiable Credentials. Examples in other credential formats are given in  (#alternative_credential_formats). 
 
 Verifiable Presentations are requested by adding a parameter `presentation_definition` to an OAuth 2.0 authorization request.
 This specification introduces a new token type, "VP Token", used as a generic container for verifiable presentation objects, that is returned in authorization and token responses.
@@ -119,6 +119,8 @@ This specification introduces a new token type, "VP Token", used as a generic co
 OpenID for Verifiable Presentations supports scenarios where Authorization Request is sent from the Verifier to the Wallet using redirects (same-device flow) and when it is passed an across devices (cross-device flow).
 
 Deployments can use any pre-existing OAuth grant type and response type in conjunction with this specifications to support those scenarios in the context of different deployment architectures. This specification also introduces a new OAuth 2.0 Response Mode to support cross device scenarios initiated by the verifier (see (#response_mode_post) ). 
+
+Note that the Wallet that acted as an OAuth 2.0 Client to the Authorization Server during the Issuance, for example using [@!OpenID.VCI], acts as an OAuth 2.0 Authorization Server in relation to the Relying Party (RP).
 
 # Request {#vp_token_request}
 
