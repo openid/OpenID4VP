@@ -248,7 +248,13 @@ which is an alias for the first presentation definition example given in (#reque
     &nonce=n-0S6_WzA2Mj HTTP/1.1
 ```
 
-#### `aud` of a Request Object
+## Authorization Request in a Cross-Device flow
+
+There are use-cases when the Authorization Request is being displayed on a device different from a device on which the requested Credential is stored.
+
+One option to pass an Authorization Request across devices is for the Verifier to render the Authorization Request as a QR Code. The usage of `request_uri` is RECOMMENDED, since authorization request size might be large and might not fit in a QR code.
+
+## `aud` of a Request Object
 
 When an RP is sending a Request Object as defined in Section 6.1 of [@!OpenID.Core] or [@!RFC9101], the `aud` Claim value depends on whether the recipient of the request can be identified by the RP or not:
 
@@ -319,20 +325,11 @@ Additionally, if the request contains more then a `presentation_definition` para
 scope value representing a presentation definition, the wallet MUST refuse to process the request and return an `invalid_request` error
 as defined in [@!RFC6749]. 
 
-# Cross-Device Flow 
+## Response Mode "direct_post" {#response_mode_post}
 
-Cross-Device flow needs to fulfill the following two requirements:
+There are use-cases when the Authorization Request was received from a Verifier that is unreachable using redirects (i.e. it is on another device) from the Wallet on which the requested Credential is stored.
 
-1. The Verifier is able to pass an authorization request to a Wallet across devices. 
-2. The Wallet is able to pass the response back to the Verifier. 
-
-## Authorization Request
-
-One option to meet the first requirement is for the Verifier to render the Authorization Request as a QR Code. The usage of `request_uri` is RECOMMENDED, since authorization request size might be large and might not fit in a QR code.
-
-## Authorization Response {#response_mode_post}
-
-To meet the second requirement, this specification defines a new Response Mode `direct_post` to enable the Wallet to send the response to the Verifier via an HTTPS connection, for example over the Internet.
+For such use-cases, this specification defines a new Response Mode `direct_post` to enable the Wallet to send the response to the Verifier via an HTTPS connection.
 
 This specification defines the following Response Mode in accordance with [@!OAuth.Responses]:
 
