@@ -116,7 +116,7 @@ The specification supports all kinds of verifiable credentials, such as W3C Veri
 Verifiable Presentations are requested by adding a parameter `presentation_definition` to an OAuth 2.0 authorization request.
 This specification introduces a new token type, "VP Token", used as a generic container for verifiable presentation objects, that is returned in authorization and token responses.
 
-This specification also introduces a new response mode "direct_post" to enable sending Authorization Response containing Verifiable Presentations using the HTTP `POST` method instead of using redirects, which is already enabled by the existing reponse modes.
+This specification also introduces a new response mode "direct_post" to enable sending Authorization Response containing Verifiable Presentations using the HTTP `POST` method when usage of redirects, enabled by the existing reponse modes, is impossible.
 
 Implementations can use any pre-existing OAuth grant type and response type in conjunction with this specifications to support those scenarios in the context of different deployment architectures.
 
@@ -319,9 +319,9 @@ Additionally, if the request contains more then a `presentation_definition` para
 scope value representing a presentation definition, the wallet MUST refuse to process the request and return an `invalid_request` error
 as defined in [@!RFC6749]. 
 
-# Cross Device Flow 
+# Cross-Device Flow 
 
-Cross Device flow needs to fulfill the following two requirements:
+Cross-Device flow needs to fulfill the following two requirements:
 
 1. The Verifier is able to pass an authorization request to a Wallet across devices. 
 2. The Wallet is able to pass the response back to the Verifier. 
@@ -346,7 +346,7 @@ The following is a non-normative example request object with Response Mode `dire
 ```json
 {
    "client_id": "https://client.example.org/post",
-   "redirect_uris": ["https://client.example.org/post"],
+   "redirect_uri": "https://client.example.org/post",
    "response_types": "vp_token",
    "response_mode": "direct_post"
    "presentation_definition": {...},
@@ -574,9 +574,9 @@ Current version of OpenID4VP does not support presentation of a VP nested inside
 
 One level of nesting `path_nested` objects is sufficient to describe a VC included inside a VP.
 
-## UI in the Cross Device Flow
+## UI in the Cross-Device Flow
 
-In the Cross Device Flow, the Wallet can change the UI based on the Verifier's response to the HTTP POST request.
+In the Cross-Device Flow, the Wallet can change the UI based on the Verifier's response to the HTTP POST request.
 
 # Security Considerations {#security_considerations}
 
@@ -1169,7 +1169,7 @@ The technology described in this specification was made available from contribut
 
    -12
 
-   * add cross device flow (using SIOP v2 text)
+   * add Cross-Device flow (using SIOP v2 text)
    * Added Client Metadata Section (based on SIOP v2 text)
 
    -11
