@@ -116,7 +116,7 @@ The specification supports all kinds of verifiable credentials, such as W3C Veri
 Verifiable Presentations are requested by adding a parameter `presentation_definition` to an OAuth 2.0 authorization request.
 This specification introduces a new token type, "VP Token", used as a generic container for verifiable presentation objects, that is returned in authorization and token responses.
 
-This specification also introduces a new response mode "post" to enable sending Authorization Response containing Verifiable Presentations across devices in a cross-device flow, in addition to using redirects in a same-device flow, which is already enabled by the existing reponse modes.
+This specification also introduces a new response mode "direct_post" to enable sending Authorization Response containing Verifiable Presentations using the HTTP `POST` method instead of using redirects, which is already enabled by the existing reponse modes.
 
 Implementations can use any pre-existing OAuth grant type and response type in conjunction with this specifications to support those scenarios in the context of different deployment architectures.
 
