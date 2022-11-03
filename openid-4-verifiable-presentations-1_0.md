@@ -362,7 +362,7 @@ https://wallet.example.com?
     &request_uri=https%3A%2F%2Fclient.example.org%2F567545564
 ```
 
-The respective HTTP POST response to the verifier would look like this:
+The respective HTTP POST response to the Verifier would look like this:
 
 ```
   POST /post HTTP/1.1
@@ -373,6 +373,9 @@ The respective HTTP POST response to the verifier would look like this:
     vp_token=...
 
 ```
+
+Note that in the Cross-Device Flow, the Wallet can change the UI based on the Verifier's response to the HTTP POST request.
+
 # Encoding of Presented Verifiable Presentations
 
 Presented credentials MUST be returned in the VP Token as defined in Section 6.7.3. of [@!OpenID.VCI], based on the format and the signature scheme of the credentials and presentations. This specification does not require any additional encoding when credential format is already represented as a JSON object or a JSON string.
@@ -573,10 +576,6 @@ This example will chose a VC that has been issued by a university that is a memb
 Current version of OpenID4VP does not support presentation of a VP nested inside another VP, even though [@!DIF.PresentationExchange] specification theoretically supports this by stating that the nesting of `path_nested` objects "may be any number of levels deep".
 
 One level of nesting `path_nested` objects is sufficient to describe a VC included inside a VP.
-
-## UI in the Cross-Device Flow
-
-In the Cross-Device Flow, the Wallet can change the UI based on the Verifier's response to the HTTP POST request.
 
 # Security Considerations {#security_considerations}
 
