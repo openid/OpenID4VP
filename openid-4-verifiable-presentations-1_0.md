@@ -338,6 +338,8 @@ direct_post
   
 HTTP POST request MUST be sent to the URL obtained from the `redirect_uri` parameter in the Authorization Request.
 
+Note that Response Mode "direct_post" could be less secure than redirect-based Response Mode. For details, see (#session-binding).
+
 The following is a non-normative example request object with Response Mode `direct_post`:
 
 ```json
@@ -575,6 +577,10 @@ Current version of OpenID4VP does not support presentation of a VP nested inside
 One level of nesting `path_nested` objects is sufficient to describe a VC included inside a VP.
 
 # Security Considerations {#security_considerations}
+
+## Sending VP Token using Response Mode "direct_post" {#session-binding}
+
+When HTTP "POST" method is used to send VP Token, there is no session for the Verifier to validate whether the Response is sent by the same Wallet that has received the Authorization Request. It is RECOMMENDED for the Verifiers to implement mechanisms to strengthen such binding.
 
 ## Preventing Replay Attacks {#preventing-replay}
 
