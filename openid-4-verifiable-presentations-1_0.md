@@ -440,7 +440,19 @@ vp_formats_supported": {
 
 ## Obtaining Authorization Server Metadata
 
-TBD
+Client utilizing this specification has multiple options to obtain AS's metadata:
+
+* Client obtains AS metadata prior to a transaction, e.g using [@!RFC-Discovery] or out-of-band mechanisms. See (#pre-registered-as) for the details.
+* Client provides metadata to the AS just-in-time in the Authorization Request using one of the following mechanisms defined in this specification:
+    * `client_id` equals `redirect_uri` See (#simplest-registration) for the details.
+    * OpenID Federation 1.0 Automatic Registration. See (#opeid-federation) for the details.
+    * Decentralized Identifiers. See (#DID) for the details.
+
+Just-in-time metadata exchange allows OpenID4VP to be used in deployments models where the AS does not or cannot support pre-registration of Client metadata.
+
+### Dynamic Discovery of AS Metadata {#pre-registered-as}
+
+tbd
 
 # Client Metadata
 
@@ -463,7 +475,7 @@ Here is an example for an RP sending its metadata with a presentation request (o
 
 ## Obtaining Client Metadata 
 
-Client and the AS utilizing this specification have multiple options to exchange metadata:
+AS utilizing this specification has multiple options to exchange metadata:
 
 * AS obtains Client metadata prior to a transaction, e.g using [@!RFC7591] or out-of-band mechanisms. See (#pre-registered-rp) for the details.
 * Client provides metadata to the AS just-in-time in the Authorization Request using one of the following mechanisms defined in this specification:
@@ -510,17 +522,7 @@ The Authorization Request MUST be signed. A public key to verify the signature M
 
 All RP metadata other than the public key MUST be obtained from the `client_metadata` parameter as defined in {#rp-registration-parameter}.
 
-#### Alternative Methods 
-
-When the request is signed, the mechanism depends on the syntax of `client_id` and the resolution method used. Resolution methods are defined in Section 9.2.2 og [@!SIOPv2]. 
-
-If `client_id` is a HTTPS URL, `client_id` is resolved to obtain all Client metadata from an Entity Statement as defined in [@!OpenID.Federation]. 
-
-If `client_id` is a Decentralized Identifier, the public key is obtained from a DID Doc as defined in [@!DID-Core] and the rest of the metadata is obtained from the `client_metadata` (or `client_metadata_uri`) parameter.
-
-Note: move sections on the metadata resolution here.
-
-#### `client_metadata` and `client_metadata_uri` Parameters {#client_metadata}
+### `client_metadata` and `client_metadata_uri` Parameters {#client_metadata}
 
 The Client may send one of the following parameters to convey metadata with unsigned authorization requests. 
 
