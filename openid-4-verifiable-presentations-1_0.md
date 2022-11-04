@@ -432,7 +432,15 @@ vp_formats_supported": {
 
 ### Obtaining Client Metadata 
 
-Client and the AS utilizing this specification can exchange metadata prior to a transaction, e.g using [@!RFC7591] or out-of-band mechanisms. However, OpenID for VP can be used in deployments models where the AS does not support those mechanisms. This specification therefore defines additional mechanisms where the Client can provide metadata to the AS just-in-time with the Authorization Request. 
+Client and the AS utilizing this specification have multiple options to exchange metadata:
+
+* AS obtains Client metadata prior to a transaction, e.g using [@!RFC7591] or out-of-band mechanisms. 
+* Client provides metadata to the AS just-in-time in the Authorization Request using one of the following mechanisms defined in this specification:
+    * `client_id` equals `redirect_uri`
+    * OpenID Federation 1.0 Automatic Registration
+    * Decentralized Identifiers
+
+Just-in-time metadata exchange allows OpenID4VP to be used in deployments models where the AS does not or cannot support pre-registration of Client metadata.
 
 #### Request Parameter
 
