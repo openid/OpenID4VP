@@ -446,7 +446,7 @@ TBD
 
 This specification introduces additional AS metadata to enable Client and AS to determine credential formats, proof types and algorithms to be used in a protocol exchange.
 
-### Additional Client Metadata Parameters {#client_metadata_parameters}
+## Additional Client Metadata Parameters {#client_metadata_parameters}
 
 This specification defines the following new client metadata parameters according to [@!RFC7591]:
 
@@ -461,25 +461,31 @@ Here is an example for an RP sending its metadata with a presentation request (o
 
 <{{examples/client_metadata/client_ondemand_format.json}}
 
-### Obtaining Client Metadata 
+## Obtaining Client Metadata 
 
 Client and the AS utilizing this specification have multiple options to exchange metadata:
 
 * AS obtains Client metadata prior to a transaction, e.g using [@!RFC7591] or out-of-band mechanisms. See (#pre-registered-rp) for the details.
 * Client provides metadata to the AS just-in-time in the Authorization Request using one of the following mechanisms defined in this specification:
-    * `client_id` equals `redirect_uri` See (#DID) for the details. (#simplest-registration)
+    * `client_id` equals `redirect_uri` See (#simplest-registration) for the details.
     * OpenID Federation 1.0 Automatic Registration. See (#opeid-federation) for the details.
     * Decentralized Identifiers. See (#DID) for the details.
 
 Just-in-time metadata exchange allows OpenID4VP to be used in deployments models where the AS does not or cannot support pre-registration of Client metadata.
 
-#### Pre-Registered Relying Party {#pre-registered-rp}
+### Pre-Registered Relying Party {#pre-registered-rp}
 
 When the Wallet has obtained Client metadata prior to a transaction, e.g using [@!RFC7591] or out-of-band mechanisms, `client_id` MUST equal to the client identifier the RP has obtained from the Wallet during pre-registration. When the Authorization Request is signed, the public key for signature verification MUST be obtained during the pre-registration process.
 
 In this case, `client_metadata` and `client_metadata_uri` parameters defined in (#rp-registration-parameter) MUST NOT be present in the Authorization Request. 
 
-### `client_id` equals `redirect_uri` {#simplest-registration}
+### Non-Pre-Registered Relying Party {#non-pre-registered-rp} 
+
+When the RP has not pre-registered, it may pass its metadata to the AS in the Authorization Request.
+
+No registration response is returned. A successful Authorization Response implicitly indicates that the client metadata parameters were accepted.
+
+#### `client_id` equals `redirect_uri` {#simplest-registration}
 
 In the simplest option, the Client can proceed without registration as if it had registered with the Wallet and obtained the following Client Registration Response:
 
@@ -488,7 +494,7 @@ In the simplest option, the Client can proceed without registration as if it had
 
 In this case, the Authorization Request cannot be signed and all client metadata parameters MUST be passed using client metadata parameter defined in (#client_metadata).
 
-### OpenID Federation 1.0 Automatic Registration {#opeid-federation}
+#### OpenID Federation 1.0 Automatic Registration {#opeid-federation}
 
 When Relying Party's `client_id` is expressed as an `https` URI, Automatic Registration defined in [@!OpenID.Federation] MUST be used. The Relying Party's Entity Identifier defined in Section 1.2 of [@!OpenID.Federation] MUST be `client_id`. 
 
@@ -496,7 +502,7 @@ The Authorization Request MUST be signed. The AS MUST obtain the public key from
 
 Note that to use Automatic Registration, clients would be required to have an individual identifier and an associated public key(s), which is not always the case for the public/native app clients.
 
-### Decentralized Identifiers {#DID}
+#### Decentralized Identifiers {#DID}
 
 The `client_id` MAY be expressed as a Decentralized Identifier as defined in [@!DID-Core].
 
