@@ -386,6 +386,16 @@ Credential formats expressed as binary formats MUST be Base64url encoded and ret
 
 Additional Credential Format Profiles may exist outside of Appendix E of [@!OpenID.VCI].
 
+# Wallet Invocation {#wallet-invocation}
+
+Verifier has the choice of the following mechanisms to invoke a Wallet:
+
+- Custom URL scheme as an `authorization_endpoint` (for example, `openid4vp://` as defined in (#openid4vp-profile))
+- Domain-bound Universal Links/App link as an `authorization_endpoint`
+- no specific `authorization_endpoint`, user scanning a QR code with Authorization Request using a manually opened Wallet, instead of an arbitrary camera application on a user-device
+
+Note that alternatives to the above approaches are being actively discussed in other industry and standards organizations.
+
 # Metadata {#metadata}
 
 This specification introduces additional metadata to enable Client and AS to determine the verifiable presentation and verifiable credential formats, proof types and algorithms to be used in a protocol exchange.
@@ -514,7 +524,7 @@ Below is a list of profiles that define static configuration values of Authoriza
 
 - [JWT VC Presentation Profile](https://identity.foundation/jwt-vc-presentation-profile/)
 
-### A Set of Static Configuration Values bound to `openid4vp://`
+### A Set of Static Configuration Values bound to `openid4vp://` {#openid4vp-profile}
 
 Below is a set of static configuration values that can be used with `vp_token` as a supported `response_type`, bound to a custom URL scheme `openid4vp://` as an `authorization_endpoint`:
 
