@@ -120,7 +120,19 @@ OpenID for Verifiable Presentations supports scenarios where Authorization Reque
 
 Deployments can use any pre-existing OAuth grant type and response type in conjunction with this specifications to support those scenarios in the context of different deployment architectures. This specification also introduces a new OAuth response mode to support cross device scenarios initiated by the verifier (see {#response_mode_post}). 
 
-# Request {#vp_token_request}
+# Scope
+
+## In Scope
+
+TBD
+
+## Out of Scope
+
+### Issuance of Verifiable Credentials
+
+  The mechanism to acquire Credentials which can be presented is out of scope of this document. One mechanism to issue credentials is being defined within the [@!OpenID.VCI] specification.
+
+# Authorization Request {#vp_token_request}
 
 The parameters comprising a request for verifiable presentations are given in the following: 
 
@@ -143,9 +155,9 @@ This is an example request:
     &nonce=n-0S6_WzA2Mj HTTP/1.1
 ```
 
-## presentation_definition {#request_presentation_definition}
+## `presentation_definition` Parameter{#request_presentation_definition}
 
-This parameter contains a JSON object conforming to the syntax defined for `presentation_definition` elements in Section 4 of [@!DIF.PresentationExchange].
+This parameter contains a JSON object conforming to the syntax defined for `presentation_definition` parameters in Section 4 of [@!DIF.PresentationExchange].
 
 The following shows an example `presentation_definition` parameter:
 
@@ -165,7 +177,7 @@ The VC and VP formats supported by an AS should be published in its metadata (se
 
 Note that when the Client is requesting presentation of a VP containing a VC, Client MUST indicate in the `vp_formats` parameter, supported formats of both VC and VP.
 
-## presentation_definition\_uri {#request_presentation_definition_uri}
+## `presentation_definition\_uri` Parameter {#request_presentation_definition_uri}
 
 `presentation_definition_uri` is used to the retrieve the `presentation_definition` from the resource at the specified URL, rather than being passed by value. The AS will send a GET request without additional parameters. The resource MUST be exposed without further need to authenticate or authorize. 
 
@@ -214,7 +226,7 @@ Content-Type: application/json
     ]
 }
 ```
-## scope {#request_scope}
+## Using Scope Parameter to Request Verifiable Credential(s) {#request_scope}
 
 Wallets MAY support requesting presentation of credentials using OAuth 2.0 scope values. 
 
@@ -270,13 +282,13 @@ Whether VP Token is provided to the Client in the Authorization Response or Toke
 
 The VP Token MUST either contain a single verifiable presentation or an array of Verifiable Presentations which MUST be represented as a JSON string or an object depending on a format as defined in Section 9.3 of [@!OpenID.VCI].
 
-## `presentation_submission` Element
+## `presentation_submission` Parameter
 
-The `presentation_submission` element as defined in [@!DIF.PresentationExchange] links the input descriptor identifiers as specified in the corresponding request to the respective verifiable presentations within the VP Token along with format information. The root of the path expressions in the descriptor map is the respective verifiable presentation, pointing to the respective verifiable credentials.
+The `presentation_submission` parameter as defined in [@!DIF.PresentationExchange] links the input descriptor identifiers as specified in the corresponding request to the respective verifiable presentations within the VP Token along with format information. The root of the path expressions in the descriptor map is the respective verifiable presentation, pointing to the respective verifiable credentials.
 
-This `presentation_submission` element MUST be included as a separate response parameter alongside the vp_token. Clients MUST ignore any `presentation_submission` element included inside a VP.
+This `presentation_submission` parameter MUST be included as a separate response parameter alongside the vp_token. Clients MUST ignore any `presentation_submission` parameter included inside a VP.
 
-Including the `presentation_submission` element as a separate response parameter allows the AS to provide the RP with additional information about the format and structure in advance of the processing of the VP Token, and can be used even with the credential formats that do not allow for the direct inclusion of `presentation_submission` elements inside a credential itself.
+Including the `presentation_submission` parameter as a separate response parameter allows the AS to provide the RP with additional information about the format and structure in advance of the processing of the VP Token, and can be used even with the credential formats that do not allow for the direct inclusion of `presentation_submission` parameters inside a credential itself.
 
 In case the AS returns a single verifiable presentation in the VP Token, the `descriptor_map` would then contain a simple path expression "$".
 
@@ -297,7 +309,7 @@ with a matching `presentation_submission`.
 
 <{{examples/response/presentation_submission.json}}
 
-A `descriptor_map` element MUST  contain a `path_nested` element referring to the actual credential carried in the respective verifiable presentation. 
+A `descriptor_map` parameter MUST  contain a `path_nested` parameter referring to the actual credential carried in the respective verifiable presentation. 
 
 This is an example of a VP Token containing multiple verifiable presentations,   
 
@@ -368,11 +380,11 @@ The respective HTTP POST response to the verifier would look like this:
 ```
 ## Encoding of Presented Verifiable Presentations
 
-Presented credentials MUST be returned in the VP Token as defined in Section 6.7.3. of [@!OpenID.VCI], based on the format and the signature scheme of the credentials and presentations. This specification does not require any additional encoding when credential format is already represented as a JSON object or a JSON string.
+Presented credentials MUST be returned in the VP Token as defined in Credential Format Profiles in Appendix E of [@!OpenID.VCI], based on the format and the signature scheme of the credentials and presentations. This specification does not require any additional encoding when credential format is already represented as a JSON object or a JSON string.
 
 Credential formats expressed as binary formats MUST be Base64url encoded and returned as a JSON string.
 
-Table in Section 6.7.3. of [@!OpenID.VCI] might be superceded by a registry in the future.
+Additional Credential Format Profiles may exist outside of Appendix E of [@!OpenID.VCI].
 
 # Metadata {#metadata}
 
@@ -897,7 +909,7 @@ The requirements regarding the credential to be presented are conveyed in the `p
 
 <{{examples/request/pd_jwt_vc.json}}
 
-It contains a single `input_descriptor`, which sets the desired format to JWT VC and defines a constraint over the `vc.type` element to select credentials of type `IDCredential`. 
+It contains a single `input_descriptor`, which sets the desired format to JWT VC and defines a constraint over the `vc.type` parameter to select credentials of type `IDCredential`. 
 
 ### Presentation Response
 
@@ -931,7 +943,7 @@ The requirements regarding the credential to be presented are conveyed in the `p
 
 <{{examples/request/pd_ldp_vc.json}}
 
-It contains a single `input_descriptor`, which sets the desired format to LDP VC and defines a constraint over the `type` element to select credentials of type `IDCardCredential`. 
+It contains a single `input_descriptor`, which sets the desired format to LDP VC and defines a constraint over the `type` parameter to select credentials of type `IDCardCredential`. 
 
 ### Presentation Response
 
@@ -965,7 +977,7 @@ The following is an example AnonCred credential that will be used through this s
 
 <{{examples/credentials/ac_vc.json}}
 
-The most important parts for the purpose of this example are `scheme_id` element and `values` element that contains the actual End-user claims. 
+The most important parts for the purpose of this example are `scheme_id` parameter and `values` parameter that contains the actual End-user claims. 
 
 ### Presentation Request 
 
@@ -981,7 +993,7 @@ The following is the content of the `presentation_definition` parameter.
 
 The `format` object of the `input_descriptor` uses the format identifier `ac_vc` as defined above and sets the `proof_type` to `CLSignature2019` to denote this descriptor requires a credential in AnonCreds format signed with a CL signature (Camenisch-Lysyanskaya siganture). The rest of the expressions operate on the AnonCreds JSON structure.
 
-The `constraints` object requires the selected credential to conform with the schema definition `did:indy:idu:test:3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0\\.1`, which is denoted as a constraint over the AnonCred's `schema_id` element. 
+The `constraints` object requires the selected credential to conform with the schema definition `did:indy:idu:test:3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0\\.1`, which is denoted as a constraint over the AnonCred's `schema_id` parameter. 
 
 #### Request Example with Selective Release of Claims
 
@@ -1030,13 +1042,13 @@ The content of the `presentation_definition` parameter is as follows:
 
 <{{examples/request/pd_mdl_iso_cbor.json}}
 
-To start with, the `format` element of the `input_descriptor` is set to `mdl_iso_cbor`, i.e. it requests presentation of a mDL in CBOR format. 
+To start with, the `format` parameter of the `input_descriptor` is set to `mdl_iso_cbor`, i.e. it requests presentation of a mDL in CBOR format. 
 
 To request user claims in ISO/IEC 18013-5:2021 mDL, a `doctype` and `namespace` of the claim needs to be specified. Moreover, the verifiers needs to indicate whether it intends to retain obtained user claims or not, using `intent_to_retain` property.
 
 Note: `intent_to_retain` is a property introduced in this example to meet requirements of [@ISO.18013-5].
 
-Setting `limit_disclosure` property defined in [@!DIF.PresentationExchange] to `required` enables selective release by instructing the wallet to submit only the data elements specified in the fields array. Selective release of claims is a requirement built into an ISO/IEC 18013-5:2021 mDL data model.
+Setting `limit_disclosure` property defined in [@!DIF.PresentationExchange] to `required` enables selective release by instructing the wallet to submit only the data parameters specified in the fields array. Selective release of claims is a requirement built into an ISO/IEC 18013-5:2021 mDL data model.
 
 ### Presentation Response
 
@@ -1050,7 +1062,7 @@ The following shows the `presentation_submission` content:
 
 The `descriptor_map` refers to the input descriptor `mDL` and tells the verifier that there is an ISO/IEC 18013-5:2021 mDL (`format` is `mdl_iso_cbor`) in CBOR encoding directly in the `vp_token` (path is the root designated by `$`). 
 
-When ISO/IEC 18013-5:2021 mDL is expressed in CBOR the `nested_path` element cannot be used to point to the location of the requested claims. The user claims will always be included in the `issuerSigned` item. `nested_path` parameter can be used, however, when a JSON-encoded ISO/IEC 18013-5:2021 mDL is returned.
+When ISO/IEC 18013-5:2021 mDL is expressed in CBOR the `nested_path` parameter cannot be used to point to the location of the requested claims. The user claims will always be included in the `issuerSigned` item. `nested_path` parameter can be used, however, when a JSON-encoded ISO/IEC 18013-5:2021 mDL is returned.
 
 The following is a non-normative example of an ISO/IEC 18013-5:2021 mDL encoded as CBOR in diagnostic notation (line wraps within values are for display purposes only) as conveyed in the `vp_token`parameter.
 
@@ -1193,7 +1205,7 @@ The technology described in this specification was made available from contribut
 
    -05
 
-   * moved presentation submission elements outside of verifiable presentations (ID Token or UserInfo)
+   * moved presentation submission parameters outside of verifiable presentations (ID Token or UserInfo)
 
    -04
 
@@ -1208,7 +1220,7 @@ The technology described in this specification was made available from contribut
 
    -02
 
-   * added `presentation_definition` as sub element of `verifiable_presentation` and VP Token
+   * added `presentation_definition` as sub parameter of `verifiable_presentation` and VP Token
 
    -01
 
