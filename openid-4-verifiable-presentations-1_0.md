@@ -321,13 +321,23 @@ with a matching `presentation_submission` parameter.
 
 ## Error Response
 
-The error response follows the rules as defined in [@!RFC6749]. 
+The error response MUST be made as defined in [@!RFC6749] and [@!RFC7591]. 
 
 When the requested scope value is invalid, unknown, or malformed, the AS should respond with the error code `invalid_scope` defined in Section 4.1.2.1 of [@!RFC6749].
 
-Additionally, if the request contains more then a `presentation_definition` parameter or a `presentation_definition_uri` parameter or a 
+If the request contains more then a `presentation_definition` parameter or a `presentation_definition_uri` parameter or a 
 scope value representing a presentation definition, the wallet MUST refuse to process the request and return an `invalid_request` error
 as defined in [@!RFC6749]. 
+
+This document defines the following additional error codes and error descriptions:
+
+`vp_formats_not_supported`: The AS does not support any of the formats supported by the RP such as those included in the `vp_formats` registration parameter.
+
+Moreover, when `client_metadata` or `client_metadata_uri` parameters defined in (#client_metadata) are present, but the AS recognizes `client_id` and knows metadata associated with it, it MUST return an error. 
+
+ASs compliant to this specification MUST NOT proceed with the transaction when pre-registered client metadata has been found based on the `client_id`, but `client_metadata` parameter has also been present.
+
+Usage of `client_metadata` or `client_metadata_uri` parameters with `client_id` that the AS might be seeing for the first time is mutualy exclusive with the registration mechanism where Self-Issued OP assigns `client_id` to the RP after receiving RP's metadata.
 
 # Verifier-initiated Cross Device Flow 
 
@@ -402,6 +412,8 @@ This specification introduces additional metadata to enable Client and AS to det
 
 ## Authorization Server Metadata {#as_metadata_parameters}
 
+### Additional Authorization Server Metadata parameters
+
 This specification defines new server metadata parameters according to [@!RFC8414].
 
 The AS publishes the formats it supports using the `vp_formats_supported` metadata parameter. 
@@ -428,7 +440,26 @@ vp_formats_supported": {
 }
 ```
 
+### Obtaining Authorization Server Metadata
+
+TBD
+
 ## Client Metadata
+
+### Additional Client Metadata Parameters {#client_metadata_parameters}
+
+This specification defines the following new client metadata parameters according to [@!RFC7591]:
+
+* `vp_formats`: REQUIRED. An object defining the formats and proof types of verifiable presentations and verifiable credentials that a RP supports. Valid format identifier values are defined in the table in Section 9.3. of [@!OpenID.VCI] and include `jwt_vc`, `ldp_vc`, `jwt_jp` and `ldp_vp`. Formats identifiers not in the table may be supported when defined in the profiles of this specification.
+* `presentation_definition_uri`: OPTIONAL. Boolean value specifying whether the RP supports the transfer of `presentation_definition` by reference, with true indicating support. If omitted, the default value is true. 
+
+Here is an example for an RP registering with a Standard OP via dynamic client registration:
+
+<{{examples/client_metadata/client_code_format.json}}
+
+Here is an example for an RP sending its metadata with a presentation request (object) in the `client_metadata` request parameter:
+
+<{{examples/client_metadata/client_ondemand_format.json}}
 
 ### Obtaining Client Metadata 
 
@@ -442,7 +473,17 @@ Client and the AS utilizing this specification have multiple options to exchange
 
 Just-in-time metadata exchange allows OpenID4VP to be used in deployments models where the AS does not or cannot support pre-registration of Client metadata.
 
-#### Request Parameter
+#### Alternative Methods 
+
+When the request is signed, the mechanism depends on the syntax of `client_id` and the resolution method used. Resolution methods are defined in Section 9.2.2 og [@!SIOPv2]. 
+
+If `client_id` is a HTTPS URL, `client_id` is resolved to obtain all Client metadata from an Entity Statement as defined in [@!OpenID.Federation]. 
+
+If `client_id` is a Decentralized Identifier, the public key is obtained from a DID Doc as defined in [@!DID-Core] and the rest of the metadata is obtained from the `client_metadata` (or `client_metadata_uri`) parameter.
+
+Note: move sections on the metadata resolution here.
+
+#### `client_metadata` and `client_metadata_uri` Parameters {#client_metadata}
 
 The Client may send one of the following parameters to convey metadata with unsigned authorization requests. 
 
@@ -471,54 +512,6 @@ The following is a non-normative example of a request.
     _vp%22:%7B%22proof_type%22:%5B%22Ed25519Signature201
     8%22%5D%7D%7D%7D
 ```
-
-#### Alternative Methods 
-
-When the request is signed, the mechanism depends on the syntax of `client_id` and the resolution method used. Resolution methods are defined in Section 9.2.2 og [@!SIOPv2]. 
-
-If `client_id` is a HTTPS URL, `client_id` is resolved to obtain all Client metadata from an Entity Statement as defined in [@!OpenID.Federation]. 
-
-If `client_id` is a Decentralized Identifier, the public key is obtained from a DID Doc as defined in [@!DID-Core] and the rest of the metadata is obtained from the `client_metadata` (or `client_metadata_uri`) parameter.
-
-Note: move sections on the metadata resolution here.
-
-### Client Metadata Error Response
-
-Error response MUST be made as defined in [@!RFC7591].
-
-This extension defines the following additional error codes and error descriptions:
-
-`vp_formats_not_supported`: The OP does not support any of the formats supported by the RP such as those included in the `vp_formats` registration parameter.
-
-Moreover, when `client_metadata` or `client_metadata_uri` parameters are present, but the AS recognizes `client_id` and knows metadata associated with it, it MUST return an error. 
-
-ASs compliant to this specification MUST NOT proceed with the transaction when pre-registered client metadata has been found based on the `client_id`, but `client_metadata` parameter has also been present.
-
-Usage of `client_metadata` or `client_metadata_uri` parameters with `client_id` that the AS might be seeing for the first time is mutualy exclusive with the registration mechanism where Self-Issued OP assigns `client_id` to the RP after receiving RP's metadata.
-
-### Client Metadata Parameters {#client_metadata_parameters}
-
-This specification defines new client metadata parameters according to [@!RFC7591].
-
-#### vp_formats
-
-RPs indicate the supported formats using the new parameter `vp_formats`.
-
-* `vp_formats`: REQUIRED. An object defining the formats and proof types of verifiable presentations and verifiable credentials that a RP supports. Valid format identifier values are defined in the table in Section 9.3. of [@!OpenID.VCI] and include `jwt_vc`, `ldp_vc`, `jwt_jp` and `ldp_vp`. Formats identifiers not in the table may be supported when defined in the profiles of this specification.
-
-Here is an example for an RP registering with a Standard OP via dynamic client registration:
-
-<{{examples/client_metadata/client_code_format.json}}
-
-Here is an example for an RP sending its metadata with a presentation request (object) in the `client_metadata` request parameter:
-
-<{{examples/client_metadata/client_ondemand_format.json}}
-
-#### Presentation Definition Transfer
-
-RPs indicate their support for transferring presentation definitions by value and/or by reference, by using the following parameters:
-
-* `presentation_definition_uri`: OPTIONAL. Boolean value specifying whether the RP supports the transfer of `presentation_definition` by reference, with true indicating support. If omitted, the default value is true. 
 
 # Implementation Considerations
 
