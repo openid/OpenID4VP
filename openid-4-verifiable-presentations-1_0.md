@@ -406,13 +406,11 @@ Verifier has the choice of the following mechanisms to invoke a Wallet:
 
 Note that alternatives to the above approaches are being actively discussed in other industry and standards organizations.
 
-# Metadata {#metadata}
+# Authorization Server Metadata {#as_metadata_parameters}
 
-This specification introduces additional metadata to enable Client and AS to determine the verifiable presentation and verifiable credential formats, proof types and algorithms to be used in a protocol exchange.
+This specification introduces additional AS metadata to enable Client and AS to determine credential formats, proof types and algorithms to be used in a protocol exchange.
 
-## Authorization Server Metadata {#as_metadata_parameters}
-
-### Additional Authorization Server Metadata parameters
+## Additional Authorization Server Metadata parameters
 
 This specification defines new server metadata parameters according to [@!RFC8414].
 
@@ -440,11 +438,13 @@ vp_formats_supported": {
 }
 ```
 
-### Obtaining Authorization Server Metadata
+## Obtaining Authorization Server Metadata
 
 TBD
 
-## Client Metadata
+# Client Metadata
+
+This specification introduces additional AS metadata to enable Client and AS to determine credential formats, proof types and algorithms to be used in a protocol exchange.
 
 ### Additional Client Metadata Parameters {#client_metadata_parameters}
 
@@ -465,13 +465,44 @@ Here is an example for an RP sending its metadata with a presentation request (o
 
 Client and the AS utilizing this specification have multiple options to exchange metadata:
 
-* AS obtains Client metadata prior to a transaction, e.g using [@!RFC7591] or out-of-band mechanisms. 
+* AS obtains Client metadata prior to a transaction, e.g using [@!RFC7591] or out-of-band mechanisms. See (#pre-registered-rp) for the details.
 * Client provides metadata to the AS just-in-time in the Authorization Request using one of the following mechanisms defined in this specification:
-    * `client_id` equals `redirect_uri`
-    * OpenID Federation 1.0 Automatic Registration
-    * Decentralized Identifiers
+    * `client_id` equals `redirect_uri` See (#DID) for the details. (#simplest-registration)
+    * OpenID Federation 1.0 Automatic Registration. See (#opeid-federation) for the details.
+    * Decentralized Identifiers. See (#DID) for the details.
 
 Just-in-time metadata exchange allows OpenID4VP to be used in deployments models where the AS does not or cannot support pre-registration of Client metadata.
+
+#### Pre-Registered Relying Party {#pre-registered-rp}
+
+When the Wallet has obtained Client metadata prior to a transaction, e.g using [@!RFC7591] or out-of-band mechanisms, `client_id` MUST equal to the client identifier the RP has obtained from the Wallet during pre-registration. When the Authorization Request is signed, the public key for signature verification MUST be obtained during the pre-registration process.
+
+In this case, `client_metadata` and `client_metadata_uri` parameters defined in (#rp-registration-parameter) MUST NOT be present in the Authorization Request. 
+
+### `client_id` equals `redirect_uri` {#simplest-registration}
+
+In the simplest option, the Client can proceed without registration as if it had registered with the Wallet and obtained the following Client Registration Response:
+
+* `client_id`
+  * `redirect_uri` value of the RP.
+
+In this case, the Authorization Request cannot be signed and all client metadata parameters MUST be passed using client metadata parameter defined in (#client_metadata).
+
+### OpenID Federation 1.0 Automatic Registration {#opeid-federation}
+
+When Relying Party's `client_id` is expressed as an `https` URI, Automatic Registration defined in [@!OpenID.Federation] MUST be used. The Relying Party's Entity Identifier defined in Section 1.2 of [@!OpenID.Federation] MUST be `client_id`. 
+
+The Authorization Request MUST be signed. The AS MUST obtain the public key from the `jwks` property in the Relying Party's Entity Statement defined in Section 3.1 of [@!OpenID.Federation]. Metadata other than the public keys MUST also be obtained from the Entity Statement.
+
+Note that to use Automatic Registration, clients would be required to have an individual identifier and an associated public key(s), which is not always the case for the public/native app clients.
+
+### Decentralized Identifiers {#DID}
+
+The `client_id` MAY be expressed as a Decentralized Identifier as defined in [@!DID-Core].
+
+The Authorization Request MUST be signed. A public key to verify the signature MUST be obtained from the `verificationMethod` property of a DID Document. Since DID Document may include multiple public keys, a particular public key used to sign the request in question MUST be identified by the `kid` in the header. To obtain the DID Document, AS MUST use DID Resolution defined by the DID method must be used by the RP.
+
+All RP metadata other than the public key MUST be obtained from the `client_metadata` parameter as defined in {#rp-registration-parameter}.
 
 #### Alternative Methods 
 
