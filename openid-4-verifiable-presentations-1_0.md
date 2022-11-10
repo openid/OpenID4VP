@@ -93,9 +93,6 @@ Holder
 Verifier
   An entity that requests, checks and extracts the claims from Verifiable Presentations.
 
-End-User
-  Human participant, 
-
 Issuer-Holder-Verifier Model
   An ecosystem where issuance of a Verifiable Credential to the Holder happens  independently from it being presented as a Verifiable Presentation to the Verifier. Issued Credential can (but not necessarily) be used multiple times.
 
