@@ -74,7 +74,7 @@ Note that the definition of a term "credential" in this specification is differe
 Verifiable Credential (VC)
   A tamper-evident credential that has authorship of the Issuer that can be cryptographically verified. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] and [@Hyperledger.Indy] (AnonCreds).
 
-Note that Verifiable Credentials compliant to the [@VC_DATA] specification will be referred to as W3C Verifiable Credentials.
+Note that Verifiable Credentials compliant to the [@VC_DATA] specification are referred to in this specification as W3C Verifiable Credentials.
 
 Presentation
   Data derived from one or more Verifiable Credentials that can be from the same or different issuers that is shared with a specific verifier.
