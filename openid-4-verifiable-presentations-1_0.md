@@ -93,6 +93,9 @@ Holder
 Verifier
   An entity that requests, checks and extracts the claims from Verifiable Presentations.
 
+End-User
+  Human participant, 
+
 Issuer-Holder-Verifier Model
   An ecosystem where issuance of a Verifiable Credential to the Holder happens  independently from it being presented as a Verifiable Presentation to the Verifier. Issued Credential can (but not necessarily) be used multiple times.
 
@@ -103,7 +106,7 @@ Base64url Encoding
   Base64 encoding using the URL- and filename-safe character set defined in Section 5 of [@!RFC4648], with all trailing '=' characters omitted (as permitted by Section 3.2 of [@!RFC4648]) and without the inclusion of any line breaks, whitespace, or other additional characters. Note that the base64url encoding of the empty octet sequence is the empty string. (See Appendix C of [@!RFC7515] for notes on implementing base64url encoding without padding.)
 
 Wallet
-  Entity that receives, stores, presents, and manages Verifiable Credentials and key material of the End-User. There is no single deployment model of a Wallet: Verifiable Credentials and keys can both be stored/managed locally by the end-user, or by using a remote self-hosted service, or a remote third party service. In the context of this specification, the Wallet acts as an OAuth 2.0 Authorization Server (see [@!RFC6749]) towards the Credential Verifier which acts as the OAuth 2.0 Client. 
+  Entity used by the Holder to receive, store, present, and manage Verifiable Credentials and key material. There is no single deployment model of a Wallet: Verifiable Credentials and keys can both be stored/managed locally, or by using a remote self-hosted service, or a remote third party service. In the context of this specification, the Wallet acts as an OAuth 2.0 Authorization Server (see [@!RFC6749]) towards the Credential Verifier which acts as the OAuth 2.0 Client. 
 
 # Use Cases
 
