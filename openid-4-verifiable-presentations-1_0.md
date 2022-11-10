@@ -60,9 +60,9 @@ This specification defines a mechanism on top of OAuth 2.0 to allow presentation
 
 # Introduction
 
-This specification defines a mechanism on top of OAuth 2.0 [@!RFC6749] that enables presentation of Verifiable Credentials as Verifiable Presentations in the Issuer-Holder-Verifier Model. Credentials of any Credential format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] and [@Hyperledger.Indy] (AnonCreds) are supported. This allowss existing OpenID Connect Relying Parties to extend their reach towards claim sources asserting claims in new formats. New applications built using Verifiable Credentials are also enabled to utilize OAuth 2.0 and/or OpenID Connect as integration and interoperability layer towards Holders.
+This specification defines a mechanism on top of OAuth 2.0 [@!RFC6749] that enables presentation of Verifiable Credentials as Verifiable Presentations in the Issuer-Holder-Verifier Model. Credentials of any Credential format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] and [@Hyperledger.Indy] (AnonCreds) are supported. This allows existing OpenID Connect Relying Parties to extend their reach towards claim sources asserting claims in new formats. New applications built using Verifiable Credentials are also enabled to utilize OAuth 2.0 and/or OpenID Connect as integration and interoperability layer towards Holders.
 
-OAuth 2.0 [@!RFC6749] is used as a base protocol, because this specification is focused on enabling exchange of Verifiable Presentations alone, without issuance of an ID Token. This keeps this specification simple, whilst also enabling more complex use cases. OpenID Conect deployments can also extend their implementations using this specification with the ability to transport Verifiable Presentations, since OpenID Connect is built on top of OAuth 2.0. Implementers that require [@!OpenID.Core] features, such as the issuance of subject-signed ID tokens can combine this specification with [@!SIOPv2].
+OAuth 2.0 [@!RFC6749] is used as a base protocol as it provides the required protocol rails and security to build credential presentation on top of it. Moreover, implementers can, in a single interface, support credential presentation and the issuance of access tokens for access to APIs based on verifiable credentials in the wallet. OpenID Conect deployments can also extend their implementations using this specification with the ability to transport Verifiable Presentations, since OpenID Connect is built on top of OAuth 2.0. Implementers that require [@!OpenID.Core] features, such as the issuance of subject-signed ID tokens can combine this specification with [@!SIOPv2].
 
 # Terminology
 
@@ -80,9 +80,9 @@ Presentation
   Data derived from one or more verifiable credentials that can be from the same or different issuers that is shared with a specific verifier.
 
 Verifiable Presentation (VP)
-  A tamper-evident presentation that has authorship of the Holder that can be cryptographically verified. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] and [@Hyperledger.Indy] (AnonCreds).
+  A tamper-evident presentation that has authorship of the Holder that can be cryptographically verified to provide Cryptographic Holder Binding. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] and [@Hyperledger.Indy] (AnonCreds).
 
-Note that Verifiable Presentations compliant to the [@VC_DATA] specification will be referred to as W3C Verifiable Presentations.
+Note that Verifiable Presentations compliant to the [@VC_DATA] specification are referred to in this specification as W3C Verifiable Presentations.
 
 Issuer
   An entity that creates Verifiable Credentials.
@@ -95,6 +95,9 @@ Verifier
 
 Issuer-Holder-Verifier Model
   An ecosystem where issuance of a Verifiable Credential to the Holder happens asynchronously from it being presented as a Verifiable Presentation to the Verifier. Issued Credential can (but not necessarily) be used multiple times.
+
+Cryptographic Holder Binding
+  Ability of the Holder to prove legitimate possession of a Verifiable Credential by proving control over the same private key during the issuance and presentation. Mechanism might depend on the Crednetial Format. For example, in `jwt_vc_json` Credential Format, a VC with Cryptographic Holder Binding contains a public key or a reference to a public key that matches to the private key controlled by the Holder. Claim-based or biometrics-based holder binding is also possible.
 
 Base64url Encoding
   Base64 encoding using the URL- and filename-safe character set defined in Section 5 of [@!RFC4648], with all trailing '=' characters omitted (as permitted by Section 3.2 of [@!RFC4648]) and without the inclusion of any line breaks, whitespace, or other additional characters. Note that the base64url encoding of the empty octet sequence is the empty string. (See Appendix C of [@!RFC7515] for notes on implementing base64url encoding without padding.)
