@@ -126,13 +126,11 @@ Note that the Wallet that acted as an OAuth 2.0 Client to the Authorization Serv
 
 ## In Scope
 
-TBD
+This document is currently scoped for the presentation of the claims in the form of Verifiable Credentials between the Holder and the Verifier.
 
 ## Out of Scope
 
-### Issuance of Verifiable Credentials
-
-  The mechanism to acquire Credentials which can be presented is out of scope of this document. One mechanism to issue credentials is being defined within the [@!OpenID.VCI] specification.
+Issuance of Verifiable Credentials. The mechanism to acquire Credentials which can be presented is out of scope of this document. One mechanism to issue credentials is being defined within the [@!OpenID.VCI] specification.
 
 # Authorization Request {#vp_token_request}
 
@@ -228,7 +226,7 @@ Content-Type: application/json
     ]
 }
 ```
-## Using Scope Parameter to Request Verifiable Credential(s) {#request_scope}
+## Using `scope` Parameter to Request Verifiable Credential(s) {#request_scope}
 
 Wallets MAY support requesting presentation of credentials using OAuth 2.0 scope values. 
 
@@ -329,7 +327,7 @@ with a matching `presentation_submission` parameter.
 
 ## Error Response
 
-The error response MUST be made as defined in [@!RFC6749] and [@!RFC7591]. 
+The error response uses the syntax as defined in [@!RFC6749] and [@!RFC7591]. 
 
 When the requested scope value is invalid, unknown, or malformed, the AS should respond with the error code `invalid_scope` defined in Section 4.1.2.1 of [@!RFC6749].
 
@@ -343,7 +341,7 @@ This document defines the following additional error codes and error description
 
 Moreover, when `client_metadata` or `client_metadata_uri` parameters defined in (#client_metadata) are present, but the AS recognizes `client_id` and knows metadata associated with it, it MUST return an error. 
 
-ASs compliant to this specification MUST NOT proceed with the transaction when pre-registered client metadata has been found based on the `client_id`, but `client_metadata` parameter has also been present.
+ASs compliant with this specification MUST NOT proceed with the transaction when pre-registered client metadata has been found based on the `client_id`, but `client_metadata` parameter is also present.
 
 Usage of `client_metadata` or `client_metadata_uri` parameters with `client_id` that the AS might be seeing for the first time is mutualy exclusive with the registration mechanism where Self-Issued OP assigns `client_id` to the RP after receiving RP's metadata.
 
@@ -407,7 +405,7 @@ Additional Credential Format Profiles may exist outside of Appendix E of [@!Open
 
 # Wallet Invocation {#wallet-invocation}
 
-Verifier has the choice of the following mechanisms to invoke a Wallet:
+The Verifier has the choice of the following mechanisms to invoke a Wallet:
 
 - Custom URL scheme as an `authorization_endpoint` (for example, `openid4vp://` as defined in (#openid4vp-profile))
 - Domain-bound Universal Links/App link as an `authorization_endpoint`
