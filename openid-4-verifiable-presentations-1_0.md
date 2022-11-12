@@ -956,7 +956,7 @@ OpenID for Verifiable Presentations is credential format agnostic, i.e. it is de
 
 ### Example Credential
 
-The following is an JWT-based Verifiable Credential that will be used through this section.
+The following is an JWT-based W3C Verifiable Credential that will be used through this section.
 
 <{{examples/credentials/jwt_vc.json}}
 
@@ -990,7 +990,7 @@ Note: the VP's `nonce` claim contains the value of the `nonce` of the presentati
 
 ## LDP VCs
 
-The following is an LDP-based Verifiable Credential that will be used through this section.
+The following is an LDP-based W3C Verifiable Credential that will be used through this section.
 
 <{{examples/credentials/ldp_vc.json}}
 
