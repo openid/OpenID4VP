@@ -60,7 +60,7 @@ This specification defines a mechanism on top of OAuth 2.0 to allow presentation
 
 # Introduction
 
-This specification defines a mechanism on top of OAuth 2.0 [@!RFC6749] for presentation of claims via verifiable credentials, supporting W3C formats as well as other credential formats. This allows existing OpenID Connect RPs to extend their reach towards claims sources asserting claims in this format. It also allows new applications built using verifiable credentials to utilize OAuth 2.0 or OpenID Connect as integration and interoperability layer towards credential holders.
+This specification defines a mechanism on top of OAuth 2.0 [@!RFC6749] for presentation of claims via verifiable credentials, supporting W3C formats as well as other credential formats. This allows existing OpenID Connect Relying Parties to extend their reach towards claims sources asserting claims in this format. It also allows new applications built using verifiable credentials to utilize OAuth 2.0 or OpenID Connect as integration and interoperability layer towards credential holders.
 
 OAuth 2.0 [@!RFC6749] is used as a base protocol to enable use cases where the presentation of verifiable presentations alone is sufficient. This keeps this specification simple, whilst also enabling more complex use cases. Deployments that require [@!OpenID.Core] features, such as issuance of ID tokens can nevertheless use this specification to extend their OpenID Connect implementations with the ability to transport verifiable credentials, since OpenID Connect is built on top of OAuth 2.0. Especially Self-Issued OpenID Providers (see [@!SIOPv2]) would benefit from combining this specification.
 
@@ -109,16 +109,18 @@ This approach dramatically reduces latency and reduces load on the OP's servers.
 
 # Overview 
 
-This specification defines a mechanism on top of OAuth 2.0 to request and provide verifiable presentations. Since OpenID Connect is based on OAuth 2.0, implementations can also be build on top of OpenID Connect, e.g. Self-Issued OP v2 [@SIOPv2].
+This specification defines a mechanism on top of OAuth 2.0 to request and provide verifiable presentations. Since OpenID Connect is based on OAuth 2.0, implementations can also be built on top of OpenID Connect, e.g. Self-Issued OP v2 [@SIOPv2].
 
-The specification supports all kinds of verifiable credentials, such as W3C Verifiable Credentials but also ISO mDL or AnonCreds. The examples given in the main part of the specification use W3C Verifiable Credentials, examples in other credential formats are given in  (#alternative_credential_formats). 
+The specification supports all kinds of verifiable credentials, such as W3C Verifiable Credentials but also ISO mDL or AnonCreds. The examples given in the main part of the specification use W3C Verifiable Credentials. Examples in other credential formats are given in  (#alternative_credential_formats). 
 
 Verifiable Presentations are requested by adding a parameter `presentation_definition` to an OAuth 2.0 authorization request.
 This specification introduces a new token type, "VP Token", used as a generic container for verifiable presentation objects, that is returned in authorization and token responses.
 
-OpenID for Verifiable Presentations supports scenarios where Authorization Request is sent from the Verifier to the Wallet using redirects (same-device flow) and when it is passed an across devices (cross-device flow).
+This specification also introduces a new response mode "direct_post" to enable sending Authorization Response containing Verifiable Presentations using the HTTP `POST` method when usage of redirects, enabled by the existing reponse modes, is impossible.
 
-Deployments can use any pre-existing OAuth grant type and response type in conjunction with this specifications to support those scenarios in the context of different deployment architectures. This specification also introduces a new OAuth response mode to support cross device scenarios initiated by the verifier (see {#response_mode_post}). 
+Implementations can use any pre-existing OAuth grant type and response type in conjunction with this specifications to support those scenarios in the context of different deployment architectures.
+
+Note that the Wallet that acted as an OAuth 2.0 Client to the Authorization Server during the Issuance, for example using [@!OpenID.VCI], acts as an OAuth 2.0 Authorization Server in relation to the Relying Party (RP).
 
 # Scope
 
@@ -258,7 +260,13 @@ which is an alias for the first presentation definition example given in (#reque
     &nonce=n-0S6_WzA2Mj HTTP/1.1
 ```
 
-#### `aud` of a Request Object
+## Authorization Request in a Cross-Device flow
+
+There are use-cases when the Authorization Request is being displayed on a device different from a device on which the requested Credential is stored.
+
+One option to pass an Authorization Request across devices is for the Verifier to render the Authorization Request as a QR Code. The usage of `request_uri` is RECOMMENDED, since authorization request size might be large and might not fit in a QR code.
+
+## `aud` of a Request Object
 
 When an RP is sending a Request Object as defined in Section 6.1 of [@!OpenID.Core] or [@!RFC9101], the `aud` Claim value depends on whether the recipient of the request can be identified by the RP or not:
 
@@ -339,31 +347,29 @@ ASs compliant to this specification MUST NOT proceed with the transaction when p
 
 Usage of `client_metadata` or `client_metadata_uri` parameters with `client_id` that the AS might be seeing for the first time is mutualy exclusive with the registration mechanism where Self-Issued OP assigns `client_id` to the RP after receiving RP's metadata.
 
-# Verifier-initiated Cross Device Flow 
+## Response Mode "direct_post" {#response_mode_post}
 
-A Verified-initiated Cross Device flow poses two challenges:
+There are use-cases when the Authorization Request was received from a Verifier that is unreachable using redirects (i.e. it is on another device) from the Wallet on which the requested Credential is stored.
 
-1. The Verifier needs to pass an authorization request to a Wallet across devices. 
-2. The Wallet needs to pass the result back to the Verifier. 
+For such use-cases, this specification defines a new Response Mode `direct_post` to enable the Wallet to send the response to the Verifier via an HTTPS connection.
 
-## Authorization Request
+This specification defines the following Response Mode in accordance with [@!OAuth.Responses]:
 
-One option to address the first challenge is to render the authorization request as a QR Code. Since authorization requests might be large and result in a large QR code, the usage of `request_uri` is RECOMMENDED.
+direct_post
+  In this mode, Authorization Response parameters are encoded in the body using the `application/x-www-form-urlencoded` content type and sent using the HTTP `POST` method instead of redirecting back to the Client.
+  
+HTTP POST request MUST be sent to the URL obtained from the `redirect_uri` parameter in the Authorization Request.
 
-## Authorization Response {#response_mode_post}
+Note that Response Mode "direct_post" could be less secure than redirect-based Response Mode. For details, see (#session-binding).
 
-The solution to the second challenge facilitated by this specification is to send the results from the Wallet via an HTTPS connection, for example over the Internet. This is facilitated by a new response mode `post`. 
-
-This specification defines the response mode `post` in accordance with [@!OAuth.Responses] to support verifier-initiated cross device flows. This response mode asks the AS to deliver the result of an authorization process to the URL conveyed in the `redirect_uri` parameter using the HTTP `POST` method instead of redirecting the user agent to the Client.
-
-The following is a non-normative example request object with response mode `post`:
+The following is a non-normative example request object with Response Mode `direct_post`:
 
 ```json
 {
    "client_id": "https://client.example.org/post",
-   "redirect_uris": ["https://client.example.org/post"],
+   "redirect_uri": "https://client.example.org/post",
    "response_types": "vp_token",
-   "response_mode": "post"
+   "response_mode": "direct_post"
    "presentation_definition": {...},
    "nonce": "n-0S6_WzA2Mj"
 }
@@ -377,7 +383,7 @@ https://wallet.example.com?
     &request_uri=https%3A%2F%2Fclient.example.org%2F567545564
 ```
 
-The respective HTTP POST response to the verifier would look like this:
+The respective HTTP POST response to the Verifier would look like this:
 
 ```
   POST /post HTTP/1.1
@@ -388,7 +394,10 @@ The respective HTTP POST response to the verifier would look like this:
     vp_token=...
 
 ```
-## Encoding of Presented Verifiable Presentations
+
+Note that in the Cross-Device Flow, the Wallet can change the UI based on the Verifier's response to the HTTP POST request.
+
+# Encoding of Presented Verifiable Presentations
 
 Presented credentials MUST be returned in the VP Token as defined in Credential Format Profiles in Appendix E of [@!OpenID.VCI], based on the format and the signature scheme of the credentials and presentations. This specification does not require any additional encoding when credential format is already represented as a JSON object or a JSON string.
 
@@ -630,6 +639,10 @@ Current version of OpenID4VP does not support presentation of a VP nested inside
 One level of nesting `path_nested` objects is sufficient to describe a VC included inside a VP.
 
 # Security Considerations {#security_considerations}
+
+## Sending VP Token using Response Mode "direct_post" {#session-binding}
+
+When HTTP "POST" method is used to send VP Token, there is no session for the Verifier to validate whether the Response is sent by the same Wallet that has received the Authorization Request. It is RECOMMENDED for the Verifiers to implement mechanisms to strengthen such binding.
 
 ## Preventing Replay Attacks {#preventing-replay}
 
@@ -899,7 +912,7 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </front>
 </reference>
 
-<reference anchor="OpenID.VCI" target="https://openid.net/specs/openid-4-verifiable-credential-issuance.html">
+<reference anchor="OpenID.VCI" target="https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html">
         <front>
           <title>OpenID for Verifiable Credential Issuance</title>
           <author initials="T." surname="Lodderstedt" fullname="Torsten Lodderstedt">
@@ -1220,7 +1233,7 @@ The technology described in this specification was made available from contribut
 
    -12
 
-   * add cross device flow (using SIOP v2 text)
+   * add Cross-Device flow (using SIOP v2 text)
    * Added Client Metadata Section (based on SIOP v2 text)
 
    -11
