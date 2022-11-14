@@ -94,7 +94,7 @@ Verifier
   An entity that requests, checks and extracts the claims from Verifiable Presentations.
 
 Issuer-Holder-Verifier Model
-  An ecosystem where issuance of a Verifiable Credential to the Holder happens  independently from it being presented as a Verifiable Presentation to the Verifier. Issued Credential can (but not necessarily) be used multiple times.
+  A model for claims sharing where claims are issued in the form of Verifiable Credentials independent of the process of presenting them as Verifiable Presentation to the Verifiers. Issued Verifiable Credential can (but not necessarily must) be used multiple times.
 
 Cryptographic Holder Binding
   Ability of the Holder to prove legitimate possession of a Verifiable Credential by proving control over the same private key during the issuance and presentation. Mechanism might depend on the Crednetial Format. For example, in `jwt_vc_json` Credential Format, a VC with Cryptographic Holder Binding contains a public key or a reference to a public key that matches to the private key controlled by the Holder. Claim-based or biometrics-based holder binding is also possible.
