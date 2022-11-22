@@ -127,7 +127,7 @@ Note that the Wallet that acted as an OAuth 2.0 Client to the Authorization Serv
 The parameters comprising a request for verifiable presentations are given in the following: 
 
 * `response_type`: REQUIRED. this parameter is defined in [@!RFC6749]. The possible values are determined by the response type registry established by [@!RFC6749]. This specification introduces the response type "vp_token". This response type asks the Authorization Server (AS) to return only a VP Token in the Authorization Response. 
-* `scope`: OPTIONAL. this parameter is defined in [@!RFC6749]. The wallet MAY allows verifiers to request presentation of credentials be utilizing a pre-defined scope value. See (#request_scope) for more details.
+* `scope`: OPTIONAL. this parameter is defined in [@!RFC6749]. The wallet MAY allow verifiers to request presentation of credentials by utilizing a pre-defined scope value. See (#request_scope) for more details.
 * `presentation_definition`: CONDITIONAL. A string containing a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange]. See (#request_presentation_definition) for more details. 
 * `presentation_definition_uri`: CONDITIONAL. A string containing an HTTPS URL pointing to a resource where a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange] can be retrieved . See (#request_presentation_definition_uri) for more details.
 * `nonce`: REQUIRED. This parameter follows the definition given in [@!OpenID.Core]. It is used to securely bind the verifiable presentation(s) provided by the AS to the particular transaction.
