@@ -449,7 +449,7 @@ vp_formats_supported": {
 
 Client utilizing this specification has multiple options to obtain AS's metadata:
 
-* Client obtains AS metadata prior to a transaction, e.g using [@!RFC-Discovery] or out-of-band mechanisms. See (#pre-registered-as) for the details.
+* Client obtains AS metadata prior to a transaction, e.g using [@!RFC8414] or out-of-band mechanisms. See (#pre-registered-as) for the details.
 * Client provides metadata to the AS just-in-time in the Authorization Request using one of the following mechanisms defined in this specification:
     * `client_id` equals `redirect_uri` See (#simplest-registration) for the details.
     * OpenID Federation 1.0 Automatic Registration. See (#opeid-federation) for the details.
@@ -496,7 +496,7 @@ Just-in-time metadata exchange allows OpenID4VP to be used in deployments models
 
 When the Wallet has obtained Client metadata prior to a transaction, e.g using [@!RFC7591] or out-of-band mechanisms, `client_id` MUST equal to the client identifier the RP has obtained from the Wallet during pre-registration. When the Authorization Request is signed, the public key for signature verification MUST be obtained during the pre-registration process.
 
-In this case, `client_metadata` and `client_metadata_uri` parameters defined in (#rp-registration-parameter) MUST NOT be present in the Authorization Request. 
+In this case, `client_metadata` and `client_metadata_uri` parameters defined in (#client_metadata) MUST NOT be present in the Authorization Request. 
 
 ### Non-Pre-Registered Relying Party {#non-pre-registered-rp} 
 
