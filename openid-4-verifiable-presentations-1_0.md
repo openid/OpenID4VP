@@ -54,38 +54,56 @@ organization="Mattr"
 
 .# Abstract
 
-This specification defines a mechanism on top of OAuth 2.0 to allow presentation of claims in the form of verifiable credentials as part of the protocol flow. 
+This specification defines a mechanism on top of OAuth 2.0 to allow presentation of claims in the form of Verifiable Credentials as part of the protocol flow. 
 
 {mainmatter}
 
 # Introduction
 
-This specification defines a mechanism on top of OAuth 2.0 [@!RFC6749] for presentation of claims via verifiable credentials, supporting W3C formats as well as other credential formats. This allows existing OpenID Connect Relying Parties to extend their reach towards claims sources asserting claims in this format. It also allows new applications built using verifiable credentials to utilize OAuth 2.0 or OpenID Connect as integration and interoperability layer towards credential holders.
+This specification defines a mechanism on top of OAuth 2.0 [@!RFC6749] that enables presentation of Verifiable Credentials as Verifiable Presentations in the Issuer-Holder-Verifier Model. Credentials of any Credential format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] and [@Hyperledger.Indy] (AnonCreds) are supported. This allows existing OpenID Connect Relying Parties to extend their reach towards claim sources asserting claims in new formats. New applications built using Verifiable Credentials are also enabled to utilize OAuth 2.0 and/or OpenID Connect as integration and interoperability layer towards Holders.
 
-OAuth 2.0 [@!RFC6749] is used as a base protocol to enable use cases where the presentation of verifiable presentations alone is sufficient. This keeps this specification simple, whilst also enabling more complex use cases. Deployments that require [@!OpenID.Core] features, such as issuance of ID tokens can nevertheless use this specification to extend their OpenID Connect implementations with the ability to transport verifiable credentials, since OpenID Connect is built on top of OAuth 2.0. Especially Self-Issued OpenID Providers (see [@!SIOPv2]) would benefit from combining this specification.
+OAuth 2.0 [@!RFC6749] is used as a base protocol as it provides the required protocol rails and security to build credential presentation on top of it. Moreover, implementers can, in a single interface, support credential presentation and the issuance of access tokens for access to APIs based on Verifiable Credentials in the wallet. OpenID Conect deployments can also extend their implementations using this specification with the ability to transport Verifiable Presentations, since OpenID Connect is built on top of OAuth 2.0. Implementers that require [@!OpenID.Core] features, such as the issuance of subject-signed ID tokens can combine this specification with [@!SIOPv2].
 
 # Terminology
 
-Verifiable Credential (VC)
+Credential
+  A set of claims about a subject made by an Issuer.
 
-A verifiable credential is a tamper-evident credential that has authorship that can be cryptographically verified. Verifiable credentials can be used to build verifiable presentations, which can also be cryptographically verified. The claims in a credential can be about different subjects. (see [@VC_DATA])
-Note that this specification uses a term "credential" as defined in Section 2 of [@VC_DATA], which is a different definition than in [@!OpenID.Core].
+Note that the definition of a term "credential" in this specification is different from that in [@!OpenID.Core].
+
+Verifiable Credential (VC)
+  A tamper-evident credential that has authorship of the Issuer that can be cryptographically verified. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] and [@Hyperledger.Indy] (AnonCreds).
+
+Note that Verifiable Credentials compliant to the [@VC_DATA] specification are referred to in this specification as W3C Verifiable Credentials.
 
 Presentation
-
-Data derived from one or more verifiable credentials, issued by one or more issuers, that is shared with a specific verifier. (see [@VC_DATA])
+  Data derived from one or more Verifiable Credentials that can be from the same or different issuers that is shared with a specific verifier.
 
 Verifiable Presentation (VP)
+  A tamper-evident presentation that has authorship of the Holder that can be cryptographically verified to provide Cryptographic Holder Binding. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] and [@Hyperledger.Indy] (AnonCreds).
 
-A verifiable presentation is a tamper-evident presentation encoded in such a way that authorship of the data can be trusted after a process of cryptographic verification. Certain types of verifiable presentations might contain data that is synthesized from, but do not contain, the original verifiable credentials (for example, zero-knowledge proofs). (see [@VC_DATA])
+Note that Verifiable Presentations compliant to the [@VC_DATA] specification are referred to in this specification as W3C Verifiable Presentations.
 
-Wallet
+Issuer
+  An entity that creates Verifiable Credentials.
 
-Entity that receives, stores, presents, and manages Credentials and key material of the End-User. There is no single deployment model of a Wallet: Credentials and keys can both be stored/managed locally by the end-user, or by using a remote self-hosted service, or a remote third party service. In the context of this specification, the Wallet acts as an OAuth 2.0 Authorization Server (see [@!RFC6749]) towards the Credential Verifier which acts as the OAuth 2.0 Client. 
+Holder
+  An entity that receives Verifiable Credentials and has control over them to present them to the Verifiers as Verifiable Presentations.
+
+Verifier
+  An entity that requests, checks and extracts the claims from Verifiable Presentations.
+
+Issuer-Holder-Verifier Model
+  A model for claims sharing where claims are issued in the form of Verifiable Credentials independent of the process of presenting them as Verifiable Presentation to the Verifiers. Issued Verifiable Credential can (but not necessarily must) be used multiple times.
+
+Cryptographic Holder Binding
+  Ability of the Holder to prove legitimate possession of a Verifiable Credential by proving control over the same private key during the issuance and presentation. Mechanism might depend on the Crednetial Format. For example, in `jwt_vc_json` Credential Format, a VC with Cryptographic Holder Binding contains a public key or a reference to a public key that matches to the private key controlled by the Holder. Claim-based or biometrics-based holder binding is also possible.
 
 Base64url Encoding
+  Base64 encoding using the URL- and filename-safe character set defined in Section 5 of [@!RFC4648], with all trailing '=' characters omitted (as permitted by Section 3.2 of [@!RFC4648]) and without the inclusion of any line breaks, whitespace, or other additional characters. Note that the base64url encoding of the empty octet sequence is the empty string. (See Appendix C of [@!RFC7515] for notes on implementing base64url encoding without padding.)
 
-Base64 encoding using the URL- and filename-safe character set defined in Section 5 of [@!RFC4648], with all trailing '=' characters omitted (as permitted by Section 3.2 of [@!RFC4648]) and without the inclusion of any line breaks, whitespace, or other additional characters. Note that the base64url encoding of the empty octet sequence is the empty string. (See Appendix C of [@!RFC7515] for notes on implementing base64url encoding without padding.)
+Wallet
+  Entity used by the Holder to receive, store, present, and manage Verifiable Credentials and key material. There is no single deployment model of a Wallet: Verifiable Credentials and keys can both be stored/managed locally, or by using a remote self-hosted service, or a remote third party service. In the context of this specification, the Wallet acts as an OAuth 2.0 Authorization Server (see [@!RFC6749]) towards the Credential Verifier which acts as the OAuth 2.0 Client. 
 
 # Use Cases
 
@@ -93,34 +111,33 @@ Base64 encoding using the URL- and filename-safe character set defined in Sectio
 
 A Verifier uses OpenID Connect to obtain verifiable presentations. This is a simple and mature way to obtain identity data. From a technical perspective, this also makes integration with OAuth-protected APIs easier as OpenID Connect is based on OAuth 2.0.  
 
-## Existing OpenID Connect RP integrates SSI wallets
+## Existing OpenID Connect RP integrates with the Wallets
 
-An application currently utilizing OpenID Connect for accessing various federated identity providers can use the same protocol to also integrate with emerging SSI-based wallets. This is a convenient transition path leveraging existing expertise to protect investments made.
+An application currently utilizing OpenID Connect for accessing various federated identity providers can use the same protocol to also integrate with emerging Wallets using Issuer-Holder-Verifier Model. This is a convenient transition path leveraging existing expertise to protect investments made.
 
-## Existing OpenID Connect OP as custodian of End-User Credentials
+## Existing OpenID Connect OP as custodian of End-User Verifiable Credentials
 
-An existing OpenID Connect may extend its service by maintaining credentials issued by other claims sources on behalf of its customers. Customers can mix claims of The AS and from their credentials to fulfil authentication requests. 
+An existing OpenID Connect may extend its service by maintaining Verifiable Credentials issued by other claims sources on behalf of its customers. Customers can mix claims of The AS and from their Verifiable Credentials to fulfil authentication requests. 
 
 ## Federated OpenID Connect OP adds device-local mode
 
-An existing OpenID Connect OP with a native user experience (PWA or native app) issues verifiable credentials and stores them on the user's device linked to a private key residing on this device under the user's control. For every authentication request, the native user experience first checks whether this request can be fulfilled using the locally stored credentials. If so, it generates a presentation signed with the user's keys in order to prevent replay of the credential. 
+An existing OpenID Connect OP with a native user experience (PWA or native app) issues Verifiable Credentials and stores them on the user's device linked to a private key residing on this device under the user's control. For every authentication request, the native user experience first checks whether this request can be fulfilled using the locally stored Verifiable Credentials. If so, it generates a presentation signed with the user's keys in order to prevent replay of the credential. 
 
 This approach dramatically reduces latency and reduces load on the OP's servers. Moreover, the user identification, authentication, and authorization can be done even in situations with unstable or no internet connectivity. 
 
 # Overview 
 
-This specification defines a mechanism on top of OAuth 2.0 to request and provide verifiable presentations. Since OpenID Connect is based on OAuth 2.0, implementations can also be built on top of OpenID Connect, e.g. Self-Issued OP v2 [@SIOPv2].
+This specification defines a mechanism on top of OAuth 2.0 to request and provide Verifiable Presentations. Implementations can also be build on top of OpenID Connect Core, since OpenID Connect Core is based on OAuth 2.0. To benefit from the subject-signed ID Token feature, this specification can also be combined with the Self-Issued OP v2 specification [@SIOPv2].
 
-The specification supports all kinds of verifiable credentials, such as W3C Verifiable Credentials but also ISO mDL or AnonCreds. The examples given in the main part of the specification use W3C Verifiable Credentials. Examples in other credential formats are given in  (#alternative_credential_formats). 
+This specification supports any Credential format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] and [@Hyperledger.Indy] (AnonCreds). The examples given in the main part of this specification use W3C Verifiable Credentials, but examples in other Credential formats are given in  (#alternative_credential_formats). 
 
-Verifiable Presentations are requested by adding a parameter `presentation_definition` to an OAuth 2.0 authorization request.
-This specification introduces a new token type, "VP Token", used as a generic container for verifiable presentation objects, that is returned in authorization and token responses.
+Verifiable Presentations are requested by adding a parameter `presentation_definition` as defined by [@!DIF.PresentationExchange] to an OAuth 2.0 Authorization Request.
 
-This specification also introduces a new response mode "direct_post" to enable sending Authorization Response containing Verifiable Presentations using the HTTP `POST` method when usage of redirects, enabled by the existing reponse modes, is impossible.
+OpenID for Verifiable Presentations supports scenarios where Authorization Request is sent from the Verifier to the Wallet using redirects (same-device flow) and when it is passed an across devices (cross-device flow).
 
-Implementations can use any pre-existing OAuth grant type and response type in conjunction with this specifications to support those scenarios in the context of different deployment architectures.
+Deployments can use any pre-existing OAuth grant type and response type in conjunction with this specifications to support those scenarios in the context of different deployment architectures. This specification also introduces a new OAuth response mode to support cross device scenarios initiated by the verifier (see {#response_mode_post}). 
 
-Note that the Wallet that acted as an OAuth 2.0 Client to the Authorization Server during the Issuance, for example using [@!OpenID.VCI], acts as an OAuth 2.0 Authorization Server in relation to the Relying Party (RP).
+Implementations can use any pre-existing OAuth 2.0 grant type and response type in conjunction with this specifications to support those scenarios in the context of different deployment architectures.
 
 # Scope
 
@@ -134,10 +151,10 @@ Issuance of Verifiable Credentials. The mechanism to acquire Credentials which c
 
 # Authorization Request {#vp_token_request}
 
-The parameters comprising a request for verifiable presentations are given in the following: 
+The parameters comprising a request for Verifiable Presentations are given in the following: 
 
 * `response_type`: REQUIRED. this parameter is defined in [@!RFC6749]. The possible values are determined by the response type registry established by [@!RFC6749]. This specification introduces the response type "vp_token". This response type asks the Authorization Server (AS) to return only a VP Token in the Authorization Response. 
-* `scope`: OPTIONAL. this parameter is defined in [@!RFC6749]. The wallet MAY allows verifiers to request presentation of credentials be utilizing a pre-defined scope value. See (#request_scope) for more details.
+* `scope`: OPTIONAL. this parameter is defined in [@!RFC6749]. The wallet MAY allow verifiers to request presentation of  Verifiable Credentials by utilizing a pre-defined scope value. See (#request_scope) for more details.
 * `presentation_definition`: CONDITIONAL. A string containing a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange]. See (#request_presentation_definition) for more details. 
 * `presentation_definition_uri`: CONDITIONAL. A string containing an HTTPS URL pointing to a resource where a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange] can be retrieved . See (#request_presentation_definition_uri) for more details.
 * `nonce`: REQUIRED. This parameter follows the definition given in [@!OpenID.Core]. It is used to securely bind the verifiable presentation(s) provided by the AS to the particular transaction.
@@ -169,7 +186,7 @@ The following example shows how the RP can request selective disclosure or certa
 
 <{{examples/request/vp_token_type_and_claims.json}}
 
-RPs can also ask for alternative credentials being presented, which is shown in the next example:
+RPs can also ask for alternative Verifiable Credentials being presented, which is shown in the next example:
 
 <{{examples/request/vp_token_alternative_credentials.json}}
 
@@ -228,7 +245,7 @@ Content-Type: application/json
 ```
 ## Using `scope` Parameter to Request Verifiable Credential(s) {#request_scope}
 
-Wallets MAY support requesting presentation of credentials using OAuth 2.0 scope values. 
+Wallets MAY support requesting presentation of Verifiable Credentials using OAuth 2.0 scope values. 
 
 Such a scope value MUST be an alias for a well-defined presentation definition as it will be 
 refered to in the `presentation_submission` response parameter. 
@@ -271,7 +288,7 @@ When an RP is sending a Request Object as defined in Section 6.1 of [@!OpenID.Co
 - the `aud` Claim MUST equal to the `issuer` Claim value, when Dynamic Discovery is performed.
 - the `aud` Claim MUST be "https://self-issued.me/v2", when Static Discovery Metadata is used.
 
-Note: "https://self-issued.me/v2" is a symbolic string and can be used as an `aud` Claim value even when OpenID4VP specification is used standalone, without SIOPv2. 
+Note: "https://self-issued.me/v2" is a symbolic string and can be used as an `aud` Claim value even when this specification is used standalone, without SIOPv2. 
 
 # Response {#vp_token_response}
 
@@ -290,7 +307,7 @@ The VP Token MUST either contain a single verifiable presentation or an array of
 
 ## `presentation_submission` Parameter
 
-The `presentation_submission` parameter as defined in [@!DIF.PresentationExchange] links the input descriptor identifiers as specified in the corresponding request to the respective verifiable presentations within the VP Token along with format information. The root of the path expressions in the descriptor map is the respective verifiable presentation, pointing to the respective verifiable credentials.
+The `presentation_submission` parameter as defined in [@!DIF.PresentationExchange] links the input descriptor identifiers as specified in the corresponding request to the respective Verifiable Presentations within the VP Token along with format information. The root of the path expressions in the descriptor map is the respective verifiable presentation, pointing to the respective Verifiable Credentials.
 
 This `presentation_submission` parameter MUST be included as a separate response parameter alongside the vp_token. Clients MUST ignore any `presentation_submission` parameter included inside a VP.
 
@@ -397,7 +414,7 @@ Note that in the Cross-Device Flow, the Wallet can change the UI based on the Ve
 
 # Encoding of Presented Verifiable Presentations
 
-Presented credentials MUST be returned in the VP Token as defined in Credential Format Profiles in Appendix E of [@!OpenID.VCI], based on the format and the signature scheme of the credentials and presentations. This specification does not require any additional encoding when credential format is already represented as a JSON object or a JSON string.
+Presented Verifiable Credentials MUST be returned in the VP Token as defined in Credential Format Profiles in Appendix E of [@!OpenID.VCI], based on the format and the signature scheme of the Verifiable Credentials and Verifiable Presentations. This specification does not require any additional encoding when credential format is already represented as a JSON object or a JSON string.
 
 Credential formats expressed as binary formats MUST be Base64url encoded and returned as a JSON string.
 
@@ -424,7 +441,7 @@ This specification defines new server metadata parameters according to [@!RFC841
 The AS publishes the formats it supports using the `vp_formats_supported` metadata parameter. 
 
 * `vp_formats_supported`:  An object containing a list of key value pairs, where the key is a string identifying a credential format supported by the AS. Valid credential format identifiers values are defined in Section 9.3 of [@!OpenID.VCI]. Other values may be used when defined in the profiles of this specification. The key's value is an object containing a parameter defined below:
-  * `alg_values_supported`: An object where the value is an array of case sensitive strings that identify the cryptographic suites that are supported. Cryptosuites for Credentials in `jwt_vc` format should use algorithm names defined in [IANA JOSE Algorithms Registry](https://www.iana.org/assignments/jose/jose.xhtml#web-signature-encryption-algorithms). Cryptosuites for Credentials in `ldp_vc` format should use signature suites names defined in [Linked Data Cryptographic Suite Registry](https://w3c-ccg.github.io/ld-cryptosuite-registry/). Cryptosuites for Credentials in `mdl_iso_cbor` format should use signature suites names defined in ISO/IEC 18013-5:2021. Parties using other credential formats will need to agree upon the meanings of the values used, which may be context-specidic. 
+  * `alg_values_supported`: An object where the value is an array of case sensitive strings that identify the cryptographic suites that are supported. Cryptosuites for Verifiable Credentials in `jwt_vc` format should use algorithm names defined in [IANA JOSE Algorithms Registry](https://www.iana.org/assignments/jose/jose.xhtml#web-signature-encryption-algorithms). Cryptosuites for Verifiable Credentials in `ldp_vc` format should use signature suites names defined in [Linked Data Cryptographic Suite Registry](https://w3c-ccg.github.io/ld-cryptosuite-registry/). Cryptosuites for Verifiable Credentials in `mdl_iso_cbor` format should use signature suites names defined in ISO/IEC 18013-5:2021. Parties using other credential formats will need to agree upon the meanings of the values used, which may be context-specidic. 
 
 Below is a non-normative example of a `vp_formats_supported` parameter:
 
@@ -597,9 +614,9 @@ Below is a set of static configuration values that can be used with `vp_token` a
 
 ## Support for Federations/Trust Schemes
 
-Often RPs will want to request verifiable credentials from an issuer who is a member of a federation or trust scheme, rather than from a specific issuer, for example, a "BSc Chemistry Degree" credential from a US University rather than from a specifically named university.
+Often RPs will want to request Verifiable Credentials from an issuer who is a member of a federation or trust scheme, rather than from a specific issuer, for example, a "BSc Chemistry Degree" credential from a US University rather than from a specifically named university.
 
-In order to facilitate this, federations will need to determine how an issuer can indicate in a verifiable credential that they are a member of one or more federations/trust schemes. Once this is done, the RP will be able to create a `presentation_definition` that includes this filtering criteria. This will enable the wallet to select all the verifiable credentials that match this criteria and then by some means (for example, by asking the user) determine which matching verifiable credential to return to the RP. Upon receiving this verifiable credential, the RP will be able to call its federation API to determine if the issuer is indeed a member of the federation/trust scheme that it says it is.
+In order to facilitate this, federations will need to determine how an issuer can indicate in a verifiable credential that they are a member of one or more federations/trust schemes. Once this is done, the RP will be able to create a `presentation_definition` that includes this filtering criteria. This will enable the wallet to select all the Verifiable Credentials that match this criteria and then by some means (for example, by asking the user) determine which matching verifiable credential to return to the RP. Upon receiving this verifiable credential, the RP will be able to call its federation API to determine if the issuer is indeed a member of the federation/trust scheme that it says it is.
 
 Indicating the federations/trust schemes that an issuer is a member of may be achieved by defining a `termsOfUse` property [@!VC_DATA].
 
@@ -632,7 +649,7 @@ This example will chose a VC that has been issued by a university that is a memb
 
 ## Nested Verifiable Presentations
 
-Current version of OpenID4VP does not support presentation of a VP nested inside another VP, even though [@!DIF.PresentationExchange] specification theoretically supports this by stating that the nesting of `path_nested` objects "may be any number of levels deep".
+Current version of this document does not support presentation of a VP nested inside another VP, even though [@!DIF.PresentationExchange] specification theoretically supports this by stating that the nesting of `path_nested` objects "may be any number of levels deep".
 
 One level of nesting `path_nested` objects is sufficient to describe a VC included inside a VP.
 
@@ -644,7 +661,7 @@ When HTTP "POST" method is used to send VP Token, there is no session for the Ve
 
 ## Preventing Replay Attacks {#preventing-replay}
 
-To prevent replay attacks, verifiable presentation container objects MUST be linked to `client_id` and `nonce` from the Authentication Request. The `client_id` is used to detect presentation of credentials to a different party other than the intended. The `nonce` value binds the presentation to a certain authentication transaction and allows the verifier to detect injection of a presentation in the OpenID Connect flow, which is especially important in flows where the presentation is passed through the front-channel. 
+To prevent replay attacks, verifiable presentation container objects MUST be linked to `client_id` and `nonce` from the Authentication Request. The `client_id` is used to detect presentation of Verifiable Credentials to a different party other than the intended. The `nonce` value binds the presentation to a certain authentication transaction and allows the verifier to detect injection of a presentation in the OpenID Connect flow, which is especially important in flows where the presentation is passed through the front-channel. 
 
 Note: These values MAY be represented in different ways in a verifiable presentation (directly as claims or indirectly be incorporation in proof calculation) according to the selected proof format denoted by the format claim in the verifiable presentation container.
 
@@ -703,7 +720,7 @@ In the example above, the requested `nonce` value is included as the `challenge`
 
 A verifier MUST validate the integrity, authenticity, and holder binding of any verifiable presentation provided by an OP according to the rules of the respective presentation format. 
 
-This requirement holds true even if those verifiable presentations are embedded within a signed OpenID Connect assertion, such as an ID Token or a UserInfo response. This is required because verifiable presentations might be signed by the same holder but with different key material and/or the OpenID Connect assertions may be signed by a third party (e.g., a traditional OP). In both cases, just checking the signature of the respective OpenID Connect assertion does not, for example, check the holder binding.
+This requirement holds true even if those Verifiable Presentations are embedded within a signed OpenID Connect assertion, such as an ID Token or a UserInfo response. This is required because Verifiable Presentations might be signed by the same holder but with different key material and/or the OpenID Connect assertions may be signed by a third party (e.g., a traditional OP). In both cases, just checking the signature of the respective OpenID Connect assertion does not, for example, check the holder binding.
 
 Note: Some of the available mechanisms are outlined in Section 4.3.2 of [@!DIF.PresentationExchange].
 
@@ -950,7 +967,7 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
 
 # Examples {#alternative_credential_formats}
 
-OpenID for Verifiable Presentations is credential format agnostic, i.e. it is designed to allow applications to request and receive verifiable presentations and credentials in any format, not limited to the formats defined in [@!VC_DATA]. This section aims to illustrate this with examples utilizing different credential formats. Customization of OpenID for Verifiable Presentation for credential formats other than those defined in [@!VC_DATA] uses extensions points of Presentation Exchange [@!DIF.PresentationExchange]. 
+OpenID for Verifiable Presentations is credential format agnostic, i.e. it is designed to allow applications to request and receive Verifiable Presentations and Verifiable Credentials in any format, not limited to the formats defined in [@!VC_DATA]. This section aims to illustrate this with examples utilizing different credential formats. Customization of OpenID for Verifiable Presentation for credential formats other than those defined in [@!VC_DATA] uses extensions points of Presentation Exchange [@!DIF.PresentationExchange]. 
 
 ## JWT VCs
 
@@ -970,7 +987,7 @@ The requirements regarding the credential to be presented are conveyed in the `p
 
 <{{examples/request/pd_jwt_vc.json}}
 
-It contains a single `input_descriptor`, which sets the desired format to JWT VC and defines a constraint over the `vc.type` parameter to select credentials of type `IDCredential`. 
+It contains a single `input_descriptor`, which sets the desired format to JWT VC and defines a constraint over the `vc.type` parameter to select Verifiable Credentials of type `IDCredential`. 
 
 ### Presentation Response
 
@@ -1004,7 +1021,7 @@ The requirements regarding the credential to be presented are conveyed in the `p
 
 <{{examples/request/pd_ldp_vc.json}}
 
-It contains a single `input_descriptor`, which sets the desired format to LDP VC and defines a constraint over the `type` parameter to select credentials of type `IDCardCredential`. 
+It contains a single `input_descriptor`, which sets the desired format to LDP VC and defines a constraint over the `type` parameter to select Verifiable Credentials of type `IDCardCredential`. 
 
 ### Presentation Response
 
@@ -1026,7 +1043,7 @@ Note: the VP's `challenge` claim contains the value of the `nonce` of the presen
 
 AnonCreds is a credential format defined as part of the Hyperledger Indy project [@Hyperledger.Indy].
 
-To be able to request AnonCreds, there needs to be a set of identifiers for credentials, presentations ("proofs" in Indy terminology) and crypto schemes. For the purpose of this example, the following identifiers are used: 
+To be able to request AnonCreds, there needs to be a set of identifiers for Verifiable Credentials, Verifiable Pesentations ("proofs" in Indy terminology) and crypto schemes. For the purpose of this example, the following identifiers are used: 
 
 * `ac_vc`: designates a credential in AnonCreds format. 
 * `ac_vp`: designates a presentation in AnonCreds format.
@@ -1088,7 +1105,7 @@ The following is a VP Token example.
 
 This section illustrates how a mobile driving licence (mDL) credential expressed using a data model and data sets defined in [@ISO.18013-5] can be presented from the End-User's device directly to the RP using this specification.
 
-To request an ISO/IEC 18013-5:2021 mDL, following identifiers for credentials are used for the purposes of this example:
+To request an ISO/IEC 18013-5:2021 mDL, following identifiers are used for the purposes of this example:
 
 * `mdl_iso_cbor`: designates a mobile driving licence (mDL) credential encoded as CBOR, expressed using a data model and data sets defined in [@ISO.18013-5].
 * `mdl_iso_json`: designates a mobile driving licence (mDL) credential encoded as JSON, expressed using a data model and data sets defined in [@ISO.18013-5].
@@ -1139,13 +1156,13 @@ Note that user claims in the `deviceSigned` item correspond to self-attested cla
 
 Note that the reason why hashes of the user claims are included in the `issuerAuth` item lies in the selective release mechanism. Selective release of the user claims in an ISO/IEC 18013-5:2021 mDL is performed by the Issuer signing over the hashes of all the user claims during the issuance, and only the actual values of the claims that the End-User has agreed to reveal to teh Verifier being included during the presentation. 
 
-The example in this section is also applicable to the electronic identification credentials expressed using data models defined in ISO/IEC TR 23220-2.
+The example in this section is also applicable to the electronic identification Verifiable Credentials expressed using data models defined in ISO/IEC TR 23220-2.
 
 TBD: are `nonce` and `client_id` included into the mDL to detect replay?
 
-## SIOP & OpenID 4 VPs
+## Combining this specificaiton with SIOPv2
 
-This section shows how SIOP and OpenID 4 Verifiable Presentations can be combined to present credentials and pseudonymously authenticate an end-user using subject controlled key material.
+This section shows how SIOP and OpenID for Verifiable Presentations can be combined to present Verifiable Credentials and pseudonymously authenticate an end-user using subject controlled key material.
 
 ### Request
 
@@ -1195,7 +1212,7 @@ The `id_token` content is shown in the following.
 }
 ```
 
-Note: the `nonce` and `aud` are set to the `nonce` of the request and the client id of the verifier, respectively, in the same way as for the verifier presentations to prevent replay. 
+Note: the `nonce` and `aud` are set to the `nonce` of the request and the client id of the verifier, respectively, in the same way as for the verifier, Verifiable Presentations to prevent replay. 
 
 # IANA Considerations
 
@@ -1261,12 +1278,12 @@ The technology described in this specification was made available from contribut
    -06
 
    * added additional security considerations
-   * removed support for embedding verifiable presentations in ID Token or UserInfo response
+   * removed support for embedding Verifiable Presentations in ID Token or UserInfo response
    * migrated to Presentation Exchange 2.0
 
    -05
 
-   * moved presentation submission parameters outside of verifiable presentations (ID Token or UserInfo)
+   * moved presentation submission parameters outside of Verifiable Presentations (ID Token or UserInfo)
 
    -04
 
@@ -1286,7 +1303,7 @@ The technology described in this specification was made available from contribut
    -01
 
    * adopted DIF Presentation Exchange request syntax
-   * added security considerations regarding replay detection for verifiable credentials
+   * added security considerations regarding replay detection for Verifiable Credentials
 
    -00 
 
