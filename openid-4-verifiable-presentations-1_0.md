@@ -418,7 +418,7 @@ Presented Verifiable Credentials MUST be returned in the VP Token as defined in 
 
 Credential formats expressed as binary formats MUST be Base64url encoded and returned as a JSON string.
 
-Additional Credential Format Profiles may exist outside of Appendix E of [@!OpenID.VCI].
+Additional Credential Format Profiles may be defined in addition to those in Appendix E of [@!OpenID.VCI].
 
 # Wallet Invocation {#wallet-invocation}
 
@@ -467,16 +467,7 @@ vp_formats_supported": {
 Client utilizing this specification has multiple options to obtain AS's metadata:
 
 * Client obtains AS metadata prior to a transaction, e.g using [@!RFC-Discovery] or out-of-band mechanisms. See (#pre-registered-as) for the details.
-* Client provides metadata to the AS just-in-time in the Authorization Request using one of the following mechanisms defined in this specification:
-    * `client_id` equals `redirect_uri` See (#simplest-registration) for the details.
-    * OpenID Federation 1.0 Automatic Registration. See (#opeid-federation) for the details.
-    * Decentralized Identifiers. See (#DID) for the details.
-
-Just-in-time metadata exchange allows OpenID4VP to be used in deployments models where the AS does not or cannot support pre-registration of Client metadata.
-
-### Dynamic Discovery of AS Metadata {#pre-registered-as}
-
-tbd
+* Client has pre-obtained static set of AS metadata. See (#openid4vp-profile) for the example.
 
 # Client Metadata
 
