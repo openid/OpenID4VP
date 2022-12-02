@@ -1225,6 +1225,10 @@ The technology described in this specification was made available from contribut
 
    [[ To be removed from the final specification ]]
 
+   -14
+
+   * move invocation/just-in-time client metadata exchange/AS Discovery sections from siopv2 to openid4vp
+
    -13
 
    * added scope support
