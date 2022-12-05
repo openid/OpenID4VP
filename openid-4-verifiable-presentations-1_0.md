@@ -422,8 +422,6 @@ The Verifier has the choice of the following mechanisms to invoke a Wallet:
 - Domain-bound Universal Links/App link as an `authorization_endpoint`
 - no specific `authorization_endpoint`, user scanning a QR code with Authorization Request using a manually opened Wallet, instead of an arbitrary camera application on a user-device (neither custom URL scheme nor Universal/App link is used)
 
-Note that alternatives to the above approaches are being actively discussed in other industry and standards organizations.
-
 # Authorization Server Metadata {#as_metadata_parameters}
 
 This specification introduces additional AS metadata to enable Client and AS to determine credential formats, proof types and algorithms to be used in a protocol exchange.
