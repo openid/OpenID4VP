@@ -141,13 +141,7 @@ Implementations can use any pre-existing OAuth 2.0 grant type and response type 
 
 # Scope
 
-## In Scope
-
-This document is currently scoped for the presentation of the claims in the form of Verifiable Credentials between the Holder and the Verifier.
-
-## Out of Scope
-
-Issuance of Verifiable Credentials. The mechanism to acquire Credentials which can be presented is out of scope of this document. One mechanism to issue credentials is being defined within the [@!OpenID.VCI] specification.
+This specification defines a mechanism on top of OAuth 2.0 [@!RFC6749] that enables presentation of Verifiable Credentials as Verifiable Presentations in the Issuer-Holder-Verifier Model. Credentials of any Credential format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] and [@Hyperledger.Indy] (AnonCreds) are supported. This allows existing OpenID Connect Relying Parties to extend their reach towards claim sources asserting claims in new formats.
 
 # Authorization Request {#vp_token_request}
 
