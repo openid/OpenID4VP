@@ -338,9 +338,14 @@ The error response follows the rules as defined in [@!RFC6749].
 
 When the requested scope value is invalid, unknown, or malformed, the AS should respond with the error code `invalid_scope` defined in Section 4.1.2.1 of [@!RFC6749].
 
+When the requested presentation definition does not conform to the DIF PEv2 specification [@!DIF.PresentationExchange] the AS should respond with the error code `invalid_request` defined in Section 4.1.2.1 of [@!RFC6749].
+
 Additionally, if the request contains more then a `presentation_definition` parameter or a `presentation_definition_uri` parameter or a 
-scope value representing a presentation definition, the wallet MUST refuse to process the request and return an `invalid_request` error
-as defined in [@!RFC6749]. 
+scope value representing a presentation definition, the wallet MUST refuse to process the request and return an `invalid_request` error as defined in section 4.1.2.1 of [@!RFC6749]. 
+
+If the presentation definition URL cannot be reached, then the AS should respond with the error code `invalid_presentation_definition_location`.
+
+If the presentation definition URL can be reached but the specified `presentation_definition` cannot be found at this URL then the AS should respond with the error code `invalid_policy_reference`.
 
 ## Response Mode "direct_post" {#response_mode_post}
 
