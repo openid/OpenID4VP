@@ -271,9 +271,9 @@ which is an alias for the first presentation definition example given in (#reque
 
 ## Authorization Request in a Cross-Device flow
 
-There are use-cases when the Authorization Request is being displayed on a device different from a device on which the requested Credential is stored.
+There are use-cases when the Authorization Request is being displayed on a device different from a device on which the requested Credential is stored. In those cases, an Authorization Request can be passed across devices by being rendered as a QR Code. 
 
-One option to pass an Authorization Request across devices is for the Verifier to render the Authorization Request as a QR Code. The usage of `request_uri` is RECOMMENDED, since authorization request size might be large and might not fit in a QR code.
+The usage of `request_uri` is RECOMMENDED, since authorization request size might be large and might not fit in a QR code.
 
 ## `aud` of a Request Object
 
