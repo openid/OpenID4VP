@@ -1212,7 +1212,7 @@ The technology described in this specification was made available from contribut
 
    [[ To be removed from the final specification ]]
 
-   - 14
+   -14
 
    * added support for signed and encrypted authorization responses based on JARM
 
