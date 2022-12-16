@@ -458,7 +458,7 @@ vp_formats_supported": {
 
 Client utilizing this specification has multiple options to obtain AS's metadata:
 
-* Client obtains AS metadata prior to a transaction, e.g using [@!OpenID-Discovery] or out-of-band mechanisms. See (#pre-registered-as) for the details.
+* Client obtains AS metadata prior to a transaction, e.g using [@!OpenID-Discovery] or out-of-band mechanisms.
 * Client has pre-obtained static set of AS metadata. See (#openid4vp-profile) for the example.
 
 # Client Metadata
@@ -496,7 +496,7 @@ Just-in-time metadata exchange allows OpenID4VP to be used in deployments models
 
 When the Wallet has obtained Client metadata prior to a transaction, e.g using [@!RFC7591] or out-of-band mechanisms, `client_id` MUST equal to the client identifier the RP has obtained from the Wallet during pre-registration. When the Authorization Request is signed, the public key for signature verification MUST be obtained during the pre-registration process.
 
-In this case, `client_metadata` and `client_metadata_uri` parameters defined in (#rp-registration-parameter) MUST NOT be present in the Authorization Request. 
+In this case, `client_metadata` and `client_metadata_uri` parameters defined in (#client_metadata) MUST NOT be present in the Authorization Request. 
 
 ### Non-Pre-Registered Relying Party {#non-pre-registered-rp} 
 
@@ -527,7 +527,7 @@ The `client_id` MAY be expressed as a Decentralized Identifier as defined in [@!
 
 The Authorization Request MUST be signed. A public key to verify the signature MUST be obtained from the `verificationMethod` property of a DID Document. Since DID Document may include multiple public keys, a particular public key used to sign the request in question MUST be identified by the `kid` in the header. To obtain the DID Document, AS MUST use DID Resolution defined by the DID method must be used by the RP.
 
-All RP metadata other than the public key MUST be obtained from the `client_metadata` parameter as defined in {#rp-registration-parameter}.
+All RP metadata other than the public key MUST be obtained from the `client_metadata` parameter as defined in (#client_metadata).
 
 ### `client_metadata` and `client_metadata_uri` Parameters {#client_metadata}
 
