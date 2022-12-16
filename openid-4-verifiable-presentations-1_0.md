@@ -458,7 +458,7 @@ vp_formats_supported": {
 
 Client utilizing this specification has multiple options to obtain AS's metadata:
 
-* Client obtains AS metadata prior to a transaction, e.g using [@!RFC-Discovery] or out-of-band mechanisms. See (#pre-registered-as) for the details.
+* Client obtains AS metadata prior to a transaction, e.g using [@!OpenID-Discovery] or out-of-band mechanisms. See (#pre-registered-as) for the details.
 * Client has pre-obtained static set of AS metadata. See (#openid4vp-profile) for the example.
 
 # Client Metadata
