@@ -135,7 +135,7 @@ Verifiable Presentations are requested by adding a parameter `presentation_defin
 
 OpenID for Verifiable Presentations supports scenarios where Authorization Request is sent from the Verifier to the Wallet using redirects (same-device flow) and when it is passed an across devices (cross-device flow).
 
-Deployments can use any pre-existing OAuth grant type and response type in conjunction with this specifications to support those scenarios in the context of different deployment architectures. This specification also introduces a new OAuth response mode to support cross device scenarios initiated by the verifier (see {#response_mode_post}). 
+Deployments can use any pre-existing OAuth grant type and response type in conjunction with this specifications to support those scenarios in the context of different deployment architectures. This specification also introduces a new OAuth response mode to support cross device scenarios initiated by the verifier (see (#response_mode_post)). 
 
 Implementations can use any pre-existing OAuth 2.0 grant type and response type in conjunction with this specifications to support those scenarios in the context of different deployment architectures.
 
@@ -363,7 +363,7 @@ The following is a non-normative example request object with Response Mode `dire
 {
    "client_id": "https://client.example.org/post",
    "redirect_uri": "https://client.example.org/post",
-   "response_types": "vp_token",
+   "response_type": "vp_token",
    "response_mode": "direct_post"
    "presentation_definition": {...},
    "nonce": "n-0S6_WzA2Mj"
