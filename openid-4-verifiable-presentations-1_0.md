@@ -305,7 +305,7 @@ A response of type `vp_token` consists of the following parameters:
 * `vp_token` REQUIRED. String parameter that MUST either contain a single verifiable presentation or an array of Verifiable Presentations which MUST be represented as a JSON string or an object depending on a format as defined in Section 9.3 of [@!OpenID.VCI].
 * `presentation_submission`. REQUIRED. The `presentation_submission` element as defined in [@!DIF.PresentationExchange] links the input descriptor identifiers as specified in the corresponding request to the respective Verifiable Presentations within the VP Token along with format information. The root of the path expressions in the descriptor map is the respective verifiable presentation, pointing to the respective Verifiable Credentials.
 * `state` OPTIONAL. as defined in [@!RFC6749]
-* `response_mode` OPTIONAL. as defined in [@!OAuth.Responses]. If the parameter is not present, the default value is `fragment`. This parameter is also used to request signing & encryption (see (#response_signing_and_encryption)) as well as to ask the wallet to send the response to the Verifier via an HTTPS connection (see (##response_mode_post)). 
+* `response_mode` OPTIONAL. as defined in [@!OAuth.Responses]. If the parameter is not present, the default value is `fragment`. This parameter is also used to request signing & encryption (see (#response_signing_and_encryption)) as well as to ask the wallet to send the response to the Verifier via an HTTPS connection (see (#response_mode_post)). 
 
 The `presentation_submission` element MUST be included as a separate response parameter alongside the vp_token. Clients MUST ignore any `presentation_submission` element included inside a VP.
 
@@ -1220,6 +1220,7 @@ The technology described in this specification was made available from contribut
    -14
 
    * added support for signed and encrypted authorization responses based on JARM
+   * clarified response encoding for authorization responses
 
    -13
 
