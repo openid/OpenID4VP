@@ -289,10 +289,8 @@ Note: "https://self-issued.me/v2" is a symbolic string and can be used as an `au
 
 Whether `vp_token` is provided to the Client in the Authorization Response or Token Response depends on the response type used in the request (see (#vp_token_request)).
 
-- If only `vp_token` is used as the `response_type`, the `vp_token` is provided in the authorization response. 
-- If `id_token` is used as the `response_type` alongside `vp_token`, the `vp_token` is provided in the OpenID Connect authentication response along with the ID Token. 
-- In all other cases, if the response type value `vp_token` is not used, but the `presentation_definition` parameter is present, the `vp_token` is provided in the Token Response. 
-- Any combination of `vp_token` with a `response_type` other than `id_token` is undefined.
+- If the response type value is `vp_token` or `vp_token id_token`, the `vp_token` is provided in the authorization response. 
+- Otherwise and if the parameter `presentation_definition` is present in the authorization request, the `vp_token` is provided in the Token Response. 
 
 ## Response Type vp_token {#response_type_vp_token}
 
