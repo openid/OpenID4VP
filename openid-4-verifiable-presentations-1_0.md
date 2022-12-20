@@ -298,11 +298,14 @@ Whether `vp_token` is provided to the Client in the Authorization Response or To
 
 This specification defines the response type `vp_token`. 
 
+The reponse type `vp_token` can be used with different response modes as defined in [@!multiple-response-types.]. The default encoding is `fragment`, i.e. the Authorization Response parameters are encoded in the fragment added to the `redirect_uri` when redirecting back to the Client.
+
 A response of type `vp_token` consists of the following parameters:
 
 * `vp_token` REQUIRED. String parameter that MUST either contain a single verifiable presentation or an array of Verifiable Presentations which MUST be represented as a JSON string or an object depending on a format as defined in Section 9.3 of [@!OpenID.VCI].
 * `presentation_submission`. REQUIRED. The `presentation_submission` element as defined in [@!DIF.PresentationExchange] links the input descriptor identifiers as specified in the corresponding request to the respective Verifiable Presentations within the VP Token along with format information. The root of the path expressions in the descriptor map is the respective verifiable presentation, pointing to the respective Verifiable Credentials.
 * `state` OPTIONAL. as defined in [@!RFC6749]
+* `response_mode` OPTIONAL. as defined in [@!multiple-response-types.]. If the parameter is not present, the default value is `fragment`.
 
 The `presentation_submission` element MUST be included as a separate response parameter alongside the vp_token. Clients MUST ignore any `presentation_submission` element included inside a VP.
 
