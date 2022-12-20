@@ -298,14 +298,14 @@ Whether `vp_token` is provided to the Client in the Authorization Response or To
 
 This specification defines the response type `vp_token`. 
 
-The reponse type `vp_token` can be used with different response modes as defined in [@!multiple-response-types.]. The default encoding is `fragment`, i.e. the Authorization Response parameters are encoded in the fragment added to the `redirect_uri` when redirecting back to the Client.
+The reponse type `vp_token` can be used with different response modes as defined in [@!OAuth.Responses]. The default encoding is `fragment`, i.e. the Authorization Response parameters are encoded in the fragment added to the `redirect_uri` when redirecting back to the Client.
 
 A response of type `vp_token` consists of the following parameters:
 
 * `vp_token` REQUIRED. String parameter that MUST either contain a single verifiable presentation or an array of Verifiable Presentations which MUST be represented as a JSON string or an object depending on a format as defined in Section 9.3 of [@!OpenID.VCI].
 * `presentation_submission`. REQUIRED. The `presentation_submission` element as defined in [@!DIF.PresentationExchange] links the input descriptor identifiers as specified in the corresponding request to the respective Verifiable Presentations within the VP Token along with format information. The root of the path expressions in the descriptor map is the respective verifiable presentation, pointing to the respective Verifiable Credentials.
 * `state` OPTIONAL. as defined in [@!RFC6749]
-* `response_mode` OPTIONAL. as defined in [@!multiple-response-types.]. If the parameter is not present, the default value is `fragment`.
+* `response_mode` OPTIONAL. as defined in [@!OAuth.Responses]. If the parameter is not present, the default value is `fragment`. This parameter is also used to request signing & encryption (see (#response_signing_and_encryption)) as well as to ask the wallet to send the response to the Verifier via an HTTPS connection (see (##response_mode_post)). 
 
 The `presentation_submission` element MUST be included as a separate response parameter alongside the vp_token. Clients MUST ignore any `presentation_submission` element included inside a VP.
 
@@ -340,7 +340,7 @@ with a matching `presentation_submission` parameter.
 
 <{{examples/response/presentation_submission_multiple_vps.json}}
 
-## Signed and Encrypted Responses
+## Signed and Encrypted Responses {#response_signing_and_encryption}
 
 Implementations MAY use JARM [@!JARM] to sign and/or encrypt the response on the application level. 
 
@@ -353,16 +353,6 @@ For authorization responses with response type `vp_token`, the response JWT cont
 * `state` 
 
 The key material used for encryption and signing is at the discretion of the wallet. Utilizing existing metadata mechanisms for wallet and verifier is one option. This specification adds another option with the `authz_response_enc_pub_key` authorization request parameter, allowing the verifier to determine the encryption key with every authorization request.
-
-## Error Response
-
-The error response follows the rules as defined in [@!RFC6749]. 
-
-When the requested scope value is invalid, unknown, or malformed, the AS should respond with the error code `invalid_scope` defined in Section 4.1.2.1 of [@!RFC6749].
-
-Additionally, if the request contains more then a `presentation_definition` parameter or a `presentation_definition_uri` parameter or a 
-scope value representing a presentation definition, the wallet MUST refuse to process the request and return an `invalid_request` error
-as defined in [@!RFC6749]. 
 
 ## Response Mode "direct_post" {#response_mode_post}
 
@@ -413,6 +403,16 @@ The respective HTTP POST response to the Verifier would look like this:
 ```
 
 Note that in the Cross-Device Flow, the Wallet can change the UI based on the Verifier's response to the HTTP POST request.
+
+## Error Response
+
+The error response follows the rules as defined in [@!RFC6749]. 
+
+When the requested scope value is invalid, unknown, or malformed, the AS should respond with the error code `invalid_scope` defined in Section 4.1.2.1 of [@!RFC6749].
+
+Additionally, if the request contains more then a `presentation_definition` parameter or a `presentation_definition_uri` parameter or a 
+scope value representing a presentation definition, the wallet MUST refuse to process the request and return an `invalid_request` error
+as defined in [@!RFC6749]. 
 
 # Encoding of Presented Verifiable Presentations
 
