@@ -342,7 +342,7 @@ with a matching `presentation_submission` parameter.
 
 Implementations MAY use JARM [@!JARM] to sign and/or encrypt the response on the application level. 
 
-In addition to [@!JARM], this specification supports encrypted, unsigned responses. In this case, the JWT is only encrypted with JWE.  
+In addition to [@!JARM], this specification supports encrypted, unsigned responses. In this case, the JWT containing the response parameters is only encrypted.  
 
 For authorization responses with response type `vp_token`, the response JWT contains the following parameters:
 
