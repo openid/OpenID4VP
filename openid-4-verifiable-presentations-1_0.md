@@ -339,7 +339,7 @@ with a matching `presentation_submission` parameter.
 
 ## Signed and Encrypted Responses
 
-Implementations MAY use JARM [@!JARM] to sign and/or encrypt the response on the application level. 
+Implementations MAY use JARM [@!JARM] to sign, or sign and encrypt the response on the application level. 
 
 In addition to [@!JARM], this specification supports encrypted, unsigned responses. In this case the response is a JWE that directly contains JSON encoded response parameters.  
 
