@@ -290,7 +290,7 @@ Note: "https://self-issued.me/v2" is a symbolic string and can be used as an `au
 Whether `vp_token` is provided to the Client in the Authorization Response or Token Response depends on the response type used in the request (see (#vp_token_request)).
 
 - If the response type value is `vp_token` or `vp_token id_token`, the `vp_token` is provided in the authorization response. 
-- Otherwise and if the parameter `presentation_definition` is present in the authorization request, the `vp_token` is provided in the Token Response. 
+- In all other cases, such as when response type is `code`, and if the parameter `presentation_definition` is present in the authorization request, the `vp_token` is provided in the Token Response. 
 
 ## Response Type vp_token {#response_type_vp_token}
 
