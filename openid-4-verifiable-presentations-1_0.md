@@ -141,13 +141,7 @@ Implementations can use any pre-existing OAuth 2.0 grant type and response type 
 
 # Scope
 
-## In Scope
-
-This document is currently scoped for the presentation of the claims in the form of Verifiable Credentials between the Holder and the Verifier.
-
-## Out of Scope
-
-Issuance of Verifiable Credentials. The mechanism to acquire Credentials which can be presented is out of scope of this document. One mechanism to issue credentials is being defined within the [@!OpenID.VCI] specification.
+This specification defines a mechanism on top of OAuth 2.0 [@!RFC6749] that enables presentation of Verifiable Credentials as Verifiable Presentations in the Issuer-Holder-Verifier Model. Credentials of any Credential format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] and [@Hyperledger.Indy] (AnonCreds) are supported. This allows existing OpenID Connect Relying Parties to extend their reach towards claim sources asserting claims in new formats.
 
 # Authorization Request {#vp_token_request}
 
@@ -277,9 +271,9 @@ which is an alias for the first presentation definition example given in (#reque
 
 ## Authorization Request in a Cross-Device flow
 
-There are use-cases when the Authorization Request is being displayed on a device different from a device on which the requested Credential is stored.
+There are use-cases when the Authorization Request is being displayed on a device different from a device on which the requested Credential is stored. In those cases, an Authorization Request can be passed across devices by being rendered as a QR Code. 
 
-One option to pass an Authorization Request across devices is for the Verifier to render the Authorization Request as a QR Code. The usage of `request_uri` is RECOMMENDED, since authorization request size might be large and might not fit in a QR code.
+The usage of `request_uri` is RECOMMENDED, since authorization request size might be large and might not fit in a QR code.
 
 ## `aud` of a Request Object
 
@@ -426,9 +420,7 @@ The Verifier has the choice of the following mechanisms to invoke a Wallet:
 
 - Custom URL scheme as an `authorization_endpoint` (for example, `openid4vp://` as defined in (#openid4vp-profile))
 - Domain-bound Universal Links/App link as an `authorization_endpoint`
-- no specific `authorization_endpoint`, user scanning a QR code with Authorization Request using a manually opened Wallet, instead of an arbitrary camera application on a user-device
-
-Note that alternatives to the above approaches are being actively discussed in other industry and standards organizations.
+- no specific `authorization_endpoint`, user scanning a QR code with Authorization Request using a manually opened Wallet, instead of an arbitrary camera application on a user-device (neither custom URL scheme nor Universal/App link is used)
 
 # Authorization Server Metadata {#as_metadata_parameters}
 
