@@ -109,7 +109,7 @@ Wallet
 
 ## Verifier accesses Wallet via OpenID Connect
 
-A Verifier uses OpenID Connect to obtain verifiable presentations. This is a simple and mature way to obtain identity data. From a technical perspective, this also makes integration with OAuth-protected APIs easier as OpenID Connect is based on OAuth 2.0.  
+A Verifier uses OpenID Connect to obtain Verifiable Presentations. This is a simple and mature way to obtain identity data. From a technical perspective, this also makes integration with OAuth-protected APIs easier as OpenID Connect is based on OAuth 2.0.  
 
 ## Existing OpenID Connect RP integrates with the Wallets
 
@@ -149,7 +149,7 @@ The parameters comprising a request for Verifiable Presentations are given in th
 * `scope`: OPTIONAL. This parameter is defined in [@!RFC6749]. The wallet MAY allow verifiers to request presentation of  Verifiable Credentials by utilizing a pre-defined scope value. See (#request_scope) for more details.
 * `presentation_definition`: CONDITIONAL. A string containing a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange]. See (#request_presentation_definition) for more details. 
 * `presentation_definition_uri`: CONDITIONAL. A string containing an HTTPS URL pointing to a resource where a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange] can be retrieved . See (#request_presentation_definition_uri) for more details.
-* `nonce`: REQUIRED. This parameter follows the definition given in [@!OpenID.Core]. It is used to securely bind the verifiable presentation(s) provided by the AS to the particular transaction.
+* `nonce`: REQUIRED. This parameter follows the definition given in [@!OpenID.Core]. It is used to securely bind the Verifiable Presentation(s) provided by the AS to the particular transaction.
 * `response_mode` OPTIONAL. as defined in [@!OAuth.Responses]. If the parameter is not present, the default value is `fragment`. This parameter is also used to request signing & encryption (see (#jarm)) as well as to ask the wallet to send the response to the Verifier via an HTTPS connection (see (#response_mode_post)). 
 
 Note: A request MUST contain either a `presentation_definition` or a `presentation_definition_uri` or a single `scope` value representing a presentation definition, those three ways to request credential presentation are mutually exclusive. The wallet MUST refuse any request violating this requirement. 
@@ -303,14 +303,14 @@ The reponse type `vp_token` can be used with different response modes as defined
 When response type is `vp_token`, response consists of the following parameters:
 
 * `vp_token` REQUIRED. String parameter that MUST either contain a single Verifiable Presentation or an array of Verifiable Presentations. Each Verifiable Presentation MUST be represented as a JSON string (that is a Base64url encoded value) or a JSON object depending on a format as defined in Annex E of [@!OpenID.VCI].
-* `presentation_submission`. REQUIRED. The `presentation_submission` element as defined in [@!DIF.PresentationExchange] links the input descriptor identifiers in the corresponding request to the respective Verifiable Presentations within the VP Token. The root of the path expressions in the descriptor map is the respective verifiable presentation, pointing to the respective Verifiable Credentials.
+* `presentation_submission`. REQUIRED. The `presentation_submission` element as defined in [@!DIF.PresentationExchange] links the input descriptor identifiers in the corresponding request to the respective Verifiable Presentations within the VP Token. The root of the path expressions in the descriptor map is the respective Verifiable Presentation, pointing to the respective Verifiable Credentials.
 * `state` OPTIONAL. as defined in [@!RFC6749]
 
 The `presentation_submission` element MUST be included as a separate response parameter alongside the vp_token. Clients MUST ignore any `presentation_submission` element included inside a VP.
 
 Including the `presentation_submission` element as a separate response parameter allows the AS to provide the RP with additional information about the format and structure in advance of the processing of the VP Token, and can be used even with the credential formats that do not allow for the direct inclusion of `presentation_submission` elements inside a credential itself.
 
-In case the AS returns a single verifiable presentation in the VP Token, the `descriptor_map` would then contain a simple path expression "$".
+In case the AS returns a single Verifiable Presentation in the VP Token, the `descriptor_map` would then contain a simple path expression "$".
 
 The following is an example response to a request of a response type `vp_token`, where the `presentation_submission` is a separate response parameter: 
 
@@ -321,7 +321,7 @@ The following is an example response to a request of a response type `vp_token`,
     &vp_token=...
 ```
 
-This is an example of a VP Token containing a single verifiable presentation
+This is an example of a VP Token containing a single Verifiable Presentation
 
 <{{examples/response/vp_token_raw_ldp_vp.json}}
 
@@ -329,9 +329,9 @@ with a matching `presentation_submission`.
 
 <{{examples/response/presentation_submission.json}}
 
-A `descriptor_map` element MUST  contain a `path_nested` element referring to the actual credential carried in the respective verifiable presentation. 
+A `descriptor_map` element MUST  contain a `path_nested` element referring to the actual credential carried in the respective Verifiable Presentation. 
 
-This is an example of a VP Token containing multiple verifiable presentations,   
+This is an example of a VP Token containing multiple Verifiable Presentations,   
 
 <{{examples/response/vp_token_multiple_vps.json}}
 
@@ -425,7 +425,7 @@ Table in Section 6.7.3. of [@!OpenID.VCI] might be superceded by a registry in t
 
 # Metadata {#metadata}
 
-This specification introduces additional metadata to enable Client and AS to determine the verifiable presentation and verifiable credential formats, proof types and algorithms to be used in a protocol exchange.
+This specification introduces additional metadata to enable Client and AS to determine the Verifiable Presentation and Verifiable Credential formats, proof types and algorithms to be used in a protocol exchange.
 
 ## Authorization Server Metadata {#as_metadata_parameters}
 
@@ -579,11 +579,11 @@ Below is a set of static configuration values that can be used with `vp_token` a
 
 Often RPs will want to request Verifiable Credentials from an issuer who is a member of a federation or trust scheme, rather than from a specific issuer, for example, a "BSc Chemistry Degree" credential from a US University rather than from a specifically named university.
 
-In order to facilitate this, federations will need to determine how an issuer can indicate in a verifiable credential that they are a member of one or more federations/trust schemes. Once this is done, the RP will be able to create a `presentation_definition` that includes this filtering criteria. This will enable the wallet to select all the Verifiable Credentials that match this criteria and then by some means (for example, by asking the user) determine which matching verifiable credential to return to the RP. Upon receiving this verifiable credential, the RP will be able to call its federation API to determine if the issuer is indeed a member of the federation/trust scheme that it says it is.
+In order to facilitate this, federations will need to determine how an issuer can indicate in a Verifiable Credential that they are a member of one or more federations/trust schemes. Once this is done, the RP will be able to create a `presentation_definition` that includes this filtering criteria. This will enable the wallet to select all the Verifiable Credentials that match this criteria and then by some means (for example, by asking the user) determine which matching Verifiable Credential to return to the RP. Upon receiving this Verifiable Credential, the RP will be able to call its federation API to determine if the issuer is indeed a member of the federation/trust scheme that it says it is.
 
 Indicating the federations/trust schemes that an issuer is a member of may be achieved by defining a `termsOfUse` property [@!VC_DATA].
 
-Note: [@!VC_DATA] describes terms of use as "can be utilized by an issuer ... to communicate the terms under which a verifiable credential ... was issued."
+Note: [@!VC_DATA] describes terms of use as "can be utilized by an issuer ... to communicate the terms under which a Verifiable Credential ... was issued."
 
 The following terms of use may be defined:
 
@@ -624,11 +624,11 @@ When HTTP "POST" method is used to send VP Token, there is no session for the Ve
 
 ## Preventing Replay Attacks {#preventing-replay}
 
-To prevent replay attacks, verifiable presentation container objects MUST be linked to `client_id` and `nonce` from the Authentication Request. The `client_id` is used to detect presentation of Verifiable Credentials to a different party other than the intended. The `nonce` value binds the presentation to a certain authentication transaction and allows the verifier to detect injection of a presentation in the OpenID Connect flow, which is especially important in flows where the presentation is passed through the front-channel. 
+To prevent replay attacks, Verifiable Presentation container objects MUST be linked to `client_id` and `nonce` from the Authentication Request. The `client_id` is used to detect presentation of Verifiable Credentials to a different party other than the intended. The `nonce` value binds the presentation to a certain authentication transaction and allows the verifier to detect injection of a presentation in the OpenID Connect flow, which is especially important in flows where the presentation is passed through the front-channel. 
 
-Note: These values MAY be represented in different ways in a verifiable presentation (directly as claims or indirectly be incorporation in proof calculation) according to the selected proof format denoted by the format claim in the verifiable presentation container.
+Note: These values MAY be represented in different ways in a Verifiable Presentation (directly as claims or indirectly be incorporation in proof calculation) according to the selected proof format denoted by the format claim in the Verifiable Presentation container.
 
-Note: This specification assumes that a verifiable credential is always presented with a cryptographic proof of possession which can be a Verifiable presentation. This cryptographic proof of possession is bound to audience and transaction as described in this section.
+Note: This specification assumes that a Verifiable Credential is always presented with a cryptographic proof of possession which can be a Verifiable Presentation. This cryptographic proof of possession is bound to audience and transaction as described in this section.
 
 Here is a non-normative example for format=`jwt_vp` (only relevant part):
 
@@ -653,7 +653,7 @@ Here is a non-normative example for format=`jwt_vp` (only relevant part):
 }
 ```
 
-In the example above, the requested `nonce` value is included as the `nonce` and `client_id` as the `aud` value in the proof of the verifiable presentation.
+In the example above, the requested `nonce` value is included as the `nonce` and `client_id` as the `aud` value in the proof of the Verifiable Presentation.
 
 Here is a non-normative example for format=`ldp_vp` (only relevant part):
 
@@ -677,11 +677,11 @@ Here is a non-normative example for format=`ldp_vp` (only relevant part):
 }
 ```
 
-In the example above, the requested `nonce` value is included as the `challenge` and `client_id` as the `domain` value in the proof of the verifiable presentation.
+In the example above, the requested `nonce` value is included as the `challenge` and `client_id` as the `domain` value in the proof of the Verifiable Presentation.
 
 ## Validation of Verifiable Presentations
 
-A verifier MUST validate the integrity, authenticity, and holder binding of any verifiable presentation provided by an OP according to the rules of the respective presentation format. 
+A verifier MUST validate the integrity, authenticity, and holder binding of any Verifiable Presentation provided by an OP according to the rules of the respective presentation format. 
 
 This requirement holds true even if those Verifiable Presentations are embedded within a signed OpenID Connect assertion, such as an ID Token or a UserInfo response. This is required because Verifiable Presentations might be signed by the same holder but with different key material and/or the OpenID Connect assertions may be signed by a third party (e.g., a traditional OP). In both cases, just checking the signature of the respective OpenID Connect assertion does not, for example, check the holder binding.
 
@@ -801,7 +801,7 @@ Clients intending to authenticate the end-user utilizing a claim in a verifable 
 
 <reference anchor="TRAIN" target="https://oid2022.compute.dtu.dk/index.html">
         <front>
-          <title>A novel approach to establish trust in verifiable credential
+          <title>A novel approach to establish trust in Verifiable Credential
 issuers in Self-Sovereign Identity ecosystems using TRAIN</title>	  
            <author fullname="Isaac Henderson Johnson Jeyakumar">
             <organization>University of Stuttgart</organization>
