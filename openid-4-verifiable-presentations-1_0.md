@@ -150,9 +150,10 @@ The parameters comprising a request for Verifiable Presentations are given in th
 * `presentation_definition`: CONDITIONAL. A string containing a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange]. See (#request_presentation_definition) for more details. 
 * `presentation_definition_uri`: CONDITIONAL. A string containing an HTTPS URL pointing to a resource where a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange] can be retrieved . See (#request_presentation_definition_uri) for more details.
 * `nonce`: REQUIRED. This parameter follows the definition given in [@!OpenID.Core]. It is used to securely bind the verifiable presentation(s) provided by the AS to the particular transaction.
-* `response_enc_pub_key`: OPTIONAL. The verifiers's public key used as input to the key agreement for encryption of the authorization response in JWK [@!RFC7517] format. If not present, the key agreement is performed using a public key determined by the verifiers's `jwks` or `jwks_uri` metadata parameter. The key agreement algorithm is determined by the `authorization_encrypted_response_alg` client metadata parameter. 
 
 Note: A request MUST contain either a `presentation_definition` or a `presentation_definition_uri` or a single `scope` value representing a presentation definition, those three ways to request credential presentation are mutually exclusive. The wallet MUST refuse any request violating this requirement. 
+
+Note: A verifier MAY pass public keys to be used as input to the key agreement for encryption of the authorization response (see (#jarm)) in the `jwks` or `jwks_uri` claim within the `client_metadata` request parameter (see (#client_metadata_parameter)). 
 
 This is an example request: 
 
@@ -337,7 +338,7 @@ with a matching `presentation_submission` parameter.
 
 <{{examples/response/presentation_submission_multiple_vps.json}}
 
-## Signed and Encrypted Responses
+## Signed and Encrypted Responses {#jarm}
 
 Implementations MAY use JARM [@!JARM] to sign, or sign and encrypt the response on the application level. Furthermore, this specification allows for JARM with encrypted, unsigned responses. In this case, the JWT containing the response parameters is only encrypted.  
 
@@ -347,7 +348,7 @@ For authorization responses with response type `vp_token`, the response JWT cont
 * `presentation_submission`
 * `state` 
 
-The key material used for encryption and signing is at the discretion of the wallet. Utilizing existing metadata mechanisms for wallet and verifier is one option. This specification adds another option with the `response_enc_pub_key` authorization request parameter, allowing the verifier to determine the encryption key with every authorization request.
+The key material used for encryption and signing SHOULD be determined using existing metadata mechanisms, such as the `jwks` client metadata parameter. 
 
 ## Error Response
 
@@ -455,7 +456,7 @@ vp_formats_supported": {
 
 Client and the AS utilizing this specification can exchange metadata prior to a transaction, e.g using [@!RFC7591] or out-of-band mechanisms. However, OpenID for VP can be used in deployments models where the AS does not support those mechanisms. This specification therefore defines additional mechanisms where the Client can provide metadata to the AS just-in-time with the Authorization Request. 
 
-#### Request Parameter
+#### Request Parameter {#client_metadata_parameter}
 
 The Client may send one of the following parameters to convey metadata with unsigned authorization requests. 
 
