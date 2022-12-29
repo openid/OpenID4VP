@@ -7,7 +7,7 @@ keyword = ["security", "openid", "ssi"]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "openid-4-verifiable-presentations-1_0-13"
+value = "openid-4-verifiable-presentations-1_0-14"
 status = "standard"
 
 [[author]]
@@ -133,6 +133,8 @@ This specification supports any Credential format used in the Issuer-Holder-Veri
 
 Verifiable Presentations are requested by adding a parameter `presentation_definition` as defined by [@!DIF.PresentationExchange] to an OAuth 2.0 Authorization Request.
 
+The Verifiable Presentations are returned to the Verifier in a `vp_token` response parameter. 
+
 OpenID for Verifiable Presentations supports scenarios where Authorization Request is sent from the Verifier to the Wallet using redirects (same-device flow) and when it is passed an across devices (cross-device flow).
 
 Deployments can use any pre-existing OAuth grant type and response type in conjunction with this specifications to support those scenarios in the context of different deployment architectures. This specification also introduces a new OAuth response mode to support cross device scenarios initiated by the verifier (see (#response_mode_post)). 
@@ -143,13 +145,16 @@ Implementations can use any pre-existing OAuth 2.0 grant type and response type 
 
 The parameters comprising a request for Verifiable Presentations are given in the following: 
 
-* `response_type`: REQUIRED. this parameter is defined in [@!RFC6749]. The possible values are determined by the response type registry established by [@!RFC6749]. This specification introduces the response type "vp_token". This response type asks the Authorization Server (AS) to return only a VP Token in the Authorization Response. 
-* `scope`: OPTIONAL. this parameter is defined in [@!RFC6749]. The wallet MAY allow verifiers to request presentation of  Verifiable Credentials by utilizing a pre-defined scope value. See (#request_scope) for more details.
+* `response_type`: REQUIRED. This parameter is defined in [@!RFC6749]. The possible values are determined by the response type registry established by [@!RFC6749]. This specification introduces the response type `vp_token`. This response type asks the Authorization Server (AS) to return the `vp_token` in the Authorization Response (see (#response_type_vp_token)). 
+* `scope`: OPTIONAL. This parameter is defined in [@!RFC6749]. The wallet MAY allow verifiers to request presentation of  Verifiable Credentials by utilizing a pre-defined scope value. See (#request_scope) for more details.
 * `presentation_definition`: CONDITIONAL. A string containing a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange]. See (#request_presentation_definition) for more details. 
 * `presentation_definition_uri`: CONDITIONAL. A string containing an HTTPS URL pointing to a resource where a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange] can be retrieved . See (#request_presentation_definition_uri) for more details.
 * `nonce`: REQUIRED. This parameter follows the definition given in [@!OpenID.Core]. It is used to securely bind the verifiable presentation(s) provided by the AS to the particular transaction.
+* `response_mode` OPTIONAL. as defined in [@!OAuth.Responses]. If the parameter is not present, the default value is `fragment`. This parameter is also used to request signing & encryption (see (#jarm)) as well as to ask the wallet to send the response to the Verifier via an HTTPS connection (see (#response_mode_post)). 
 
 Note: A request MUST contain either a `presentation_definition` or a `presentation_definition_uri` or a single `scope` value representing a presentation definition, those three ways to request credential presentation are mutually exclusive. The wallet MUST refuse any request violating this requirement. 
+
+Note: A verifier MAY pass public keys to be used as input to the key agreement for encryption of the authorization response (see (#jarm)) in the `jwks` or `jwks_uri` claim within the `client_metadata` request parameter (see (#client_metadata_parameter)). 
 
 This is an example request: 
 
@@ -282,24 +287,26 @@ Note: "https://self-issued.me/v2" is a symbolic string and can be used as an `au
 
 # Response {#vp_token_response}
 
-## Response Types
+## vp_token and Response Types
 
-Whether VP Token is provided to the Client in the Authorization Response or Token Response depends on the response type used in the request (see (#vp_token_request)).
+Whether `vp_token` is provided to the Client in the Authorization Response or Token Response depends on the response type used in the request (see (#vp_token_request)).
 
-- If only `vp_token` is used as the `response_type`, the VP Token is provided in the authorization response. 
-- If `id_token` is used as the `response_type` alongside `vp_token`, the VP Token is provided in the OpenID Connect authentication response along with the ID Token. 
-- In all other cases, if `vp_token` is not used, but `presentation_definition` parameter is present, the VP Token is provided in the Token Response. 
-- Any combination of `vp_token` with a `response_type` other than `id_token` is undefined.
+- If the response type value is `vp_token` or `vp_token id_token`, the `vp_token` is provided in the authorization response. 
+- In all other cases, such as when response type is `code`, and if the parameter `presentation_definition` is present in the authorization request, the `vp_token` is provided in the Token Response. 
 
-## VP Token
+## Response Type vp_token {#response_type_vp_token}
 
-The VP Token MUST either contain a single verifiable presentation or an array of Verifiable Presentations which MUST be represented as a JSON string or an object depending on a format as defined in Section 9.3 of [@!OpenID.VCI].
+This specification defines the response type `vp_token`. 
 
-## `presentation_submission` Element
+The reponse type `vp_token` can be used with different response modes as defined in [@!OAuth.Responses]. The default encoding is `fragment`, i.e. the Authorization Response parameters are encoded in the fragment added to the `redirect_uri` when redirecting back to the Client.
 
-The `presentation_submission` element as defined in [@!DIF.PresentationExchange] links the input descriptor identifiers as specified in the corresponding request to the respective Verifiable Presentations within the VP Token along with format information. The root of the path expressions in the descriptor map is the respective verifiable presentation, pointing to the respective Verifiable Credentials.
+A response of type `vp_token` consists of the following parameters:
 
-This `presentation_submission` element MUST be included as a separate response parameter alongside the vp_token. Clients MUST ignore any `presentation_submission` element included inside a VP.
+* `vp_token` REQUIRED. String parameter that MUST either contain a single verifiable presentation or an array of Verifiable Presentations which MUST be represented as a JSON string or an object depending on a format as defined in Section 9.3 of [@!OpenID.VCI].
+* `presentation_submission`. REQUIRED. The `presentation_submission` element as defined in [@!DIF.PresentationExchange] links the input descriptor identifiers as specified in the corresponding request to the respective Verifiable Presentations within the VP Token along with format information. The root of the path expressions in the descriptor map is the respective verifiable presentation, pointing to the respective Verifiable Credentials.
+* `state` OPTIONAL. as defined in [@!RFC6749]
+
+The `presentation_submission` element MUST be included as a separate response parameter alongside the vp_token. Clients MUST ignore any `presentation_submission` element included inside a VP.
 
 Including the `presentation_submission` element as a separate response parameter allows the AS to provide the RP with additional information about the format and structure in advance of the processing of the VP Token, and can be used even with the credential formats that do not allow for the direct inclusion of `presentation_submission` elements inside a credential itself.
 
@@ -332,15 +339,17 @@ with a matching `presentation_submission` parameter.
 
 <{{examples/response/presentation_submission_multiple_vps.json}}
 
-## Error Response
+## Signed and Encrypted Responses {#jarm}
 
-The error response follows the rules as defined in [@!RFC6749]. 
+Implementations MAY use JARM [@!JARM] to sign, or sign and encrypt the response on the application level. Furthermore, this specification allows for JARM with encrypted, unsigned responses, in which case, the JWT containing the response parameters is only encrypted.
 
-When the requested scope value is invalid, unknown, or malformed, the AS should respond with the error code `invalid_scope` defined in Section 4.1.2.1 of [@!RFC6749].
+For authorization responses with response type `vp_token`, the response JWT contains the following parameters as defined in (#response_type_vp_token):
 
-Additionally, if the request contains more then a `presentation_definition` parameter or a `presentation_definition_uri` parameter or a 
-scope value representing a presentation definition, the wallet MUST refuse to process the request and return an `invalid_request` error
-as defined in [@!RFC6749]. 
+* `vp_token` 
+* `presentation_submission`
+* `state` 
+
+The key material used for encryption and signing SHOULD be determined using existing metadata mechanisms, such as the `jwks` client metadata parameter. 
 
 ## Response Mode "direct_post" {#response_mode_post}
 
@@ -392,6 +401,16 @@ The respective HTTP POST response to the Verifier would look like this:
 
 Note that in the Cross-Device Flow, the Wallet can change the UI based on the Verifier's response to the HTTP POST request.
 
+## Error Response
+
+The error response follows the rules as defined in [@!RFC6749]. 
+
+When the requested scope value is invalid, unknown, or malformed, the AS should respond with the error code `invalid_scope` defined in Section 4.1.2.1 of [@!RFC6749].
+
+Additionally, if the request contains more then a `presentation_definition` parameter or a `presentation_definition_uri` parameter or a 
+scope value representing a presentation definition, the wallet MUST refuse to process the request and return an `invalid_request` error
+as defined in [@!RFC6749]. 
+
 # Encoding of Presented Verifiable Presentations
 
 Presented Verifiable Credentials MUST be returned in the VP Token as defined in Section 6.7.3. of [@!OpenID.VCI], based on the format and the signature scheme of the Verifiable Credentials and Verifiable Presentations. This specification does not require any additional encoding when credential format is already represented as a JSON object or a JSON string.
@@ -438,7 +457,7 @@ vp_formats_supported": {
 
 Client and the AS utilizing this specification can exchange metadata prior to a transaction, e.g using [@!RFC7591] or out-of-band mechanisms. However, OpenID for VP can be used in deployments models where the AS does not support those mechanisms. This specification therefore defines additional mechanisms where the Client can provide metadata to the AS just-in-time with the Authorization Request. 
 
-#### Request Parameter
+#### Request Parameter {#client_metadata_parameter}
 
 The Client may send one of the following parameters to convey metadata with unsigned authorization requests. 
 
@@ -838,6 +857,19 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </front>
 </reference>
 
+<reference anchor="JARM" target="https://openid.net/specs/oauth-v2-jarm-final.html">
+        <front>
+          <title>Financial-grade API: JWT Secured Authorization Response Mode for OAuth 2.0 (JARM)</title>
+		  <author fullname="Torsten Lodderstedt">
+            <organization>yes.com</organization>
+          </author>
+          <author fullname="Brian Campbell">
+            <organization>Ping Identity</organization>
+          </author>
+          <date day="9" month="Nov" year="2022"/>
+        </front>
+ </reference>
+
 <reference anchor="ISO.18013-5" target="https://www.iso.org/standard/69084.html">
         <front>
           <title>ISO/IEC 18013-5:2021 Personal identification — ISO-compliant driving licence — Part 5: Mobile driving licence (mDL)  application</title>
@@ -1181,6 +1213,11 @@ The technology described in this specification was made available from contribut
 # Document History
 
    [[ To be removed from the final specification ]]
+
+   -14
+
+   * added support for signed and encrypted authorization responses based on JARM
+   * clarified response encoding for authorization responses
 
    -13
 
