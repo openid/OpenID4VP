@@ -62,7 +62,7 @@ This specification defines a protocol for requesting and presenting Verifiable C
 
 This specification defines a mechanism on top of OAuth 2.0 [@!RFC6749] that enables presentation of Verifiable Credentials. W3C [@VC_DATA] formats as well as other Credential formats, like [@ISO.18013-5] and [@Hyperledger.Indy], are supported. 
 
-OAuth 2.0 [@!RFC6749] is used as a base protocol as it provides the required rails to build secure and developer friendly credential presentation on top of it. Moreover, implementers can, in a single interface, support credential presentation and the issuance of access tokens for access to APIs based on Verifiable Credentials in the wallet. OpenID Conect deployments can also extend their implementations using this specification with the ability to transport Verifiable Presentations, since OpenID Connect is built on top of OAuth 2.0. Implementers that require [@!OpenID.Core] features, such as the issuance of subject-signed ID tokens, can combine this specification with [@!SIOPv2].
+OAuth 2.0 [@!RFC6749] is used as a base protocol as it provides the required rails to build simple, secure and developer friendly credential presentation on top of it. Moreover, implementers can, in a single interface, support credential presentation and the issuance of access tokens for access to APIs based on Verifiable Credentials in the wallet. OpenID Conect deployments can also extend their implementations using this specification with the ability to transport Verifiable Presentations, since OpenID Connect is built on top of OAuth 2.0. Implementers that require [@!OpenID.Core] features, such as the issuance of subject-signed ID tokens, can combine this specification with [@!SIOPv2].
 
 # Terminology
 
@@ -70,7 +70,7 @@ Credential
 
   A set of claims about a subject made by an Issuer.
 
-Note: the definition of a term "credential" in this specification is based on [@VC_DATA] and is different from that in [@!OpenID.Core].
+Note: the definition of a term "credential" in this specification is different from that in [@!OpenID.Core].
 
 Verifiable Credential (VC)
 
@@ -160,12 +160,12 @@ The following new parameters are defined by this specification:
 
 Additional considerations need to be considered for the following parameters defined in [@!RFC6749]:
 
-* `response_type`: REQUIRED. This specification can be used with all response types as defined in the registry established by [@!RFC6749]. This specification introduces the new response type "vp_token". This response type asks the Authorization Server (AS) to return only a VP Token in the Authorization Response. 
+* `response_type`: REQUIRED. This specification can be used with all response types as defined in the registry established by [@!RFC6749]. This specification introduces the new response type `vp_token`. This response type asks the Authorization Server (AS) to return a VP Token in the Authorization Response. 
 * `scope`: OPTIONAL. The wallet MAY allow verifiers to request presentation of  Verifiable Credentials by utilizing a pre-defined scope value. See (#request_scope) for more details.
 
 Note: A request MUST contain either a `presentation_definition` or a `presentation_definition_uri` or a single `scope` value representing a presentation definition, those three ways to request credential presentation are mutually exclusive. The wallet MUST refuse any request violating this requirement. 
 
-Note: A verifier MAY pass public keys to be used as input to the key agreement for encryption of the authorization response (see (#jarm)) in the `jwks` or `jwks_uri` claim within the `client_metadata` request parameter (see (#client_metadata_parameter)). 
+Note: A verifier MAY pass public keys to be used as input to the key agreement for encryption of the authorization response (see (#jarm)) in the `jwks` or `jwks_uri` claim within the `client_metadata` request parameter (see (#client_metadata_parameters)). 
 
 This is an example request: 
 
@@ -362,16 +362,6 @@ For authorization responses with response type `vp_token`, the response JWT cont
 
 The key material used for encryption and signing SHOULD be determined using existing metadata mechanisms, such as the `jwks` client metadata parameter. 
 
-This document defines the following additional error codes and error descriptions:
-
-`vp_formats_not_supported`: The AS does not support any of the formats supported by the RP such as those included in the `vp_formats` registration parameter.
-
-Moreover, when `client_metadata` or `client_metadata_uri` parameters defined in (#client_metadata) are present, but the AS recognizes `client_id` and knows metadata associated with it, it MUST return an error. 
-
-ASs compliant with this specification MUST NOT proceed with the transaction when pre-registered client metadata has been found based on the `client_id`, but `client_metadata` parameter is also present.
-
-Usage of `client_metadata` or `client_metadata_uri` parameters with `client_id` that the AS might be seeing for the first time is mutualy exclusive with the registration mechanism where Self-Issued OP assigns `client_id` to the RP after receiving RP's metadata.
-
 ## Response Mode "direct_post" {#response_mode_post}
 
 There are use-cases when the Authorization Request was received from a Verifier that is unreachable using redirects (i.e. it is on another device) from the Wallet on which the requested Credential is stored.
@@ -424,13 +414,29 @@ Note that in the Cross-Device Flow, the Wallet can change the UI based on the Ve
 
 ## Error Response
 
-The error response follows the rules as defined in [@!RFC6749]. 
+The error response follows the rules as defined in [@!RFC6749], with the following additional clarifications:
 
-When the requested scope value is invalid, unknown, or malformed, the AS should respond with the error code `invalid_scope` defined in Section 4.1.2.1 of [@!RFC6749].
+`invalid_scope`: 
 
-Additionally, if the request contains more then a `presentation_definition` parameter or a `presentation_definition_uri` parameter or a 
-scope value representing a presentation definition, the wallet MUST refuse to process the request and return an `invalid_request` error
-as defined in [@!RFC6749]. 
+- Requested scope value is invalid, unknown, or malformed.
+
+`invalid_request`:
+
+- The request contains more than a `presentation_definition` parameter or a `presentation_definition_uri` parameter or a 
+scope value representing a presentation definition.
+
+`invalid_client`:
+
+- `client_metadata` or `client_metadata_uri` parameters defined in (#client_metadata) are present, but the Wallet recognizes `client_id` and knows metadata associated with it.
+- Pre-registered client metadata has been found based on the `client_id`, but `client_metadata` parameter is also present.
+
+Usage of `client_metadata` or `client_metadata_uri` parameters with `client_id` that the AS might be seeing for the first time is mutualy exclusive with the registration mechanism where Self-Issued OP assigns `client_id` to the RP after receiving RP's metadata.
+
+## Error Response
+
+This document defines the following additional error codes and error descriptions:
+
+`vp_formats_not_supported`: The AS does not support any of the formats requested by the RP such as those included in the `vp_formats` registration parameter.
 
 # Encoding of Presented Verifiable Presentations
 
@@ -458,8 +464,9 @@ This specification defines new server metadata parameters according to [@!RFC841
 
 The AS publishes the formats it supports using the `vp_formats_supported` metadata parameter. 
 
-* `vp_formats_supported`:  An object containing a list of key value pairs, where the key is a string identifying a credential format supported by the AS. Valid credential format identifiers values are defined in Section 9.3 of [@!OpenID.VCI]. Other values may be used when defined in the profiles of this specification. The key's value is an object containing a parameter defined below:
-  * `alg_values_supported`: An object where the value is an array of case sensitive strings that identify the cryptographic suites that are supported. Cryptosuites for Verifiable Credentials in `jwt_vc` format should use algorithm names defined in [IANA JOSE Algorithms Registry](https://www.iana.org/assignments/jose/jose.xhtml#web-signature-encryption-algorithms). Cryptosuites for Verifiable Credentials in `ldp_vc` format should use signature suites names defined in [Linked Data Cryptographic Suite Registry](https://w3c-ccg.github.io/ld-cryptosuite-registry/). Cryptosuites for Verifiable Credentials in `mdl_iso_cbor` format should use signature suites names defined in ISO/IEC 18013-5:2021. Parties using other credential formats will need to agree upon the meanings of the values used, which may be context-specidic. 
+* `presentation_definition_uri_supported`: OPTIONAL. Boolean value specifying whether the RP supports the transfer of `presentation_definition` by reference, with true indicating support. If omitted, the default value is true. 
+* `vp_formats_supported`: REQUIRED. An object containing a list of key value pairs, where the key is a string identifying a credential format supported by the AS. Valid credential format identifiers values are defined in Annex E of [@!OpenID.VCI]. Other values may be used when defined in the profiles of this specification. The value is an object containing a parameter defined below:
+  * `alg_values_supported`: An object where the value is an array of case sensitive strings that identify the cryptographic suites that are supported. Cryptosuites for Verifiable Credentials in `jwt_vc_json`, `jwon_vc_json-ld`, `jwt_vp_json`, `jwon_vp_json-ld` formats should use algorithm names defined in [IANA JOSE Algorithms Registry](https://www.iana.org/assignments/jose/jose.xhtml#web-signature-encryption-algorithms). Cryptosuites for Verifiable Credentials in `ldp_vc` and `ldp_vp` format should use signature suites names defined in [Linked Data Cryptographic Suite Registry](https://w3c-ccg.github.io/ld-cryptosuite-registry/). Cryptosuites for Verifiable Credentials in `mso_mdoc` format should use signature suites names defined in ISO/IEC 18013-5:2021. Parties using other credential formats will need to agree upon the meanings of the values used, which may be context-specidic.
 
 Below is a non-normative example of a `vp_formats_supported` parameter:
 
@@ -495,10 +502,9 @@ This specification introduces additional Client metadata to enable Client and AS
 
 This specification defines the following new client metadata parameters according to [@!RFC7591]:
 
-* `vp_formats`: REQUIRED. An object defining the formats and proof types of verifiable presentations and verifiable credentials that a RP supports. Valid format identifier values are defined in the table in Section 9.3. of [@!OpenID.VCI] and include `jwt_vc`, `ldp_vc`, `jwt_jp` and `ldp_vp`. Formats identifiers not in the table may be supported when defined in the profiles of this specification.
-* `presentation_definition_uri`: OPTIONAL. Boolean value specifying whether the RP supports the transfer of `presentation_definition` by reference, with true indicating support. If omitted, the default value is true. 
+* `vp_formats`: REQUIRED. An object defining the formats and proof types of verifiable presentations and verifiable credentials that a RP supports. Valid format identifier values are defined in Annex E of [@!OpenID.VCI] and include `jwt_vc_json`, `jwt_vc_json-ld`, `ldp_vc`, `jwt_vp_json`, `jwt_vp_json-ld`, `ldp_vp`, and `mso_mdoc`. Deployments can extend the formats supported, provided Issuers, Holders and Verifiers all understand the new format.
 
-Here is an example for an RP registering with a Standard OP via dynamic client registration:
+Here is an example for an RP registering with a standard OP via dynamic client registration:
 
 <{{examples/client_metadata/client_code_format.json}}
 
@@ -1250,7 +1256,7 @@ Note: Plan to register the following response types in the [OAuth Authorization 
 
 # Acknowledgements {#Acknowledgements}
 
-We would like to thank David Chadwick, Daniel Fett, Fabian Hauck, Alen Horvat, Edmund Jay, Ronald Koenig, and Michael B. Jones for their valuable feedback and contributions that helped to evolve this specification.
+We would like to thank John Bradley, Brian Campbell, David Chadwick, Giuseppe De Marco, Daniel Fett, George Fletcher, Fabian Hauck, Joseph Heenan, Alen Horvat, Andrew Hughes, Edmund Jay, Michael B. Jones, Gaurav Khot, Ronald Koenig, Kenichi Nakamura, Nat Sakimura, Arjen van Veen, and Jacob Ward for their valuable feedback and contributions that helped to evolve this specification.
 
 # Notices
 
