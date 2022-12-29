@@ -154,7 +154,7 @@ The parameters comprising a request for Verifiable Presentations are given in th
 
 Note: A request MUST contain either a `presentation_definition` or a `presentation_definition_uri` or a single `scope` value representing a presentation definition, those three ways to request credential presentation are mutually exclusive. The wallet MUST refuse any request violating this requirement. 
 
-Note: A verifier MAY pass public keys to be used as input to the key agreement for encryption of the authorization response (see (#jarm)) in the `jwks` or `jwks_uri` claim within the `client_metadata` request parameter (see (#client_metadata_parameter)). 
+A public key to be used by the Wallet as an input to the key agreement to encrypt Authorization Response (see (#jarm)) MAY be passed by the Verifier using `jwks` or `jwks_uri` claim within the `client_metadata` request parameter (see (#client_metadata_parameter)). 
 
 This is an example request: 
 
@@ -291,8 +291,8 @@ Note: "https://self-issued.me/v2" is a symbolic string and can be used as an `au
 
 Whether `vp_token` is provided to the Client in the Authorization Response or Token Response depends on the response type used in the request (see (#vp_token_request)).
 
-- If the response type value is `vp_token` or `vp_token id_token`, the `vp_token` is provided in the authorization response. 
-- In all other cases, such as when response type is `code`, and if the parameter `presentation_definition` is present in the authorization request, the `vp_token` is provided in the Token Response. 
+- If the response type value is `vp_token` or `vp_token id_token`, the `vp_token` is provided in the authorization response, with or without Self-Issued ID Token as defined in [@!SIOPv2].
+- In all other cases, such as when response type is `code`, when the parameter `presentation_definition` is present in the authorization request, the `vp_token` is provided in the Token Response. 
 
 ## Response Type vp_token {#response_type_vp_token}
 
@@ -300,10 +300,10 @@ This specification defines the response type `vp_token`.
 
 The reponse type `vp_token` can be used with different response modes as defined in [@!OAuth.Responses]. The default encoding is `fragment`, i.e. the Authorization Response parameters are encoded in the fragment added to the `redirect_uri` when redirecting back to the Client.
 
-A response of type `vp_token` consists of the following parameters:
+When response type is `vp_token`, response consists of the following parameters:
 
-* `vp_token` REQUIRED. String parameter that MUST either contain a single verifiable presentation or an array of Verifiable Presentations which MUST be represented as a JSON string or an object depending on a format as defined in Section 9.3 of [@!OpenID.VCI].
-* `presentation_submission`. REQUIRED. The `presentation_submission` element as defined in [@!DIF.PresentationExchange] links the input descriptor identifiers as specified in the corresponding request to the respective Verifiable Presentations within the VP Token along with format information. The root of the path expressions in the descriptor map is the respective verifiable presentation, pointing to the respective Verifiable Credentials.
+* `vp_token` REQUIRED. String parameter that MUST either contain a single Verifiable Presentation or an array of Verifiable Presentations. Each Verifiable Presentation MUST be represented as a JSON string (that is a Base64url encoded value) or a JSON object depending on a format as defined in Annex E of [@!OpenID.VCI].
+* `presentation_submission`. REQUIRED. The `presentation_submission` element as defined in [@!DIF.PresentationExchange] links the input descriptor identifiers in the corresponding request to the respective Verifiable Presentations within the VP Token. The root of the path expressions in the descriptor map is the respective verifiable presentation, pointing to the respective Verifiable Credentials.
 * `state` OPTIONAL. as defined in [@!RFC6749]
 
 The `presentation_submission` element MUST be included as a separate response parameter alongside the vp_token. Clients MUST ignore any `presentation_submission` element included inside a VP.
@@ -1115,8 +1115,6 @@ The `descriptor_map` refers to the input descriptor `mDL` and tells the verifier
 When ISO/IEC 18013-5:2021 mDL is expressed in CBOR the `nested_path` element cannot be used to point to the location of the requested claims. The user claims will always be included in the `issuerSigned` item. `nested_path` parameter can be used, however, when a JSON-encoded ISO/IEC 18013-5:2021 mDL is returned.
 
 The following is a non-normative example of an ISO/IEC 18013-5:2021 mDL encoded as CBOR in diagnostic notation (line wraps within values are for display purposes only) as conveyed in the `vp_token`parameter.
-
-TBD: shouldn't the vp_token parameter be base64url encoded?
 
 <{{examples/response/mdl_iso_cbor.json}}
 
