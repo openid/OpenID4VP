@@ -347,9 +347,13 @@ For authorization responses with response type `vp_token`, the response JWT cont
 
 * `vp_token` 
 * `presentation_submission`
-* `state` 
+* `state`  
 
-The key material used for encryption and signing SHOULD be determined using existing metadata mechanisms, such as the `jwks` client metadata parameter. 
+The key material used for encryption and signing SHOULD be determined using using existing metadata mechanisms. 
+
+To obtain Verifier's public key for the input to the key agreement to encrypt the Authorization Response, the Wallet MUST use `jwks` or `jwks_uri` claim within the `client_metadata` request parameter, or `jwks` claim within Entity Statement when [@!OpenID.Federation] is used.
+
+To sign the Authorization Response, the Wallet MUST use a private key that corresponds to a public key made available in its metadata.
 
 ## Response Mode "direct_post" {#response_mode_post}
 
