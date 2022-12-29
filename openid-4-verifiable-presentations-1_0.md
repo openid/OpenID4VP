@@ -427,7 +427,7 @@ scope value representing a presentation definition.
 
 `invalid_client`:
 
-- `client_metadata` or `client_metadata_uri` parameters defined in (#client_metadata) are present, but the Wallet recognizes `client_id` and knows metadata associated with it.
+- `client_metadata` or `client_metadata_uri` parameters defined in (#client_metadata_parameters) are present, but the Wallet recognizes `client_id` and knows metadata associated with it.
 - Pre-registered client metadata has been found based on the `client_id`, but `client_metadata` parameter is also present.
 
 Usage of `client_metadata` or `client_metadata_uri` parameters with `client_id` that the AS might be seeing for the first time is mutualy exclusive with the registration mechanism where Self-Issued OP assigns `client_id` to the RP after receiving RP's metadata.
@@ -503,14 +503,12 @@ This specification introduces additional Client metadata to enable Client and AS
 This specification defines the following new client metadata parameters according to [@!RFC7591]:
 
 * `vp_formats`: REQUIRED. An object defining the formats and proof types of verifiable presentations and verifiable credentials that a RP supports. Valid format identifier values are defined in Annex E of [@!OpenID.VCI] and include `jwt_vc_json`, `jwt_vc_json-ld`, `ldp_vc`, `jwt_vp_json`, `jwt_vp_json-ld`, `ldp_vp`, and `mso_mdoc`. Deployments can extend the formats supported, provided Issuers, Holders and Verifiers all understand the new format.
+* `client_metadata` 
+  * OPTIONAL. This parameter enables RP Metadata to be passed in a single, self-contained parameter. The value is a JSON object containing RP Registration Metadata values. The client metadata parameter value is represented in an OAuth 2.0 request as a UTF-8 encoded JSON object. MUST NOT be present if `client_metadata_uri` parameter is present.
+* `client_metadata_uri` 
+  * OPTIONAL. This parameter enables RP Registration Metadata to be passed by reference, rather than by value. The `request_uri` value is a URL referencing a resource containing a RP Registration Metadata Object. The scheme used in the `client_metadata_uri` value MUST be https. The `client_metadata_uri` value MUST be reachable by the AS. MUST NOT be present if `client_metadata` parameter is present.
 
-Here is an example for an RP registering with a standard OP via dynamic client registration:
-
-<{{examples/client_metadata/client_code_format.json}}
-
-Here is an example for an RP sending its metadata with a presentation request (object) in the `client_metadata` request parameter:
-
-<{{examples/client_metadata/client_ondemand_format.json}}
+Claims to be included in `client_metadata` and `client_metadata_uri` parameters are defined in Section 4.3 and Section 2.1 of the OpenID Connect Dynamic RP Registration 1.0 [@!OpenID.Registration] specification as well as [@!RFC7591].
 
 ## Obtaining Client Metadata 
 
@@ -527,7 +525,11 @@ Just-in-time metadata exchange allows OpenID4VP to be used in deployments models
 
 When the Wallet has obtained Client metadata prior to a transaction, e.g using [@!RFC7591] or out-of-band mechanisms, `client_id` MUST equal to the client identifier the RP has obtained from the Wallet during pre-registration. When the Authorization Request is signed, the public key for signature verification MUST be (re-)obtained using pre-registration process.
 
-In this case, `client_metadata` and `client_metadata_uri` parameters defined in (#client_metadata) MUST NOT be present in the Authorization Request. 
+In this case, `client_metadata` and `client_metadata_uri` parameters defined in (#client_metadata_parameters) MUST NOT be present in the Authorization Request. 
+
+Below is an example for an RP registering using Dynamic Client Registration:
+
+<{{examples/client_metadata/client_code_format.json}}
 
 ### Non-Pre-Registered Relying Party {#non-pre-registered-rp} 
 
@@ -542,39 +544,9 @@ In the simplest option, the Client can proceed without registration as if it had
 * `client_id`
   * `redirect_uri` value of the RP.
 
-In this case, the Authorization Request cannot be signed and all client metadata parameters MUST be passed using client metadata parameter defined in (#client_metadata).
+In this case, the Authorization Request cannot be signed and all client metadata parameters MUST be passed using client metadata parameter defined in (#client_metadata_parameters).
 
-#### OpenID Federation 1.0 Automatic Registration {#opeid-federation}
-
-When Relying Party's `client_id` is expressed as an `https` URI, and does not equal to a `redirect_uri` value when using simple string comparison ([@!RFC3986] section 6.2.1), Automatic Registration defined in [@!OpenID.Federation] MUST be used. The Relying Party's Entity Identifier defined in Section 1.2 of [@!OpenID.Federation] MUST be `client_id`. 
-
-The Authorization Request MUST be signed. The AS MUST obtain the public key from the `jwks` property in the Relying Party's Entity Statement defined in Section 3.1 of [@!OpenID.Federation]. Metadata other than the public keys MUST also be obtained from the Entity Statement.
-
-Note that to use Automatic Registration, clients would be required to have an individual identifier and an associated public key(s), which is not always the case for the public/native app clients.
-
-#### Decentralized Identifiers {#DID}
-
-The `client_id` MAY be expressed as a Decentralized Identifier as defined in [@!DID-Core].
-
-The Authorization Request MUST be signed. A public key to verify the signature MUST be obtained from the `verificationMethod` property of a DID Document. Since DID Document may include multiple public keys, a particular public key used to sign the request in question MUST be identified by the `kid` in the header. To obtain the DID Document, AS MUST use DID Resolution defined by the DID method used by the RP.
-
-All RP metadata other than the public key MUST be obtained from the `client_metadata` parameter as defined in (#client_metadata).
-
-### `client_metadata` and `client_metadata_uri` Parameters {#client_metadata}
-
-The Client may send one of the following parameters to convey metadata with unsigned authorization requests. 
-
-* `client_metadata` 
-  * OPTIONAL. This parameter enables RP Metadata to be passed in a single, self-contained parameter. The value is a JSON object containing RP Registration Metadata values. The client metadata parameter value is represented in an OAuth 2.0 request as a UTF-8 encoded JSON object.
-
-* `client_metadata_uri` 
-  * OPTIONAL. This parameter enables RP Registration Metadata to be passed by reference, rather than by value. The `request_uri` value is a URL referencing a resource containing a RP Registration Metadata Object. The scheme used in the `client_metadata_uri` value MUST be https. The `client_metadata_uri` value MUST be reachable by the AS. 
-
-If one of these parameters is used, the other MUST NOT be used in the same request.
-
-RP Negotiation metadata values are defined in Section 4.3 and Section 2.1 of the OpenID Connect Dynamic RP Registration 1.0 [@!OpenID.Registration] specification as well as [@!RFC7591].
-
-The following is a non-normative example of a request.
+Below is a non-normative example of a request when `client_id` equals `redirect_uri`.
 
 ```
   HTTP/1.1 302 Found
@@ -589,6 +561,26 @@ The following is a non-normative example of a request.
     _vp%22:%7B%22proof_type%22:%5B%22Ed25519Signature201
     8%22%5D%7D%7D%7D
 ```
+
+#### Decentralized Identifiers {#DID}
+
+The `client_id` MAY be expressed as a Decentralized Identifier as defined in [@!DID-Core].
+
+The Authorization Request MUST be signed. A public key to verify the signature MUST be obtained from the `verificationMethod` property of a DID Document. Since DID Document may include multiple public keys, a particular public key used to sign the request in question MUST be identified by the `kid` in the header. To obtain the DID Document, AS MUST use DID Resolution defined by the DID method used by the RP.
+
+All RP metadata other than the public key MUST be obtained from the `client_metadata` parameter as defined in (#client_metadata_parameters).
+
+Below is a non-normative example of a request when `client_id` is a DID, sent as a request object using `request_uri`:
+
+<{{examples/client_metadata/client_client_id_did.json}}
+
+#### OpenID Federation 1.0 Automatic Registration {#opeid-federation}
+
+When Relying Party's `client_id` is expressed as an `https` URI, and does not equal to a `redirect_uri` value when using simple string comparison ([@!RFC3986] section 6.2.1), Automatic Registration defined in [@!OpenID.Federation] MUST be used. The Relying Party's Entity Identifier defined in Section 1.2 of [@!OpenID.Federation] MUST be `client_id`. 
+
+The Authorization Request MUST be signed. The AS MUST obtain the public key from the `jwks` property in the Relying Party's Entity Statement defined in Section 3.1 of [@!OpenID.Federation]. Metadata other than the public keys MUST also be obtained from the Entity Statement.
+
+Note that to use Automatic Registration, clients would be required to have an individual identifier and an associated public key(s), which is not always the case for the public/native app clients.
 
 # Implementation Considerations
 
