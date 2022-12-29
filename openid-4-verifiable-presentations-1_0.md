@@ -150,10 +150,11 @@ The parameters comprising a request for Verifiable Presentations are given in th
 * `presentation_definition`: CONDITIONAL. A string containing a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange]. See (#request_presentation_definition) for more details. 
 * `presentation_definition_uri`: CONDITIONAL. A string containing an HTTPS URL pointing to a resource where a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange] can be retrieved . See (#request_presentation_definition_uri) for more details.
 * `nonce`: REQUIRED. This parameter follows the definition given in [@!OpenID.Core]. It is used to securely bind the verifiable presentation(s) provided by the AS to the particular transaction.
-* `authz_response_enc_pub_key`: OPTIONAL. A JWK [@!RFC7517] containing the public key the client wants the wallet to use as basis to encrypt the authorization response. 
-* `response_mode` OPTIONAL. as defined in [@!OAuth.Responses]. If the parameter is not present, the default value is `fragment`. This parameter is also used to request signing & encryption (see (#response_signing_and_encryption)) as well as to ask the wallet to send the response to the Verifier via an HTTPS connection (see (#response_mode_post)). 
+* `response_mode` OPTIONAL. as defined in [@!OAuth.Responses]. If the parameter is not present, the default value is `fragment`. This parameter is also used to request signing & encryption (see (#jarm)) as well as to ask the wallet to send the response to the Verifier via an HTTPS connection (see (#response_mode_post)). 
 
 Note: A request MUST contain either a `presentation_definition` or a `presentation_definition_uri` or a single `scope` value representing a presentation definition, those three ways to request credential presentation are mutually exclusive. The wallet MUST refuse any request violating this requirement. 
+
+Note: A verifier MAY pass public keys to be used as input to the key agreement for encryption of the authorization response (see (#jarm)) in the `jwks` or `jwks_uri` claim within the `client_metadata` request parameter (see (#client_metadata_parameter)). 
 
 This is an example request: 
 
@@ -338,19 +339,17 @@ with a matching `presentation_submission` parameter.
 
 <{{examples/response/presentation_submission_multiple_vps.json}}
 
-## Signed and Encrypted Responses {#response_signing_and_encryption}
+## Signed and Encrypted Responses {#jarm}
 
-Implementations MAY use JARM [@!JARM] to sign and/or encrypt the response on the application level. 
+Implementations MAY use JARM [@!JARM] to sign, or sign and encrypt the response on the application level. Furthermore, this specification allows for JARM with encrypted, unsigned responses, in which case, the JWT containing the response parameters is only encrypted.
 
-In addition to [@!JARM], this specification supports encrypted, unsigned responses. In this case, the JWT containing the response parameters is only encrypted.  
-
-For authorization responses with response type `vp_token`, the response JWT contains the following parameters:
+For authorization responses with response type `vp_token`, the response JWT contains the following parameters as defined in (#response_type_vp_token):
 
 * `vp_token` 
 * `presentation_submission`
 * `state` 
 
-The key material used for encryption and signing is at the discretion of the wallet. Utilizing existing metadata mechanisms for wallet and verifier is one option. This specification adds another option with the `authz_response_enc_pub_key` authorization request parameter, allowing the verifier to determine the encryption key with every authorization request.
+The key material used for encryption and signing SHOULD be determined using existing metadata mechanisms, such as the `jwks` client metadata parameter. 
 
 ## Response Mode "direct_post" {#response_mode_post}
 
@@ -458,7 +457,7 @@ vp_formats_supported": {
 
 Client and the AS utilizing this specification can exchange metadata prior to a transaction, e.g using [@!RFC7591] or out-of-band mechanisms. However, OpenID for VP can be used in deployments models where the AS does not support those mechanisms. This specification therefore defines additional mechanisms where the Client can provide metadata to the AS just-in-time with the Authorization Request. 
 
-#### Request Parameter
+#### Request Parameter {#client_metadata_parameter}
 
 The Client may send one of the following parameters to convey metadata with unsigned authorization requests. 
 
