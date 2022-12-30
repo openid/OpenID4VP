@@ -311,7 +311,7 @@ The reponse type `vp_token` can be used with different response modes as defined
 
 A response of type `vp_token` consists of the following parameters:
 
-* `vp_token` REQUIRED. String parameter that MUST either contain a single verifiable presentation or an array of Verifiable Presentations which MUST be represented as a JSON string or an object depending on a format as defined in Section 9.3 of [@!OpenID.VCI].
+* `vp_token` REQUIRED. String parameter that MUST either contain a single verifiable presentation or an array of Verifiable Presentations which MUST be represented as a JSON string or an object depending on a format as defined in Section 9.3 of [@!OpenID.VCI]. If Appendix E of [@!OpenID.VCI] defines a rule for encoding the respective credential format in the credential response, this rules MUST also be followed when encoding credentials of this format in the `vp_token` response parameter. Otherwise, this specification does not require any additional encoding when a credential format is already represented as a JSON object or a JSON string. Credential formats expressed as binary formats MUST be Base64url encoded and returned as a JSON string.
 * `presentation_submission`. REQUIRED. The `presentation_submission` element as defined in [@!DIF.PresentationExchange] links the input descriptor identifiers as specified in the corresponding request to the respective Verifiable Presentations within the VP Token along with format information. The root of the path expressions in the descriptor map is the respective verifiable presentation, pointing to the respective Verifiable Credentials.
 * `state` OPTIONAL. as defined in [@!RFC6749]
 
@@ -435,12 +435,6 @@ This document also defines the following additional error codes and error descri
 `vp_formats_not_supported`
 
 - The Wallet does not support any of the formats requested by the RP such as those included in the `vp_formats` registration parameter.
-
-# Encoding of Presented Verifiable Presentations
-
-If Appendix E of [@!OpenID.VCI] defines a rule for encoding the respective credential format in the credential response, this rules MUST also be followed when encoding credentials of this format in the `vp_token` response parameter.
-
-Otherwise, this specification does not require any additional encoding when a credential format is already represented as a JSON object or a JSON string. Credential formats expressed as binary formats MUST be Base64url encoded and returned as a JSON string.
 
 # Wallet Invocation {#wallet-invocation}
 
