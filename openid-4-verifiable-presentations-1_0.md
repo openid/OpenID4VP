@@ -14,9 +14,9 @@ status = "standard"
 initials="O."
 surname="Terbu"
 fullname="Oliver Terbu"
-organization="walt.id"
+organization="Spruce Systems, Inc."
     [author.address]
-    email = "o.terbu@gmail.com"
+    email = "oliver.terbu@spruceid.com"
 
 [[author]]
 initials="T."
