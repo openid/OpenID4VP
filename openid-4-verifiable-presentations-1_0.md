@@ -394,9 +394,9 @@ Note that in the Cross-Device Flow, the Wallet can change the UI based on the Ve
 
 # Encoding of Presented Verifiable Presentations
 
-This specification does not require any additional encoding when credential format is already represented as a JSON object or a JSON string.
+If Appendix E of [@!OpenID.VCI] defines a rule for encoding the respective credential format in the credential response, this rules MUST also be followed when encoding credentials of this format in the `vp_token` response parameter.
 
-Credential formats expressed as binary formats MUST be Base64url encoded and returned as a JSON string.
+Otherwise, this specification does not require any additional encoding when a credential format is already represented as a JSON object or a JSON string. Credential formats expressed as binary formats MUST be Base64url encoded and returned as a JSON string.
 
 # Metadata {#metadata}
 
