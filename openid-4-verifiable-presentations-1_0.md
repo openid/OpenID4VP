@@ -7,16 +7,16 @@ keyword = ["security", "openid", "ssi"]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "openid-4-verifiable-presentations-1_0-13"
+value = "openid-4-verifiable-presentations-1_0-14"
 status = "standard"
 
 [[author]]
 initials="O."
 surname="Terbu"
 fullname="Oliver Terbu"
-organization="walt.id"
+organization="Spruce Systems, Inc."
     [author.address]
-    email = "o.terbu@gmail.com"
+    email = "oliver.terbu@spruceid.com"
 
 [[author]]
 initials="T."
@@ -54,76 +54,82 @@ organization="Mattr"
 
 .# Abstract
 
-This specification defines a mechanism on top of OAuth 2.0 to allow presentation of claims in the form of Verifiable Credentials as part of the protocol flow. 
+This specification defines a protocol for requesting and presenting Verifiable Credentials. 
 
 {mainmatter}
 
 # Introduction
 
-This specification defines a mechanism on top of OAuth 2.0 [@!RFC6749] that enables presentation of Verifiable Credentials as Verifiable Presentations in the Issuer-Holder-Verifier Model. Credentials of any Credential format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] and [@Hyperledger.Indy] (AnonCreds) are supported. This allows existing OpenID Connect Relying Parties to extend their reach towards claim sources asserting claims in new formats. New applications built using Verifiable Credentials are also enabled to utilize OAuth 2.0 and/or OpenID Connect as integration and interoperability layer towards Holders.
+This specification defines a mechanism on top of OAuth 2.0 [@!RFC6749] that enables presentation of Verifiable Credentials. W3C [@VC_DATA] formats as well as other Credential formats, like [@ISO.18013-5] and [@Hyperledger.Indy], are supported. 
 
-OAuth 2.0 [@!RFC6749] is used as a base protocol as it provides the required protocol rails and security to build credential presentation on top of it. Moreover, implementers can, in a single interface, support credential presentation and the issuance of access tokens for access to APIs based on Verifiable Credentials in the wallet. OpenID Conect deployments can also extend their implementations using this specification with the ability to transport Verifiable Presentations, since OpenID Connect is built on top of OAuth 2.0. Implementers that require [@!OpenID.Core] features, such as the issuance of subject-signed ID tokens can combine this specification with [@!SIOPv2].
+OAuth 2.0 [@!RFC6749] is used as a base protocol as it provides the required rails to build simple, secure and developer friendly credential presentation on top of it. Moreover, implementers can, in a single interface, support credential presentation and the issuance of access tokens for access to APIs based on Verifiable Credentials in the wallet. OpenID Conect deployments can also extend their implementations using this specification with the ability to transport Verifiable Presentations, since OpenID Connect is built on top of OAuth 2.0. Implementers that require [@!OpenID.Core] features, such as the issuance of subject-signed ID tokens, can combine this specification with [@!SIOPv2].
 
 # Terminology
 
 Credential
+
   A set of claims about a subject made by an Issuer.
 
-Note that the definition of a term "credential" in this specification is different from that in [@!OpenID.Core].
+Note: the definition of a term "credential" in this specification is different from that in [@!OpenID.Core].
 
 Verifiable Credential (VC)
+
   A tamper-evident credential that has authorship of the Issuer that can be cryptographically verified. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] and [@Hyperledger.Indy] (AnonCreds).
 
-Note that Verifiable Credentials compliant to the [@VC_DATA] specification are referred to in this specification as W3C Verifiable Credentials.
+W3C Verifiable Credential
+
+  A Verifiable Credential compliant to the [@VC_DATA] specification.
 
 Presentation
+
   Data derived from one or more Verifiable Credentials that can be from the same or different issuers that is shared with a specific verifier.
 
 Verifiable Presentation (VP)
+
   A tamper-evident presentation that has authorship of the Holder that can be cryptographically verified to provide Cryptographic Holder Binding. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] and [@Hyperledger.Indy] (AnonCreds).
 
-Note that Verifiable Presentations compliant to the [@VC_DATA] specification are referred to in this specification as W3C Verifiable Presentations.
+W3C Verifiable Presentation
+
+  A Verifiable Presentations compliant to the [@VC_DATA] specification.
 
 Issuer
+
   An entity that creates Verifiable Credentials.
 
 Holder
+
   An entity that receives Verifiable Credentials and has control over them to present them to the Verifiers as Verifiable Presentations.
 
 Verifier
+
   An entity that requests, checks and extracts the claims from Verifiable Presentations.
 
 Issuer-Holder-Verifier Model
-  A model for claims sharing where claims are issued in the form of Verifiable Credentials independent of the process of presenting them as Verifiable Presentation to the Verifiers. Issued Verifiable Credential can (but not necessarily must) be used multiple times.
+
+  A model for claims sharing where claims are issued in the form of Verifiable Credentials independent of the process of presenting them as Verifiable Presentation to the Verifiers. Issued Verifiable Credential can (but must not necessarily) be used multiple times.
 
 Cryptographic Holder Binding
+
   Ability of the Holder to prove legitimate possession of a Verifiable Credential by proving control over the same private key during the issuance and presentation. Mechanism might depend on the Crednetial Format. For example, in `jwt_vc_json` Credential Format, a VC with Cryptographic Holder Binding contains a public key or a reference to a public key that matches to the private key controlled by the Holder. Claim-based or biometrics-based holder binding is also possible.
 
 Base64url Encoding
+
   Base64 encoding using the URL- and filename-safe character set defined in Section 5 of [@!RFC4648], with all trailing '=' characters omitted (as permitted by Section 3.2 of [@!RFC4648]) and without the inclusion of any line breaks, whitespace, or other additional characters. Note that the base64url encoding of the empty octet sequence is the empty string. (See Appendix C of [@!RFC7515] for notes on implementing base64url encoding without padding.)
 
 Wallet
+
   Entity used by the Holder to receive, store, present, and manage Verifiable Credentials and key material. There is no single deployment model of a Wallet: Verifiable Credentials and keys can both be stored/managed locally, or by using a remote self-hosted service, or a remote third party service. In the context of this specification, the Wallet acts as an OAuth 2.0 Authorization Server (see [@!RFC6749]) towards the Credential Verifier which acts as the OAuth 2.0 Client. 
 
-# Use Cases
 
-## Verifier accesses Wallet via OpenID Connect
+# Scope
 
-A Verifier uses OpenID Connect to obtain verifiable presentations. This is a simple and mature way to obtain identity data. From a technical perspective, this also makes integration with OAuth-protected APIs easier as OpenID Connect is based on OAuth 2.0.  
+This specification defines mechanisms to
 
-## Existing OpenID Connect RP integrates with the Wallets
-
-An application currently utilizing OpenID Connect for accessing various federated identity providers can use the same protocol to also integrate with emerging Wallets using Issuer-Holder-Verifier Model. This is a convenient transition path leveraging existing expertise to protect investments made.
-
-## Existing OpenID Connect OP as custodian of End-User Verifiable Credentials
-
-An existing OpenID Connect may extend its service by maintaining Verifiable Credentials issued by other claims sources on behalf of its customers. Customers can mix claims of The AS and from their Verifiable Credentials to fulfil authentication requests. 
-
-## Federated OpenID Connect OP adds device-local mode
-
-An existing OpenID Connect OP with a native user experience (PWA or native app) issues Verifiable Credentials and stores them on the user's device linked to a private key residing on this device under the user's control. For every authentication request, the native user experience first checks whether this request can be fulfilled using the locally stored Verifiable Credentials. If so, it generates a presentation signed with the user's keys in order to prevent replay of the credential. 
-
-This approach dramatically reduces latency and reduces load on the OP's servers. Moreover, the user identification, authentication, and authorization can be done even in situations with unstable or no internet connectivity. 
+* request presentation of Verifiable Credentials in arbitrary formats.
+* provide a verifier with one or more Verifiable Presentations in a secure fashion. 
+* customize the protocol to the specific needs of a particular credential format. Examples are given for credential formats as specified in [@VC_DATA], [@ISO.18013-5] and [@Hyperledger.Indy].
+* combine the credential presentation with user authentication through [@SIOPv2]. 
+* combine the credential presentation with the issuance of OAuth access tokens. 
 
 # Overview 
 
@@ -133,23 +139,33 @@ This specification supports any Credential format used in the Issuer-Holder-Veri
 
 Verifiable Presentations are requested by adding a parameter `presentation_definition` as defined by [@!DIF.PresentationExchange] to an OAuth 2.0 Authorization Request.
 
+The Verifiable Presentations are returned to the Verifier in a `vp_token` response parameter. 
+
 OpenID for Verifiable Presentations supports scenarios where Authorization Request is sent from the Verifier to the Wallet using redirects (same-device flow) and when it is passed an across devices (cross-device flow).
 
 Deployments can use any pre-existing OAuth grant type and response type in conjunction with this specifications to support those scenarios in the context of different deployment architectures. This specification also introduces a new OAuth response mode to support cross device scenarios initiated by the verifier (see (#response_mode_post)). 
 
 Implementations can use any pre-existing OAuth 2.0 grant type and response type in conjunction with this specifications to support those scenarios in the context of different deployment architectures.
 
-# Request {#vp_token_request}
+# Authorization Request {#vp_token_request}
 
-The parameters comprising a request for Verifiable Presentations are given in the following: 
+The authorization request follows the definition given in [@!RFC6749]. 
 
-* `response_type`: REQUIRED. this parameter is defined in [@!RFC6749]. The possible values are determined by the response type registry established by [@!RFC6749]. This specification introduces the response type "vp_token". This response type asks the Authorization Server (AS) to return only a VP Token in the Authorization Response. 
-* `scope`: OPTIONAL. this parameter is defined in [@!RFC6749]. The wallet MAY allow verifiers to request presentation of  Verifiable Credentials by utilizing a pre-defined scope value. See (#request_scope) for more details.
+The following new parameters are defined by this specification:  
+
 * `presentation_definition`: CONDITIONAL. A string containing a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange]. See (#request_presentation_definition) for more details. 
 * `presentation_definition_uri`: CONDITIONAL. A string containing an HTTPS URL pointing to a resource where a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange] can be retrieved . See (#request_presentation_definition_uri) for more details.
 * `nonce`: REQUIRED. This parameter follows the definition given in [@!OpenID.Core]. It is used to securely bind the verifiable presentation(s) provided by the AS to the particular transaction.
+* `response_mode` OPTIONAL. as defined in [@!OAuth.Responses]. If the parameter is not present, the default value is `fragment`. This parameter is also used to request signing & encryption (see (#jarm)) as well as to ask the wallet to send the response to the Verifier via an HTTPS connection (see (#response_mode_post)). 
+
+Additional considerations need to be considered for the following parameters defined in [@!RFC6749]:
+
+* `response_type`: REQUIRED. This specification can be used with all response types as defined in the registry established by [@!RFC6749]. This specification introduces the new response type `vp_token`. This response type asks the Authorization Server (AS) to return a VP Token in the Authorization Response. 
+* `scope`: OPTIONAL. The wallet MAY allow verifiers to request presentation of  Verifiable Credentials by utilizing a pre-defined scope value. See (#request_scope) for more details.
 
 Note: A request MUST contain either a `presentation_definition` or a `presentation_definition_uri` or a single `scope` value representing a presentation definition, those three ways to request credential presentation are mutually exclusive. The wallet MUST refuse any request violating this requirement. 
+
+Note: A verifier MAY pass public keys to be used as input to the key agreement for encryption of the authorization response (see (#jarm)) in the `jwks` or `jwks_uri` claim within the `client_metadata` request parameter (see (#client_metadata_parameters)). 
 
 This is an example request: 
 
@@ -162,9 +178,9 @@ This is an example request:
     &nonce=n-0S6_WzA2Mj HTTP/1.1
 ```
 
-## presentation_definition {#request_presentation_definition}
+## `presentation_definition` Parameter{#request_presentation_definition}
 
-This parameter contains a JSON object conforming to the syntax defined for `presentation_definition` elements in Section 4 of [@!DIF.PresentationExchange].
+This parameter contains a JSON object conforming to the syntax defined for `presentation_definition` parameters in Section 4 of [@!DIF.PresentationExchange].
 
 The following shows an example `presentation_definition` parameter:
 
@@ -184,7 +200,7 @@ The VC and VP formats supported by an AS should be published in its metadata (se
 
 Note that when the Client is requesting presentation of a VP containing a VC, Client MUST indicate in the `vp_formats` parameter, supported formats of both VC and VP.
 
-## presentation_definition\_uri {#request_presentation_definition_uri}
+## `presentation_definition_uri` Parameter {#request_presentation_definition_uri}
 
 `presentation_definition_uri` is used to the retrieve the `presentation_definition` from the resource at the specified URL, rather than being passed by value. The AS will send a GET request without additional parameters. The resource MUST be exposed without further need to authenticate or authorize. 
 
@@ -233,7 +249,7 @@ Content-Type: application/json
     ]
 }
 ```
-## scope {#request_scope}
+## Using `scope` Parameter to Request Verifiable Credential(s) {#request_scope}
 
 Wallets MAY support requesting presentation of Verifiable Credentials using OAuth 2.0 scope values. 
 
@@ -267,9 +283,9 @@ which is an alias for the first presentation definition example given in (#reque
 
 ## Authorization Request in a Cross-Device flow
 
-There are use-cases when the Authorization Request is being displayed on a device different from a device on which the requested Credential is stored.
+There are use-cases when the Authorization Request is being displayed on a device different from a device on which the requested Credential is stored. In those cases, an Authorization Request can be passed across devices by being rendered as a QR Code. 
 
-One option to pass an Authorization Request across devices is for the Verifier to render the Authorization Request as a QR Code. The usage of `request_uri` is RECOMMENDED, since authorization request size might be large and might not fit in a QR code.
+The usage of the response mode `direct_post` (see (#response_mode_post)) in conjunction with `request_uri` is RECOMMENDED, since authorization request size might be large and might not fit in a QR code.
 
 ## `aud` of a Request Object
 
@@ -282,26 +298,28 @@ Note: "https://self-issued.me/v2" is a symbolic string and can be used as an `au
 
 # Response {#vp_token_response}
 
-## Response Types
+## vp_token and Response Types
 
-Whether VP Token is provided to the Client in the Authorization Response or Token Response depends on the response type used in the request (see (#vp_token_request)).
+Whether `vp_token` is provided to the Client in the Authorization Response or Token Response depends on the response type used in the request (see (#vp_token_request)).
 
-- If only `vp_token` is used as the `response_type`, the VP Token is provided in the authorization response. 
-- If `id_token` is used as the `response_type` alongside `vp_token`, the VP Token is provided in the OpenID Connect authentication response along with the ID Token. 
-- In all other cases, if `vp_token` is not used, but `presentation_definition` parameter is present, the VP Token is provided in the Token Response. 
-- Any combination of `vp_token` with a `response_type` other than `id_token` is undefined.
+- If the response type value is `vp_token` or `vp_token id_token`, the `vp_token` is provided in the authorization response. 
+- In all other cases, such as when response type is `code`, and if the parameter `presentation_definition` is present in the authorization request, the `vp_token` is provided in the Token Response. 
 
-## VP Token
+## Response Type vp_token {#response_type_vp_token}
 
-The VP Token MUST either contain a single verifiable presentation or an array of Verifiable Presentations which MUST be represented as a JSON string or an object depending on a format as defined in Section 9.3 of [@!OpenID.VCI].
+This specification defines the response type `vp_token`. 
 
-## `presentation_submission` Element
+The reponse type `vp_token` can be used with different response modes as defined in [@!OAuth.Responses]. The default encoding is `fragment`, i.e. the Authorization Response parameters are encoded in the fragment added to the `redirect_uri` when redirecting back to the Client.
 
-The `presentation_submission` element as defined in [@!DIF.PresentationExchange] links the input descriptor identifiers as specified in the corresponding request to the respective Verifiable Presentations within the VP Token along with format information. The root of the path expressions in the descriptor map is the respective verifiable presentation, pointing to the respective Verifiable Credentials.
+A response of type `vp_token` consists of the following parameters:
 
-This `presentation_submission` element MUST be included as a separate response parameter alongside the vp_token. Clients MUST ignore any `presentation_submission` element included inside a VP.
+* `vp_token` REQUIRED. String parameter that MUST either contain a single verifiable presentation or an array of Verifiable Presentations which MUST be represented as a JSON string or an object depending on a format as defined in Section 9.3 of [@!OpenID.VCI].
+* `presentation_submission`. REQUIRED. The `presentation_submission` element as defined in [@!DIF.PresentationExchange] links the input descriptor identifiers as specified in the corresponding request to the respective Verifiable Presentations within the VP Token along with format information. The root of the path expressions in the descriptor map is the respective verifiable presentation, pointing to the respective Verifiable Credentials.
+* `state` OPTIONAL. as defined in [@!RFC6749]
 
-Including the `presentation_submission` element as a separate response parameter allows the AS to provide the RP with additional information about the format and structure in advance of the processing of the VP Token, and can be used even with the credential formats that do not allow for the direct inclusion of `presentation_submission` elements inside a credential itself.
+The `presentation_submission` element MUST be included as a separate response parameter alongside the vp_token. Clients MUST ignore any `presentation_submission` element included inside a VP.
+
+Including the `presentation_submission` parameter as a separate response parameter allows the AS to provide the RP with additional information about the format and structure in advance of the processing of the VP Token, and can be used even with the credential formats that do not allow for the direct inclusion of `presentation_submission` parameters inside a credential itself.
 
 In case the AS returns a single verifiable presentation in the VP Token, the `descriptor_map` would then contain a simple path expression "$".
 
@@ -322,7 +340,7 @@ with a matching `presentation_submission`.
 
 <{{examples/response/presentation_submission.json}}
 
-A `descriptor_map` element MUST  contain a `path_nested` element referring to the actual credential carried in the respective verifiable presentation. 
+A `descriptor_map` parameter MUST  contain a `path_nested` parameter referring to the actual credential carried in the respective verifiable presentation. 
 
 This is an example of a VP Token containing multiple verifiable presentations,   
 
@@ -332,15 +350,17 @@ with a matching `presentation_submission` parameter.
 
 <{{examples/response/presentation_submission_multiple_vps.json}}
 
-## Error Response
+## Signed and Encrypted Responses {#jarm}
 
-The error response follows the rules as defined in [@!RFC6749]. 
+Implementations MAY use JARM [@!JARM] to sign, or sign and encrypt the response on the application level. Furthermore, this specification allows for JARM with encrypted, unsigned responses, in which case, the JWT containing the response parameters is only encrypted.
 
-When the requested scope value is invalid, unknown, or malformed, the AS should respond with the error code `invalid_scope` defined in Section 4.1.2.1 of [@!RFC6749].
+For authorization responses with response type `vp_token`, the response JWT contains the following parameters as defined in (#response_type_vp_token):
 
-Additionally, if the request contains more then a `presentation_definition` parameter or a `presentation_definition_uri` parameter or a 
-scope value representing a presentation definition, the wallet MUST refuse to process the request and return an `invalid_request` error
-as defined in [@!RFC6749]. 
+* `vp_token` 
+* `presentation_submission`
+* `state` 
+
+The key material used for encryption and signing SHOULD be determined using existing metadata mechanisms, such as the `jwks` client metadata parameter. 
 
 ## Response Mode "direct_post" {#response_mode_post}
 
@@ -392,24 +412,59 @@ The respective HTTP POST response to the Verifier would look like this:
 
 Note that in the Cross-Device Flow, the Wallet can change the UI based on the Verifier's response to the HTTP POST request.
 
+## Error Response
+
+The error response follows the rules as defined in [@!RFC6749], with the following additional clarifications:
+
+`invalid_scope`: 
+
+- Requested scope value is invalid, unknown, or malformed.
+
+`invalid_request`:
+
+- The request contains more than a `presentation_definition` parameter or a `presentation_definition_uri` parameter or a 
+scope value representing a presentation definition.
+
+`invalid_client`:
+
+- `client_metadata` or `client_metadata_uri` parameters defined in (#client_metadata_parameters) are present, but the Wallet recognizes `client_id` and knows metadata associated with it.
+- Pre-registered client metadata has been found based on the `client_id`, but `client_metadata` parameter is also present.
+
+Usage of `client_metadata` or `client_metadata_uri` parameters with `client_id` that the AS might be seeing for the first time is mutualy exclusive with the registration mechanism where Self-Issued OP assigns `client_id` to the RP after receiving RP's metadata.
+
+This document also defines the following additional error codes and error descriptions:
+
+`vp_formats_not_supported`
+
+- The Wallet does not support any of the formats requested by the RP such as those included in the `vp_formats` registration parameter.
+
 # Encoding of Presented Verifiable Presentations
 
 If Appendix E of [@!OpenID.VCI] defines a rule for encoding the respective credential format in the credential response, this rules MUST also be followed when encoding credentials of this format in the `vp_token` response parameter.
 
 Otherwise, this specification does not require any additional encoding when a credential format is already represented as a JSON object or a JSON string. Credential formats expressed as binary formats MUST be Base64url encoded and returned as a JSON string.
 
-# Metadata {#metadata}
+# Wallet Invocation {#wallet-invocation}
 
-This specification introduces additional metadata to enable Client and AS to determine the verifiable presentation and verifiable credential formats, proof types and algorithms to be used in a protocol exchange.
+The Verifier has the choice of the following mechanisms to invoke a Wallet:
 
-## Authorization Server Metadata {#as_metadata_parameters}
+- Custom URL scheme as an `authorization_endpoint` (for example, `openid4vp://` as defined in (#openid4vp-profile))
+- Domain-bound Universal Links/App link as an `authorization_endpoint`
+- no specific `authorization_endpoint`, user scanning a QR code with Authorization Request using a manually opened Wallet, instead of an arbitrary camera application on a user-device (neither custom URL scheme nor Universal/App link is used)
+
+# Authorization Server Metadata {#as_metadata_parameters}
+
+This specification introduces additional AS metadata to enable Client and AS to determine credential formats, proof types and algorithms to be used in a protocol exchange.
+
+## Additional Authorization Server Metadata parameters
 
 This specification defines new server metadata parameters according to [@!RFC8414].
 
 The AS publishes the formats it supports using the `vp_formats_supported` metadata parameter. 
 
-* `vp_formats_supported`:  An object containing a list of key value pairs, where the key is a string identifying a credential format supported by the AS. Valid credential format identifiers values are defined in Section 9.3 of [@!OpenID.VCI]. Other values may be used when defined in the profiles of this specification. The key's value is an object containing a parameter defined below:
-  * `alg_values_supported`: An object where the value is an array of case sensitive strings that identify the cryptographic suites that are supported. Cryptosuites for Verifiable Credentials in `jwt_vc` format should use algorithm names defined in [IANA JOSE Algorithms Registry](https://www.iana.org/assignments/jose/jose.xhtml#web-signature-encryption-algorithms). Cryptosuites for Verifiable Credentials in `ldp_vc` format should use signature suites names defined in [Linked Data Cryptographic Suite Registry](https://w3c-ccg.github.io/ld-cryptosuite-registry/). Cryptosuites for Verifiable Credentials in `mdl_iso_cbor` format should use signature suites names defined in ISO/IEC 18013-5:2021. Parties using other credential formats will need to agree upon the meanings of the values used, which may be context-specidic. 
+* `presentation_definition_uri_supported`: OPTIONAL. Boolean value specifying whether the RP supports the transfer of `presentation_definition` by reference, with true indicating support. If omitted, the default value is true. 
+* `vp_formats_supported`: REQUIRED. An object containing a list of key value pairs, where the key is a string identifying a credential format supported by the AS. Valid credential format identifiers values are defined in Annex E of [@!OpenID.VCI]. Other values may be used when defined in the profiles of this specification. The value is an object containing a parameter defined below:
+* `alg_values_supported`: An object where the value is an array of case sensitive strings that identify the cryptographic suites that are supported. Cryptosuites for Verifiable Credentials in `jwt_vc_json`, `jwon_vc_json-ld`, `jwt_vp_json`, `jwon_vp_json-ld` formats should use algorithm names defined in [IANA JOSE Algorithms Registry](https://www.iana.org/assignments/jose/jose.xhtml#web-signature-encryption-algorithms). Cryptosuites for Verifiable Credentials in `ldp_vc` and `ldp_vp` format should use signature suites names defined in [Linked Data Cryptographic Suite Registry](https://w3c-ccg.github.io/ld-cryptosuite-registry/). Cryptosuites for Verifiable Credentials in `mso_mdoc` format should use signature suites names defined in ISO/IEC 18013-5:2021. Parties using other credential formats will need to agree upon the meanings of the values used, which may be context-specidic.
 
 Below is a non-normative example of a `vp_formats_supported` parameter:
 
@@ -430,27 +485,66 @@ vp_formats_supported": {
 }
 ```
 
-## Client Metadata
+## Obtaining Authorization Server Metadata
 
-### Obtaining Client Metadata 
+Client utilizing this specification has multiple options to obtain AS's metadata:
 
-Client and the AS utilizing this specification can exchange metadata prior to a transaction, e.g using [@!RFC7591] or out-of-band mechanisms. However, OpenID for VP can be used in deployments models where the AS does not support those mechanisms. This specification therefore defines additional mechanisms where the Client can provide metadata to the AS just-in-time with the Authorization Request. 
+* Client obtains AS metadata prior to a transaction, e.g using [@!RFC8414] or out-of-band mechanisms. See (#as_metadata_parameters) for the details.
+* Client has pre-obtained static set of AS metadata. See (#openid4vp-profile) for the example.
 
-#### Request Parameter
+# Client Metadata
 
-The Client may send one of the following parameters to convey metadata with unsigned authorization requests. 
+This specification introduces additional Client metadata to enable Client and AS to determine credential formats, proof types and algorithms to be used in a protocol exchange.
 
+## Additional Client Metadata Parameters {#client_metadata_parameters}
+
+This specification defines the following new client metadata parameters according to [@!RFC7591]:
+
+* `vp_formats`: REQUIRED. An object defining the formats and proof types of verifiable presentations and verifiable credentials that a RP supports. Valid format identifier values are defined in Annex E of [@!OpenID.VCI] and include `jwt_vc_json`, `jwt_vc_json-ld`, `ldp_vc`, `jwt_vp_json`, `jwt_vp_json-ld`, `ldp_vp`, and `mso_mdoc`. Deployments can extend the formats supported, provided Issuers, Holders and Verifiers all understand the new format.
 * `client_metadata` 
-  * OPTIONAL. This parameter enables RP Metadata to be passed in a single, self-contained parameter. The value is a JSON object containing RP Registration Metadata values. The client metadata parameter value is represented in an OAuth 2.0 request as a UTF-8 encoded JSON object.
-
+  * OPTIONAL. This parameter enables RP Metadata to be passed in a single, self-contained parameter. The value is a JSON object containing RP Registration Metadata values. The client metadata parameter value is represented in an OAuth 2.0 request as a UTF-8 encoded JSON object. MUST NOT be present if `client_metadata_uri` parameter is present.
 * `client_metadata_uri` 
-  * OPTIONAL. This parameter enables RP Registration Metadata to be passed by reference, rather than by value. The `request_uri` value is a URL referencing a resource containing a RP Registration Metadata Object. The scheme used in the `client_metadata_uri` value MUST be https. The `request_uri` value MUST be reachable by the AS. 
+  * OPTIONAL. This parameter enables RP Registration Metadata to be passed by reference, rather than by value. The `request_uri` value is a URL referencing a resource containing a RP Registration Metadata Object. The scheme used in the `client_metadata_uri` value MUST be https. The `client_metadata_uri` value MUST be reachable by the AS. MUST NOT be present if `client_metadata` parameter is present.
 
-If one of these parameters is used, the other MUST NOT be used in the same request.
+Claims to be included in `client_metadata` and `client_metadata_uri` parameters are defined in Section 4.3 and Section 2.1 of the OpenID Connect Dynamic RP Registration 1.0 [@!OpenID.Registration] specification as well as [@!RFC7591].
 
-RP Negotiation metadata values are defined in Section 4.3 and Section 2.1 of the OpenID Connect Dynamic RP Registration 1.0 [@!OpenID.Registration] specification as well as [@!RFC7591].
+## Obtaining Client Metadata 
 
-The following is a non-normative example of a request.
+AS utilizing this specification has multiple options to exchange metadata:
+
+* AS obtains Client metadata prior to a transaction, e.g using [@!RFC7591] or out-of-band mechanisms. See (#pre-registered-rp) for the details.
+* Client provides metadata to the AS just-in-time in the Authorization Request using one of the following mechanisms defined in this specification:
+    * `client_metadata` or `client_metadata_uri` parameter when `client_id` equals `redirect_uri` (see (#simplest-registration) for the details), or `client_id` is a Decentralized Identifier (see (#DID) for the details).
+    * Entity Statement when OpenID Federation 1.0 Automatic Registration is used (see (#opeid-federation) for the details).
+
+Just-in-time metadata exchange allows OpenID4VP to be used in deployments models where the AS does not or cannot support pre-registration of Client metadata.
+
+### Pre-Registered Relying Party {#pre-registered-rp}
+
+When the Wallet has obtained Client metadata prior to a transaction, e.g using [@!RFC7591] or out-of-band mechanisms, `client_id` MUST equal to the client identifier the RP has obtained from the Wallet during pre-registration. When the Authorization Request is signed, the public key for signature verification MUST be (re-)obtained using pre-registration process.
+
+In this case, `client_metadata` and `client_metadata_uri` parameters defined in (#client_metadata_parameters) MUST NOT be present in the Authorization Request. 
+
+Below is an example for an RP registering using Dynamic Client Registration:
+
+<{{examples/client_metadata/client_code_format.json}}
+
+### Non-Pre-Registered Relying Party {#non-pre-registered-rp} 
+
+When the RP has not pre-registered, it may pass its metadata to the AS in the Authorization Request.
+
+No registration response is returned. A successful Authorization Response implicitly indicates that the client metadata parameters were accepted.
+
+#### `client_id` equals `redirect_uri` {#simplest-registration}
+
+In the simplest option, the Client can proceed without registration as if it had registered with the Wallet and obtained the following Client Registration Response:
+
+* `client_id`
+  * `redirect_uri` value of the RP.
+
+In this case, the Authorization Request cannot be signed and all client metadata parameters MUST be passed using client metadata parameter defined in (#client_metadata_parameters).
+
+Below is a non-normative example of a request when `client_id` equals `redirect_uri`.
 
 ```
   HTTP/1.1 302 Found
@@ -466,53 +560,25 @@ The following is a non-normative example of a request.
     8%22%5D%7D%7D%7D
 ```
 
-#### Alternative Methods 
+#### Decentralized Identifiers {#DID}
 
-When the request is signed, the mechanism depends on the syntax of `client_id` and the resolution method used. Resolution methods are defined in Section 9.2.2 og [@!SIOPv2]. 
+The `client_id` MAY be expressed as a Decentralized Identifier as defined in [@!DID-Core].
 
-If `client_id` is a HTTPS URL, `client_id` is resolved to obtain all Client metadata from an Entity Statement as defined in [@!OpenID.Federation]. 
+The Authorization Request MUST be signed. A public key to verify the signature MUST be obtained from the `verificationMethod` property of a DID Document. Since DID Document may include multiple public keys, a particular public key used to sign the request in question MUST be identified by the `kid` in the header. To obtain the DID Document, AS MUST use DID Resolution defined by the DID method used by the RP.
 
-If `client_id` is a Decentralized Identifier, the public key is obtained from a DID Doc as defined in [@!DID-Core] and the rest of the metadata is obtained from the `client_metadata` (or `client_metadata_uri`) parameter.
+All RP metadata other than the public key MUST be obtained from the `client_metadata` parameter as defined in (#client_metadata_parameters).
 
-Note: move sections on the metadata resolution here.
+Below is a non-normative example of a request when `client_id` is a DID, sent as a request object using `request_uri`:
 
-### Client Metadata Error Response
+<{{examples/client_metadata/client_client_id_did.json}}
 
-Error response MUST be made as defined in [@!RFC7591].
+#### OpenID Federation 1.0 Automatic Registration {#opeid-federation}
 
-This extension defines the following additional error codes and error descriptions:
+When Relying Party's `client_id` is expressed as an `https` URI, and does not equal to a `redirect_uri` value when using simple string comparison ([@!RFC3986] section 6.2.1), Automatic Registration defined in [@!OpenID.Federation] MUST be used. The Relying Party's Entity Identifier defined in Section 1.2 of [@!OpenID.Federation] MUST be `client_id`. 
 
-`vp_formats_not_supported`: The OP does not support any of the formats supported by the RP such as those included in the `vp_formats` registration parameter.
+The Authorization Request MUST be signed. The AS MUST obtain the public key from the `jwks` property in the Relying Party's Entity Statement defined in Section 3.1 of [@!OpenID.Federation]. Metadata other than the public keys MUST also be obtained from the Entity Statement.
 
-Moreover, when `client_metadata` or `client_metadata_uri` parameters are present, but the AS recognizes `client_id` and knows metadata associated with it, it MUST return an error. 
-
-ASs compliant to this specification MUST NOT proceed with the transaction when pre-registered client metadata has been found based on the `client_id`, but `client_metadata` parameter has also been present.
-
-Usage of `client_metadata` or `client_metadata_uri` parameters with `client_id` that the AS might be seeing for the first time is mutualy exclusive with the registration mechanism where Self-Issued OP assigns `client_id` to the RP after receiving RP's metadata.
-
-### Client Metadata Parameters {#client_metadata_parameters}
-
-This specification defines new client metadata parameters according to [@!RFC7591].
-
-#### vp_formats
-
-RPs indicate the supported formats using the new parameter `vp_formats`.
-
-* `vp_formats`: REQUIRED. An object defining the formats and proof types of Verifiable Presentations and Verifiable Credentials that a RP supports. Valid format identifier values are defined in the table in Section 9.3. of [@!OpenID.VCI] and include `jwt_vc`, `ldp_vc`, `jwt_jp` and `ldp_vp`. Formats identifiers not in the table may be supported when defined in the profiles of this specification.
-
-Here is an example for an RP registering with a Standard OP via dynamic client registration:
-
-<{{examples/client_metadata/client_code_format.json}}
-
-Here is an example for an RP sending its metadata with a presentation request (object) in the `client_metadata` request parameter:
-
-<{{examples/client_metadata/client_ondemand_format.json}}
-
-#### Presentation Definition Transfer
-
-RPs indicate their support for transferring presentation definitions by value and/or by reference, by using the following parameters:
-
-* `presentation_definition_uri`: OPTIONAL. Boolean value specifying whether the RP supports the transfer of `presentation_definition` by reference, with true indicating support. If omitted, the default value is true. 
+Note that to use Automatic Registration, clients would be required to have an individual identifier and an associated public key(s), which is not always the case for the public/native app clients.
 
 # Implementation Considerations
 
@@ -526,7 +592,7 @@ Below is a list of profiles that define static configuration values of Authoriza
 
 - [JWT VC Presentation Profile](https://identity.foundation/jwt-vc-presentation-profile/)
 
-### A Set of Static Configuration Values bound to `openid4vp://`
+### A Set of Static Configuration Values bound to `openid4vp://` {#openid4vp-profile}
 
 Below is a set of static configuration values that can be used with `vp_token` as a supported `response_type`, bound to a custom URL scheme `openid4vp://` as an `authorization_endpoint`:
 
@@ -836,6 +902,19 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </front>
 </reference>
 
+<reference anchor="JARM" target="https://openid.net/specs/oauth-v2-jarm-final.html">
+        <front>
+          <title>Financial-grade API: JWT Secured Authorization Response Mode for OAuth 2.0 (JARM)</title>
+		  <author fullname="Torsten Lodderstedt">
+            <organization>yes.com</organization>
+          </author>
+          <author fullname="Brian Campbell">
+            <organization>Ping Identity</organization>
+          </author>
+          <date day="9" month="Nov" year="2022"/>
+        </front>
+ </reference>
+
 <reference anchor="ISO.18013-5" target="https://www.iso.org/standard/69084.html">
         <front>
           <title>ISO/IEC 18013-5:2021 Personal identification — ISO-compliant driving licence — Part 5: Mobile driving licence (mDL)  application</title>
@@ -911,7 +990,7 @@ OpenID for Verifiable Presentations is credential format agnostic, i.e. it is de
 
 ### Example Credential
 
-The following is an JWT-based Verifiable Credential that will be used through this section.
+The following is an JWT-based W3C Verifiable Credential that will be used through this section.
 
 <{{examples/credentials/jwt_vc.json}}
 
@@ -925,7 +1004,7 @@ The requirements regarding the credential to be presented are conveyed in the `p
 
 <{{examples/request/pd_jwt_vc.json}}
 
-It contains a single `input_descriptor`, which sets the desired format to JWT VC and defines a constraint over the `vc.type` element to select Verifiable Credentials of type `IDCredential`. 
+It contains a single `input_descriptor`, which sets the desired format to JWT VC and defines a constraint over the `vc.type` parameter to select Verifiable Credentials of type `IDCredential`. 
 
 ### Presentation Response
 
@@ -945,7 +1024,7 @@ Note: the VP's `nonce` claim contains the value of the `nonce` of the presentati
 
 ## LDP VCs
 
-The following is an LDP-based Verifiable Credential that will be used through this section.
+The following is an LDP-based W3C Verifiable Credential that will be used through this section.
 
 <{{examples/credentials/ldp_vc.json}}
 
@@ -959,7 +1038,7 @@ The requirements regarding the credential to be presented are conveyed in the `p
 
 <{{examples/request/pd_ldp_vc.json}}
 
-It contains a single `input_descriptor`, which sets the desired format to LDP VC and defines a constraint over the `type` element to select Verifiable Credentials of type `IDCardCredential`. 
+It contains a single `input_descriptor`, which sets the desired format to LDP VC and defines a constraint over the `type` parameter to select Verifiable Credentials of type `IDCardCredential`. 
 
 ### Presentation Response
 
@@ -993,7 +1072,7 @@ The following is an example AnonCred credential that will be used through this s
 
 <{{examples/credentials/ac_vc.json}}
 
-The most important parts for the purpose of this example are `scheme_id` element and `values` element that contains the actual End-user claims. 
+The most important parts for the purpose of this example are `scheme_id` parameter and `values` parameter that contains the actual End-user claims. 
 
 ### Presentation Request 
 
@@ -1009,7 +1088,7 @@ The following is the content of the `presentation_definition` parameter.
 
 The `format` object of the `input_descriptor` uses the format identifier `ac_vc` as defined above and sets the `proof_type` to `CLSignature2019` to denote this descriptor requires a credential in AnonCreds format signed with a CL signature (Camenisch-Lysyanskaya siganture). The rest of the expressions operate on the AnonCreds JSON structure.
 
-The `constraints` object requires the selected credential to conform with the schema definition `did:indy:idu:test:3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0\\.1`, which is denoted as a constraint over the AnonCred's `schema_id` element. 
+The `constraints` object requires the selected credential to conform with the schema definition `did:indy:idu:test:3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0\\.1`, which is denoted as a constraint over the AnonCred's `schema_id` parameter. 
 
 #### Request Example with Selective Release of Claims
 
@@ -1058,13 +1137,13 @@ The content of the `presentation_definition` parameter is as follows:
 
 <{{examples/request/pd_mdl_iso_cbor.json}}
 
-To start with, the `format` element of the `input_descriptor` is set to `mdl_iso_cbor`, i.e. it requests presentation of a mDL in CBOR format. 
+To start with, the `format` parameter of the `input_descriptor` is set to `mdl_iso_cbor`, i.e. it requests presentation of a mDL in CBOR format. 
 
 To request user claims in ISO/IEC 18013-5:2021 mDL, a `doctype` and `namespace` of the claim needs to be specified. Moreover, the verifiers needs to indicate whether it intends to retain obtained user claims or not, using `intent_to_retain` property.
 
 Note: `intent_to_retain` is a property introduced in this example to meet requirements of [@ISO.18013-5].
 
-Setting `limit_disclosure` property defined in [@!DIF.PresentationExchange] to `required` enables selective release by instructing the wallet to submit only the data elements specified in the fields array. Selective release of claims is a requirement built into an ISO/IEC 18013-5:2021 mDL data model.
+Setting `limit_disclosure` property defined in [@!DIF.PresentationExchange] to `required` enables selective release by instructing the wallet to submit only the data parameters specified in the fields array. Selective release of claims is a requirement built into an ISO/IEC 18013-5:2021 mDL data model.
 
 ### Presentation Response
 
@@ -1078,7 +1157,7 @@ The following shows the `presentation_submission` content:
 
 The `descriptor_map` refers to the input descriptor `mDL` and tells the verifier that there is an ISO/IEC 18013-5:2021 mDL (`format` is `mdl_iso_cbor`) in CBOR encoding directly in the `vp_token` (path is the root designated by `$`). 
 
-When ISO/IEC 18013-5:2021 mDL is expressed in CBOR the `nested_path` element cannot be used to point to the location of the requested claims. The user claims will always be included in the `issuerSigned` item. `nested_path` parameter can be used, however, when a JSON-encoded ISO/IEC 18013-5:2021 mDL is returned.
+When ISO/IEC 18013-5:2021 mDL is expressed in CBOR the `nested_path` parameter cannot be used to point to the location of the requested claims. The user claims will always be included in the `issuerSigned` item. `nested_path` parameter can be used, however, when a JSON-encoded ISO/IEC 18013-5:2021 mDL is returned.
 
 The following is a non-normative example of an ISO/IEC 18013-5:2021 mDL encoded as CBOR in diagnostic notation (line wraps within values are for display purposes only) as conveyed in the `vp_token`parameter.
 
@@ -1166,7 +1245,7 @@ Note: Plan to register the following response types in the [OAuth Authorization 
 
 # Acknowledgements {#Acknowledgements}
 
-We would like to thank David Chadwick, Daniel Fett, Fabian Hauck, Alen Horvat, Edmund Jay, Ronald Koenig, and Michael B. Jones for their valuable feedback and contributions that helped to evolve this specification.
+We would like to thank John Bradley, Brian Campbell, David Chadwick, Giuseppe De Marco, Daniel Fett, George Fletcher, Fabian Hauck, Joseph Heenan, Alen Horvat, Andrew Hughes, Edmund Jay, Michael B. Jones, Gaurav Khot, Ronald Koenig, Kenichi Nakamura, Nat Sakimura, Arjen van Veen, and Jacob Ward for their valuable feedback and contributions that helped to evolve this specification.
 
 # Notices
 
@@ -1179,6 +1258,12 @@ The technology described in this specification was made available from contribut
 # Document History
 
    [[ To be removed from the final specification ]]
+
+   -14
+
+   * added support for signed and encrypted authorization responses based on JARM
+   * clarified response encoding for authorization responses
+   * move invocation/just-in-time client metadata exchange/AS Discovery sections from siopv2 to openid4vp
 
    -13
 
@@ -1221,7 +1306,7 @@ The technology described in this specification was made available from contribut
 
    -05
 
-   * moved presentation submission elements outside of Verifiable Presentations (ID Token or UserInfo)
+   * moved presentation submission parameters outside of Verifiable Presentations (ID Token or UserInfo)
 
    -04
 
@@ -1236,7 +1321,7 @@ The technology described in this specification was made available from contribut
 
    -02
 
-   * added `presentation_definition` as sub element of `verifiable_presentation` and VP Token
+   * added `presentation_definition` as sub parameter of `verifiable_presentation` and VP Token
 
    -01
 
