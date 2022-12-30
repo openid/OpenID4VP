@@ -438,11 +438,9 @@ This document also defines the following additional error codes and error descri
 
 # Encoding of Presented Verifiable Presentations
 
-Presented Verifiable Credentials MUST be returned in the VP Token as defined in Credential Format Profiles in Appendix E of [@!OpenID.VCI], based on the format and the signature scheme of the Verifiable Credentials and Verifiable Presentations. This specification does not require any additional encoding when credential format is already represented as a JSON object or a JSON string.
+If Appendix E of [@!OpenID.VCI] defines a rule for encoding the respective credential format in the credential response, this rules MUST also be followed when encoding credentials of this format in the `vp_token` response parameter.
 
-Credential formats expressed as binary formats MUST be Base64url encoded and returned as a JSON string.
-
-Additional Credential Format Profiles may be defined in addition to those in Appendix E of [@!OpenID.VCI].
+Otherwise, this specification does not require any additional encoding when a credential format is already represented as a JSON object or a JSON string. Credential formats expressed as binary formats MUST be Base64url encoded and returned as a JSON string.
 
 # Wallet Invocation {#wallet-invocation}
 
