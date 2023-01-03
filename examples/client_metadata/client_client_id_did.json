@@ -1,12 +1,12 @@
 {
-   "client_id": "s6BhdRkqt3",
+   "client_id": "did:example:123",
    "redirect_uris": [
       "https://client.example.org/callback"
    ],
    "client_name": "My Example (SIOP)",
    "application_type": "web",
-   "response_types": "id_token",
-   "registration": {
+   "response_types": "vp_token id_token",
+   "client_metadata": {
       "vp_formats": {
          "jwt_vp": {
             "alg": [
