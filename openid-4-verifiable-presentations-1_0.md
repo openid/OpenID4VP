@@ -62,7 +62,7 @@ This specification defines a protocol for requesting and presenting Verifiable C
 
 This specification defines a mechanism on top of OAuth 2.0 [@!RFC6749] that enables presentation of Verifiable Credentials. W3C [@VC_DATA] formats as well as other Credential formats, like [@ISO.18013-5] and AnonCreds [@Hyperledger.Indy], are supported. 
 
-OAuth 2.0 [@!RFC6749] is used as a base protocol as it provides the required rails to build simple, secure, and developer friendly credential presentation on top of it. Moreover, implementers can, in a single interface, support credential presentation and the issuance of access tokens for access to APIs based on Verifiable Credentials in the wallet. OpenID Connect [@!OpenID.Core] deployments can also extend their implementations using this specification with the ability to transport Verifiable Presentations. 
+OAuth 2.0 [@!RFC6749] is used as a base protocol as it provides the required rails to build simple, secure, and developer friendly credential presentation on top of it. Moreover, implementers can, in a single interface, support credential presentation and the issuance of access tokens for access to APIs based on Verifiable Credentials in the Wallet. OpenID Connect [@!OpenID.Core] deployments can also extend their implementations using this specification with the ability to transport Verifiable Presentations. 
 
 This specification can also be combined with [@!SIOPv2], if implementers require OpenID Connect features, such as the issuance of subject-signed ID tokens.
 
@@ -154,14 +154,14 @@ The following new parameters are defined by this specification:
 * `presentation_definition`: CONDITIONAL. A string containing a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange]. See (#request_presentation_definition) for more details. 
 * `presentation_definition_uri`: CONDITIONAL. A string containing an HTTPS URL pointing to a resource where a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange] can be retrieved . See (#request_presentation_definition_uri) for more details.
 * `nonce`: REQUIRED. This parameter follows the definition given in [@!OpenID.Core]. It is used to securely bind the Verifiable Presentation(s) provided by the AS to the particular transaction.
-* `response_mode` OPTIONAL. as defined in [@!OAuth.Responses]. If the parameter is not present, the default value is `fragment`. This parameter is also used to request signing & encryption (see (#jarm)) as well as to ask the wallet to send the response to the Verifier via an HTTPS connection (see (#response_mode_post)). 
+* `response_mode` OPTIONAL. as defined in [@!OAuth.Responses]. If the parameter is not present, the default value is `fragment`. This parameter is also used to request signing & encryption (see (#jarm)) as well as to ask the Wallet to send the response to the Verifier via an HTTPS connection (see (#response_mode_post)). 
 
 Additional considerations need to be considered for the following parameters defined in [@!RFC6749]:
 
 * `response_type`: REQUIRED. This specification can be used with all response types as defined in the registry established by [@!RFC6749]. This specification introduces the new response type `vp_token`. This response type asks the Authorization Server (AS) to return a `vp_token` authorization response parameter. 
-* `scope`: OPTIONAL. The wallet MAY allow verifiers to request presentation of  Verifiable Credentials by utilizing a pre-defined scope value. See (#request_scope) for more details.
+* `scope`: OPTIONAL. The Wallet MAY allow verifiers to request presentation of  Verifiable Credentials by utilizing a pre-defined scope value. See (#request_scope) for more details.
 
-Note: A request MUST contain either a `presentation_definition` or a `presentation_definition_uri` or a single `scope` value representing a presentation definition, those three ways to request credential presentation are mutually exclusive. The wallet MUST refuse any request violating this requirement. 
+Note: A request MUST contain either a `presentation_definition` or a `presentation_definition_uri` or a single `scope` value representing a presentation definition, those three ways to request credential presentation are mutually exclusive. The Wallet MUST refuse any request violating this requirement. 
 
 A public key to be used by the Wallet as an input to the key agreement to encrypt Authorization Response (see (#jarm)) MAY be passed by the Verifier using `jwks` or `jwks_uri` claim within the `client_metadata` request parameter (see (#client_metadata_parameters)). 
 
@@ -258,7 +258,7 @@ The concrete scope values and the mapping between a certain scope value and the 
 presentation definition is out of scope of this specification. 
 
 Possible options include normative text in a specification defining scope values along with a description of their
-semantics or machine readable definitions in the wallet's server metadata, mapping a scope value to an equivalent 
+semantics or machine readable definitions in the Wallet's server metadata, mapping a scope value to an equivalent 
 `presentation_definition` object as defined in [@!DIF.PresentationExchange]. 
 
 The definition MUST allow the verifier to determine the identifiers for presentation definition and input descriptors 
@@ -301,7 +301,7 @@ Note: "https://self-issued.me/v2" is a symbolic string and can be used as an `au
 Whether `vp_token` is provided to the Client in the Authorization Response or Token Response depends on the response type used in the request (see (#vp_token_request)).
 
 - If the response type value is `vp_token` or `vp_token id_token`, the `vp_token` is provided in the authorization response, with or without Self-Issued ID Token as defined in [@!SIOPv2].
-- In all other cases, such as when response type is `code`, when the parameter `presentation_definition` is present in the authorization request, the `vp_token` is provided in the Token Response. 
+- In all other cases, such as when response type is `code`, when the parameter `presentation_definition` is present in the Authorization Request, the `vp_token` is provided in the Token Response.
 
 ## Response Type vp_token {#response_type_vp_token}
 
@@ -358,9 +358,9 @@ For authorization responses with response type `vp_token`, the response JWT cont
 * `presentation_submission`
 * `state`  
 
-The key material used for encryption and signing SHOULD be determined using using existing metadata mechanisms. 
+The key material used for encryption and signing SHOULD be determined using existing metadata mechanisms. 
 
-To obtain Verifier's public key for the input to the key agreement to encrypt the Authorization Response, the Wallet MUST use `jwks` or `jwks_uri` claim within the `client_metadata` request parameter, or `jwks` claim within Entity Statement when [@!OpenID.Federation] is used.
+To obtain Verifier's public key for the input to the key agreement to encrypt the Authorization Response, the Wallet MUST use `jwks` or `jwks_uri` claim within the `client_metadata` request parameter, or within the metadata defined in the Entity Configuration when [@!OpenID.Federation] is used.
 
 To sign the Authorization Response, the Wallet MUST use a private key that corresponds to a public key made available in its metadata.
 
@@ -614,11 +614,11 @@ Below is a set of static configuration values that can be used with `vp_token` a
 
 ## Support for Federations/Trust Schemes
 
-Often RPs will want to request Verifiable Credentials from an issuer who is a member of a federation or trust scheme, rather than from a specific issuer, for example, a "BSc Chemistry Degree" credential from a US University rather than from a specifically named university.
+Often RPs will want to request Verifiable Credentials from an issuer who is a participant of a federation, or adheres to a known trust scheme, rather than from a specific issuer, for example, a "BSc Chemistry Degree" credential from a US University rather than from a specifically named university.
 
-In order to facilitate this, federations will need to determine how an issuer can indicate in a Verifiable Credential that they are a member of one or more federations/trust schemes. Once this is done, the RP will be able to create a `presentation_definition` that includes this filtering criteria. This will enable the wallet to select all the Verifiable Credentials that match this criteria and then by some means (for example, by asking the user) determine which matching Verifiable Credential to return to the RP. Upon receiving this Verifiable Credential, the RP will be able to call its federation API to determine if the issuer is indeed a member of the federation/trust scheme that it says it is.
+In order to facilitate this, federations will need to determine how an issuer can indicate in a Verifiable Credential that they are a member of one or more federations/trust schemes. Once this is done, the RP will be able to create a `presentation_definition` that includes this filtering criteria. This will enable the Wallet to select all the Verifiable Credentials that match this criteria and then by some means (for example, by asking the user) determine which matching Verifiable Credential to return to the RP. Upon receiving this Verifiable Credential, the RP will be able to call its federation API to determine if the issuer is indeed a member of the federation/trust scheme that it says it is.
 
-Indicating the federations/trust schemes that an issuer is a member of may be achieved by defining a `termsOfUse` property [@!VC_DATA].
+Indicating the federations/trust schemes used by an issuer MAY be achieved by defining a `termsOfUse` property [@!VC_DATA].
 
 Note: [@!VC_DATA] describes terms of use as "can be utilized by an issuer ... to communicate the terms under which a Verifiable Credential ... was issued."
 
@@ -1139,7 +1139,7 @@ To request user claims in ISO/IEC 18013-5:2021 mDL, a `doctype` and `namespace` 
 
 Note: `intent_to_retain` is a property introduced in this example to meet requirements of [@ISO.18013-5].
 
-Setting `limit_disclosure` property defined in [@!DIF.PresentationExchange] to `required` enables selective release by instructing the wallet to submit only the data parameters specified in the fields array. Selective release of claims is a requirement built into an ISO/IEC 18013-5:2021 mDL data model.
+Setting `limit_disclosure` property defined in [@!DIF.PresentationExchange] to `required` enables selective release by instructing the Wallet to submit only the data parameters specified in the fields array. Selective release of claims is a requirement built into an ISO/IEC 18013-5:2021 mDL data model.
 
 ### Presentation Response
 
@@ -1193,7 +1193,7 @@ This is an example request.
 
 The differences to the example requests in the previous sections are:
 
-* `response_type` is set to `id_token`. If the request also includes a `presentation_definition` parameter, the wallet is supposed to return the `presentation_submission` and `vp_token` parameters in the same response as the `id_token` parameter. 
+* `response_type` is set to `id_token`. If the request also includes a `presentation_definition` parameter, the Wallet is supposed to return the `presentation_submission` and `vp_token` parameters in the same response as the `id_token` parameter. 
 * The request includes the `scope` parameter with value `openid` making this a OpenID Connect request. Additionally, the request also contains the parameter `id_token_type` with value `subject_signed` requesting a Self-Issuer ID Token, i.e. the request is a SIOP request. 
 
 ### Response
