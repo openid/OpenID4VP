@@ -62,7 +62,7 @@ This specification defines a protocol for requesting and presenting Verifiable C
 
 This specification defines a mechanism on top of OAuth 2.0 [@!RFC6749] that enables presentation of Verifiable Credentials. W3C [@VC_DATA] formats as well as other Credential formats, like [@ISO.18013-5] and AnonCreds [@Hyperledger.Indy], are supported. 
 
-OAuth 2.0 [@!RFC6749] is used as a base protocol as it provides the required rails to build simple, secure, and developer friendly credential presentation on top of it. Moreover, implementers can, in a single interface, support credential presentation and the issuance of access tokens for access to APIs based on Verifiable Credentials in the Wallet. OpenID Connect [@!OpenID.Core] deployments can also extend their implementations using this specification with the ability to transport Verifiable Presentations. 
+OAuth 2.0 [@!RFC6749] is used as a base protocol as it provides the required rails to build simple, secure, and developer-friendly credential presentation on top of it. Moreover, implementers can, in a single interface, support credential presentation and the issuance of access tokens for access to APIs based on Verifiable Credentials in the Wallet. OpenID Connect [@!OpenID.Core] deployments can also extend their implementations using this specification with the ability to transport Verifiable Presentations. 
 
 This specification can also be combined with [@!SIOPv2], if implementers require OpenID Connect features, such as the issuance of subject-signed ID tokens.
 
@@ -120,17 +120,17 @@ Base64url Encoding
 
 Wallet
 
-  Entity used by the Holder to receive, store, present, and manage Verifiable Credentials and key material. There is no single deployment model of a Wallet: Verifiable Credentials and keys can both be stored/managed locally, or by using a remote self-hosted service, or a remote third party service. In the context of this specification, the Wallet acts as an OAuth 2.0 Authorization Server (see [@!RFC6749]) towards the Credential Verifier which acts as the OAuth 2.0 Client. 
+  Entity used by the Holder to receive, store, present, and manage Verifiable Credentials and key material. There is no single deployment model of a Wallet: Verifiable Credentials and keys can both be stored/managed locally, or by using a remote self-hosted service, or a remote third-party service. In the context of this specification, the Wallet acts as an OAuth 2.0 Authorization Server (see [@!RFC6749]) towards the Credential Verifier which acts as the OAuth 2.0 Client. 
 
 
 # Scope
 
 This specification defines mechanisms to
 
-* request presentation of Verifiable Credentials in arbitrary formats.
-* provide a verifier with one or more Verifiable Presentations in a secure fashion. 
-* customize the protocol to the specific needs of a particular credential format. Examples are given for credential formats as specified in [@VC_DATA], [@ISO.18013-5] and [@Hyperledger.Indy].
-* combine the credential presentation with user authentication through [@SIOPv2]. 
+* request presentation of Verifiable Credentials in arbitrary formats,
+* provide a verifier with one or more Verifiable Presentations in a secure fashion,
+* customize the protocol to the specific needs of a particular credential format (examples are given for credential formats as specified in [@VC_DATA], [@ISO.18013-5], and [@Hyperledger.Indy]),
+* combine the credential presentation with user authentication through [@SIOPv2], and
 * combine the credential presentation with the issuance of OAuth access tokens. 
 
 # Overview 
@@ -141,7 +141,7 @@ OpenID for Verifiable Presentations supports scenarios where the Authorization R
 
 Implementations can use any pre-existing OAuth grant type and response type in conjunction with this specifications to support different deployment architectures. This specification also introduces a new OAuth response mode `direct_post` to support the cross device flow (see (#response_mode_post)). 
 
-This specification supports any Credential format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] and [@Hyperledger.Indy] (AnonCreds) even in the same transaction. The examples given in the main part of this specification use W3C Verifiable Credentials, but examples in other Credential formats are given in  (#alternative_credential_formats). 
+This specification supports any Credential format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5], and [@Hyperledger.Indy] (AnonCreds) even in the same transaction. The examples given in the main part of this specification use W3C Verifiable Credentials, but examples in other Credential formats are given in  (#alternative_credential_formats). 
 
 Implementations can also be build on top of OpenID Connect Core, since OpenID Connect Core is based on OAuth 2.0. To benefit from the subject-signed ID Token feature, this specification can also be combined with the Self-Issued OP v2 specification [@SIOPv2].
 
@@ -151,17 +151,17 @@ The authorization request follows the definition given in [@!RFC6749].
 
 The following new parameters are defined by this specification:  
 
-* `presentation_definition`: CONDITIONAL. A string containing a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange]. See (#request_presentation_definition) for more details. 
-* `presentation_definition_uri`: CONDITIONAL. A string containing an HTTPS URL pointing to a resource where a `presentation_definition` JSON object as defined in Section 4 of [@!DIF.PresentationExchange] can be retrieved . See (#request_presentation_definition_uri) for more details.
+* `presentation_definition`: CONDITIONAL. A string containing a Presentation Definition JSON object as defined in Section 5 of [@!DIF.PresentationExchange]. See (#request_presentation_definition) for more details. 
+* `presentation_definition_uri`: CONDITIONAL. A string containing an HTTPS URL pointing to a resource where a Presentation Definition JSON object as defined in Section 5 of [@!DIF.PresentationExchange] can be retrieved . See (#request_presentation_definition_uri) for more details.
 * `nonce`: REQUIRED. This parameter follows the definition given in [@!OpenID.Core]. It is used to securely bind the Verifiable Presentation(s) provided by the AS to the particular transaction.
 * `response_mode` OPTIONAL. as defined in [@!OAuth.Responses]. If the parameter is not present, the default value is `fragment`. This parameter is also used to request signing & encryption (see (#jarm)) as well as to ask the Wallet to send the response to the Verifier via an HTTPS connection (see (#response_mode_post)). 
 
-Additional considerations need to be considered for the following parameters defined in [@!RFC6749]:
+Additional considerations need to be made for the following parameters defined in [@!RFC6749]:
 
 * `response_type`: REQUIRED. This specification can be used with all response types as defined in the registry established by [@!RFC6749]. This specification introduces the new response type `vp_token`. This response type asks the Authorization Server (AS) to return a `vp_token` authorization response parameter. 
 * `scope`: OPTIONAL. The Wallet MAY allow verifiers to request presentation of  Verifiable Credentials by utilizing a pre-defined scope value. See (#request_scope) for more details.
 
-Note: A request MUST contain either a `presentation_definition` or a `presentation_definition_uri` or a single `scope` value representing a presentation definition, those three ways to request credential presentation are mutually exclusive. The Wallet MUST refuse any request violating this requirement. 
+Note: The three ways to request credential presentation are mutually exclusive. A request MUST NOT contain more than one of `presentation_definition`, `presentation_definition_uri`, or a `scope` value representing a Presentation Definition. The Wallet MUST refuse any request violating this requirement. 
 
 A public key to be used by the Wallet as an input to the key agreement to encrypt Authorization Response (see (#jarm)) MAY be passed by the Verifier using `jwks` or `jwks_uri` claim within the `client_metadata` request parameter (see (#client_metadata_parameters)). 
 
@@ -178,7 +178,7 @@ This is an example request:
 
 ## `presentation_definition` Parameter{#request_presentation_definition}
 
-This parameter contains a JSON object conforming to the syntax defined for `presentation_definition` parameters in Section 4 of [@!DIF.PresentationExchange].
+This parameter contains a Presentation Definition JSON object conforming to the syntax defined in Section 5 of [@!DIF.PresentationExchange].
 
 The following shows an example `presentation_definition` parameter:
 
@@ -196,22 +196,22 @@ RPs can also ask for alternative Verifiable Credentials being presented, which i
 
 The VC and VP formats supported by an AS should be published in its metadata (see (#as_metadata_parameters)). The formats supported by a client may be set up using the client metadata parameter `vp_formats` (see (#client_metadata_parameters)). The AS MUST ignore any `format` property inside a `presentation_definition` object if that `format` was not included in the `vp_formats` property of the client metadata. 
 
-Note that when the Client is requesting presentation of a VP containing a VC, Client MUST indicate in the `vp_formats` parameter, supported formats of both VC and VP.
+Note that when a client is requesting presentation of a VP containing a VC, the client MUST indicate in the `vp_formats` parameter the supported formats of both VC and VP.
 
 ## `presentation_definition_uri` Parameter {#request_presentation_definition_uri}
 
-`presentation_definition_uri` is used to the retrieve the `presentation_definition` from the resource at the specified URL, rather than being passed by value. The AS will send a GET request without additional parameters. The resource MUST be exposed without further need to authenticate or authorize. 
+`presentation_definition_uri` is used to retrieve the Presentation Definition from the resource at the specified URL, rather than being passed by value. The AS will send a GET request without additional parameters. The ressource MUST be exposed without further need to authenticate or authorize. 
 
 The protocol for the `presentation_definition_uri` MUST be HTTPS.
 
-For example the parameter value "https://server.example.com/presentationdefs?ref=idcard_presentation_request" will result in the following request 
+For example the parameter value `https://server.example.com/presentationdefs?ref=idcard_presentation_request` will result in the following request 
 
 ```
   GET /presentationdefs?ref=idcard_presentation_request HTTP/1.1
   Host: server.example.com
 ```
 
-and response.
+and response:
 
 ```
 HTTP/1.1 200 OK
@@ -251,24 +251,24 @@ Content-Type: application/json
 
 Wallets MAY support requesting presentation of Verifiable Credentials using OAuth 2.0 scope values. 
 
-Such a scope value MUST be an alias for a well-defined presentation definition as it will be 
-refered to in the `presentation_submission` response parameter. 
+Such a scope value MUST be an alias for a well-defined Presentation Definition as it will be 
+referred to in the `presentation_submission` response parameter. 
 
 The concrete scope values and the mapping between a certain scope value and the respective 
-presentation definition is out of scope of this specification. 
+Presentation Definition is out of scope of this specification. 
 
 Possible options include normative text in a specification defining scope values along with a description of their
 semantics or machine readable definitions in the Wallet's server metadata, mapping a scope value to an equivalent 
 `presentation_definition` object as defined in [@!DIF.PresentationExchange]. 
 
-The definition MUST allow the verifier to determine the identifiers for presentation definition and input descriptors 
+The definition MUST allow the verifier to determine the identifiers for Presentation Definition and input descriptors 
 used in the respective presentation submission response parameter as well as the credential formats and types in 
 the `vp_token` response parameter.  
 
 It is RECOMMENDED to use collision-resistant scopes values.
 
 Below is a non-normative example of an Authorization Request using the scope value `com.example.IDCardCredential_presentation`, 
-which is an alias for the first presentation definition example given in (#request_presentation_definition):
+which is an alias for the first Presentation Definition example given in (#request_presentation_definition):
 
 ```
   GET /authorize?
@@ -425,7 +425,7 @@ The error response follows the rules as defined in [@!RFC6749], with the followi
 `invalid_request`:
 
 - The request contains more than a `presentation_definition` parameter or a `presentation_definition_uri` parameter or a 
-scope value representing a presentation definition.
+scope value representing a Presentation Definition.
 
 `invalid_client`:
 
@@ -728,7 +728,7 @@ It is NOT RECOMMENDED for the Subject to delegate the presentation of the creden
 
 ## Fetching Presentation Definitions by Reference
 
-In many instances the referenced server will be operated by a known federation or other trusted operator, and the URL's domain name will already be widely known. OPs (including SIOPs) using this URI can mitigate request forgeries by having a pre-configured set of trusted domain names and only fetching presentation_definitions from these sources. In addition, the presentation definitions could be signed by a trusted authority, such as the ICO or federation operator.
+In many instances the referenced server will be operated by a known federation or other trusted operator, and the URL's domain name will already be widely known. OPs (including SIOPs) using this URI can mitigate request forgeries by having a pre-configured set of trusted domain names and only fetching presentation_definitions from these sources. In addition, the Presentation Definitions could be signed by a trusted authority, such as the ICO or federation operator.
 
 ## User Authentication using Verifiable Credentials
 
