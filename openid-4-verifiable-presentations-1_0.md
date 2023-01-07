@@ -364,6 +364,20 @@ To obtain Verifier's public key for the input to the key agreement to encrypt th
 
 To sign the Authorization Response, the Wallet MUST use a private key that corresponds to a public key made available in its metadata.
 
+### JARM Response Mode "direct_post.jwt" {#direct_post_jwt}
+
+This specification also defines a new JARM response mode `direct_post`, which allows for JARM to be used with response mode `direct_post`.
+
+The JARM response mode "direct_post.jwt" causes the Authorization Server to send the Authorization Response using the HTTP `POST` method instead of redirecting back to the Client as defined in (#response_mode_post). The AS authorization server adds the `response` parameter containing the JWT as defined in section 4.1. of [@!JARM] and (#jarm) in the body of HTTP POST request using the `application/x-www-form-urlencoded` content type.
+
+The following is a non-normative example of a response using the `presentation_submission` and `vp_token` values from (#jwt_vc). (line breaks for display purposes only):
+
+<{{examples/response/jarm_jwt_vc_json_post.txt}}
+
+This is a JWT signed with `ES256` algorithm used in the example above before base64url encoding and signing:
+
+<{{examples/response/jarm_jwt_vc_json_body.json}}
+
 ## Response Mode "direct_post" {#response_mode_post}
 
 There are use-cases when the Authorization Request was received from a Verifier that is unreachable using redirects (i.e. it is on another device) from the Wallet on which the requested Credential is stored.
@@ -982,7 +996,7 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
 
 OpenID for Verifiable Presentations is credential format agnostic, i.e. it is designed to allow applications to request and receive Verifiable Presentations and Verifiable Credentials in any format, not limited to the formats defined in [@!VC_DATA]. This section aims to illustrate this with examples utilizing different credential formats. Customization of OpenID for Verifiable Presentation for credential formats other than those defined in [@!VC_DATA] uses extensions points of Presentation Exchange [@!DIF.PresentationExchange]. 
 
-## JWT VCs
+## JWT VCs {#jwt_vc}
 
 ### Example Credential
 
