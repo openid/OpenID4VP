@@ -196,7 +196,7 @@ RPs can also ask for alternative Verifiable Credentials being presented, which i
 
 The VC and VP formats supported by an AS should be published in its metadata (see (#as_metadata_parameters)). The formats supported by a client may be set up using the client metadata parameter `vp_formats` (see (#client_metadata_parameters)). The AS MUST ignore any `format` property inside a `presentation_definition` object if that `format` was not included in the `vp_formats` property of the client metadata. 
 
-Note that when a client is requesting presentation of a VP containing a VC, the client MUST indicate in the `vp_formats` parameter the supported formats of both VC and VP.
+Note that when a Client is requesting presentation of a VP containing a VC, the Client MUST indicate in the `vp_formats` parameter the supported formats of both VC and VP.
 
 ## `presentation_definition_uri` Parameter {#request_presentation_definition_uri}
 
