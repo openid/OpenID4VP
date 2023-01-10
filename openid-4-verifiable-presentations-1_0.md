@@ -94,6 +94,10 @@ W3C Verifiable Presentation
 
   A Verifiable Presentations compliant to the [@VC_DATA] specification.
 
+VP Token
+
+  Contains a single Verifiable Presentation or an array of Verifiable Presentations.
+
 Issuer
 
   An entity that creates Verifiable Credentials.
@@ -158,8 +162,15 @@ The following new parameters are defined by this specification:
 
 Additional considerations need to be made for the following parameters defined in [@!RFC6749]:
 
-* `response_type`: REQUIRED. This specification can be used with all response types as defined in the registry established by [@!RFC6749]. This specification introduces the new response type `vp_token`. This response type asks the Authorization Server (AS) to return a `vp_token` authorization response parameter. 
-* `scope`: OPTIONAL. The Wallet MAY allow verifiers to request presentation of  Verifiable Credentials by utilizing a pre-defined scope value. See (#request_scope) for more details.
+* `response_type`:
+
+- This specification introduces a new response type `vp_token`. This response type asks the Authorization Server (AS) to return a `vp_token` authorization response parameter. See (#response_type_vp_token) for more details.
+
+* `scope`:
+
+- The Wallet MAY allow verifiers to request presentation of Verifiable Credentials by utilizing a pre-defined scope value. See (#request_scope) for more details.
+
+Note: This specification can be used with all response types as defined in the registry established by [@!RFC6749].
 
 Note: The three ways to request credential presentation are mutually exclusive. A request MUST NOT contain more than one of `presentation_definition`, `presentation_definition_uri`, or a `scope` value representing a Presentation Definition. The Wallet MUST refuse any request violating this requirement. 
 
@@ -247,6 +258,7 @@ Content-Type: application/json
     ]
 }
 ```
+
 ## Using `scope` Parameter to Request Verifiable Credential(s) {#request_scope}
 
 Wallets MAY support requesting presentation of Verifiable Credentials using OAuth 2.0 scope values. 
@@ -257,13 +269,13 @@ referred to in the `presentation_submission` response parameter.
 The concrete scope values and the mapping between a certain scope value and the respective 
 Presentation Definition is out of scope of this specification. 
 
-Possible options include normative text in a specification defining scope values along with a description of their
+Possible options include normative text in a separate specification defining scope values along with a description of their
 semantics or machine readable definitions in the Wallet's server metadata, mapping a scope value to an equivalent 
-`presentation_definition` object as defined in [@!DIF.PresentationExchange]. 
+`presentation_definition` object. 
 
-The definition MUST allow the verifier to determine the identifiers for Presentation Definition and input descriptors 
-used in the respective presentation submission response parameter as well as the credential formats and types in 
-the `vp_token` response parameter.  
+Such definition of a scope value MUST allow the verifier to determine the identifiers for Presentation Definition and input descriptors 
+used in the respective `presentation_submission` response parameter as well as the credential formats and types in 
+the `vp_token` response parameter defined in (#response_type_vp_token).  
 
 It is RECOMMENDED to use collision-resistant scopes values.
 
@@ -294,22 +306,27 @@ When an RP is sending a Request Object as defined in Section 6.1 of [@!OpenID.Co
 
 Note: "https://self-issued.me/v2" is a symbolic string and can be used as an `aud` Claim value even when this specification is used standalone, without SIOPv2. 
 
-# Response {#vp_token_response}
+# Response
 
-## vp_token and Response Types
+## Response Type `vp_token` {#response_type_vp_token}
+
+This specification defines the response type `vp_token`.
+
+`vp_token`
+  When supplied as the `response_type` parameter in an Authorization Request, a successful response MUST include the parameter `vp_token`. The Authorization Server SHOULD NOT return an OAuth 2.0 Authorization Code, Access Token, or Access Token Type in a successful response to the grant request. The default Response Mode for this Response Type is the fragment encoding, i.e. the Authorization Response parameters are encoded in the fragment added to the `redirect_uri` when redirecting back to the Client. The response type `vp_token` can be used with other response modes as defined in [@!OAuth.Responses]. Both successful and error responses SHOULD be returned using the supplied Response Mode, or if none is supplied, using the default Response Mode.
+
+Note: Discuss if response mode `query` is allowed for response type vp_token - since it is not allowed for response type id_token.
+
+## Response Types Values
 
 Whether `vp_token` is provided to the Client in the Authorization Response or Token Response depends on the response type used in the request (see (#vp_token_request)).
 
 - If the response type value is `vp_token` or `vp_token id_token`, the `vp_token` is provided in the authorization response, with or without Self-Issued ID Token as defined in [@!SIOPv2].
 - In all other cases, such as when response type is `code`, when the parameter `presentation_definition` is present in the Authorization Request, the `vp_token` is provided in the Token Response.
 
-## Response Type vp_token {#response_type_vp_token}
+## Response Parameters
 
-This specification defines the response type `vp_token`. 
-
-The response type `vp_token` can be used with different response modes as defined in [@!OAuth.Responses]. The default encoding is `fragment`, i.e. the Authorization Response parameters are encoded in the fragment added to the `redirect_uri` when redirecting back to the Client.
-
-When response type is `vp_token`, response consists of the following parameters:
+When VP Token is returned, response consists of the following parameters:
 
 * `vp_token` REQUIRED. String parameter that MUST either contain a single Verifiable Presentation or an array of Verifiable Presentations. Each Verifiable Presentation MUST be represented as a JSON string (that is a Base64url encoded value) or a JSON object depending on a format as defined in Annex E of [@!OpenID.VCI]. If Appendix E of [@!OpenID.VCI] defines a rule for encoding the respective credential format in the credential response, this rules MUST also be followed when encoding credentials of this format in the `vp_token` response parameter. Otherwise, this specification does not require any additional encoding when a credential format is already represented as a JSON object or a JSON string.
 * `presentation_submission`. REQUIRED. The `presentation_submission` element as defined in [@!DIF.PresentationExchange] links the input descriptor identifiers in the corresponding request to the respective Verifiable Presentations within the VP Token. The root of the path expressions in the descriptor map is the respective Verifiable Presentation, pointing to the respective Verifiable Credentials.
@@ -348,22 +365,6 @@ with a matching `presentation_submission` parameter.
 
 <{{examples/response/presentation_submission_multiple_vps.json}}
 
-## Signed and Encrypted Responses {#jarm}
-
-Implementations MAY use JARM [@!JARM] to sign, or sign and encrypt the response on the application level. Furthermore, this specification allows for JARM with encrypted, unsigned responses, in which case, the JWT containing the response parameters is only encrypted.
-
-For authorization responses with response type `vp_token`, the response JWT contains the following parameters as defined in (#response_type_vp_token):
-
-* `vp_token` 
-* `presentation_submission`
-* `state`  
-
-The key material used for encryption and signing SHOULD be determined using existing metadata mechanisms. 
-
-To obtain Verifier's public key for the input to the key agreement to encrypt the Authorization Response, the Wallet MUST use `jwks` or `jwks_uri` claim within the `client_metadata` request parameter, or within the metadata defined in the Entity Configuration when [@!OpenID.Federation] is used.
-
-To sign the Authorization Response, the Wallet MUST use a private key that corresponds to a public key made available in its metadata.
-
 ## Response Mode "direct_post" {#response_mode_post}
 
 There are use-cases when the Authorization Request was received from a Verifier that is unreachable using redirects (i.e. it is on another device) from the Wallet on which the requested Credential is stored.
@@ -372,12 +373,13 @@ For such use-cases, this specification defines a new Response Mode `direct_post`
 
 This specification defines the following Response Mode in accordance with [@!OAuth.Responses]:
 
-direct_post
-  In this mode, Authorization Response parameters are encoded in the body using the `application/x-www-form-urlencoded` content type and sent using the HTTP `POST` method instead of redirecting back to the Client.
+* direct_post
+  
+- In this mode, Authorization Response parameters are encoded in the body using the `application/x-www-form-urlencoded` content type and sent using the HTTP `POST` method instead of redirecting back to the Client.
   
 HTTP POST request MUST be sent to the URL obtained from the `redirect_uri` parameter in the Authorization Request.
 
-Note that Response Mode "direct_post" could be less secure than redirect-based Response Mode. For details, see (#session-binding).
+Note: Response Mode `direct_post` could be less secure than redirect-based Response Mode. For details, see (#session-binding).
 
 The following is a non-normative example request object with Response Mode `direct_post`:
 
@@ -413,6 +415,22 @@ The respective HTTP POST response to the Verifier would look like this:
 ```
 
 Note that in the Cross-Device Flow, the Wallet can change the UI based on the Verifier's response to the HTTP POST request.
+
+## Signed and Encrypted Responses {#jarm}
+
+Implementations MAY use JARM [@!JARM] to sign, or sign and encrypt the response on the application level. Furthermore, this specification allows for JARM with encrypted, unsigned responses, in which case, the JWT containing the response parameters is only encrypted.
+
+For authorization responses with response type `vp_token`, the response JWT contains the following parameters as defined in (#response_type_vp_token):
+
+* `vp_token` 
+* `presentation_submission`
+* `state`  
+
+The key material used for encryption and signing SHOULD be determined using existing metadata mechanisms. 
+
+To obtain Verifier's public key for the input to the key agreement to encrypt the Authorization Response, the Wallet MUST use `jwks` or `jwks_uri` claim within the `client_metadata` request parameter, or within the metadata defined in the Entity Configuration when [@!OpenID.Federation] is used.
+
+To sign the Authorization Response, the Wallet MUST use a private key that corresponds to a public key made available in its metadata.
 
 ## Error Response
 
