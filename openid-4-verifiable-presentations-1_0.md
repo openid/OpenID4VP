@@ -68,11 +68,15 @@ This specification can also be combined with [@!SIOPv2], if implementers require
 
 # Terminology
 
+Common terms in this document come from [@!RFC6749]. 
+
+This specification also defines the following terms. In the case where a term has a definition that differs, the definition below is authoritative.
+
 Credential
 
-  A set of claims about a subject made by an Issuer.
+  A set of one or more claims about a subject made by a Credential Issuer.
 
-Note: the definition of a term "credential" in this specification is different from that in [@!OpenID.Core].
+  Note: the definition of a term "credential" in this specification is different from that in [@!OpenID.Core].
 
 Verifiable Credential (VC)
 
@@ -94,9 +98,9 @@ W3C Verifiable Presentation
 
   A Verifiable Presentations compliant to the [@VC_DATA] specification.
 
-Issuer
+Credential Issuer
 
-  An entity that creates Verifiable Credentials.
+  Entity that issues Verifiable Credentials. Also called Issuer.
 
 Holder
 
@@ -114,14 +118,13 @@ Cryptographic Holder Binding
 
   Ability of the Holder to prove legitimate possession of a Verifiable Credential by proving control over the same private key during the issuance and presentation. Mechanism might depend on the Credential Format. For example, in `jwt_vc_json` Credential Format, a VC with Cryptographic Holder Binding contains a public key or a reference to a public key that matches to the private key controlled by the Holder. Claim-based or biometrics-based holder binding is also possible.
 
+Wallet
+
+  Entity used by the Holder to receive, store, present, and manage Verifiable Credentials and key material. There is no single deployment model of a Wallet: Verifiable Credentials and keys can both be stored/managed locally, or by using a remote self-hosted service, or a remote third-party service. In the context of this specification, the Wallet acts as an OAuth 2.0 Authorization Server (see [@!RFC6749]) towards the Credential Verifier which acts as the OAuth 2.0 Client.
+
 Base64url Encoding
 
   Base64 encoding using the URL- and filename-safe character set defined in Section 5 of [@!RFC4648], with all trailing '=' characters omitted (as permitted by Section 3.2 of [@!RFC4648]) and without the inclusion of any line breaks, whitespace, or other additional characters. Note that the base64url encoding of the empty octet sequence is the empty string. (See Appendix C of [@!RFC7515] for notes on implementing base64url encoding without padding.)
-
-Wallet
-
-  Entity used by the Holder to receive, store, present, and manage Verifiable Credentials and key material. There is no single deployment model of a Wallet: Verifiable Credentials and keys can both be stored/managed locally, or by using a remote self-hosted service, or a remote third-party service. In the context of this specification, the Wallet acts as an OAuth 2.0 Authorization Server (see [@!RFC6749]) towards the Credential Verifier which acts as the OAuth 2.0 Client. 
-
 
 # Scope
 
