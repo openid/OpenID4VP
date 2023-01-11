@@ -716,11 +716,13 @@ In the example above, the requested `nonce` value is included as the `challenge`
 
 ## Validation of Verifiable Presentations
 
-A verifier MUST validate the integrity, authenticity, and holder binding of any Verifiable Presentation provided by an OP according to the rules of the respective presentation format. 
+The validity of data presented in W3C Veriable Presentations is attested by the issuer of the underlying W3C Verifiable Credential.
 
-This requirement holds true even if those Verifiable Presentations are embedded within a signed OpenID Connect assertion, such as an ID Token or a UserInfo response. This is required because Verifiable Presentations might be signed by the same holder but with different key material and/or the OpenID Connect assertions may be signed by a third party (e.g., a traditional OP). In both cases, just checking the signature of the respective OpenID Connect assertion does not, for example, check the holder binding.
+Verifiers MUST consider that Verifiable Presentations can be revoked and that user data within the W3C Verifiable Credential may change over time. Such changes can only be noticed by the Verifier if the Verifiable Presentation is checked at each interaction with the End-User.
 
-Note: Some of the available mechanisms are outlined in Section 4.3.2 of [@!DIF.PresentationExchange].
+A verifier MUST validate the integrity, authenticity, and holder binding of any Verifiable Presentation provided by an OP according to the rules of the respective presentation format.
+
+Note: when used in conjunction with [@!SIOPv2], Verifiable Presentations might be signed by the same holder but with different key material and/or the Self-Issued ID Token.
 
 It is NOT RECOMMENDED for the Subject to delegate the presentation of the credential to a third party.
 
