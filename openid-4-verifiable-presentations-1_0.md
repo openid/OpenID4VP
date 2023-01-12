@@ -663,7 +663,7 @@ One level of nesting `path_nested` objects is sufficient to describe a VC includ
 
 ## Sending VP Token using Response Mode "direct_post" {#session-binding}
 
-When HTTP "POST" method is used to send VP Token, there is no session for the Verifier to validate whether the Response is sent by the same Wallet that has received the Authorization Request. It is RECOMMENDED for the Verifiers to implement mechanisms to strengthen such binding.
+When HTTP "POST" method is used to send VP Token, there is no session for the Verifier to validate whether the Response is sent by the same Wallet that has received the Authorization Request. It is RECOMMENDED for the Verifiers to implement mechanisms to strengthen such binding. For more details on possible attacks and mitigations see [@Cross-Device.BCP].
 
 ## Preventing Replay Attacks {#preventing-replay}
 
@@ -899,6 +899,22 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
           <title>Hyperledger Indy Project</title>
           <author>
             <organization>Hyperledger Indy Project</organization>
+          </author>
+          <date year="2022"/>
+        </front>
+</reference>
+
+<reference anchor="Cross-Device.BCP" target="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-cross-device-security">
+        <front>
+          <title>Cross-Device Flows: Security Best Current Practice</title>
+		      <author fullname="P. Kasselman">
+            <organization>Microsoft</organization>
+          </author>
+          <author fullname="D. Fett">
+            <organization>yes.com</organization>
+          </author>
+          <author fullname="F. Skokan">
+            <organization>Okta</organization>
           </author>
           <date year="2022"/>
         </front>
