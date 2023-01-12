@@ -104,7 +104,7 @@ Holder
 
 Verifier
 
-  Entity that requests, checks and extracts the claims from Verifiable Presentations to make a decision regarding providing a service to the End-User. Verifier acts as an OAuth 2.0 Client towards the Wallet that is acting as an OAuth 2.0 Authorization Server. Verifier is a specific instance of OAuth 2.0 Client, just like Relying Party (RP) in [@!OpenID.Core].
+  The entity that requests, receives and validates Verifiable Presentations. During presentation of Credentials, Verifier acts as an OAuth 2.0 Client towards the Wallet that is acting as an OAuth 2.0 Authorization Server. The verifier is a specific case of OAuth 2.0 Client, just like Relying Party (RP) in [@OpenID.Core].
 
 Issuer-Holder-Verifier Model
 
