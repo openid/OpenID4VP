@@ -296,6 +296,8 @@ Note: "https://self-issued.me/v2" is a symbolic string and can be used as an `au
 
 # Response {#vp_token_response}
 
+This section defines how Verifiable Presentation(s) can be returned in the Authorization Response or Token Response.
+
 ## vp_token and Response Types
 
 Whether `vp_token` is provided to the Client in the Authorization Response or Token Response depends on the response type used in the request (see (#vp_token_request)).
