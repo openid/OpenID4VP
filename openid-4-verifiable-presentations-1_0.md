@@ -149,32 +149,47 @@ This specification supports any Credential format used in the Issuer-Holder-Veri
 
 Implementations can also be build on top of OpenID Connect Core, since OpenID Connect Core is based on OAuth 2.0. To benefit from the subject-signed ID Token feature, this specification can also be combined with the Self-Issued OP v2 specification [@SIOPv2].
 
+# VP Token
+
+---WIP
+
+The primary extension that OpenID for Verifiable Presentations makes to OAuth 2.0 is to enable End-Users to present Verifiable Presentations to the Verifiers. The VP Token consists of one or more Verifiable Presentations that has authorship of the Holder that can be cryptographically verified to provide Cryptographic Holder Binding over a set of claims about a subject that has authorship of the Issuer that can be cryptographically verified. 
+
+The VP Token can contain VPs of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] and [@Hyperledger.Indy] (AnonCreds).
+
+WIP---
+
 # Authorization Request {#vp_token_request}
 
 The authorization request follows the definition given in [@!RFC6749]. 
 
-The following new parameters are defined by this specification:  
+This specification defines the following new parameters:
 
 * `presentation_definition`: CONDITIONAL. A string containing a Presentation Definition JSON object as defined in Section 5 of [@!DIF.PresentationExchange]. See (#request_presentation_definition) for more details. 
 * `presentation_definition_uri`: CONDITIONAL. A string containing an HTTPS URL pointing to a resource where a Presentation Definition JSON object as defined in Section 5 of [@!DIF.PresentationExchange] can be retrieved . See (#request_presentation_definition_uri) for more details.
-* `nonce`: REQUIRED. This parameter follows the definition given in [@!OpenID.Core]. It is used to securely bind the Verifiable Presentation(s) provided by the AS to the particular transaction.
-* `response_mode` OPTIONAL. as defined in [@!OAuth.Responses]. If the parameter is not present, the default value is `fragment`. This parameter is also used to request signing & encryption (see (#jarm)) as well as to ask the Wallet to send the response to the Verifier via an HTTPS connection (see (#response_mode_post)). 
+* `client_metadata`: OPTIONAL. This parameter enables RP Metadata to be passed in a single, self-contained parameter. The value is a JSON object containing RP Registration Metadata values. The client metadata parameter value is represented in an OAuth 2.0 request as a UTF-8 encoded JSON object. MUST NOT be present if `client_metadata_uri` parameter is present.
+* `client_metadata_uri`: OPTIONAL. This parameter enables RP Registration Metadata to be passed by reference, rather than by value. The `request_uri` value is a URL referencing a resource containing a RP Registration Metadata Object. The scheme used in the `client_metadata_uri` value MUST be https. The `client_metadata_uri` value MUST be reachable by the AS. MUST NOT be present if `client_metadata` parameter is present.
 
-Additional considerations need to be made for the following parameters defined in [@!RFC6749]:
+Claims to be included in `client_metadata` and `client_metadata_uri` parameters are defined in Section 4.3 and Section 2.1 of the OpenID Connect Dynamic RP Registration 1.0 [@!OpenID.Registration] specification as well as [@!RFC7591].
 
-* `response_type`:
+A public key to be used by the Wallet as an input to the key agreement to encrypt Authorization Response (see (#jarm)) MAY be passed by the Verifier using `jwks` or `jwks_uri` claim within the `client_metadata` request parameter (see (#client_metadata_parameters)). 
 
-- This specification introduces a new response type `vp_token`. This response type asks the Authorization Server (AS) to return a `vp_token` authorization response parameter. See (#response_type_vp_token) for more details.
+This specification uses the following Authorization Request parameters defined in OAuth 2.0 [@!RFC6749]:
 
-* `scope`:
-
-- The Wallet MAY allow verifiers to request presentation of Verifiable Credentials by utilizing a pre-defined scope value. See (#request_scope) for more details.
+* `scope`: OPTIONAL. The Wallet MAY allow verifiers to request presentation of Verifiable Credentials by utilizing a pre-defined scope value. See (#request_scope) for more details.
+* `response_type`: REQUIRED. This specification introduces a new response type `vp_token`. This response type asks the Authorization Server (AS) to return a `vp_token` authorization response parameter. See (#response_type_vp_token) for more details.
 
 Note: This specification can be used with all response types as defined in the registry established by [@!RFC6749].
 
-Note: The three ways to request credential presentation are mutually exclusive. A request MUST NOT contain more than one of `presentation_definition`, `presentation_definition_uri`, or a `scope` value representing a Presentation Definition. The Wallet MUST refuse any request violating this requirement. 
+The three ways to request credential presentation are mutually exclusive. A request MUST NOT contain more than one of `presentation_definition`, `presentation_definition_uri`, or a `scope` value representing a Presentation Definition. The Wallet MUST refuse any request violating this requirement.
 
-A public key to be used by the Wallet as an input to the key agreement to encrypt Authorization Response (see (#jarm)) MAY be passed by the Verifier using `jwks` or `jwks_uri` claim within the `client_metadata` request parameter (see (#client_metadata_parameters)). 
+This specification also uses the following Authorization Request parameter, defined in OAuth 2.0 Multiple Response Type Encoding Practices [@!OAuth.Responses]:
+
+* `response_mode`: OPTIONAL. This specification introduces a new response mode `direct_post`, which asks the Wallet to send the response to the Verifier via an HTTPS connection (see (#response_mode_post) for more details). `response_mode` parameter is also used to request signing & encryption (see (#jarm) for more details). If the parameter is not present, the default value is `fragment`. 
+
+This specification also uses the following request parameter, defined in OpenID Connect Core [@!OpenID.Core]:
+
+* `nonce`: REQUIRED. It is used to securely bind the Verifiable Presentation(s) provided by the AS to the particular transaction.
 
 This is an example request: 
 
@@ -291,6 +306,15 @@ which is an alias for the first Presentation Definition example given in (#reque
     &nonce=n-0S6_WzA2Mj HTTP/1.1
 ```
 
+## Response Type `vp_token` {#response_type_vp_token}
+
+This specification defines the response type `vp_token`.
+
+`vp_token`
+  When supplied as the `response_type` parameter in an Authorization Request, a successful response MUST include the parameter `vp_token`. The Authorization Server SHOULD NOT return an OAuth 2.0 Authorization Code, Access Token, or Access Token Type in a successful response to the grant request. The default Response Mode for this Response Type is the fragment encoding, i.e. the Authorization Response parameters are encoded in the fragment added to the `redirect_uri` when redirecting back to the Client. The response type `vp_token` can be used with other response modes as defined in [@!OAuth.Responses]. Both successful and error responses SHOULD be returned using the supplied Response Mode, or if none is supplied, using the default Response Mode.
+
+Note: Discuss if response mode `query` is allowed for response type vp_token - since it is not allowed for response type id_token.
+
 ## Authorization Request in a Cross-Device flow
 
 There are use-cases when the Authorization Request is being displayed on a device different from a device on which the requested Credential is stored. In those cases, an Authorization Request can be passed across devices by being rendered as a QR Code. 
@@ -310,18 +334,9 @@ Note: "https://self-issued.me/v2" is a symbolic string and can be used as an `au
 
 This section defines how Verifiable Presentation(s) can be returned in the Authorization Response or Token Response.
 
-## Response Type `vp_token` {#response_type_vp_token}
-
-This specification defines the response type `vp_token`.
-
-`vp_token`
-  When supplied as the `response_type` parameter in an Authorization Request, a successful response MUST include the parameter `vp_token`. The Authorization Server SHOULD NOT return an OAuth 2.0 Authorization Code, Access Token, or Access Token Type in a successful response to the grant request. The default Response Mode for this Response Type is the fragment encoding, i.e. the Authorization Response parameters are encoded in the fragment added to the `redirect_uri` when redirecting back to the Client. The response type `vp_token` can be used with other response modes as defined in [@!OAuth.Responses]. Both successful and error responses SHOULD be returned using the supplied Response Mode, or if none is supplied, using the default Response Mode.
-
-Note: Discuss if response mode `query` is allowed for response type vp_token - since it is not allowed for response type id_token.
-
 ## Response Types Values
 
-Whether `vp_token` is provided to the Client in the Authorization Response or Token Response depends on the response type used in the request (see (#vp_token_request)).
+Whether `vp_token` parameter is provided to the Client in the Authorization Response or Token Response depends on the response type used in the Authorization Request.
 
 - If the response type value is `vp_token` or `vp_token id_token`, the `vp_token` is provided in the authorization response, with or without Self-Issued ID Token as defined in [@!SIOPv2].
 - In all other cases, such as when response type is `code`, when the parameter `presentation_definition` is present in the Authorization Request, the `vp_token` is provided in the Token Response.
@@ -525,10 +540,6 @@ This specification introduces additional Client metadata to enable Client and AS
 This specification defines the following new client metadata parameters according to [@!RFC7591]:
 
 * `vp_formats`: REQUIRED. An object defining the formats and proof types of verifiable presentations and verifiable credentials that a RP supports. Valid format identifier values are defined in Annex E of [@!OpenID.VCI] and include `jwt_vc_json`, `jwt_vc_json-ld`, `ldp_vc`, `jwt_vp_json`, `jwt_vp_json-ld`, `ldp_vp`, and `mso_mdoc`. Deployments can extend the formats supported, provided Issuers, Holders and Verifiers all understand the new format.
-* `client_metadata`: OPTIONAL. This parameter enables RP Metadata to be passed in a single, self-contained parameter. The value is a JSON object containing RP Registration Metadata values. The client metadata parameter value is represented in an OAuth 2.0 request as a UTF-8 encoded JSON object. MUST NOT be present if `client_metadata_uri` parameter is present.
-* `client_metadata_uri`: OPTIONAL. This parameter enables RP Registration Metadata to be passed by reference, rather than by value. The `request_uri` value is a URL referencing a resource containing a RP Registration Metadata Object. The scheme used in the `client_metadata_uri` value MUST be https. The `client_metadata_uri` value MUST be reachable by the AS. MUST NOT be present if `client_metadata` parameter is present.
-
-Claims to be included in `client_metadata` and `client_metadata_uri` parameters are defined in Section 4.3 and Section 2.1 of the OpenID Connect Dynamic RP Registration 1.0 [@!OpenID.Registration] specification as well as [@!RFC7591].
 
 ## Obtaining Client Metadata 
 
