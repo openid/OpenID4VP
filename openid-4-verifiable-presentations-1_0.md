@@ -308,6 +308,8 @@ Note: "https://self-issued.me/v2" is a symbolic string and can be used as an `au
 
 # Response
 
+This section defines how Verifiable Presentation(s) can be returned in the Authorization Response or Token Response.
+
 ## Response Type `vp_token` {#response_type_vp_token}
 
 This specification defines the response type `vp_token`.
@@ -442,8 +444,8 @@ The error response follows the rules as defined in [@!RFC6749], with the followi
 
 `invalid_request`:
 
-- The request contains more than a `presentation_definition` parameter or a `presentation_definition_uri` parameter or a 
-scope value representing a Presentation Definition.
+- The request contains more than one out of the following three options to communicate a requested credential: a `presentation_definition` parameter, a `presentation_definition_uri` parameter, or a scope value representing a Presentation Definition.
+- Requested Presentation Definition does not conform to the DIF PEv2 specification [@!DIF.PresentationExchange].
 
 `invalid_client`:
 
@@ -454,9 +456,17 @@ Usage of `client_metadata` or `client_metadata_uri` parameters with `client_id` 
 
 This document also defines the following additional error codes and error descriptions:
 
-`vp_formats_not_supported`
+`vp_formats_not_supported`:
 
 - The Wallet does not support any of the formats requested by the RP such as those included in the `vp_formats` registration parameter.
+
+`invalid_presentation_definition_uri`:
+
+- The Presentation Definition URL cannot be reached.
+
+`invalid_presentation_definition_reference`:
+
+- The presentation definition URL can be reached, but the specified `presentation_definition` cannot be found at the URL.
 
 # Wallet Invocation {#wallet-invocation}
 
