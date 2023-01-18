@@ -150,7 +150,7 @@ Implementations can also be build on top of OpenID Connect Core, since OpenID Co
 
 # VP Token {#vp_token}
 
-The primary extension that OpenID for Verifiable Presentations makes to OAuth 2.0 is to enable End-Users to present Verifiable Presentations to the Verifiers using the Wallet. The VP Token consists of one or more Verifiable Presentations. 
+The primary extension that OpenID for Verifiable Presentations makes to OAuth 2.0 is to enable End-Users to present Verifiable Presentations to the Verifiers using the Wallet. The VP Token consists of one or more Verifiable Presentations (VPs). 
 
 The VP Token can contain VPs of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] and [@Hyperledger.Indy] (AnonCreds).
 
