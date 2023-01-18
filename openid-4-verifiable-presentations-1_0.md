@@ -138,21 +138,20 @@ This specification defines mechanisms to
 
 # Overview 
 
-This specification defines a mechanism on top of OAuth 2.0 to request and provide Verifiable Presentations. Verifiable Presentations are requested by adding a parameter `presentation_definition` as defined by [@!DIF.PresentationExchange] to an OAuth 2.0 Authorization Request. The Verifiable Presentations are returned to the Verifier in a `vp_token` response parameter, depending on the grant type either in the authorization or the token response. 
+This specification defines a mechanism on top of OAuth 2.0 to request and provide Verifiable Presentations. 
 
-OpenID for Verifiable Presentations supports scenarios where the Authorization Request is sent from the Verifier to the Wallet using redirects on the same device (same-device flow) and where the Authorization Request is passed across devices (cross-device flow).
-
-Implementations can use any pre-existing OAuth grant type and response type in conjunction with this specifications to support different deployment architectures. This specification also introduces a new OAuth response mode `direct_post` to support the cross device flow (see (#response_mode_post)). 
+As the primary extension, OpenID for Verifiable Presentations introduces the VP Token as a container to enable End-Users to present Verifiable Presentations to the Verifiers using the Wallet. A VP Token contains one or more Verifiable Presentations in the same or different credential formats. 
 
 This specification supports any Credential format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5], and [@Hyperledger.Indy] (AnonCreds) even in the same transaction. The examples given in the main part of this specification use W3C Verifiable Credentials, but examples in other Credential formats are given in  (#alternative_credential_formats). 
 
-Implementations can also be build on top of OpenID Connect Core, since OpenID Connect Core is based on OAuth 2.0. To benefit from the subject-signed ID Token feature, this specification can also be combined with the Self-Issued OP v2 specification [@SIOPv2].
+Verifiable Presentations are requested by adding the newly defined parameter `presentation_definition` using the syntax as defined by [@!DIF.PresentationExchange] to an OAuth 2.0 Authorization Request. The VP Token is returned in a `vp_token` response parameter, depending on the grant type either in the authorization or the token response. 
 
-# VP Token {#vp_token}
+OpenID for Verifiable Presentations supports scenarios where the Authorization Request is sent from the Verifier to the Wallet using redirects on the same device (same-device flow) and where the Authorization Request is passed across devices (cross-device flow). Implementations can use any pre-existing OAuth grant type and response type in conjunction with this specifications to support different deployment architectures. In order to cater for the specific requirements of some of the deployments in the Issuer-Holder-Verifier Model, this specification defines the following extensions:
 
-The primary extension that OpenID for Verifiable Presentations makes to OAuth 2.0 is to enable End-Users to present Verifiable Presentations to the Verifiers using the Wallet. The VP Token consists of one or more Verifiable Presentations (VPs). 
+* new response types `vp_token` and `id_token vp_token`, which allow to return a `vp_token` in the authorization response (standalone or along with an OpenID Connect ID Token [@!OpenID.Core]). See (#response_type_vp_token) for more details. 
+* a new OAuth response mode `direct_post` to support the cross device flow (see (#response_mode_post)). 
 
-The VP Token can contain VPs of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] and [@Hyperledger.Indy] (AnonCreds).
+Implementations can also be build on top of OpenID Connect Core, since OpenID Connect Core is based on OAuth 2.0. To benefit from the subject-signed ID Token feature, this specification can also be combined with the Self-Issued OP v2 specification [@SIOPv2]. 
 
 # Authorization Request {#vp_token_request}
 
@@ -167,26 +166,17 @@ This specification defines the following new parameters:
 
 Presentation Definition is a JSON Object that articulate what Verifiable Presentation(s) the Verifier is requesting to be presented as defined in Section 5 of [@!DIF.PresentationExchange].
 
-Claims to be included in `client_metadata` and `client_metadata_uri` parameters are defined in Section 4.3 and Section 2.1 of the OpenID Connect Dynamic RP Registration 1.0 [@!OpenID.Registration] specification as well as [@!RFC7591].
+Claims to be included in `client_metadata` and `client_metadata_uri` parameters are defined in Section 4.3 and Section 2.1 of the OpenID Connect Dynamic RP Registration 1.0 [@!OpenID.Registration] specification as well as [@!RFC7591]. 
 
 A public key to be used by the Wallet as an input to the key agreement to encrypt Authorization Response (see (#jarm)) MAY be passed by the Verifier using `jwks` or `jwks_uri` claim within the `client_metadata` request parameter (see (#client_metadata_parameters)). 
 
-This specification uses the following Authorization Request parameters defined in OAuth 2.0 [@!RFC6749]:
+The following additional considerations are given for pre-existing Authorization Request parameters:
 
-* `scope`: OPTIONAL. The Wallet MAY allow verifiers to request presentation of Verifiable Credentials by utilizing a pre-defined scope value. See (#request_scope) for more details.
-* `response_type`: REQUIRED. This specification introduces a new response type `vp_token`. This response type asks the Authorization Server (AS) to return a `vp_token` authorization response parameter. See (#response_type_vp_token) for more details.
-
-Note: This specification can be used with all response types as defined in the registry established by [@!RFC6749].
+* `nonce`: REQUIRED. as defined in  [@!OpenID.Core]. It is used to securely bind the Verifiable Presentation(s) provided by the wallet to the particular transaction.
+* `scope`: OPTIONAL. as defined in [@!RFC6749]. The Wallet MAY allow verifiers to request presentation of Verifiable Credentials by utilizing a pre-defined scope value. See (#request_scope) for more details.
+* `response_mode`: OPTIONAL. as defined in [@!OAuth.Responses]. This parameter is used (through the new response mode `direct_post`) to ask the Wallet to send the response to the Verifier via an HTTPS connection (see (#response_mode_post) for more details). It is also used to request signing and encrypting (see (#jarm) for more details). If the parameter is not present, the default value is `fragment`. 
 
 The three ways to request credential presentation are mutually exclusive. A request MUST NOT contain more than one of `presentation_definition`, `presentation_definition_uri`, or a `scope` value representing a Presentation Definition. The Wallet MUST refuse any request violating this requirement.
-
-This specification also uses the following Authorization Request parameter, defined in OAuth 2.0 Multiple Response Type Encoding Practices [@!OAuth.Responses]:
-
-* `response_mode`: OPTIONAL. This specification introduces a new response mode `direct_post`, which asks the Wallet to send the response to the Verifier via an HTTPS connection (see (#response_mode_post) for more details). `response_mode` parameter is also used to request signing and encrypting (see (#jarm) for more details). If the parameter is not present, the default value is `fragment`. 
-
-This specification also uses the following request parameter, defined in OpenID Connect Core [@!OpenID.Core]:
-
-* `nonce`: REQUIRED. It is used to securely bind the Verifiable Presentation(s) provided by the AS to the particular transaction.
 
 This is an example request: 
 
@@ -329,7 +319,7 @@ Note: "https://self-issued.me/v2" is a symbolic string and can be used as an `au
 
 # Response
 
-This section defines how to return VP Token defined in (#vp_token) in a response, when either `presentation_definition`, `presentation_definition_uri`, or `scope` parameter representing a Presentation Definition is present in the Authorization Request conformat to (#vp_token_request).
+This section defines how to return VP Token in a response, when either `presentation_definition`, `presentation_definition_uri`, or `scope` parameter representing a Presentation Definition is present in the Authorization Request conformat to (#vp_token_request).
 
 VP Token MUST be returned in a flow determined by a Response Type request parameter as defined in (#response-type-values), using response parameters defined in (#response-parameters).
 
