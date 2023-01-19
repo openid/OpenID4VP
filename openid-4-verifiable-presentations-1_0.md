@@ -172,9 +172,9 @@ A public key to be used by the Wallet as an input to the key agreement to encryp
 
 The following additional considerations are given for pre-existing Authorization Request parameters:
 
-* `nonce`: REQUIRED. as defined in  [@!OpenID.Core]. It is used to securely bind the Verifiable Presentation(s) provided by the wallet to the particular transaction.
-* `scope`: OPTIONAL. as defined in [@!RFC6749]. The Wallet MAY allow verifiers to request presentation of Verifiable Credentials by utilizing a pre-defined scope value. See (#request_scope) for more details.
-* `response_mode`: OPTIONAL. as defined in [@!OAuth.Responses]. This parameter is used (through the new response mode `direct_post`) to ask the Wallet to send the response to the Verifier via an HTTPS connection (see (#response_mode_post) for more details). It is also used to request signing and encrypting (see (#jarm) for more details). If the parameter is not present, the default value is `fragment`. 
+* `nonce`: REQUIRED. Defined in  [@!OpenID.Core]. It is used to securely bind the Verifiable Presentation(s) provided by the wallet to the particular transaction.
+* `scope`: OPTIONAL. Defined in [@!RFC6749]. The Wallet MAY allow verifiers to request presentation of Verifiable Credentials by utilizing a pre-defined scope value. See (#request_scope) for more details.
+* `response_mode`: OPTIONAL. Defined in [@!OAuth.Responses]. This parameter is used (through the new response mode `direct_post`) to ask the Wallet to send the response to the Verifier via an HTTPS connection (see (#response_mode_post) for more details). It is also used to request signing and encrypting (see (#jarm) for more details). If the parameter is not present, the default value is `fragment`. 
 
 The three ways to request credential presentation are mutually exclusive. A request MUST NOT contain more than one of `presentation_definition`, `presentation_definition_uri`, or a `scope` value representing a Presentation Definition. The Wallet MUST refuse any request violating this requirement.
 
