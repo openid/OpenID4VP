@@ -140,7 +140,7 @@ This specification defines mechanisms to
 
 This specification defines a mechanism on top of OAuth 2.0 to request and provide Verifiable Presentations. 
 
-As the primary extension, OpenID for Verifiable Presentations introduces the VP Token as a container to enable End-Users to present Verifiable Presentations to the Verifiers using the Wallet. A VP Token contains one or more Verifiable Presentations in the same or different credential formats. 
+As the primary extension, OpenID for Verifiable Presentations introduces the VP Token as a container to enable End-Users to present Verifiable Presentations to Verifiers using the Wallet. A VP Token contains one or more Verifiable Presentations in the same or different Credential formats.
 
 This specification supports any Credential format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5], and [@Hyperledger.Indy] (AnonCreds) even in the same transaction. The examples given in the main part of this specification use W3C Verifiable Credentials, but examples in other Credential formats are given in  (#alternative_credential_formats). 
 
@@ -148,8 +148,8 @@ Verifiable Presentations are requested by adding the newly defined parameter `pr
 
 OpenID for Verifiable Presentations supports scenarios where the Authorization Request is sent from the Verifier to the Wallet using redirects on the same device (same-device flow) and where the Authorization Request is passed across devices (cross-device flow). Implementations can use any pre-existing OAuth grant type and response type in conjunction with this specifications to support different deployment architectures. In order to cater for the specific requirements of some of the deployments in the Issuer-Holder-Verifier Model, this specification defines the following extensions:
 
-* new response types `vp_token` and `id_token vp_token`, which allow to return a `vp_token` in the authorization response (standalone or along with an OpenID Connect ID Token [@!OpenID.Core]). See (#response_type_vp_token) for more details. 
-* a new OAuth response mode `direct_post` to support the cross device flow (see (#response_mode_post)). 
+* new response types `vp_token` and `id_token vp_token`, which allow to return a `vp_token` in the Authorization Response (standalone or along with an OpenID Connect ID Token [@!OpenID.Core]). See (#response_type_vp_token) for more details. 
+* a new OAuth response mode `direct_post` to support the cross-device flow (see (#response_mode_post)). 
 
 Implementations can also be build on top of OpenID Connect Core, since OpenID Connect Core is based on OAuth 2.0. To benefit from the subject-signed ID Token feature, this specification can also be combined with the Self-Issued OP v2 specification [@SIOPv2]. 
 
@@ -164,7 +164,7 @@ This specification defines the following new parameters:
 * `client_metadata`: OPTIONAL. This parameter enables RP Metadata to be passed in a single, self-contained parameter. The value is a JSON object containing RP Registration Metadata values. The client metadata parameter value is represented in an OAuth 2.0 request as a UTF-8 encoded JSON object. MUST NOT be present if `client_metadata_uri` parameter is present.
 * `client_metadata_uri`: OPTIONAL. This parameter enables RP Registration Metadata to be passed by reference, rather than by value. The `request_uri` value is a URL referencing a resource containing a RP Registration Metadata Object. The scheme used in the `client_metadata_uri` value MUST be https. The `client_metadata_uri` value MUST be reachable by the AS. MUST NOT be present if `client_metadata` parameter is present.
 
-Presentation Definition is a JSON Object that articulate what Verifiable Presentation(s) the Verifier is requesting to be presented as defined in Section 5 of [@!DIF.PresentationExchange].
+Presentation Definition is a JSON Object that articulates what Verifiable Presentation(s) the Verifier is requesting to be presented as defined in Section 5 of [@!DIF.PresentationExchange].
 
 Claims to be included in `client_metadata` and `client_metadata_uri` parameters are defined in Section 4.3 and Section 2.1 of the OpenID Connect Dynamic RP Registration 1.0 [@!OpenID.Registration] specification as well as [@!RFC7591]. 
 
@@ -321,21 +321,21 @@ Note: "https://self-issued.me/v2" is a symbolic string and can be used as an `au
 
 This section defines how to return VP Token in a response, when either `presentation_definition`, `presentation_definition_uri`, or `scope` parameter representing a Presentation Definition is present in the Authorization Request conformat to (#vp_token_request).
 
-VP Token MUST be returned in a flow determined by a Response Type request parameter as defined in (#response-type-values), using response parameters defined in (#response-parameters).
+VP Token MUST be returned in a Grant Type determined by a Response Type request parameter as defined in (#response-type-values), using response parameters defined in (#response-parameters).
 
 ## Response Types Values {#response-type-values}
 
-VP Token can be returned using either the Implicit Flow, or the Authorization Code Flow. 
+VP Token can be returned using either the Implicit Grant, or the Authorization Code Grant. 
 
-In the Implicit Flow, VP Token is provided to the Client in the Authorization Response. In the Authorization Code Flow, VP Token is provided in the Token Response.
+In the Implicit Grant, VP Token is provided to the Client in the Authorization Response. In the Authorization Code Grant, VP Token is provided in the Token Response.
 
-The flow used to return a VP Token is determined by the `response_type` value contained in the Authorization Request as summarized in the following table:
+The Grant used to return a VP Token is determined by the `response_type` value contained in the Authorization Request as summarized in the following table:
 
-| `response_type` parameter value | Flow to return a VP Token |
+| `response_type` parameter value | Grat Type to return a VP Token |
 |:--- |:--- |
 |`vp_token`|Implicit|
-|`vp_token` `id_token`|Implicit|
-|`code`|Authorization Code Flow|
+|`vp_token id_token`|Implicit|
+|`code`|Authorization Code|
 
 Table 1: OpenID for Verifiable Presentations `response_type` values
 
@@ -434,7 +434,7 @@ The respective HTTP POST response to the Verifier would look like this:
 
 ```
 
-Note that in the Cross-Device Flow, the Wallet can change the UI based on the Verifier's response to the HTTP POST request.
+Note that in the Cross-Device Grant, the Wallet can change the UI based on the Verifier's response to the HTTP POST request.
 
 ## Signed and Encrypted Responses {#jarm}
 
@@ -701,7 +701,7 @@ When HTTP "POST" method is used to send VP Token, there is no session for the Ve
 
 ## Preventing Replay Attacks {#preventing-replay}
 
-To prevent replay attacks, Verifiable Presentation container objects MUST be linked to `client_id` and `nonce` from the Authentication Request. The `client_id` is used to detect presentation of Verifiable Credentials to a different party other than the intended. The `nonce` value binds the presentation to a certain authentication transaction and allows the verifier to detect injection of a presentation in the OpenID Connect flow, which is especially important in flows where the presentation is passed through the front-channel. 
+To prevent replay attacks, Verifiable Presentation container objects MUST be linked to `client_id` and `nonce` from the Authentication Request. The `client_id` is used to detect presentation of Verifiable Credentials to a different party other than the intended. The `nonce` value binds the presentation to a certain authentication transaction and allows the verifier to detect injection of a presentation in the flow, which is especially important in the flows where the presentation is passed through the front-channel. 
 
 Note: These values MAY be represented in different ways in a Verifiable Presentation (directly as claims or indirectly be incorporation in proof calculation) according to the selected proof format denoted by the format claim in the Verifiable Presentation container.
 
