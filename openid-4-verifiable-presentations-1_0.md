@@ -76,16 +76,16 @@ Credential:
 :  A set of one or more claims about a subject made by a Credential Issuer. This definition of a term "credential" in this specification is different from that in [@!OpenID.Core].
 
 Verifiable Credential (VC):
-:  A tamper-evident credential that has authorship of the Issuer that can be cryptographically verified. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] and [@Hyperledger.Indy] (AnonCreds).
+:  An Issuer-signed Credential whose authenticity can be cryptographically verified. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] and [@Hyperledger.Indy] (AnonCreds).
 
 W3C Verifiable Credential:
 :  A Verifiable Credential compliant to the [@VC_DATA] specification.
 
 Presentation:
-:  Data derived from one or more Verifiable Credentials that can be from the same or different issuers that is shared with a specific verifier.
+:  Data that is shared with a specific verifier, derived from one or more Verifiable Credentials that can be from the same or different issuers.
 
 Verifiable Presentation (VP):
-:  A tamper-evident presentation that has authorship of the Holder that can be cryptographically verified to provide Cryptographic Holder Binding. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] and [@Hyperledger.Indy] (AnonCreds).
+:  A Holder-signed Credential whose authenticity can be cryptographically verified to provide Cryptographic Holder Binding. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] and [@Hyperledger.Indy] (AnonCreds).
 
 W3C Verifiable Presentation:
 :  A Verifiable Presentations compliant to the [@VC_DATA] specification.
@@ -100,7 +100,7 @@ Verifier:
 :  An entity that requests, checks and extracts the claims from Verifiable Presentations.
 
 Issuer-Holder-Verifier Model:
-:  A model for claims sharing where claims are issued in the form of Verifiable Credentials independent of the process of presenting them as Verifiable Presentation to the Verifiers. Issued Verifiable Credential can (but must not necessarily) be used multiple times.
+:  A model for claims sharing where claims are issued in the form of Verifiable Credentials independent of the process of presenting them as Verifiable Presentation to the Verifiers. An issued Verifiable Credential can (but must not necessarily) be used multiple times.
 
 Cryptographic Holder Binding:
 :  Ability of the Holder to prove legitimate possession of a Verifiable Credential by proving control over the same private key during the issuance and presentation. Mechanism might depend on the Credential Format. For example, in `jwt_vc_json` Credential Format, a VC with Cryptographic Holder Binding contains a public key or a reference to a public key that matches to the private key controlled by the Holder. Claim-based or biometrics-based holder binding is also possible.
