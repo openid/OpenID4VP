@@ -73,7 +73,7 @@ Common terms in this document come from [@!RFC6749].
 This specification also defines the following terms. In the case where a term has a definition that differs, the definition below is authoritative.
 
 Credential:
-:  A set of one or more claims about a subject made by a Credential Issuer. This definition of a term "credential" in this specification is different from that in [@!OpenID.Core].
+:  A set of one or more claims about a subject made by a Credential Issuer. Note that this definition of a term "credential" in this specification is different from that in [@!OpenID.Core].
 
 Verifiable Credential (VC):
 :  An Issuer-signed Credential whose authenticity can be cryptographically verified. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] and [@Hyperledger.Indy] (AnonCreds).
