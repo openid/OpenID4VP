@@ -476,13 +476,13 @@ Below is a non-normative example of a `vp_formats_supported` parameter:
 
 ```
 vp_formats_supported": {
-‌ "jwt_vc": {
+‌ "jwt_vc_json": {
   ‌ "alg_values_supported": [
     ‌ "ES256K",
     ‌ "ES384"
   ‌ ]
 ‌ },
-‌ "jwt_vp": {
+‌ "jwt_vp_json": {
   ‌ "alg_values_supported": [
     ‌ "ES256K",
      "EdDSA"
@@ -558,7 +558,7 @@ Below is a non-normative example of a request when `client_id` equals `redirect_
     &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
     &presentation_definition=...
     &nonce=n-0S6_WzA2Mj
-    &client_metadata=%7B%22vp_formats%22:%7B%22jwt_vp%22:%
+    &client_metadata=%7B%22vp_formats%22:%7B%22jwt_vp_json%22:%
     7B%22alg%22:%5B%22EdDSA%22,%22ES256K%22%5D%7D,%22ldp
     _vp%22:%7B%22proof_type%22:%5B%22Ed25519Signature201
     8%22%5D%7D%7D%7D
@@ -607,10 +607,10 @@ Below is a set of static configuration values that can be used with `vp_token` a
     "vp_token"
   ],
   "vp_formats_supported": {
-    "jwt_vp": {
+    "jwt_vp_json": {
       "alg": ["ES256"]
     },
-    "jwt_vc": {
+    "jwt_vc_json": {
       "alg": ["ES256"]
     }
   },
@@ -675,7 +675,7 @@ Note: These values MAY be represented in different ways in a Verifiable Presenta
 
 Note: This specification assumes that a Verifiable Credential is always presented with a cryptographic proof of possession which can be a Verifiable Presentation. This cryptographic proof of possession is bound to audience and transaction as described in this section.
 
-Here is a non-normative example for format=`jwt_vp` (only relevant part):
+Here is a non-normative example of a Verifiable Presentation with a format identifier `jwt_vp_json` (only relevant part):
 
 ```json
 {
