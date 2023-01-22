@@ -4,7 +4,7 @@
     "descriptor_map": [
         {
             "id": "mDL",
-            "format": "mdl_iso_cbor",
+            "format": "mso_mdoc",
             "path": "$"
         }
     ]
