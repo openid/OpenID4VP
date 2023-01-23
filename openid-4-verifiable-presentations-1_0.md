@@ -438,7 +438,7 @@ Note that in the Cross-Device Grant, the Wallet can change the UI based on the V
 
 ## Signed and Encrypted Responses {#jarm}
 
-This section defines how Authorization Response containing a VP Token can be signed and/or encrypted at the application level when the Response Type value is `vp_token` or `vp_token` `id_token`.
+This section defines how Authorization Response containing a VP Token can be signed and/or encrypted at the application level when the Response Type value is `vp_token` or `vp_token id_token`.
 
 To sign, or sign and encrypt the Authorization Response, implementations MAY use JWT Secured Authorization Response Mode for OAuth 2.0 (JARM) [@!JARM]. 
 
