@@ -653,7 +653,7 @@ One level of nesting `path_nested` objects is sufficient to describe a VC includ
 
 ## Sending VP Token using Response Mode "direct_post" {#session-binding}
 
-When HTTP "POST" method is used to send VP Token, there is no session for the Verifier to validate whether the Response is sent by the same Wallet that has received the Authorization Request. It is RECOMMENDED for the Verifiers to implement mechanisms to strengthen such binding.
+When HTTP "POST" method is used to send VP Token, there is no session for the Verifier to validate whether the Response is sent by the same Wallet that has received the Authorization Request. It is RECOMMENDED for the Verifiers to implement mechanisms to strengthen such binding. For more details on possible attacks and mitigations see [@I-D.ietf-oauth-cross-device-security].
 
 ## Preventing Replay Attacks {#preventing-replay}
 
