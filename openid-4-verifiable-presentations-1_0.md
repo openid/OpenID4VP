@@ -131,7 +131,7 @@ As the primary extension, OpenID for Verifiable Presentations introduces the VP 
 
 This specification supports any Credential format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] (mdoc), and [@Hyperledger.Indy] (AnonCreds). Multiple Credential formats can be presented in the same transaction. The examples given in the main part of this specification use W3C Verifiable Credentials, examples in other Credential formats are given in (#alternative_credential_formats). 
 
-Implementations can use any pre-existing OAuth grant type and response type in conjunction with this specifications to support different deployment architectures.
+Implementations can use any pre-existing OAuth 2.0 Grant Type and Response Type in conjunction with this specifications to support different deployment architectures.
 
 OpenID for Verifiable Presentations supports scenarios where the Authorization Request is sent from the Verifier to the Wallet using redirects on the same device (same-device flow) and where the Authorization Request is passed across devices (cross-device flow). 
 
@@ -327,11 +327,11 @@ Note: "https://self-issued.me/v2" is a symbolic string and can be used as an `au
 
 # Response {#response}
 
-A VP Token is only returned, if the corresponding authorization request contained a `presentation_definition` parameter, a `presentation_definition_uri` parameter, or a `scope` parameter representing a Presentation Definition (#vp_token_request).
+A VP Token is only returned if the corresponding authorization request contained a `presentation_definition` parameter, a `presentation_definition_uri` parameter, or a `scope` parameter representing a Presentation Definition (#vp_token_request).
 
-VP Tokens can be returned in the authorization response or the token response depending on the response type used. 
+VP Token can be returned in the Authorization Response or the Token Response depending on the Response Type used. See (#response_type_vp_token) for more details.
 
-If the Response Type value is `vp_token`, the VP Token is returned in the Authorization Response. When the Response Type value is `vp_token id_token` and the `scope` parameter contains `openid`, the VP Token is returned in the Authorization Response and a Self-Issued ID Token is also returned as defined in [@!SIOPv2].
+If the Response Type value is `vp_token`, the VP Token is returned in the Authorization Response. When the Response Type value is `vp_token id_token` and the `scope` parameter contains `openid`, the VP Token is returned in the Authorization Response alongside a Self-Issued ID Token as defined in [@!SIOPv2].
 
 If the Response Type value is `code` (Authorization Code grant type), the VP Token is provided in the Token Response.
 
@@ -345,7 +345,7 @@ The expected behavior is summarized in the following table:
 
 Table 1: OpenID for Verifiable Presentations `response_type` values
 
-If any other Response Type values is used, the behavior with respect to the VP Token is unspecified.
+The behavior with respect to the VP Token is unspecified for any other individual Response Type value, or a combination of Response Type values.
 
 ## Response Parameters {#response-parameters}
 
