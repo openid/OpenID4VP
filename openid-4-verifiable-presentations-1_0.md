@@ -106,7 +106,7 @@ Cryptographic Holder Binding:
 :  Ability of the Holder to prove legitimate possession of a Verifiable Credential by proving control over the same private key during the issuance and presentation. Mechanism might depend on the Credential Format. For example, in `jwt_vc_json` Credential Format, a VC with Cryptographic Holder Binding contains a public key or a reference to a public key that matches to the private key controlled by the Holder. Claim-based or biometrics-based holder binding is also possible.
 
 VP Token:
-: An artifact defined in this specification that contains a single Verifiable Presentation or an array of Verifiable Presentations as defined in (#response_type_vp_token).
+: An artifact defined in this specification that contains a single Verifiable Presentation or an array of Verifiable Presentations as defined in (#response-parameters).
 
 Wallet:
 :  Entity used by the Holder to receive, store, present, and manage Verifiable Credentials and key material. There is no single deployment model of a Wallet: Verifiable Credentials and keys can both be stored/managed locally, or by using a remote self-hosted service, or a remote third-party service. In the context of this specification, the Wallet acts as an OAuth 2.0 Authorization Server (see [@!RFC6749]) towards the Credential Verifier which acts as the OAuth 2.0 Client.
@@ -274,7 +274,7 @@ semantics or machine readable definitions in the Wallet's server metadata, mappi
 
 Such definition of a scope value MUST allow the verifier to determine the identifiers for Presentation Definition and input descriptors 
 used in the respective `presentation_submission` response parameter as well as the credential formats and types in 
-the `vp_token` response parameter defined in (#response_type_vp_token).  
+the `vp_token` response parameter defined in (#response-parameters).  
 
 It is RECOMMENDED to use collision-resistant scopes values.
 
@@ -445,7 +445,7 @@ To sign, or sign and encrypt the Authorization Response, implementations MAY use
 
 To encrypt an unsigned Authorization Response, this specification extends JARM to allow the JWT containing the response parameters to be only encrypted.
 
-The JWT response document MUST include `vp_token` and `presentation_submission` parameters as defined in (#response_type_vp_token).
+The JWT response document MUST include `vp_token` and `presentation_submission` parameters as defined in (#response-parameters).
 
 The key material used for encryption and signing SHOULD be determined using existing metadata mechanisms. 
 
