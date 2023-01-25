@@ -390,7 +390,7 @@ Note that to use identification and authentication based on X.509, clients MUST 
 
 `train`: The client id is an identifier from the `TRAIN` network. The client MUST send a parameter `trust_framework_operator` with the respective request. 
 
-Other specification can add further values by registering them in the "Client ID Format Registry". 
+Other specification can define further values for the `client_id_format` parameter. 
 
 # Response {#response}
 
