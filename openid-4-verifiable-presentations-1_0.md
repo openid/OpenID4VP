@@ -7,7 +7,7 @@ keyword = ["security", "openid", "ssi"]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "openid-4-verifiable-presentations-1_0-14"
+value = "openid-4-verifiable-presentations-1_0-15"
 status = "standard"
 
 [[author]]
@@ -1301,6 +1301,11 @@ The technology described in this specification was made available from contribut
 # Document History
 
    [[ To be removed from the final specification ]]
+
+   -15
+
+   * Added definition of VP Token 
+   * Editorial improvements for better readability (restructered request and response section, consistent terminology and casing)
 
    -14
 
