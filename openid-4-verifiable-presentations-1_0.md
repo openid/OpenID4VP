@@ -146,6 +146,7 @@ OpenID for Verifiable Presentations extends existing OAuth 2.0 mechanisms as fol
 * New Response Types `vp_token` and `id_token vp_token` are defined to request Verifiable Credentials to be returned in the Authorization Response (standalone or along with an OpenID Connect ID Token [@!OpenID.Core]). See (#response) for more details.
 * A new OAuth 2.0 Response Mode `direct_post` is defined to support the cross-device flow. See (#response_mode_post) for more detials.
 * The [@!DIF.PresentationExchange] `format` parameter is used throughout the protocol in order to enable customization according to the specific needs of a particular Credential format. Examples in (#alternative_credential_formats) are given for credential formats as specified in [@VC_DATA], [@ISO.18013-5], and [@Hyperledger.Indy].
+* A new `client_id_format` Authorization Request parameter is used to enable deployments to implement various ways of trust management between Client and AS beyond the scope of [@!RFC6749].
 
 Presentation of Credentials using OpenID for Verifiable Presentations can be combined with the user authentication using [@SIOPv2], and the issuance of OAuth 2.0 Access Tokens.
 
@@ -334,7 +335,7 @@ The `client_id_format` enables deployments of this specification to use differen
 
 This specification defines the following values for the `client_id_format` parameter: 
 
-`opaque`: This value represents the [@!RFC9101] default behavior, i.e. the client id needs to be know to the AS in advance of the authorization request. Client metadata is obtained using [@!RFC8414] or through out-of-band mechanisms.
+`opaque`: This value represents the [@!RFC6749] default behavior, i.e. the client id needs to be known to the AS in advance of the authorization request. Client metadata is obtained using [@!RFC8414] or through out-of-band mechanisms.
 
 `redirect_uri`: This value indicates that the client's redirect URI is also the value of the client id. In this case, the Authorization Request cannot be signed and all client metadata parameters MUST be passed using the `client_metadata` or `client_metadata_uri` parameter defined in (#vp_token_request). 
 
@@ -373,7 +374,7 @@ Body
 
 Note that to use DID-based identification and authentication, clients MUST be confidential clients, which is not always the case for the native app clients.
 
-`x509_dn`: the client id is a X.509 Distinguished Name (DN) [@!RFC5280]. The request MUST be signed with the private key coresponding to the public key in the X.509 certificate. The X.509 certificate MUST be added to the request in one of the following JWS headers [@!RFC7515]: `x5c`, `x5t`, or `x5u`. The AS MUST validate the signature and the trust chain of the X.509 certificate. It is recommended to add the client's redirect URIs to the certificate. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` or the `client_metadata_uri` parameter as defined in (#vp_token_request). 
+`x509_dn`: the client id is a X.509 Distinguished Name (DN) [@!RFC5280]. The request MUST be signed with the private key corresponding to the public key in the X.509 certificate. The X.509 certificate MUST be added to the request in one of the following JWS headers [@!RFC7515]: `x5c`, `x5t`, or `x5u`. The AS MUST validate the signature and the trust chain of the X.509 certificate. It is recommended to add the client's redirect URIs to the certificate. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` or the `client_metadata_uri` parameter as defined in (#vp_token_request). 
 
 Below is a non-normative example of a signed request when `client_id` is a X.509 DN:
 
@@ -1307,6 +1308,7 @@ The technology described in this specification was made available from contribut
 
    * Added definition of VP Token 
    * Editorial improvements for better readability (restructered request and response section, consistent terminology and casing)
+   * Added `client_id_format` parameter
 
    -14
 
