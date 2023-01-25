@@ -167,6 +167,9 @@ This specification defines the following new parameters:
 `client_metadata_uri`: 
 : OPTIONAL. This parameter enables Client Registration Metadata to be passed by reference, rather than by value. The `request_uri` value is a URL referencing a resource containing a Client Registration Metadata Object. The scheme used in the `client_metadata_uri` value MUST be https. The `client_metadata_uri` value MUST be reachable by the Wallet. MUST NOT be present if `client_metadata` parameter is present.
 
+`client_id_format`: 
+: OPTIONAL. A string identifying the format of the value in the `client_id` authorization request parameter. The client uses this parameter to indicate how the AS is supposed to interpret the client id and associated data in the process of client identification, authentication, and authorization. A certain client id format value MAY also require the client to pass additional request parameters and require the AS to process those additional request parameters. The `client_id_format` enables deployments of this specification to use different mechanisms to establish trust between client and AS beyond the scope of [@!RFC6749]. If the parameter is not present, the AS MUST behave as specified in [@!RFC6749]. 
+
 Presentation Definition is a JSON Object that articulates what Verifiable Presentation(s) the Verifier is requesting to be presented as defined in Section 5 of [@!DIF.PresentationExchange].
 
 Claims to be included in `client_metadata` and `client_metadata_uri` parameters are defined in Section 4.3 and Section 2.1 of the OpenID Connect Dynamic Client Registration 1.0 [@!OpenID.Registration] specification as well as [@!RFC7591]. 
@@ -324,6 +327,65 @@ When a Verifier is sending a Request Object as defined in Section 6.1 of [@!Open
 - the `aud` Claim MUST be "https://self-issued.me/v2", when Static Discovery Metadata is used.
 
 Note: "https://self-issued.me/v2" is a symbolic string and can be used as an `aud` Claim value even when this specification is used standalone, without SIOPv2. 
+
+## `client_id_format` Parameter {#client_trust_management}
+
+The `client_id_format` enables deployments of this specification to use different mechanisms to establish trust between client and AS beyond the scope of [@!RFC6749].
+
+This specification defines the following values for the `client_id_format` parameter. 
+
+`opaque`: This value represents the [@!RFC9101] default behavior, i.e. the AS needs to know the client id in advance. Client metadata is obtained using [@!RFC8414] or through out-of-band mechanisms.
+
+`redirect_uri`: This value indicates that the client id equals its redirect URI. In this case, the Authorization Request cannot be signed and all client metadata parameters MUST be passed using the `client_metadata` or `client_metadata_uri` parameter defined in (#vp_token_request).
+
+Below is a non-normative example of a request when `client_id` equals `redirect_uri`.
+
+```
+  HTTP/1.1 302 Found
+  Location: https://client.example.org/universal-link?
+    response_type=vp_token
+    &client_id=https%3A%2F%2Fclient.example.org%2Fcb
+    &client_id_format=redirect_uri
+    &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
+    &presentation_definition=...
+    &nonce=n-0S6_WzA2Mj
+    &client_metadata=%7B%22vp_formats%22:%7B%22jwt_vp%22:%
+    7B%22alg%22:%5B%22EdDSA%22,%22ES256K%22%5D%7D,%22ldp
+    _vp%22:%7B%22proof_type%22:%5B%22Ed25519Signature201
+    8%22%5D%7D%7D%7D
+```
+
+`oidc_federation_entity_id`: the client id is an OIDC federation entity id. Processing MUST follow the rules given in [@!OpenID.Federation]. Automatic Registration defined in [@!OpenID.Federation] MUST be used. The request MAY contain a further parameter `trust_chain` parameter. The AS MUST obtain client metadata from Entity Statements only.
+
+Note that to use Automatic Registration, clients MUST be confidential clients, which is not always the case for the native app clients.
+
+`did`: the client id is a DID [@!DID-Core]. The request must be signed with a private key associated with the DID. A public key to verify the signature MUST be obtained from the `verificationMethod` property of a DID Document. Since DID Document may include multiple public keys, a particular public key used to sign the request in question MUST be identified by the `kid` in the header. To obtain the DID Document, the AS MUST use DID Resolution defined by the DID method used by the Client. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` or the `client_metadata_uri` parameter as defined in (#vp_token_request). 
+
+Below is a non-normative example of a signed request when `client_id` is a DID:
+
+Header
+
+<{{examples/request/request_header_client_id_did.json}}
+
+Body
+
+<{{examples/request/request_object_client_id_did.json}}
+
+`x509_dn`: the client id is a X.509 Distinguished Name (DN) [@!RFC5280]. The request MUST be signed with the private key coresponding to the public key in the X.509 certificate. The X.509 certificate MUST be added to the request in one of the following JWS headers [@!RFC7515]: `x5c`, `x5t`, or `x5u`. The AS MUST validate the signature and the trust chain of the X.509 certificate. It is recommended to add the client's redirect URIs to the certificate. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` or the `client_metadata_uri` parameter as defined in (#vp_token_request). 
+
+Below is a non-normative example of a signed request when `client_id` is a X.509 DN:
+
+Header
+
+<{{examples/request/request_header_client_id_x509.json}}
+
+Body
+
+<{{examples/request/request_object_client_id_x509.json}}
+
+`train`: The client id is an identifier from the `TRAIN` network. The client MUST send a parameter `trust_framework_operator` with the respective request. 
+
+Other specification can add further values by registering them in the "Client ID Format Registry". 
 
 # Response {#response}
 

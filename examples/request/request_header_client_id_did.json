@@ -1,0 +1,5 @@
+{
+    "typ": "jwt-vc",
+    "alg": "RS256",
+    "kid": "did:example:123/1"
+}

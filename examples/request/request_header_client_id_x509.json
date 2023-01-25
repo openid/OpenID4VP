@@ -1,0 +1,5 @@
+{
+    "typ": "jwt-vc",
+    "alg": "RS256",
+    "x5c": "<certificate>"
+}
