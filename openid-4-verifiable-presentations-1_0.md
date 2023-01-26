@@ -518,13 +518,13 @@ Below is a non-normative example of a `vp_formats_supported` parameter:
 
 ```
 vp_formats_supported": {
-‌ "jwt_vc": {
+‌ "jwt_vc_json": {
   ‌ "alg_values_supported": [
     ‌ "ES256K",
     ‌ "ES384"
   ‌ ]
 ‌ },
-‌ "jwt_vp": {
+‌ "jwt_vp_json": {
   ‌ "alg_values_supported": [
     ‌ "ES256K",
      "EdDSA"
@@ -594,7 +594,7 @@ Below is a non-normative example of a request when `client_id` equals `redirect_
     &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
     &presentation_definition=...
     &nonce=n-0S6_WzA2Mj
-    &client_metadata=%7B%22vp_formats%22:%7B%22jwt_vp%22:%
+    &client_metadata=%7B%22vp_formats%22:%7B%22jwt_vp_json%22:%
     7B%22alg%22:%5B%22EdDSA%22,%22ES256K%22%5D%7D,%22ldp
     _vp%22:%7B%22proof_type%22:%5B%22Ed25519Signature201
     8%22%5D%7D%7D%7D
@@ -643,10 +643,10 @@ Below is a set of static configuration values that can be used with `vp_token` a
     "vp_token"
   ],
   "vp_formats_supported": {
-    "jwt_vp": {
+    "jwt_vp_json": {
       "alg_values_supported": ["ES256"]
     },
-    "jwt_vc": {
+    "jwt_vc_json": {
       "alg_values_supported": ["ES256"]
     }
   },
@@ -711,7 +711,7 @@ Note: These values MAY be represented in different ways in a Verifiable Presenta
 
 Note: This specification assumes that a Verifiable Credential is always presented with a cryptographic proof of possession which can be a Verifiable Presentation. This cryptographic proof of possession is bound to audience and transaction as described in this section.
 
-Here is a non-normative example for format=`jwt_vp` (only relevant part):
+Here is a non-normative example of a Verifiable Presentation with a format identifier `jwt_vp_json` (only relevant part):
 
 ```json
 {
@@ -1026,15 +1026,21 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
 
 OpenID for Verifiable Presentations is credential format agnostic, i.e. it is designed to allow applications to request and receive Verifiable Presentations and Verifiable Credentials in any format, not limited to the formats defined in [@!VC_DATA]. This section aims to illustrate this with examples utilizing different credential formats. Customization of OpenID for Verifiable Presentation for credential formats other than those defined in [@!VC_DATA] uses extensions points of Presentation Exchange [@!DIF.PresentationExchange]. 
 
-## JWT VCs
+## W3C Verifiable Credentials
 
-### Example Credential
+### VC signed as a JWT, not using JSON-LD
+
+The following is an example of a presentation of a Credential conformant to [@VC_DATA] that is signed using JWS, and does not use JSON-LD. It will be used throughout this section.
+
+The Credential format identifiers are `jwt_vc_json` for a W3C Verifiable Credential and `jwt_vp_json` for W3C Verifiable Presentation.
+
+#### Example Credential
 
 The following is an JWT-based W3C Verifiable Credential that will be used through this section.
 
 <{{examples/credentials/jwt_vc.json}}
 
-### Presentation Request
+#### Presentation Request
 
 This is an example presentation request. 
 
@@ -1046,7 +1052,7 @@ The requirements regarding the credential to be presented are conveyed in the `p
 
 It contains a single `input_descriptor`, which sets the desired format to JWT VC and defines a constraint over the `vc.type` parameter to select Verifiable Credentials of type `IDCredential`. 
 
-### Presentation Response
+#### Presentation Response
 
 An example presentation response look like this:
 
@@ -1062,13 +1068,15 @@ It refers to the VP in the `vp_token` parameter provided in the same response, w
 
 Note: the VP's `nonce` claim contains the value of the `nonce` of the presentation request and the `aud` claims contains the client id of the verifier. This allows the verifier to detect replay of a presentation as recommended in (#preventing-replay). 
 
-## LDP VCs
+### LDP VCs
 
-The following is an LDP-based W3C Verifiable Credential that will be used through this section.
+The following is an example of a presentation of a Credential conformant to [@VC_DATA] that is secured using Data Integrity, using JSON-LD. It will be used throughout this section.
+
+The Credential format identifiers are `ldp_vc` for a W3C Verifiable Credential and `ldp_vp` for W3C Verifiable Presentation.
 
 <{{examples/credentials/ldp_vc.json}}
 
-### Presentation Request
+#### Presentation Request
 
 This is an example presentation request. 
 
@@ -1080,7 +1088,7 @@ The requirements regarding the credential to be presented are conveyed in the `p
 
 It contains a single `input_descriptor`, which sets the desired format to LDP VC and defines a constraint over the `type` parameter to select Verifiable Credentials of type `IDCardCredential`. 
 
-### Presentation Response
+#### Presentation Response
 
 An example presentation response look like this:
 
@@ -1100,11 +1108,11 @@ Note: the VP's `challenge` claim contains the value of the `nonce` of the presen
 
 AnonCreds is a credential format defined as part of the Hyperledger Indy project [@Hyperledger.Indy].
 
-To be able to request AnonCreds, there needs to be a set of identifiers for Verifiable Credentials, Verifiable Presentations ("proofs" in Indy terminology) and crypto schemes. For the purpose of this example, the following identifiers are used: 
+To be able to request AnonCreds, there needs to be a set of identifiers for Verifiable Credentials, Verifiable Presentations ("proofs" in Indy terminology) and crypto schemes.
 
-* `ac_vc`: designates a credential in AnonCreds format. 
-* `ac_vp`: designates a presentation in AnonCreds format.
-* `CLSignature2019`: identifies the CL-signature scheme used in conjunction with AnonCreds.
+Credential format identifire is `ac_vc` for a Credential, and `ac_vp` for a Presentation.
+
+Identifier for a CL-signature crypto scheme used in the examples in this section is `CLSignature2019`.
 
 ### Example Credential
 
@@ -1160,12 +1168,9 @@ The following is a VP Token example.
 
 ## ISO mobile Driving Licence (mDL)
 
-This section illustrates how a mobile driving licence (mDL) credential expressed using a data model and data sets defined in [@ISO.18013-5] can be presented from the End-User's device directly to the Verifier using this specification.
+This section illustrates how a mobile driving licence (mDL) credential expressed using a data model and data sets defined in [@ISO.18013-5] encoded as CBOR can be presented from the End-User's device directly to the Verifier using this specification.
 
-To request an ISO/IEC 18013-5:2021 mDL, following identifiers are used for the purposes of this example:
-
-* `mdl_iso_cbor`: designates a mobile driving licence (mDL) credential encoded as CBOR, expressed using a data model and data sets defined in [@ISO.18013-5].
-* `mdl_iso_json`: designates a mobile driving licence (mDL) credential encoded as JSON, expressed using a data model and data sets defined in [@ISO.18013-5].
+The Credential format identifier is `mso_mdoc`.
 
 ### Presentation Request 
 
@@ -1177,7 +1182,7 @@ The content of the `presentation_definition` parameter is as follows:
 
 <{{examples/request/pd_mdl_iso_cbor.json}}
 
-To start with, the `format` parameter of the `input_descriptor` is set to `mdl_iso_cbor`, i.e. it requests presentation of a mDL in CBOR format. 
+To start with, the `format` parameter of the `input_descriptor` is set to `mso_mdoc`, i.e. it requests presentation of a mDL in CBOR format. 
 
 To request user claims in ISO/IEC 18013-5:2021 mDL, a `doctype` and `namespace` of the claim needs to be specified. Moreover, the verifiers needs to indicate whether it intends to retain obtained user claims or not, using `intent_to_retain` property.
 
@@ -1195,7 +1200,7 @@ The following shows the `presentation_submission` content:
 
 <{{examples/response/ps_mdl_iso_cbor.json}}
 
-The `descriptor_map` refers to the input descriptor `mDL` and tells the verifier that there is an ISO/IEC 18013-5:2021 mDL (`format` is `mdl_iso_cbor`) in CBOR encoding directly in the `vp_token` (path is the root designated by `$`). 
+The `descriptor_map` refers to the input descriptor `mDL` and tells the verifier that there is an ISO/IEC 18013-5:2021 mDL (`format` is `mso_mdoc`) in CBOR encoding directly in the `vp_token` (path is the root designated by `$`). 
 
 When ISO/IEC 18013-5:2021 mDL is expressed in CBOR the `nested_path` parameter cannot be used to point to the location of the requested claims. The user claims will always be included in the `issuerSigned` item. `nested_path` parameter can be used, however, when a JSON-encoded ISO/IEC 18013-5:2021 mDL is returned.
 
