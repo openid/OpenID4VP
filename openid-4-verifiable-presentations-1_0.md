@@ -510,14 +510,9 @@ This specification defines new server metadata parameters according to [@!RFC841
 
 the Wallet publishes the formats it supports using the `vp_formats_supported` metadata parameter. 
 
-`presentation_definition_uri_supported`:
-: OPTIONAL. Boolean value specifying whether the Verifier supports the transfer of `presentation_definition` by reference, with true indicating support. If omitted, the default value is true.
-
-`vp_formats_supported`: 
-: REQUIRED. An object containing a list of key value pairs, where the key is a string identifying a credential format supported by the Wallet. Valid credential format identifiers values are defined in Annex E of [@!OpenID.VCI]. Other values may be used when defined in the profiles of this specification. The value is an object containing a parameter defined below:
-
-`alg_values_supported`:
-: An object where the value is an array of case sensitive strings that identify the cryptographic suites that are supported. Cipher suites for Verifiable Credentials in `jwt_vc_json`, `json_vc_json-ld`, `jwt_vp_json`, `json_vp_json-ld` formats should use algorithm names defined in [IANA JOSE Algorithms Registry](https://www.iana.org/assignments/jose/jose.xhtml#web-signature-encryption-algorithms). Cipher suites for Verifiable Credentials in `ldp_vc` and `ldp_vp` format should use signature suites names defined in [Linked Data Cryptographic Suite Registry](https://w3c-ccg.github.io/ld-cryptosuite-registry/). Cipher suites for Verifiable Credentials in `mso_mdoc` format should use signature suites names defined in ISO/IEC 18013-5:2021. Parties using other credential formats will need to agree upon the meanings of the values used, which may be context-specific.
+* `presentation_definition_uri_supported`: OPTIONAL. Boolean value specifying whether the Verifier supports the transfer of `presentation_definition` by reference, with true indicating support. If omitted, the default value is true.
+* `vp_formats_supported`: REQUIRED. An object containing a list of key value pairs, where the key is a string identifying a credential format supported by the Wallet. Valid credential format identifiers values are defined in Annex E of [@!OpenID.VCI]. Other values may be used when defined in the profiles of this specification. The value is an object containing a parameter defined below:
+    * `alg_values_supported`: An object where the value is an array of case sensitive strings that identify the cryptographic suites that are supported. Cipher suites for Verifiable Credentials in `jwt_vc_json`, `json_vc_json-ld`, `jwt_vp_json`, `json_vp_json-ld` formats should use algorithm names defined in [IANA JOSE Algorithms Registry](https://www.iana.org/assignments/jose/jose.xhtml#web-signature-encryption-algorithms). Cipher suites for Verifiable Credentials in `ldp_vc` and `ldp_vp` format should use signature suites names defined in [Linked Data Cryptographic Suite Registry](https://w3c-ccg.github.io/ld-cryptosuite-registry/). Cipher suites for Verifiable Credentials in `mso_mdoc` format should use signature suites names defined in ISO/IEC 18013-5:2021. Parties using other credential formats will need to agree upon the meanings of the values used, which may be context-specific.
 
 Below is a non-normative example of a `vp_formats_supported` parameter:
 
@@ -649,10 +644,10 @@ Below is a set of static configuration values that can be used with `vp_token` a
   ],
   "vp_formats_supported": {
     "jwt_vp": {
-      "alg": ["ES256"]
+      "alg_values_supported": ["ES256"]
     },
     "jwt_vc": {
-      "alg": ["ES256"]
+      "alg_values_supported": ["ES256"]
     }
   },
   "request_object_signing_alg_values_supported": [
