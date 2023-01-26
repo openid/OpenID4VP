@@ -4,7 +4,7 @@
         {
             "id": "id_credential",
             "format": {
-                "jwt_vc": {
+                "jwt_vc_json": {
                     "proof_type": [
                         "JsonWebSignature2020"
                     ]

@@ -10,7 +10,7 @@
    "response_types": "code",
    "grant_types": "authorization_code",
    "vp_formats": {
-      "jwt_vp": {
+      "jwt_vp_json": {
          "alg": [
             "EdDSA",
             "ES256K"
