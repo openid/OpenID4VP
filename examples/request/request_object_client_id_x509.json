@@ -1,6 +1,6 @@
 {
    "client_id": "C=COM, ST=Dreamland, L=Dreamtown, O=ExampleProvider, CN=ExampleApp",
-   "client_id_format": "x.509_dn",
+   "client_id_format": "x509_dn",
    "response_types": "vp_token",
    "redirect_uri": "https://client.example.org/callback",
    "nonce":"n-0S6_WzA2Mj",
