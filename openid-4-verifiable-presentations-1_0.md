@@ -392,20 +392,6 @@ with a matching `presentation_submission` parameter.
 
 <{{examples/response/presentation_submission_multiple_vps.json}}
 
-### JARM Response Mode "direct_post.jwt" {#direct_post_jwt}
-
-This specification also defines a new JARM response mode `direct_post`, which allows for JARM to be used with response mode `direct_post`.
-
-The JARM response mode "direct_post.jwt" causes the Authorization Server to send the Authorization Response using the HTTP `POST` method instead of redirecting back to the Client as defined in (#response_mode_post). The AS authorization server adds the `response` parameter containing the JWT as defined in section 4.1. of [@!JARM] and (#jarm) in the body of HTTP POST request using the `application/x-www-form-urlencoded` content type.
-
-The following is a non-normative example of a response using the `presentation_submission` and `vp_token` values from (#jwt_vc). (line breaks for display purposes only):
-
-<{{examples/response/jarm_jwt_vc_json_post.txt}}
-
-This is a JWT signed with `ES256` algorithm used in the example above before base64url encoding and signing:
-
-<{{examples/response/jarm_jwt_vc_json_body.json}}
-
 ## Response Mode "direct_post" {#response_mode_post}
 
 There are use-cases when the Authorization Request was received from a Verifier that is unreachable using redirects (i.e. it is on another device) from the Wallet on which the requested Credential is stored.
@@ -455,6 +441,20 @@ The respective HTTP POST response to the Verifier would look like this:
 ```
 
 Note that in the Cross-Device Grant, the Wallet can change the UI based on the Verifier's response to the HTTP POST request.
+
+### Response Mode "direct_post.jwt" {#direct_post_jwt}
+
+This specification also defines a new Response Mode `direct_post.jwt`, which allows for JARM to be used with response mode `direct_post` defined in (#response_mode_post).
+
+The Response Mode `direct_post.jwt` causes the Authorization Server to send the Authorization Response using the HTTP `POST` method instead of redirecting back to the Client as defined in (#response_mode_post). The AS authorization server adds the `response` parameter containing the JWT as defined in section 4.1. of [@!JARM] and (#jarm) in the body of HTTP POST request using the `application/x-www-form-urlencoded` content type.
+
+The following is a non-normative example of a response using the `presentation_submission` and `vp_token` values from (#jwt_vc). (line breaks for display purposes only):
+
+<{{examples/response/jarm_jwt_vc_json_post.txt}}
+
+This is a JWT signed with `ES256` algorithm used in the example above before base64url encoding and signing:
+
+<{{examples/response/jarm_jwt_vc_json_body.json}}
 
 ## Signed and Encrypted Responses {#jarm}
 
