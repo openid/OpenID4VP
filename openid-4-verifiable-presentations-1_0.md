@@ -468,7 +468,7 @@ The following is a non-normative example of a response using the `presentation_s
 
 <{{examples/response/jarm_jwt_vc_json_post.txt}}
 
-This is a JWT signed with `ES256` algorithm used in the example above before base64url encoding and signing:
+This is the JWT used in the example above before base64url encoding and signing:
 
 <{{examples/response/jarm_jwt_vc_json_body.json}}
 
