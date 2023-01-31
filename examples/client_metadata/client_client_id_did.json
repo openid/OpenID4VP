@@ -8,7 +8,7 @@
    "response_types": "vp_token id_token",
    "client_metadata": {
       "vp_formats": {
-         "jwt_vp": {
+         "jwt_vp_json": {
             "alg": [
                "EdDSA",
                "ES256K"
