@@ -62,13 +62,13 @@ This specification defines a protocol for requesting and presenting Verifiable C
 
 This specification defines a mechanism on top of OAuth 2.0 [@!RFC6749] that enables presentation of Verifiable Credentials as Verifiable Presentations. Verifiable Credentials and Verifiable Presentations can be of any format, including, but not limited to W3C Verifiable Credentials Data Model [@VC_DATA], ISO mdoc [@ISO.18013-5], and AnonCreds [@Hyperledger.Indy].
 
-OAuth 2.0 [@!RFC6749] is used as a base protocol as it provides the required rails to build simple, secure, and developer-friendly credential presentation on top of it. Moreover, implementers can, in a single interface, support credential presentation and the issuance of access tokens for access to APIs based on Verifiable Credentials in the Wallet. OpenID Connect [@!OpenID.Core] deployments can also extend their implementations using this specification with the ability to transport Verifiable Presentations. 
+OAuth 2.0 [@!RFC6749] is used as a base protocol as it provides the required rails to build simple, secure, and developer-friendly credential presentation on top of it. Moreover, implementers can, in a single interface, support credential presentation and the issuance of Access Tokens for access to APIs based on Verifiable Credentials in the Wallet. OpenID Connect [@!OpenID.Core] deployments can also extend their implementations using this specification with the ability to transport Verifiable Presentations. 
 
 This specification can also be combined with [@!SIOPv2], if implementers require OpenID Connect features, such as the issuance of subject-signed ID tokens.
 
 # Terminology
 
-This specification uses the terms "Access Token", "Authorization Request", "Authorization Response", "Authorization Server", "Client", "Client Authentication", "Client Identifier", "Grant Type", "Response Type", "Token Request" and "Token Response" defined by OAuth 2.0 [@!RFC6749], the terms "End-User", "Entity", "Request Object", "Request URI" as defined by OpenID Connect Core [@!OpenID.Core], the term "JSON Web Token (JWT)" defined by JSON Web Token (JWT) [@!RFC7519], the term "JOSE Header" and the term "Base64url Encoding" defined by JSON Web Signature (JWS) [@!RFC7515], and the term "Response Mode" defined by OAuth 2.0 Multiple Response Type Encoding Practices [@!OAuth.Responses].
+This specification uses the terms "Access Token", "Authorization Request", "Authorization Response", "Client", "Client Authentication", "Client Identifier", "Grant Type", "Response Type", "Token Request" and "Token Response" defined by OAuth 2.0 [@!RFC6749], the terms "End-User", "Entity", "Request Object", "Request URI" as defined by OpenID Connect Core [@!OpenID.Core], the term "JSON Web Token (JWT)" defined by JSON Web Token (JWT) [@!RFC7519], the term "JOSE Header" and the term "Base64url Encoding" defined by JSON Web Signature (JWS) [@!RFC7515], and the term "Response Mode" defined by OAuth 2.0 Multiple Response Type Encoding Practices [@!OAuth.Responses].
 
 This specification also defines the following terms. In the case where a term has a definition that differs, the definition below is authoritative.
 
@@ -212,13 +212,13 @@ Clients can also ask for alternative Verifiable Credentials being presented, whi
 
 <{{examples/request/vp_token_alternative_credentials.json}}
 
-The VC and VP formats supported by an AS should be published in its metadata (see (#as_metadata_parameters)). The formats supported by a client may be set up using the client metadata parameter `vp_formats` (see (#client_metadata_parameters)). The AS MUST ignore any `format` property inside a `presentation_definition` object if that `format` was not included in the `vp_formats` property of the client metadata. 
+The VC and VP formats supported by the Wallet should be published in its metadata (see (#as_metadata_parameters)). The formats supported by a client may be set up using the client metadata parameter `vp_formats` (see (#client_metadata_parameters)). The Wallet MUST ignore any `format` property inside a `presentation_definition` object if that `format` was not included in the `vp_formats` property of the client metadata. 
 
 Note that when a Client is requesting presentation of a VP containing a VC, the Client MUST indicate in the `vp_formats` parameter the supported formats of both VC and VP.
 
 ## `presentation_definition_uri` Parameter {#request_presentation_definition_uri}
 
-`presentation_definition_uri` is used to retrieve the Presentation Definition from the resource at the specified URL, rather than being passed by value. The AS will send a GET request without additional parameters. The resource MUST be exposed without further need to authenticate or authorize. 
+`presentation_definition_uri` is used to retrieve the Presentation Definition from the resource at the specified URL, rather than being passed by value. The Wallet will send a GET request without additional parameters. The resource MUST be exposed without further need to authenticate or authorize. 
 
 The protocol for the `presentation_definition_uri` MUST be HTTPS.
 
@@ -303,7 +303,7 @@ which is an alias for the first Presentation Definition example given in (#reque
 This specification defines the response type `vp_token`.
 
 `vp_token`:
-:  When supplied as the `response_type` parameter in an Authorization Request, a successful response MUST include the `vp_token` parameter. The Authorization Server SHOULD NOT return an OAuth 2.0 Authorization Code, Access Token, or Access Token Type in a successful response to the grant request. The default Response Mode for this Response Type is `fragment`, i.e. the Authorization Response parameters are encoded in the fragment added to the `redirect_uri` when redirecting back to the Client. The response type `vp_token` can be used with other response modes as defined in [@!OAuth.Responses]. Both successful and error responses SHOULD be returned using the supplied Response Mode, or if none is supplied, using the default Response Mode.
+:  When supplied as the `response_type` parameter in an Authorization Request, a successful response MUST include the `vp_token` parameter. The Wallet SHOULD NOT return an OAuth 2.0 Authorization Code, Access Token, or Access Token Type in a successful response to the grant request. The default Response Mode for this Response Type is `fragment`, i.e. the Authorization Response parameters are encoded in the fragment added to the `redirect_uri` when redirecting back to the Client. The response type `vp_token` can be used with other response modes as defined in [@!OAuth.Responses]. Both successful and error responses SHOULD be returned using the supplied Response Mode, or if none is supplied, using the default Response Mode.
 
 See (#response) on how the `response_type` value determines the response used to return a VP Token.
 
@@ -311,7 +311,7 @@ See (#response) on how the `response_type` value determines the response used to
 
 There are use-cases when the Authorization Request is being displayed on a device different from a device on which the requested Credential is stored. In those cases, an Authorization Request can be passed across devices by being rendered as a QR Code. 
 
-The usage of the response mode `direct_post` (see (#response_mode_post)) in conjunction with `request_uri` is RECOMMENDED, since authorization request size might be large and might not fit in a QR code.
+The usage of the response mode `direct_post` (see (#response_mode_post)) in conjunction with `request_uri` is RECOMMENDED, since Authorization Request size might be large and might not fit in a QR code.
 
 ## `aud` of a Request Object
 
@@ -324,7 +324,7 @@ Note: "https://self-issued.me/v2" is a symbolic string and can be used as an `au
 
 # Response {#response}
 
-A VP Token is only returned if the corresponding authorization request contained a `presentation_definition` parameter, a `presentation_definition_uri` parameter, or a `scope` parameter representing a Presentation Definition (#vp_token_request).
+A VP Token is only returned if the corresponding Authorization Request contained a `presentation_definition` parameter, a `presentation_definition_uri` parameter, or a `scope` parameter representing a Presentation Definition (#vp_token_request).
 
 VP Token can be returned in the Authorization Response or the Token Response depending on the Response Type used. See (#response_type_vp_token) for more details.
 
@@ -358,7 +358,7 @@ Other parameters, such as `state` or `code` (from [@!RFC6749]), or `id_token` (f
 
 The `presentation_submission` element MUST be included as a separate response parameter alongside the vp_token. Clients MUST ignore any `presentation_submission` element included inside a VP.
 
-Including the `presentation_submission` parameter as a separate response parameter allows the AS to provide the Verifier with additional information about the format and structure in advance of the processing of the VP Token, and can be used even with the credential formats that do not allow for the direct inclusion of `presentation_submission` parameters inside a credential itself.
+Including the `presentation_submission` parameter as a separate response parameter allows the Wallet to provide the Verifier with additional information about the format and structure in advance of the processing of the VP Token, and can be used even with the credential formats that do not allow for the direct inclusion of `presentation_submission` parameters inside a credential itself.
 
 In case the Wallet returns a single Verifiable Presentation in the VP Token, the `descriptor_map` would then contain a simple path expression "$".
 
@@ -459,7 +459,7 @@ To sign the Authorization Response, the Wallet MUST use a private key that corre
 
 This specification also defines a new Response Mode `direct_post.jwt`, which allows for JARM to be used with response mode `direct_post` defined in (#response_mode_post).
 
-The Response Mode `direct_post.jwt` causes the Authorization Server to send the Authorization Response using the HTTP `POST` method instead of redirecting back to the Client as defined in (#response_mode_post). The AS authorization server adds the `response` parameter containing the JWT as defined in section 4.1. of [@!JARM] and (#jarm) in the body of HTTP POST request using the `application/x-www-form-urlencoded` content type.
+The Response Mode `direct_post.jwt` causes the Wallet to send the Authorization Response using the HTTP `POST` method instead of redirecting back to the Client as defined in (#response_mode_post). The Wallet adds the `response` parameter containing the JWT as defined in section 4.1. of [@!JARM] and (#jarm) in the body of HTTP POST request using the `application/x-www-form-urlencoded` content type.
 
 The following is a non-normative example of a response using the `presentation_submission` and `vp_token` values from (#jwt_vc). (line breaks for display purposes only):
 
@@ -487,7 +487,7 @@ The error response follows the rules as defined in [@!RFC6749], with the followi
 - `client_metadata` or `client_metadata_uri` parameters defined in (#client_metadata_parameters) are present, but the Wallet recognizes `client_id` and knows metadata associated with it.
 - Pre-registered client metadata has been found based on the `client_id`, but `client_metadata` parameter is also present.
 
-Usage of `client_metadata` or `client_metadata_uri` parameters with `client_id` that the AS might be seeing for the first time is mutually exclusive with the registration mechanism where Self-Issued OP assigns `client_id` to the Verifier after receiving Client metadata.
+Usage of `client_metadata` or `client_metadata_uri` parameters with `client_id` that the Wallet might be seeing for the first time is mutually exclusive with the registration mechanism where Self-Issued OP assigns `client_id` to the Verifier after receiving Client metadata.
 
 This document also defines the following additional error codes and error descriptions:
 
@@ -511,13 +511,13 @@ The Verifier has the choice of the following mechanisms to invoke a Wallet:
 - Domain-bound Universal Links/App link as an `authorization_endpoint`
 - no specific `authorization_endpoint`, user scanning a QR code with Authorization Request using a manually opened Wallet, instead of an arbitrary camera application on a user-device (neither custom URL scheme nor Universal/App link is used)
 
-# Authorization Server Metadata {#as_metadata_parameters}
+# Wallet Metadata {#as_metadata_parameters}
 
-This specification introduces additional AS metadata to enable Client and AS to determine credential formats, proof types and algorithms to be used in a protocol exchange.
+This specification defines how the Verifier can determine credential formats, proof types and algorithms supported by the Wallet to be used in a protocol exchange.
 
-## Additional Authorization Server Metadata parameters
+## Additional Wallet Metadata parameters
 
-This specification defines new server metadata parameters according to [@!RFC8414].
+This specification defines new metadata parameters according to [@!RFC8414].
 
 the Wallet publishes the formats it supports using the `vp_formats_supported` metadata parameter. 
 
@@ -544,16 +544,16 @@ vp_formats_supported": {
 }
 ```
 
-## Obtaining Authorization Server Metadata
+## Obtaining Wallet Metadata
 
 Client utilizing this specification has multiple options to obtain AS's metadata:
 
-* Client obtains AS metadata prior to a transaction, e.g using [@!RFC8414] or out-of-band mechanisms. See (#as_metadata_parameters) for the details.
-* Client has pre-obtained static set of AS metadata. See (#openid4vp-profile) for the example.
+* Client obtains Wallet's metadata prior to a transaction, e.g using [@!RFC8414] or out-of-band mechanisms. See (#as_metadata_parameters) for the details.
+* Client has pre-obtained static set of Wallet's metadata. See (#openid4vp-profile) for the example.
 
 # Client Metadata
 
-This specification introduces additional Client metadata to enable Client and AS to determine credential formats, proof types and algorithms to be used in a protocol exchange.
+This specification introduces additional Client metadata to enable Client and the Wallet to determine credential formats, proof types and algorithms to be used in a protocol exchange.
 
 ## Additional Client Metadata Parameters {#client_metadata_parameters}
 
@@ -566,14 +566,14 @@ This specification defines the following new client metadata parameters accordin
 
 AS utilizing this specification have multiple options to exchange metadata:
 
-* AS obtains Client metadata prior to a transaction, e.g using [@!RFC7591] or out-of-band mechanisms. See (#pre-registered-rp) for the details.
-* Client provides metadata to the AS just-in-time in the Authorization Request using one of the following mechanisms defined in this specification:
+* The Wallet obtains Client metadata prior to a transaction, e.g using [@!RFC7591] or out-of-band mechanisms. See (#pre-registered-rp) for the details.
+* Client provides metadata to the Wallet just-in-time in the Authorization Request using one of the following mechanisms defined in this specification:
     * `client_metadata` or `client_metadata_uri` parameter when `client_id` equals `redirect_uri` (see (#simplest-registration) for the details), or `client_id` is a Decentralized Identifier (see (#DID) for the details).
     * Entity Statement when OpenID Federation 1.0 Automatic Registration is used (see (#openid-federation) for the details).
 
-Just-in-time metadata exchange allows OpenID4VP to be used in deployments models where the AS does not or cannot support pre-registration of Client metadata.
+Just-in-time metadata exchange allows OpenID4VP to be used in deployments models where the Wallet does not or cannot support pre-registration of Client metadata.
 
-### Pre-Registered Relying Party {#pre-registered-rp}
+### Pre-Registered Verifier {#pre-registered-rp}
 
 When the Wallet has obtained Client metadata prior to a transaction, e.g using [@!RFC7591] or out-of-band mechanisms, `client_id` MUST equal to the client identifier the Verifier has obtained from the Wallet during pre-registration. When the Authorization Request is signed, the public key for signature verification MUST be (re-)obtained using pre-registration process.
 
@@ -583,9 +583,9 @@ Below is an example for a Verifier registering using Dynamic Client Registration
 
 <{{examples/client_metadata/client_code_format.json}}
 
-### Non-Pre-Registered Relying Party {#non-pre-registered-rp} 
+### Non-Pre-Registered Verifier {#non-pre-registered-rp} 
 
-When the Verifier has not pre-registered, it may pass its metadata to the AS in the Authorization Request.
+When the Verifier has not pre-registered, it may pass its metadata to the Wallet in the Authorization Request.
 
 No registration response is returned. A successful Authorization Response implicitly indicates that the client metadata parameters were accepted.
 
@@ -615,7 +615,7 @@ Below is a non-normative example of a request when `client_id` equals `redirect_
 
 The `client_id` MAY be expressed as a Decentralized Identifier as defined in [@!DID-Core].
 
-The Authorization Request MUST be signed. A public key to verify the signature MUST be obtained from the `verificationMethod` property of a DID Document. Since DID Document may include multiple public keys, a particular public key used to sign the request in question MUST be identified by the `kid` in the header. To obtain the DID Document, AS MUST use DID Resolution defined by the DID method used by the Client.
+The Authorization Request MUST be signed. A public key to verify the signature MUST be obtained from the `verificationMethod` property of a DID Document. Since DID Document may include multiple public keys, a particular public key used to sign the request in question MUST be identified by the `kid` in the header. To obtain the DID Document, the Wallet MUST use DID Resolution defined by the DID method used by the Client.
 
 All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter as defined in (#client_metadata_parameters).
 
@@ -625,21 +625,21 @@ Below is a non-normative example of a request when `client_id` is a DID, sent as
 
 #### OpenID Federation 1.0 Automatic Registration {#openid-federation}
 
-When Relying Party's `client_id` is expressed as an `https` URI, and does not equal to a `redirect_uri` value when using simple string comparison ([@!RFC3986] section 6.2.1), Automatic Registration defined in [@!OpenID.Federation] MUST be used. The Relying Party's Entity Identifier defined in Section 1.2 of [@!OpenID.Federation] MUST be `client_id`. 
+When Verifier's `client_id` is expressed as an `https` URI, and does not equal to a `redirect_uri` value when using simple string comparison ([@!RFC3986] section 6.2.1), Automatic Registration defined in [@!OpenID.Federation] MUST be used. The Verifier's Entity Identifier defined in Section 1.2 of [@!OpenID.Federation] MUST be `client_id`. 
 
-The Authorization Request MUST be signed. The AS MUST obtain the public key from the `jwks` property in the Relying Party's Entity Statement defined in Section 3.1 of [@!OpenID.Federation]. Metadata other than the public keys MUST also be obtained from the Entity Statement.
+The Authorization Request MUST be signed. The Wallet MUST obtain the public key from the `jwks` property in the Verifier's Entity Statement defined in Section 3.1 of [@!OpenID.Federation]. Metadata other than the public keys MUST also be obtained from the Entity Statement.
 
 Note that to use Automatic Registration, clients would be required to have an individual identifier and an associated public key(s), which is not always the case for the public/native app clients.
 
 # Implementation Considerations
 
-## Static Configuration Values of the Authorization Servers
+## Static Configuration Values of the Wallets
 
-This document lists profiles that define static configuration values of Authorization Servers and defines one set of static configuration values that can be used by the Verifier when it is unable to perform dynamic discovery and is not using any of the profiles.
+This document lists profiles that define static configuration values of the Wallets and defines one set of static configuration values that can be used by the Verifier when it is unable to perform dynamic discovery and is not using any of the profiles.
 
 ### Profiles that Define Static Configuration Values
 
-Below is a list of profiles that define static configuration values of Authorization Servers:
+Below is a list of profiles that define static configuration values of Wallets:
 
 - [JWT VC Presentation Profile](https://identity.foundation/jwt-vc-presentation-profile/)
 
