@@ -458,6 +458,20 @@ To obtain Verifier's public key for the input to the key agreement to encrypt th
 
 To sign the Authorization Response, the Wallet MUST use a private key that corresponds to a public key made available in its metadata.
 
+### Response Mode "direct_post.jwt" {#direct_post_jwt}
+
+This specification also defines a new Response Mode `direct_post.jwt`, which allows for JARM to be used with response mode `direct_post` defined in (#response_mode_post).
+
+The Response Mode `direct_post.jwt` causes the Authorization Server to send the Authorization Response using the HTTP `POST` method instead of redirecting back to the Client as defined in (#response_mode_post). The AS authorization server adds the `response` parameter containing the JWT as defined in section 4.1. of [@!JARM] and (#jarm) in the body of HTTP POST request using the `application/x-www-form-urlencoded` content type.
+
+The following is a non-normative example of a response using the `presentation_submission` and `vp_token` values from (#jwt_vc). (line breaks for display purposes only):
+
+<{{examples/response/jarm_jwt_vc_json_post.txt}}
+
+This is the JWT used in the example above before base64url encoding and signing:
+
+<{{examples/response/jarm_jwt_vc_json_body.json}}
+
 ## Error Response
 
 The error response follows the rules as defined in [@!RFC6749], with the following additional clarifications:
@@ -1028,7 +1042,7 @@ OpenID for Verifiable Presentations is credential format agnostic, i.e. it is de
 
 ## W3C Verifiable Credentials
 
-### VC signed as a JWT, not using JSON-LD
+### VC signed as a JWT, not using JSON-LD {#jwt_vc}
 
 The following is an example of a presentation of a Credential conformant to [@VC_DATA] that is signed using JWS, and does not use JSON-LD. It will be used throughout this section.
 
