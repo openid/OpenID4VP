@@ -68,7 +68,7 @@ This specification can also be combined with [@!SIOPv2], if implementers require
 
 # Terminology
 
-Common terms in this document come from [@!RFC6749]. 
+This specification uses the terms "Access Token", "Authorization Request", "Authorization Response", "Authorization Server", "Client", "Client Authentication", "Client Identifier", "Grant Type", "Response Type", "Token Request" and "Token Response" defined by OAuth 2.0 [@!RFC6749], the terms "End-User", "Entity", "Request Object", "Request URI" as defined by OpenID Connect Core [@!OpenID.Core], the term "JSON Web Token (JWT)" defined by JSON Web Token (JWT) [@!RFC7519], the term "JOSE Header" and the term "Base64url Encoding" defined by JSON Web Signature (JWS) [@!RFC7515], and the term "Response Mode" defined by OAuth 2.0 Multiple Response Type Encoding Practices [@!OAuth.Responses].
 
 This specification also defines the following terms. In the case where a term has a definition that differs, the definition below is authoritative.
 
@@ -91,13 +91,13 @@ W3C Verifiable Presentation:
 :  A Verifiable Presentations compliant to the [@VC_DATA] specification.
 
 Credential Issuer:
-:  Entity that issues Verifiable Credentials. Also called Issuer.
+:  An entity that issues Verifiable Credentials. Also called Issuer.
 
 Holder:
 :  An entity that receives Verifiable Credentials and has control over them to present them to the Verifiers as Verifiable Presentations.
 
 Verifier:
-:  The entity that requests, receives and validates Verifiable Presentations. During presentation of Credentials, Verifier acts as an OAuth 2.0 Client towards the Wallet that is acting as an OAuth 2.0 Authorization Server. The Verifier is a specific case of OAuth 2.0 Client, just like Relying Party (RP) in [@OpenID.Core].
+:  An entity that requests, receives and validates Verifiable Presentations. During presentation of Credentials, Verifier acts as an OAuth 2.0 Client towards the Wallet that is acting as an OAuth 2.0 Authorization Server. The Verifier is a specific case of OAuth 2.0 Client, just like Relying Party (RP) in [@OpenID.Core].
 
 Issuer-Holder-Verifier Model:
 :  A model for claims sharing where claims are issued in the form of Verifiable Credentials independent of the process of presenting them as Verifiable Presentation to the Verifiers. An issued Verifiable Credential can (but must not necessarily) be used multiple times.
@@ -118,10 +118,7 @@ VP Token:
 : An artifact defined in this specification that contains a single Verifiable Presentation or an array of Verifiable Presentations as defined in (#response-parameters).
 
 Wallet:
-:  Entity used by the Holder to receive, store, present, and manage Verifiable Credentials and key material. There is no single deployment model of a Wallet: Verifiable Credentials and keys can both be stored/managed locally, or by using a remote self-hosted service, or a remote third-party service. In the context of this specification, the Wallet acts as an OAuth 2.0 Authorization Server (see [@!RFC6749]) towards the Credential Verifier which acts as the OAuth 2.0 Client.
-
-Base64url Encoding:
-:  Base64 encoding using the URL- and filename-safe character set defined in Section 5 of [@!RFC4648], with all trailing '=' characters omitted (as permitted by Section 3.2 of [@!RFC4648]) and without the inclusion of any line breaks, whitespace, or other additional characters. Note that the base64url encoding of the empty octet sequence is the empty string. (See Appendix C of [@!RFC7515] for notes on implementing base64url encoding without padding.)
+:  An entity used by the Holder to receive, store, present, and manage Verifiable Credentials and key material. There is no single deployment model of a Wallet: Verifiable Credentials and keys can both be stored/managed locally, or by using a remote self-hosted service, or a remote third-party service. In the context of this specification, the Wallet acts as an OAuth 2.0 Authorization Server (see [@!RFC6749]) towards the Credential Verifier which acts as the OAuth 2.0 Client.
 
 # Overview 
 
@@ -407,7 +404,7 @@ HTTP POST request MUST be sent to the URL obtained from the `redirect_uri` param
 
 Note: Response Mode `direct_post` could be less secure than redirect-based Response Mode. For details, see (#session-binding).
 
-The following is a non-normative example request object with Response Mode `direct_post`:
+The following is a non-normative example Request Object with Response Mode `direct_post`:
 
 ```json
 {
@@ -420,7 +417,7 @@ The following is a non-normative example request object with Response Mode `dire
 }
 ```
 
-that could be used in a request URL like this (either directly or as QR Code). 
+that could be used in a Request URI like this (either directly or as QR Code). 
 
 ```
 https://wallet.example.com?
@@ -622,7 +619,7 @@ The Authorization Request MUST be signed. A public key to verify the signature M
 
 All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter as defined in (#client_metadata_parameters).
 
-Below is a non-normative example of a request when `client_id` is a DID, sent as a request object using `request_uri`:
+Below is a non-normative example of a request when `client_id` is a DID, sent as a Request Object using `request_uri`:
 
 <{{examples/client_metadata/client_client_id_did.json}}
 
