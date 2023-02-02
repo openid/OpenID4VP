@@ -159,10 +159,10 @@ This specification defines the following new parameters:
 : CONDITIONAL. A string containing an HTTPS URL pointing to a resource where a Presentation Definition JSON object as defined in Section 5 of [@!DIF.PresentationExchange] can be retrieved . See (#request_presentation_definition_uri) for more details.
 
 `client_metadata`:
-: OPTIONAL. This parameter enables Client Metadata to be passed in a single, self-contained parameter. The value is a JSON object containing Client Registration Metadata values. The `client_metadata` parameter value is represented in an OAuth 2.0 request as a UTF-8 encoded JSON object. MUST NOT be present if `client_metadata_uri` parameter is present.
+: OPTIONAL. This parameter enables Verifier's metadata to be passed in a single, self-contained parameter. The value is a JSON object containing metadata values. The `client_metadata` parameter value is represented in an OAuth 2.0 request as a UTF-8 encoded JSON object. MUST NOT be present if `client_metadata_uri` parameter is present.
 
 `client_metadata_uri`: 
-: OPTIONAL. This parameter enables Client Registration Metadata to be passed by reference, rather than by value. The `request_uri` value is a URL referencing a resource containing a Client Registration Metadata Object. The scheme used in the `client_metadata_uri` value MUST be https. The `client_metadata_uri` value MUST be reachable by the Wallet. MUST NOT be present if `client_metadata` parameter is present.
+: OPTIONAL. This parameter enables Verifier's metadata to be passed by reference, rather than by value. The `request_uri` value is a URL referencing a resource containing a Verifier's metadata object. The scheme used in the `client_metadata_uri` value MUST be https. The `client_metadata_uri` value MUST be reachable by the Wallet. MUST NOT be present if `client_metadata` parameter is present.
 
 Presentation Definition is a JSON Object that articulates what Verifiable Presentation(s) the Verifier is requesting to be presented as defined in Section 5 of [@!DIF.PresentationExchange].
 
@@ -212,9 +212,11 @@ Clients can also ask for alternative Verifiable Credentials being presented, whi
 
 <{{examples/request/vp_token_alternative_credentials.json}}
 
-The VC and VP formats supported by the Wallet should be published in its metadata (see (#as_metadata_parameters)). The formats supported by a client may be set up using the client metadata parameter `vp_formats` (see (#client_metadata_parameters)). The Wallet MUST ignore any `format` property inside a `presentation_definition` object if that `format` was not included in the `vp_formats` property of the client metadata. 
+The VC and VP formats supported by the Wallet should be published in its metadata using the metadata parameter `vp_formats_supported` (see (#as_metadata_parameters)). 
 
-Note that when a Client is requesting presentation of a VP containing a VC, the Client MUST indicate in the `vp_formats` parameter the supported formats of both VC and VP.
+The formats supported by a Verifier may be set up using the metadata parameter `vp_formats` (see (#client_metadata_parameters)). The Wallet MUST ignore any `format` property inside a `presentation_definition` object if that `format` was not included in the `vp_formats` property of the metadata.
+
+Note that when a Verifier is requesting presentation of a VP containing a VC, the Verifier MUST indicate in the `vp_formats` parameter the supported formats of both VC and VP.
 
 ## `presentation_definition_uri` Parameter {#request_presentation_definition_uri}
 
@@ -318,7 +320,7 @@ The usage of the response mode `direct_post` (see (#response_mode_post)) in conj
 When a Verifier is sending a Request Object as defined in Section 6.1 of [@!OpenID.Core] or [@!RFC9101], the `aud` Claim value depends on whether the recipient of the request can be identified by the Verifier or not:
 
 - the `aud` Claim MUST equal to the `issuer` Claim value, when Dynamic Discovery is performed.
-- the `aud` Claim MUST be "https://self-issued.me/v2", when Static Discovery Metadata is used.
+- the `aud` Claim MUST be "https://self-issued.me/v2", when Static Discovery metadata is used.
 
 Note: "https://self-issued.me/v2" is a symbolic string and can be used as an `aud` Claim value even when this specification is used standalone, without SIOPv2. 
 
@@ -330,7 +332,7 @@ VP Token can be returned in the Authorization Response or the Token Response dep
 
 If the Response Type value is `vp_token`, the VP Token is returned in the Authorization Response. When the Response Type value is `vp_token id_token` and the `scope` parameter contains `openid`, the VP Token is returned in the Authorization Response alongside a Self-Issued ID Token as defined in [@!SIOPv2].
 
-If the Response Type value is `code` (Authorization Code grant type), the VP Token is provided in the Token Response.
+If the Response Type value is `code` (Authorization Code Grant Type), the VP Token is provided in the Token Response.
 
 The expected behavior is summarized in the following table:
 
@@ -459,7 +461,7 @@ To sign the Authorization Response, the Wallet MUST use a private key that corre
 
 This specification also defines a new Response Mode `direct_post.jwt`, which allows for JARM to be used with response mode `direct_post` defined in (#response_mode_post).
 
-The Response Mode `direct_post.jwt` causes the Wallet to send the Authorization Response using the HTTP `POST` method instead of redirecting back to the Client as defined in (#response_mode_post). The Wallet adds the `response` parameter containing the JWT as defined in section 4.1. of [@!JARM] and (#jarm) in the body of HTTP POST request using the `application/x-www-form-urlencoded` content type.
+The Response Mode `direct_post.jwt` causes the Wallet to send the Authorization Response using the HTTP `POST` method instead of redirecting back to the Verifier as defined in (#response_mode_post). The Wallet adds the `response` parameter containing the JWT as defined in section 4.1. of [@!JARM] and (#jarm) in the body of HTTP POST request using the `application/x-www-form-urlencoded` content type.
 
 The following is a non-normative example of a response using the `presentation_submission` and `vp_token` values from (#jwt_vc). (line breaks for display purposes only):
 
@@ -485,9 +487,9 @@ The error response follows the rules as defined in [@!RFC6749], with the followi
 `invalid_client`:
 
 - `client_metadata` or `client_metadata_uri` parameters defined in (#client_metadata_parameters) are present, but the Wallet recognizes `client_id` and knows metadata associated with it.
-- Pre-registered client metadata has been found based on the `client_id`, but `client_metadata` parameter is also present.
+- Verifier's pre-registered metadata has been found based on the `client_id`, but `client_metadata` parameter is also present.
 
-Usage of `client_metadata` or `client_metadata_uri` parameters with `client_id` that the Wallet might be seeing for the first time is mutually exclusive with the registration mechanism where Self-Issued OP assigns `client_id` to the Verifier after receiving Client metadata.
+Usage of `client_metadata` or `client_metadata_uri` parameters with `client_id` that the Wallet might be seeing for the first time is mutually exclusive with the registration mechanism where Self-Issued OP assigns `client_id` to the Verifier after receiving Verifier's metadata.
 
 This document also defines the following additional error codes and error descriptions:
 
@@ -511,7 +513,7 @@ The Verifier has the choice of the following mechanisms to invoke a Wallet:
 - Domain-bound Universal Links/App link as an `authorization_endpoint`
 - no specific `authorization_endpoint`, user scanning a QR code with Authorization Request using a manually opened Wallet, instead of an arbitrary camera application on a user-device (neither custom URL scheme nor Universal/App link is used)
 
-# Wallet Metadata {#as_metadata_parameters}
+# Wallet Metadata (Authorization Server Metadata) {#as_metadata_parameters}
 
 This specification defines how the Verifier can determine credential formats, proof types and algorithms supported by the Wallet to be used in a protocol exchange.
 
@@ -544,38 +546,40 @@ vp_formats_supported": {
 }
 ```
 
-## Obtaining Wallet Metadata
+## Obtaining Wallet's Metadata
 
-Client utilizing this specification has multiple options to obtain AS's metadata:
+Verifier utilizing this specification has multiple options to obtain AS's metadata:
 
-* Client obtains Wallet's metadata prior to a transaction, e.g using [@!RFC8414] or out-of-band mechanisms. See (#as_metadata_parameters) for the details.
-* Client has pre-obtained static set of Wallet's metadata. See (#openid4vp-profile) for the example.
+* Verifier obtains Wallet's metadata prior to a transaction, e.g using [@!RFC8414] or out-of-band mechanisms. See (#as_metadata_parameters) for the details.
+* Verifier has pre-obtained static set of Wallet's metadata. See (#openid4vp-profile) for the example.
 
-# Client Metadata
+# Verifier Metadata (Client Metadata)
 
-This specification introduces additional Client metadata to enable Client and the Wallet to determine credential formats, proof types and algorithms to be used in a protocol exchange.
+Client metadata defined in Section 2 of [@!RFC7591] is used to convery Verifier's metadata. 
 
-## Additional Client Metadata Parameters {#client_metadata_parameters}
+This specification defines how the Wallet can determine credential formats, proof types and algorithms supported by the Verifier to be used in a protocol exchange.
 
-This specification defines the following new client metadata parameters according to [@!RFC7591]:
+## Additional Verifier Metadata Parameters {#client_metadata_parameters}
+
+This specification defines the following new metadata parameters according to [@!RFC7591], to be used by the Verifier:
 
 `vp_formats`:
-: REQUIRED. An object defining the formats and proof types of verifiable presentations and verifiable credentials that a Client supports. Valid format identifier values are defined in Annex E of [@!OpenID.VCI] and include `jwt_vc_json`, `jwt_vc_json-ld`, `ldp_vc`, `jwt_vp_json`, `jwt_vp_json-ld`, `ldp_vp`, and `mso_mdoc`. Deployments can extend the formats supported, provided Issuers, Holders and Verifiers all understand the new format.
+: REQUIRED. An object defining the formats and proof types of verifiable presentations and verifiable credentials that a Verifier supports. Valid format identifier values are defined in Annex E of [@!OpenID.VCI] and include `jwt_vc_json`, `jwt_vc_json-ld`, `ldp_vc`, `jwt_vp_json`, `jwt_vp_json-ld`, `ldp_vp`, and `mso_mdoc`. Deployments can extend the formats supported, provided Issuers, Holders and Verifiers all understand the new format.
 
-## Obtaining Client Metadata 
+## Obtaining Verifier's Metadata 
 
 AS utilizing this specification have multiple options to exchange metadata:
 
-* The Wallet obtains Client metadata prior to a transaction, e.g using [@!RFC7591] or out-of-band mechanisms. See (#pre-registered-rp) for the details.
-* Client provides metadata to the Wallet just-in-time in the Authorization Request using one of the following mechanisms defined in this specification:
+* The Wallet obtains Verifier's metadata prior to a transaction, e.g using [@!RFC7591] or out-of-band mechanisms. See (#pre-registered-rp) for the details.
+* Verifier provides metadata to the Wallet just-in-time in the Authorization Request using one of the following mechanisms defined in this specification:
     * `client_metadata` or `client_metadata_uri` parameter when `client_id` equals `redirect_uri` (see (#simplest-registration) for the details), or `client_id` is a Decentralized Identifier (see (#DID) for the details).
     * Entity Statement when OpenID Federation 1.0 Automatic Registration is used (see (#openid-federation) for the details).
 
-Just-in-time metadata exchange allows OpenID4VP to be used in deployments models where the Wallet does not or cannot support pre-registration of Client metadata.
+Just-in-time metadata exchange allows OpenID4VP to be used in deployments models where the Wallet does not or cannot support pre-registration of Verifier's metadata.
 
 ### Pre-Registered Verifier {#pre-registered-rp}
 
-When the Wallet has obtained Client metadata prior to a transaction, e.g using [@!RFC7591] or out-of-band mechanisms, `client_id` MUST equal to the client identifier the Verifier has obtained from the Wallet during pre-registration. When the Authorization Request is signed, the public key for signature verification MUST be (re-)obtained using pre-registration process.
+When the Wallet has obtained Verifier's metadata prior to a transaction, e.g using [@!RFC7591] or out-of-band mechanisms, `client_id` MUST equal to the Client ID the Verifier has obtained from the Wallet during pre-registration. When the Authorization Request is signed, the public key for signature verification MUST be (re-)obtained using pre-registration process.
 
 In this case, `client_metadata` and `client_metadata_uri` parameters defined in (#client_metadata_parameters) MUST NOT be present in the Authorization Request. 
 
@@ -587,13 +591,13 @@ Below is an example for a Verifier registering using Dynamic Client Registration
 
 When the Verifier has not pre-registered, it may pass its metadata to the Wallet in the Authorization Request.
 
-No registration response is returned. A successful Authorization Response implicitly indicates that the client metadata parameters were accepted.
+A successful Authorization Response implicitly indicates that the Verifier's metadata parameters were accepted.
 
 #### `client_id` equals `redirect_uri` {#simplest-registration}
 
 In the simplest option, the Verifier can proceed without registration and set the `client_id` value to the `redirect_uri` value.
 
-In this case, the Authorization Request cannot be signed and all client metadata parameters MUST be passed using client metadata parameter defined in (#client_metadata_parameters).
+In this case, the Authorization Request cannot be signed and all metadata parameters MUST be passed using `client_metadata` or `client_metadata_uri` parameter defined in (#client_metadata_parameters).
 
 Below is a non-normative example of a request when `client_id` equals `redirect_uri`.
 
@@ -617,7 +621,7 @@ The `client_id` MAY be expressed as a Decentralized Identifier as defined in [@!
 
 The Authorization Request MUST be signed. A public key to verify the signature MUST be obtained from the `verificationMethod` property of a DID Document. Since DID Document may include multiple public keys, a particular public key used to sign the request in question MUST be identified by the `kid` in the header. To obtain the DID Document, the Wallet MUST use DID Resolution defined by the DID method used by the Client.
 
-All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter as defined in (#client_metadata_parameters).
+All Verifier's metadata other than the public key MUST be obtained from the `client_metadata` parameter as defined in (#client_metadata_parameters).
 
 Below is a non-normative example of a request when `client_id` is a DID, sent as a Request Object using `request_uri`:
 
@@ -1077,7 +1081,7 @@ It refers to the VP in the `vp_token` parameter provided in the same response, w
 
 <{{examples/response/jwt_vp.json}}
 
-Note: the VP's `nonce` claim contains the value of the `nonce` of the presentation request and the `aud` claims contains the client id of the verifier. This allows the verifier to detect replay of a presentation as recommended in (#preventing-replay). 
+Note: the VP's `nonce` claim contains the value of the `nonce` of the presentation request and the `aud` claims contains the Client ID of the verifier. This allows the verifier to detect replay of a presentation as recommended in (#preventing-replay). 
 
 ### LDP VCs
 
@@ -1113,7 +1117,7 @@ It refers to the VP in the `vp_token` parameter provided in the same response, w
 
 <{{examples/response/ldp_vp.json}}
 
-Note: the VP's `challenge` claim contains the value of the `nonce` of the presentation request and the `domain` claims contains the client id of the verifier. This allows the verifier to detect replay of a presentation as recommended in (#preventing-replay). 
+Note: the VP's `challenge` claim contains the value of the `nonce` of the presentation request and the `domain` claims contains the Client ID of the verifier. This allows the verifier to detect replay of a presentation as recommended in (#preventing-replay). 
 
 ## AnonCreds
 
@@ -1283,7 +1287,7 @@ The `id_token` content is shown in the following.
 }
 ```
 
-Note: the `nonce` and `aud` are set to the `nonce` of the request and the client id of the verifier, respectively, in the same way as for the verifier, Verifiable Presentations to prevent replay. 
+Note: the `nonce` and `aud` are set to the `nonce` of the request and the Client ID of the verifier, respectively, in the same way as for the verifier, Verifiable Presentations to prevent replay. 
 
 # IANA Considerations
 
