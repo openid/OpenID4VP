@@ -312,7 +312,7 @@ This specification defines the response type `vp_token`.
 
 See (#response) on how the `response_type` value determines the response used to return a VP Token.
 
-## Passing Authorization Request across Devices
+## Passing Authorization Request Across Devices
 
 There are use-cases when the Authorization Request is being displayed on a device different from a device on which the requested Credential is stored. In those cases, an Authorization Request can be passed across devices by being rendered as a QR Code. 
 
