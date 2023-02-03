@@ -372,7 +372,7 @@ Body
 
 * `train`: The Client Identifier is an identifier that needs to be interpreted according to the rules of the TRAIN [@TRAIN] trust management mechanism. The client MUST send a parameter `trust_framework_operator` with the respective request, which identifies the operator of network the client claims to be a member of. 
 
-Note that to use `client_id_format` values `oidc_federation_entity_id`, `did` and `x509_dn`, Verifiers MUST be confidential clients. This might require changes to the technical design of native apps as such apps are typically public clients.
+Note that to use `client_id_format` values `oidc_federation_entity_id` and `did`, Verifiers MUST be confidential clients. This might require changes to the technical design of native apps as such apps are typically public clients.
 
 Other specifications can define further values for the `client_id_format` parameter. 
 
@@ -522,7 +522,7 @@ The error response follows the rules as defined in [@!RFC6749], with the followi
 - The request contains more than one out of the following three options to communicate a requested credential: a `presentation_definition` parameter, a `presentation_definition_uri` parameter, or a scope value representing a Presentation Definition.
 - Requested Presentation Definition does not conform to the DIF PEv2 specification [@!DIF.PresentationExchange].
 - The AS does not support the `client_id_format` passed in the authorization request. 
-- The format indicated by the request parameter `client_id_format` did not match the client id passed in the request or a constraint defined by a certain format was violated, e.g. an unsigned request was sent with `client_id_format` value `x509_dn`.  
+- The format indicated by the request parameter `client_id_format` did not match the client id passed in the request or a constraint defined by a certain format was violated, e.g. an unsigned request was sent with `client_id_format` value `oidc_federation_entity_id`.  
 
 `invalid_client`:
 
@@ -587,7 +587,7 @@ vp_formats_supported": {
 ```
 
 `client_id_formats_supported`:
-: OPTIONAL. JSON String array containing the identifiers of the Client Identifier formats the AS supports. The value range defined by this specification is `pre-registered`, `redirect_uri`, `oidc_federation_entity_id`, `did`, `x509_dn`, `train`. If omitted, the default value is `pre-registered`. 
+: OPTIONAL. JSON String array containing the identifiers of the Client Identifier formats the AS supports. The value range defined by this specification is `pre-registered`, `redirect_uri`, `oidc_federation_entity_id`, `did`, `train`. If omitted, the default value is `pre-registered`. 
 
 ## Obtaining Authorization Server Metadata
 
@@ -604,7 +604,7 @@ This specification defines the following new client metadata parameters accordin
 : REQUIRED. An object defining the formats and proof types of verifiable presentations and verifiable credentials that a Client supports. Valid format identifier values are defined in Annex E of [@!OpenID.VCI] and include `jwt_vc_json`, `jwt_vc_json-ld`, `ldp_vc`, `jwt_vp_json`, `jwt_vp_json-ld`, `ldp_vp`, and `mso_mdoc`. Deployments can extend the formats supported, provided Issuers, Holders and Verifiers all understand the new format.
 
 `client_id_format`:
-: OPTIONAL. JSON String identifying the client's id format. The value range defined by this specification is `pre-registered`, `redirect_uri`, `oidc_federation_entity_id`, `did`, `x509_dn`, `train`. If omitted, the default value is `pre-registered`. 
+: OPTIONAL. JSON String identifying the client's id format. The value range defined by this specification is `pre-registered`, `redirect_uri`, `oidc_federation_entity_id`, `did`, `train`. If omitted, the default value is `pre-registered`. 
 
 # Implementation Considerations
 
