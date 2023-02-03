@@ -135,7 +135,7 @@ Implementations can use any pre-existing OAuth 2.0 Grant Type and Response Type 
 
 OpenID for Verifiable Presentations supports scenarios where the Authorization Request is sent both when the Verifier is interacting with the End-User using the same or different device on which requested Credential(s) are stored.
 
-This specification also supports the response to be sent not only using redirects but also using HTTP POST request. This enables sending the response across devices, or sending the response large in size that exceeds redirect URL character limitations.
+This specification supports the response being sent using a redirect but also using a HTTP POST request. This enables the response to be sent across devices, or when the response size exceeds the redirect URL character size limitation.
 
 Implementations can also be build on top of OpenID Connect Core, since OpenID Connect Core is based on OAuth 2.0. To benefit from the subject-signed ID Token feature, this specification can also be combined with the Self-Issued OP v2 specification [@SIOPv2]. 
 
@@ -146,7 +146,7 @@ OpenID for Verifiable Presentations extends existing OAuth 2.0 mechanisms as fol
 * A new `presentation_definition` Authorization Request parameter that uses the [@!DIF.PresentationExchange] syntax is defined to request presentation of Verifiable Credentials in arbitrary formats. See (#vp_token_request) for more details. 
 * A new `vp_token` response parameter is defined to return Verifiable Presentations to the Verifier in either Authorization or Token Response depending on the response type. See (#response) for more details. 
 * New Response Types `vp_token` and `id_token vp_token` are defined to request Verifiable Credentials to be returned in the Authorization Response (standalone or along with an OpenID Connect ID Token [@!OpenID.Core]). See (#response) for more details.
-* A new OAuth 2.0 Response Mode `direct_post` is defined to support sending the response across devices, or when the size of response is too big and exceeds redirect URL character limitations. See (#response_mode_post) for more detials.
+* A new OAuth 2.0 Response Mode `direct_post` is defined to support sending the response across devices, or when the size of the response exceeds the redirect URL character size limitation. See (#response_mode_post) for more detials.
 * The [@!DIF.PresentationExchange] `format` parameter is used throughout the protocol in order to enable customization according to the specific needs of a particular Credential format. Examples in (#alternative_credential_formats) are given for credential formats as specified in [@VC_DATA], [@ISO.18013-5], and [@Hyperledger.Indy].
 
 Presentation of Credentials using OpenID for Verifiable Presentations can be combined with the user authentication using [@SIOPv2], and the issuance of OAuth 2.0 Access Tokens.
