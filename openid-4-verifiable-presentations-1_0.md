@@ -370,18 +370,6 @@ Body
 
 <{{examples/request/request_object_client_id_did.json}}
 
-* `x509_dn`: the Client Identifier is a X.509 Distinguished Name (DN) [@!RFC5280]. The request MUST be signed with the private key corresponding to the public key in the X.509 certificate. The X.509 certificate MUST be added to the request in one of the following JWS headers [@!RFC7515]: `x5c`, `x5t`, or `x5u`. The AS MUST validate the signature and the trust chain of the X.509 certificate. It is recommended to add the client's redirect URIs to the certificate. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` or the `client_metadata_uri` parameter as defined in (#vp_token_request). 
-
-Below is a non-normative example of a signed request when `client_id` is a X.509 DN:
-
-Header
-
-<{{examples/request/request_header_client_id_x509.json}}
-
-Body
-
-<{{examples/request/request_object_client_id_x509.json}}
-
 * `train`: The Client Identifier is an identifier that needs to be interpreted according to the rules of the TRAIN [@TRAIN] trust management mechanism. The client MUST send a parameter `trust_framework_operator` with the respective request, which identifies the operator of network the client claims to be a member of. 
 
 Note that to use `client_id_format` values `oidc_federation_entity_id`, `did` and `x509_dn`, Verifiers MUST be confidential clients. This might require changes to the technical design of native apps as such apps are typically public clients.
