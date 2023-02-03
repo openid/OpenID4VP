@@ -64,7 +64,7 @@ This specification defines a mechanism on top of OAuth 2.0 [@!RFC6749] that enab
 
 OAuth 2.0 [@!RFC6749] is used as a base protocol as it provides the required rails to build simple, secure, and developer-friendly Credential presentation on top of it. Moreover, implementers can, in a single interface, support Credential presentation and the issuance of Access Tokens for access to APIs based on Verifiable Credentials in the Wallet. OpenID Connect [@!OpenID.Core] deployments can also extend their implementations using this specification with the ability to transport Verifiable Presentations. 
 
-This specification can also be combined with [@!SIOPv2], if implementers require OpenID Connect features, such as the issuance of subject-signed ID tokens.
+This specification can also be combined with [@!SIOPv2], if implementers require OpenID Connect features, such as the issuance of subject-signed ID Tokens.
 
 # Terminology
 
@@ -173,7 +173,7 @@ A public key to be used by the Wallet as an input to the key agreement to encryp
 The following additional considerations are given for pre-existing Authorization Request parameters:
 
 `nonce`:
-: REQUIRED. Defined in  [@!OpenID.Core]. It is used to securely bind the Verifiable Presentation(s) provided by the wallet to the particular transaction.
+: REQUIRED. Defined in  [@!OpenID.Core]. It is used to securely bind the Verifiable Presentation(s) provided by the Wallet to the particular transaction.
 
 `scope`:
 : OPTIONAL. Defined in [@!RFC6749]. The Wallet MAY allow Verifiers to request presentation of Verifiable Credentials by utilizing a pre-defined scope value. See (#request_scope) for more details.
