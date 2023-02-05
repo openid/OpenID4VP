@@ -795,6 +795,10 @@ In many instances the referenced server will be operated by a known federation o
 
 Clients intending to authenticate the end-user utilizing a claim in a Verifiable Credential MUST ensure this claim is stable for the end-user as well locally unique and never reassigned within the Credential Issuer to another end-user. Such a claim MUST also only be used in combination with the Credential Issuer identifier to ensure global uniqueness and to prevent attacks where an attacker obtains the same claim from a different Credential Issuer and tries to impersonate the legitimate user. 
 
+## JSONPath and Arbitrary Scripting 
+
+Implementers MUST make sure that JSONpath used as part of `presentation_definition` and `presentation_submission` parameters cannot be used to execute arbitrary scripts on a server. For example, by implementing the entire syntax of the query without relying on the parsers of programming language engine. For details, see Section 4 of [@jsonpath-base].
+
 {backmatter}
 
 <reference anchor="VC_DATA" target="https://www.w3.org/TR/vc-data-model">
