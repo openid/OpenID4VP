@@ -1235,8 +1235,6 @@ Note that the reason why hashes of the user claims are included in the `issuerAu
 
 The example in this section is also applicable to the electronic identification Verifiable Credentials expressed using data models defined in ISO/IEC TR 23220-2.
 
-TBD: are `nonce` and `client_id` included into the mDL to detect replay?
-
 ## Combining this specification with SIOPv2
 
 This section shows how SIOP and OpenID for Verifiable Presentations can be combined to present Verifiable Credentials and pseudonymously authenticate an end-user using subject controlled key material.
