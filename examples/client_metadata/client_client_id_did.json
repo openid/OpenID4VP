@@ -5,7 +5,9 @@
    ],
    "client_name": "My Example (SIOP)",
    "application_type": "web",
-   "response_types": "vp_token id_token",
+   "response_types": [
+      "vp_token id_token"
+   ],
    "client_metadata": {
       "vp_formats": {
          "jwt_vp_json": {

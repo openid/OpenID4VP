@@ -7,8 +7,12 @@
    "client_name": "My Example",
    "token_endpoint_auth_method": "client_secret_basic",
    "application_type": "web",
-   "response_types": "code",
-   "grant_types": "authorization_code",
+   "response_types": [
+      "code"
+   ],
+   "grant_types": [
+      "authorization_code"
+   ],
    "vp_formats": {
       "jwt_vp_json": {
          "alg": [

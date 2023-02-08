@@ -132,9 +132,9 @@ Implementations can use any pre-existing OAuth 2.0 Grant Type and Response Type 
 
 OpenID for Verifiable Presentations supports scenarios where the Authorization Request is sent both when the Verifier is interacting with the End-User using the same or different device on which requested Credential(s) are stored.
 
-This specification supports the response being sent using a redirect but also using a HTTP POST request. This enables the response to be sent across devices, or when the response size exceeds the redirect URL character size limitation.
+This specification supports the response being sent using a redirect but also using an HTTP POST request. This enables the response to be sent across devices, or when the response size exceeds the redirect URL character size limitation.
 
-Implementations can also be build on top of OpenID Connect Core, since OpenID Connect Core is based on OAuth 2.0. To benefit from the subject-signed ID Token feature, this specification can also be combined with the Self-Issued OP v2 specification [@SIOPv2]. 
+Implementations can also be built on top of OpenID Connect Core, since OpenID Connect Core is based on OAuth 2.0. To benefit from the subject-signed ID Token feature, this specification can also be combined with the Self-Issued OP v2 specification [@SIOPv2]. 
 
 # Scope
 
@@ -158,13 +158,13 @@ This specification defines the following new parameters:
 : CONDITIONAL. A string containing a Presentation Definition JSON object as defined in Section 5 of [@!DIF.PresentationExchange]. See (#request_presentation_definition) for more details.
 
 `presentation_definition_uri`:
-: CONDITIONAL. A string containing an HTTPS URL pointing to a resource where a Presentation Definition JSON object as defined in Section 5 of [@!DIF.PresentationExchange] can be retrieved . See (#request_presentation_definition_uri) for more details.
+: CONDITIONAL. A string containing an HTTPS URL pointing to a resource where a Presentation Definition JSON object as defined in Section 5 of [@!DIF.PresentationExchange] can be retrieved. See (#request_presentation_definition_uri) for more details.
 
 `client_metadata`:
 : OPTIONAL. This parameter enables Verifier's metadata to be passed in a single, self-contained parameter. The value is a JSON object containing metadata values. The `client_metadata` parameter value is represented in an OAuth 2.0 request as a UTF-8 encoded JSON object. MUST NOT be present if `client_metadata_uri` parameter is present.
 
 `client_metadata_uri`: 
-: OPTIONAL. This parameter enables Verifier's metadata to be passed by reference, rather than by value. The `request_uri` value is a URL referencing a resource containing a Verifier's metadata object. The scheme used in the `client_metadata_uri` value MUST be https. The `client_metadata_uri` value MUST be reachable by the Wallet. MUST NOT be present if `client_metadata` parameter is present.
+: OPTIONAL. This parameter enables Verifier's metadata to be passed by reference, rather than by value. The value is a URL referencing a resource containing a Verifier's metadata object. The scheme used in the `client_metadata_uri` value MUST be https. The `client_metadata_uri` value MUST be reachable by the Wallet. MUST NOT be present if `client_metadata` parameter is present.
 
 Presentation Definition is a JSON Object that articulates what Verifiable Presentation(s) the Verifier is requesting to be presented as defined in Section 5 of [@!DIF.PresentationExchange].
 
@@ -519,14 +519,12 @@ The Verifier has the choice of the following mechanisms to invoke a Wallet:
 
 This specification defines how the Verifier can determine Credential formats, proof types and algorithms supported by the Wallet to be used in a protocol exchange.
 
-## Additional Wallet Metadata parameters
+## Additional Wallet Metadata Parameters
 
 This specification defines new metadata parameters according to [@!RFC8414].
 
-the Wallet publishes the formats it supports using the `vp_formats_supported` metadata parameter. 
-
-* `presentation_definition_uri_supported`: OPTIONAL. Boolean value specifying whether the Verifier supports the transfer of `presentation_definition` by reference, with true indicating support. If omitted, the default value is true.
-* `vp_formats_supported`: REQUIRED. An object containing a list of key value pairs, where the key is a string identifying a Credential format supported by the Wallet. Valid Credential format identifiers values are defined in Annex E of [@!OpenID.VCI]. Other values may be used when defined in the profiles of this specification. The value is an object containing a parameter defined below:
+* `presentation_definition_uri_supported`: OPTIONAL. Boolean value specifying whether the Wallet supports the transfer of `presentation_definition` by reference, with true indicating support. If omitted, the default value is true.
+* `vp_formats_supported`: REQUIRED. An object containing a list of key value pairs, where the key is a string identifying a Credential format supported by the Wallet. Valid Credential format identifier values are defined in Annex E of [@!OpenID.VCI]. Other values may be used when defined in the profiles of this specification. The value is an object containing a parameter defined below:
     * `alg_values_supported`: An object where the value is an array of case sensitive strings that identify the cryptographic suites that are supported. Cipher suites for Verifiable Credentials in `jwt_vc_json`, `json_vc_json-ld`, `jwt_vp_json`, `json_vp_json-ld` formats should use algorithm names defined in [IANA JOSE Algorithms Registry](https://www.iana.org/assignments/jose/jose.xhtml#web-signature-encryption-algorithms). Cipher suites for Verifiable Credentials in `ldp_vc` and `ldp_vp` format should use signature suites names defined in [Linked Data Cryptographic Suite Registry](https://w3c-ccg.github.io/ld-cryptosuite-registry/). Cipher suites for Verifiable Credentials in `mso_mdoc` format should use signature suites names defined in ISO/IEC 18013-5:2021. Parties using other Credential formats will need to agree upon the meanings of the values used, which may be context-specific.
 
 Below is a non-normative example of a `vp_formats_supported` parameter:
@@ -550,9 +548,9 @@ vp_formats_supported": {
 
 ## Obtaining Wallet's Metadata
 
-Verifier utilizing this specification has multiple options to obtain AS's metadata:
+Verifier utilizing this specification has multiple options to obtain Wallet's metadata:
 
-* Verifier obtains Wallet's metadata prior to a transaction, e.g using [@!RFC8414] or out-of-band mechanisms. See (#as_metadata_parameters) for the details.
+* Verifier obtains Wallet's metadata prior to a transaction, e.g. using [@!RFC8414] or out-of-band mechanisms. See (#as_metadata_parameters) for the details.
 * Verifier has pre-obtained static set of Wallet's metadata. See (#openid4vp-profile) for the example.
 
 # Verifier Metadata (Client Metadata)
@@ -570,9 +568,9 @@ This specification defines the following new metadata parameters according to [@
 
 ## Obtaining Verifier's Metadata 
 
-AS utilizing this specification have multiple options to exchange metadata:
+Wallet utilizing this specification have multiple options to obtain Verifier's metadata:
 
-* The Wallet obtains Verifier's metadata prior to a transaction, e.g using [@!RFC7591] or out-of-band mechanisms. See (#pre-registered-rp) for the details.
+* The Wallet obtains Verifier's metadata prior to a transaction, e.g. using [@!RFC7591] or out-of-band mechanisms. See (#pre-registered-rp) for the details.
 * Verifier provides metadata to the Wallet just-in-time in the Authorization Request using one of the following mechanisms defined in this specification:
     * `client_metadata` or `client_metadata_uri` parameter when `client_id` equals `redirect_uri` (see (#simplest-registration) for the details), or `client_id` is a Decentralized Identifier (see (#DID) for the details).
     * Entity Statement when OpenID Federation 1.0 Automatic Registration is used (see (#openid-federation) for the details).
@@ -581,7 +579,7 @@ Just-in-time metadata exchange allows OpenID4VP to be used in deployments models
 
 ### Pre-Registered Verifier {#pre-registered-rp}
 
-When the Wallet has obtained Verifier's metadata prior to a transaction, e.g using [@!RFC7591] or out-of-band mechanisms, `client_id` MUST equal to the Client ID the Verifier has obtained from the Wallet during pre-registration. When the Authorization Request is signed, the public key for signature verification MUST be (re-)obtained using pre-registration process.
+When the Wallet has obtained Verifier's metadata prior to a transaction, e.g. using [@!RFC7591] or out-of-band mechanisms, `client_id` MUST equal to the Client ID the Verifier has obtained from the Wallet during pre-registration. When the Authorization Request is signed, the public key for signature verification MUST be (re-)obtained using pre-registration process.
 
 In this case, `client_metadata` and `client_metadata_uri` parameters defined in (#client_metadata_parameters) MUST NOT be present in the Authorization Request. 
 
