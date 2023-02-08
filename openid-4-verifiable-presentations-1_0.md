@@ -696,7 +696,7 @@ The following terms of use may be defined:
 }
 ```
 
-Federations that conform to those specified in [@OpenID.Federation] are identified by the `type` `urn:ietf:params:oauth:federation`. Individual federations are identified by the entity id of the trust anchor. If the federation decides to use trust marks as signs of whether an entity belongs to a federation or not then the federation is identified by the `type` `urn:ietf:params:oauth:federation_trust_mark` and individual federations are identified by the entity id of the trust mark issuer.
+Federations that conform to those specified in [@OpenID.Federation] are identified by the `type` `urn:ietf:params:oauth:federation`. Individual federations are identified by the Entity Identifier of the trust anchor. If the federation decides to use trust marks as signs of whether an entity belongs to a federation or not then the federation is identified by the `type` `urn:ietf:params:oauth:federation_trust_mark` and individual federations are identified by the Entity Identifier of the trust mark issuer.
 
 Trust schemes that conform to the TRAIN [@TRAIN] trust scheme are identified by the `type` `https://train.trust-scheme.de/info`. Individual federations are identified by their DNS names.
 
@@ -704,7 +704,7 @@ An example `claims` parameter containing a `presentation_definition` that filter
 
 <{{examples/request/vp_token_federation.json}}
 
-This example will chose a VC that has been issued by a university that is a member of the `ukuniversities.ac.uk` federation and that uses the TRAIN terms of use specification for asserting federation memberships.
+This example will choose a VC that has been issued by a university that is a member of the `ukuniversities.ac.uk` federation and that uses the TRAIN terms of use specification for asserting federation memberships.
 
 ## Nested Verifiable Presentations
 
@@ -739,8 +739,8 @@ Here is a non-normative example of a Verifiable Presentation with a format ident
   "exp": 1573029723,
   "vp": {
     "@context": [
-      "<https://www.w3.org/2018/credentials/v1",>
-      "<https://www.w3.org/2018/credentials/examples/v1">
+      "https://www.w3.org/2018/credentials/v1",
+      "https://www.w3.org/2018/credentials/examples/v1"
     ],
     "type": ["VerifiablePresentation"],
 
@@ -787,7 +787,7 @@ It is NOT RECOMMENDED for the Subject to delegate the presentation of the Creden
 
 ## Fetching Presentation Definitions by Reference
 
-In many instances the referenced server will be operated by a known federation or other trusted operator, and the URL's domain name will already be widely known. OPs (including SIOPs) using this URI can mitigate request forgeries by having a pre-configured set of trusted domain names and only fetching presentation_definitions from these sources. In addition, the Presentation Definitions could be signed by a trusted authority, such as the ICO or federation operator.
+In many instances the referenced server will be operated by a known federation or other trusted operator, and the URL's domain name will already be widely known. OPs (including SIOPs) using this URI can mitigate request forgeries by having a pre-configured set of trusted domain names and only fetching Presentation Definition from these sources. In addition, the Presentation Definitions could be signed by a trusted authority, such as the ICO or federation operator.
 
 ## User Authentication using Verifiable Credentials
 
@@ -1039,7 +1039,7 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
 
 # Examples {#alternative_credential_formats}
 
-OpenID for Verifiable Presentations is Credential format agnostic, i.e. it is designed to allow applications to request and receive Verifiable Presentations and Verifiable Credentials in any format, not limited to the formats defined in [@!VC_DATA]. This section aims to illustrate this with examples utilizing different Credential formats. Customization of OpenID for Verifiable Presentation for Credential formats other than those defined in [@!VC_DATA] uses extensions points of Presentation Exchange [@!DIF.PresentationExchange]. 
+OpenID for Verifiable Presentations is Credential format agnostic, i.e. it is designed to allow applications to request and receive Verifiable Presentations and Verifiable Credentials in any format, not limited to the formats defined in [@!VC_DATA]. This section aims to illustrate this with examples utilizing different Credential formats. Customization of OpenID for Verifiable Presentation for Credential formats other than those defined in [@!VC_DATA] uses extension points of Presentation Exchange [@!DIF.PresentationExchange]. 
 
 ## W3C Verifiable Credentials
 
@@ -1051,7 +1051,7 @@ The Credential format identifiers are `jwt_vc_json` for a W3C Verifiable Credent
 
 #### Example Credential
 
-The following is an JWT-based W3C Verifiable Credential that will be used through this section.
+The following is a JWT-based W3C Verifiable Credential that will be used through this section.
 
 <{{examples/credentials/jwt_vc.json}}
 
@@ -1061,11 +1061,11 @@ This is an example presentation request.
 
 <{{examples/request/request.txt}}
 
-The requirements regarding the Credential to be presented are conveyed in the `presentation_definition` parameter. It's content is is given in the following example.
+The requirements regarding the Credential to be presented are conveyed in the `presentation_definition` parameter. Its content is given in the following example.
 
 <{{examples/request/pd_jwt_vc.json}}
 
-It contains a single `input_descriptor`, which sets the desired format to JWT VC and defines a constraint over the `vc.type` parameter to select Verifiable Credentials of type `IDCredential`. 
+It contains a single Input Descriptor, which sets the desired format to JWT VC and defines a constraint over the `vc.type` parameter to select Verifiable Credentials of type `IDCredential`. 
 
 #### Presentation Response
 
@@ -1097,11 +1097,11 @@ This is an example presentation request.
 
 <{{examples/request/request.txt}}
 
-The requirements regarding the Credential to be presented are conveyed in the `presentation_definition` parameter. It's content is is given in the following example.
+The requirements regarding the Credential to be presented are conveyed in the `presentation_definition` parameter. Its content is given in the following example.
 
 <{{examples/request/pd_ldp_vc.json}}
 
-It contains a single `input_descriptor`, which sets the desired format to LDP VC and defines a constraint over the `type` parameter to select Verifiable Credentials of type `IDCardCredential`. 
+It contains a single Input Descriptor, which sets the desired format to LDP VC and defines a constraint over the `type` parameter to select Verifiable Credentials of type `IDredential`. 
 
 #### Presentation Response
 
