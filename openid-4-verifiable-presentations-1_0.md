@@ -357,7 +357,9 @@ Below is a non-normative example of a request when `client_id` equals `redirect_
     8%22%5D%7D%7D%7D
 ```
 
-* `oidc_federation_entity_id`: the Client Identifier is an OpenID Connect Federation [@!OpenID.Federation] entity id. Processing MUST follow the rules given in [@!OpenID.Federation]. Automatic Registration MUST be used as defined in [@!OpenID.Federation]. The authorization request MAY contain a further parameter `trust_chain` parameter. The AS MUST obtain client metadata only from the Entity Statement. The `client_metadata` or `client_metadata_uri` parameter MUST NOT be present in the authorization request when this `client_id_format` value is used.
+* `entity_id`: the Client Identifier is an OpenID Connect Federation [@!OpenID.Federation] entity id. Processing MUST follow the rules given in [@!OpenID.Federation]. Automatic Registration MUST be used as defined in [@!OpenID.Federation]. The authorization request MAY contain a further parameter `trust_chain` parameter. The AS MUST obtain client metadata only from the Entity Statement. The `client_metadata` or `client_metadata_uri` parameter MUST NOT be present in the authorization request when this `client_id_format` value is used.
+
+ä
 
 * `did`: the Client Identifier is a DID [@!DID-Core]. The request must be signed with a private key associated with the DID. A public key to verify the signature MUST be obtained from the `verificationMethod` property of a DID Document. Since DID Document may include multiple public keys, a particular public key used to sign the request in question MUST be identified by the `kid` in the JOSE header. To obtain the DID Document, the AS MUST use DID Resolution defined by the DID method used by the Client. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` or the `client_metadata_uri` parameter as defined in (#vp_token_request). 
 
@@ -371,7 +373,7 @@ Body
 
 <{{examples/request/request_object_client_id_did.json}}
 
-* `train`: The Client Identifier is an identifier that needs to be interpreted according to the rules of the TRAIN [@TRAIN] trust management mechanism. The client MUST send a parameter `trust_framework_operator` with the respective request, which identifies the operator of network the client claims to be a member of. 
+* `train`: The Client Identifier is an identifier that needs to be interpreted according to the rules of the TRAIN [@TRAIN] trust management mechanism. The client MUST send a parameter `trust_scheme` with the respective request. The parameter value MUST be a DNS name, which identifies the operator of network the client claims to be a member of.
 
 Note that to use `client_id_format` values `oidc_federation_entity_id` and `did`, Verifiers MUST be confidential clients. This might require changes to the technical design of native apps as such apps are typically public clients.
 
