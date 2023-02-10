@@ -7,7 +7,7 @@ keyword = ["security", "openid", "ssi"]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "openid-4-verifiable-presentations-1_0-15"
+value = "openid-4-verifiable-presentations-1_0-16"
 status = "standard"
 
 [[author]]
@@ -1065,7 +1065,7 @@ The requirements regarding the Credential to be presented are conveyed in the `p
 
 <{{examples/request/pd_jwt_vc.json}}
 
-It contains a single Input Descriptor, which sets the desired format to JWT VC and defines a constraint over the `vc.type` parameter to select Verifiable Credentials of type `IDCredential`. 
+It contains a single `input_descriptor` element, which sets the desired format to JWT VC and defines a constraint over the `vc.type` parameter to select Verifiable Credentials of type `IDCredential`. 
 
 #### Presentation Response
 
@@ -1101,7 +1101,7 @@ The requirements regarding the Credential to be presented are conveyed in the `p
 
 <{{examples/request/pd_ldp_vc.json}}
 
-It contains a single Input Descriptor, which sets the desired format to LDP VC and defines a constraint over the `type` parameter to select Verifiable Credentials of type `IDredential`. 
+It contains a single `input_descriptor` element, which sets the desired format to LDP VC and defines a constraint over the `type` parameter to select Verifiable Credentials of type `IDredential`. 
 
 #### Presentation Response
 
