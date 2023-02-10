@@ -284,7 +284,7 @@ Possible options include normative text in a separate specification defining sco
 semantics or machine readable definitions in the Wallet's server metadata, mapping a scope value to an equivalent 
 `presentation_definition` object. 
 
-Such definition of a scope value MUST allow the Verifier to determine the identifiers for Presentation Definition and input descriptors 
+Such definition of a scope value MUST allow the Verifier to determine the identifiers for Presentation Definition and Input Descriptors 
 used in the respective `presentation_submission` response parameter as well as the Credential formats and types in 
 the `vp_token` response parameter defined in (#response-parameters).  
 
@@ -356,7 +356,7 @@ When VP Token is returned, the respective response MUST include the following pa
 : REQUIRED. JSON String or JSON object that MUST contain a single Verifiable Presentation or an array of JSON Strings and JSON objects each of them containing a Verifiable Presentations. Each Verifiable Presentation MUST be represented as a JSON string (that is a Base64url encoded value) or a JSON object depending on a format as defined in Annex E of [@!OpenID.VCI]. If Appendix E of [@!OpenID.VCI] defines a rule for encoding the respective Credential format in the Credential Response, this rules MUST also be followed when encoding credentials of this format in the `vp_token` response parameter. Otherwise, this specification does not require any additional encoding when a Credential format is already represented as a JSON object or a JSON string.
 
 `presentation_submission`:
-: REQUIRED. The `presentation_submission` element as defined in [@!DIF.PresentationExchange] links the input descriptor identifiers in the corresponding request to the respective Verifiable Presentations within the VP Token. The root of the path expressions in the descriptor map is the respective Verifiable Presentation, pointing to the respective Verifiable Credentials.
+: REQUIRED. The `presentation_submission` element as defined in [@!DIF.PresentationExchange] links the Input Descriptor identifiers in the corresponding request to the respective Verifiable Presentations within the VP Token. The root of the path expressions in the descriptor map is the respective Verifiable Presentation, pointing to the respective Verifiable Credentials.
 
 Other parameters, such as `state` or `code` (from [@!RFC6749]), or `id_token` (from [@!OpenID.Core]), and `iss` (from [@RFC9207]) MAY be included in the response as defined in the respective specifications.
 
@@ -1149,7 +1149,7 @@ The following is the content of the `presentation_definition` parameter.
 
 <{{examples/request/pd_ac_vc.json}}
 
-The `format` object of the Input Descriptor uses the format identifier `ac_vc` as defined above and sets the `proof_type` to `CLSignature2019` to denote this descriptor requires a Credential in AnonCreds format signed with a CL signature (Camenisch-Lysyanskaya signature). The rest of the expressions operate on the AnonCreds JSON structure.
+The `format` object in the `input_descrioptor` element uses the format identifier `ac_vc` as defined above and sets the `proof_type` to `CLSignature2019` to denote this descriptor requires a Credential in AnonCreds format signed with a CL signature (Camenisch-Lysyanskaya signature). The rest of the expressions operate on the AnonCreds JSON structure.
 
 The `constraints` object requires the selected Credential to conform with the schema definition `did:indy:idu:test:3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0\\.1`, which is denoted as a constraint over the AnonCred's `schema_id` parameter. 
 
@@ -1175,7 +1175,7 @@ The `presentation_submission` content looks like this:
 
 <{{examples/response/ps_ac_vc_sd.json}}
 
-The `descriptor_map` refers to the input descriptor with an identifier `id_credential` and tells the Verifier that there is a proof of AnonCred Credential (`format` is `ac_vp`) directly in the vp_token (path is the root designated by `$`). Furthermore it indicates using `path_nested` parameter that the user claims can be found embedded in the proof underneath `requested_proof.revealed_attr_groups.id_card_credential`.
+The `descriptor_map` refers to the `input_descriptor` element with an identifier `id_credential` and tells the Verifier that there is a proof of AnonCred Credential (`format` is `ac_vp`) directly in the vp_token (path is the root designated by `$`). Furthermore it indicates using `path_nested` parameter that the user claims can be found embedded in the proof underneath `requested_proof.revealed_attr_groups.id_card_credential`.
 
 The following is a VP Token example.
 
@@ -1197,7 +1197,7 @@ The content of the `presentation_definition` parameter is as follows:
 
 <{{examples/request/pd_mdl_iso_cbor.json}}
 
-To start with, the `format` parameter of the Input Descriptor is set to `mso_mdoc`, i.e. it requests presentation of an mDL in CBOR format. 
+To start with, the `format` parameter in the `input_descriptor` element is set to `mso_mdoc`, i.e. it requests presentation of an mDL in CBOR format. 
 
 To request user claims in ISO/IEC 18013-5:2021 mDL, a `doctype` and `namespace` of the claim needs to be specified. Moreover, the Verifiers needs to indicate whether it intends to retain obtained user claims or not, using `intent_to_retain` property.
 
@@ -1215,7 +1215,7 @@ The following shows the `presentation_submission` content:
 
 <{{examples/response/ps_mdl_iso_cbor.json}}
 
-The `descriptor_map` refers to the input descriptor `mDL` and tells the Verifier that there is an ISO/IEC 18013-5:2021 mDL (`format` is `mso_mdoc`) in CBOR encoding directly in the `vp_token` (path is the root designated by `$`). 
+The `descriptor_map` refers to the `input_descriptor` element with an identifier `mDL` and tells the Verifier that there is an ISO/IEC 18013-5:2021 mDL (`format` is `mso_mdoc`) in CBOR encoding directly in the `vp_token` (path is the root designated by `$`). 
 
 When ISO/IEC 18013-5:2021 mDL is expressed in CBOR the `path_nested` parameter cannot be used to point to the location of the requested claims. The user claims will always be included in the `issuerSigned` item. `path_nested` parameter can be used, however, when a JSON-encoded ISO/IEC 18013-5:2021 mDL is returned.
 
