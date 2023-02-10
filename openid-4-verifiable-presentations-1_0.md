@@ -797,7 +797,7 @@ Clients intending to authenticate the end-user utilizing a claim in a Verifiable
 
 ## JSONPath and Arbitrary Scripting 
 
-Implementers MUST make sure that JSONpath used as part of `presentation_definition` and `presentation_submission` parameters cannot be used to execute arbitrary scripts on a server. For example, by implementing the entire syntax of the query without relying on the parsers of programming language engine. For details, see Section 4 of [@jsonpath-base].
+Implementers MUST make sure that JSONpath used as part of `presentation_definition` and `presentation_submission` parameters cannot be used to execute arbitrary scripts on a server. This can be achieved, for example, by implementing the entire syntax of the query without relying on the parsers of programming language engine. For details, see Section 4 of [@jsonpath-base].
 
 {backmatter}
 
