@@ -136,6 +136,37 @@ This specification supports the response being sent using a redirect but also us
 
 Implementations can also be built on top of OpenID Connect Core, since OpenID Connect Core is based on OAuth 2.0. To benefit from the subject-signed ID Token feature, this specification can also be combined with the Self-Issued OP v2 specification [@SIOPv2]. 
 
+## Flow (`response_mode` is `fragment`)
+
+Below is a diagram of a Credential presentation when `response_mode` is `fragment` as defined in [@!OAuth.Responses] and Authorization Request is sent as a Request Object by reference. Note that the diagram does not illustrate all of the optional features of this specification. 
+
+!---
+~~~ ascii-art
++--------------+   +-------------+                                    +-----------------+
+| User         |   |   Verifier  |                                    |      Wallet     |
++--------------+   +-------------+                                    +-----------------+  
+        |                |                                                      |
+        |    interacts   |                                                      |
+        |--------------->|                                                      |
+        |                |  (1) `request_uri`                                   |
+        |                |----------------------------------------------------->|
+        |                |                                                      |
+        |                |  (2) HTTP GET Request to obtain a Request Object     |
+        |                |<-----------------------------------------------------|
+        |                |                                                      |
+        |                |  (2.5) Request Object with the Authorization Request |
+        |                |      (type(s) of Credentials requested)              |
+        |                |----------------------------------------------------->|
+        |                |                                                      |
+        |   User Authentication / Consent                                       |
+        |                |                                                      |
+        |                |  (3)   Authorization Response                        |
+        |                |      (VP Token with requested Credentials )          |
+        |                |<-----------------------------------------------------|
+~~~
+!---
+Figure: Presentation when `response_mode` is `fragment` and Authorization Request is sent as a Request Object by reference
+
 # Scope
 
 OpenID for Verifiable Presentations extends existing OAuth 2.0 mechanisms as following:
