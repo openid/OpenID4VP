@@ -134,7 +134,9 @@ OpenID for Verifiable Presentations supports scenarios where the Authorization R
 
 This specification supports the response being sent using a redirect but also using an HTTP POST request. This enables the response to be sent across devices, or when the response size exceeds the redirect URL character size limitation.
 
-Implementations can also be built on top of OpenID Connect Core, since OpenID Connect Core is based on OAuth 2.0. To benefit from the subject-signed ID Token feature, this specification can also be combined with the Self-Issued OP v2 specification [@SIOPv2]. 
+Implementations can also be built on top of OpenID Connect Core, since OpenID Connect Core is based on OAuth 2.0. To benefit from the subject-signed ID Token feature, this specification can also be combined with the Self-Issued OP v2 specification [@SIOPv2].
+
+Any of the OAuth 2.0 related specifications, such as [@RFC9126], and [@RFC9101] and Best Current Practice (BCP) documents, such as [@RFC8252] and [@I-D.ietf-oauth-security-topics], can be implemented on top of this specification.
 
 # Scope
 
@@ -150,7 +152,9 @@ Presentation of Credentials using OpenID for Verifiable Presentations can be com
 
 # Authorization Request {#vp_token_request}
 
-The authorization request follows the definition given in [@!RFC6749]. 
+The Authorization Request follows the definition given in [@!RFC6749].
+
+The Verifier may send Authorization Request as Request Object by value or by reference as defined in Section 6.1 of [@!OpenID.Core] or [@RFC9101].
 
 This specification defines the following new parameters:
 
@@ -317,7 +321,7 @@ The usage of the response mode `direct_post` (see (#response_mode_post)) in conj
 
 ## `aud` of a Request Object
 
-When a Verifier is sending a Request Object as defined in Section 6.1 of [@!OpenID.Core] or [@!RFC9101], the `aud` Claim value depends on whether the recipient of the request can be identified by the Verifier or not:
+When the Verifier is sending a Request Object as defined in Section 6.1 of [@!OpenID.Core] or [@!RFC9101], the `aud` Claim value depends on whether the recipient of the request can be identified by the Verifier or not:
 
 - the `aud` Claim MUST equal to the `issuer` Claim value, when Dynamic Discovery is performed.
 - the `aud` Claim MUST be "https://self-issued.me/v2", when Static Discovery metadata is used.
@@ -495,7 +499,7 @@ This document also defines the following additional error codes and error descri
 
 `vp_formats_not_supported`:
 
-- The Wallet does not support any of the formats requested by the Verifier such as those included in the `vp_formats` registration parameter.
+- The Wallet does not support any of the formats requested by the Verifier, such as those included in the `vp_formats` registration parameter.
 
 `invalid_presentation_definition_uri`:
 
