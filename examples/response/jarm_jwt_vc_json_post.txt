@@ -1,0 +1,5 @@
+  POST /post HTTP/1.1
+    Host: client.example.org
+    Content-Type: application/x-www-form-urlencoded
+
+    response=eyJraWQiOiIyMTc1YTU5Yi0yMjMxLTQyOTUt...X_lssReM3V-wU0uRPeeiLepYhw09t2LQ

@@ -3,7 +3,7 @@
     "requested_proof": {
         "revealed_attrs": {},
         "revealed_attr_groups": {
-            "id_credential": {
+            "id_card_credential": {
                 "sub_proof_index": 0,
                 "values": {
                     "last_name": {
