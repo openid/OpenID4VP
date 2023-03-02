@@ -1,5 +1,0 @@
-{
-    "typ": "oauth-authz-req+jwt",
-    "alg": "RS256",
-    "x5c": ["<certificate>", ...]
-}
