@@ -172,7 +172,7 @@ This specification defines the following new parameters:
 : OPTIONAL. This parameter enables Verifier's metadata to be passed by reference, rather than by value. The value is a URL referencing a resource containing a Verifier's metadata object. The scheme used in the `client_metadata_uri` value MUST be https. The `client_metadata_uri` value MUST be reachable by the Wallet. MUST NOT be present if `client_metadata` parameter is present.
 
 `client_id_scheme`: 
-: OPTIONAL. A string identifying the scheme of the value in the `client_id` Authorization Request parameter. The Verifier uses this parameter to indicate how the Wallet is supposed to interpret the Client Identifier and associated data in the process of client identification, authentication, and authorization. A certain Client Identifier scheme value MAY require the Verifier to sign the request as means of authentication and/or pass additional request parameters and require the Wallet to process those additional request parameters. The `client_id_scheme` parameter enables deployments of this specification to use different mechanisms to establish trust between the Verifier and the Wallet and obtain client metadata beyond the scope of [@!RFC6749]. If the parameter is not present, the Wallet MUST behave as specified in [@!RFC6749]. The `client_id_scheme` parameter namespaces the respective Client Identifier. This means if a request uses the `client_id_scheme` parameter, the Wallet MUST interpret the Client Identifier of the Verifier in the context of the Client Identifier scheme. If the same Client Identifier is used with different Client Identifier dcheme values, those occurences MUST be treated as different Verifiers. 
+: OPTIONAL. A string identifying the scheme of the value in the `client_id` Authorization Request parameter. The Verifier uses this parameter to indicate how the Wallet is supposed to interpret the Client Identifier and associated data in the process of Client identification, authentication, and authorization. A certain Client Identifier scheme value MAY require the Verifier to sign the request as means of authentication and/or pass additional request parameters and require the Wallet to process those additional request parameters. The `client_id_scheme` parameter enables deployments of this specification to use different mechanisms to establish trust between the Verifier and the Wallet and obtain Client metadata beyond the scope of [@!RFC6749]. If the parameter is not present, the Wallet MUST behave as specified in [@!RFC6749]. The `client_id_scheme` parameter namespaces the respective Client Identifier. This means if a request uses the `client_id_scheme` parameter, the Wallet MUST interpret the Client Identifier of the Verifier in the context of the Client Identifier scheme. If the same Client Identifier is used with different Client Identifier dcheme values, those occurences MUST be treated as different Verifiers. 
 
 Presentation Definition is a JSON Object that articulates what Verifiable Presentation(s) the Verifier is requesting to be presented as defined in Section 5 of [@!DIF.PresentationExchange].
 
@@ -334,13 +334,13 @@ Note: "https://self-issued.me/v2" is a symbolic string and can be used as an `au
 
 ## Client Trust Management {#client_trust_management}
 
-The `client_id_scheme` enables deployments of this specification to use different mechanisms for the Wallet to establish trust between Verifier and Wallet and obtain client metadata beyond the scope of [@!RFC6749].
+The `client_id_scheme` enables deployments of this specification to use different mechanisms for the Wallet to establish trust between Verifier and Wallet and obtain Client metadata beyond the scope of [@!RFC6749].
 
-This specification defines the following values for the `client_id_scheme` parameter, followed by examples where applicable: 
+This specification defines the following values for the `client_id_scheme` parameter, followed by the examples where applicable: 
 
-* `pre-registered`: This value represents the [@!RFC6749] default behavior, i.e. the Client Identifier needs to be known to the AS in advance of the authorization request. Client metadata is obtained using [@!RFC7591] or through out-of-band mechanisms.
+* `pre-registered`: This value represents the [@!RFC6749] default behavior, i.e., the Client Identifier needs to be known to the Wallet in advance of the Authorization Request. Client metadata is obtained using [@!RFC7591] or through out-of-band mechanisms.
 
-* `redirect_uri`: This value indicates that the client's redirect URI MUST also be the value of the Client Identifier. In this case, the Authorization Request MUST NOT be signed and all client metadata parameters MUST be passed using the `client_metadata` or `client_metadata_uri` parameter defined in (#vp_token_request). 
+* `redirect_uri`: This value indicates that the client's Redirect URI MUST also be the value of the Client Identifier. In this case, the Authorization Request MUST NOT be signed and all Client metadata parameters MUST be passed using the `client_metadata` or `client_metadata_uri` parameter defined in (#vp_token_request). 
 
 Below is a non-normative example of a request when `client_id` equals `redirect_uri`.
 
@@ -359,9 +359,9 @@ Below is a non-normative example of a request when `client_id` equals `redirect_
     8%22%5D%7D%7D%7D
 ```
 
-* `entity_id`: the Client Identifier is an OpenID Connect Federation [@!OpenID.Federation] entity id. Processing MUST follow the rules given in [@!OpenID.Federation]. Automatic Registration MUST be used as defined in [@!OpenID.Federation]. The authorization request MAY contain a further parameter `trust_chain` parameter. The AS MUST obtain client metadata only from the Entity Statement. The `client_metadata` or `client_metadata_uri` parameter MUST NOT be present in the authorization request when this `client_id_scheme` value is used.
+* `entity_id`: This value indicates that the Client Identifier is an Entity Identifier defined in OpenID Connect Federation [@!OpenID.Federation]. Processing rules given in [@!OpenID.Federation] MUST be followed. Automatic Registration as defined in [@!OpenID.Federation] MUST be used. The Authorization Request MAY also contain a `trust_chain` parameter. The Wallet MUST obtain Client metadata only from the Entity Statement(s). The `client_metadata` or `client_metadata_uri` parameter MUST NOT be present in the Authorization Request when this Client Identifier scheme value is used.
 
-* `did`: the Client Identifier is a DID [@!DID-Core]. The request must be signed with a private key associated with the DID. A public key to verify the signature MUST be obtained from the `verificationMethod` property of a DID Document. Since DID Document may include multiple public keys, a particular public key used to sign the request in question MUST be identified by the `kid` in the JOSE header. To obtain the DID Document, the AS MUST use DID Resolution defined by the DID method used by the Client. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` or the `client_metadata_uri` parameter as defined in (#vp_token_request). 
+* `did`: This value indicates that the Client Identifier is a DID defined in [@!DID-Core]. The request MUST be signed with a private key associated with the DID. A public key to verify the signature MUST be obtained from the `verificationMethod` property of a DID Document. Since DID Document may include multiple public keys, a particular public key used to sign the request in question MUST be identified by the `kid` in the JOSE Header. To obtain the DID Document, the Wallet MUST use DID Resolution defined by the DID method used by the Verifier. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` or the `client_metadata_uri` parameter as defined in (#vp_token_request). 
 
 Below is a non-normative example of a signed request when `client_id` is a DID:
 
@@ -536,12 +536,12 @@ The error response follows the rules as defined in [@!RFC6749], with the followi
 
 - The request contains more than one out of the following three options to communicate a requested credential: a `presentation_definition` parameter, a `presentation_definition_uri` parameter, or a scope value representing a Presentation Definition.
 - Requested Presentation Definition does not conform to the DIF PEv2 specification [@!DIF.PresentationExchange].
-- The AS does not support the `client_id_scheme` value passed in the authorization request. 
-- The scheme indicated by the request parameter `client_id_scheme` did not match the Client Identifier passed in the request or a constraint defined by a certain format was violated, e.g. an unsigned request was sent with `client_id_scheme` value `entity_id`.  
+- The Wallet does not support the `client_id_scheme` value passed in the Authorization Request.
+- The Client Identifier passed in the request did not belong to the Client Identifier scheme indicated in the Authorization Request, or requirements of a certain scheme was violated, for example an unsigned request was sent with Client Identifier scheme `entity_id`.  
 
 `invalid_client`:
 
-- `client_metadata` or `client_metadata_uri` parameters defined in (#vp_token_request) are present, but the Wallet recognizes Client Identifier and knows metadata associated with it.
+- `client_metadata` or `client_metadata_uri` parameter defined in (#vp_token_request) is present, but the Wallet recognizes Client Identifier and knows metadata associated with it.
 - Verifier's pre-registered metadata has been found based on the Client Identifier, but `client_metadata` parameter is also present.
 
 Usage of `client_metadata` or `client_metadata_uri` parameters with `client_id` that the Wallet might be seeing for the first time is mutually exclusive with the registration mechanism where Self-Issued OP assigns `client_id` to the Verifier after receiving Verifier's metadata.
@@ -600,7 +600,7 @@ vp_formats_supported": {
 ```
 
 `client_id_schemes_supported`:
-: OPTIONAL. JSON String array containing the identifiers of the Client Identifier formats the AS supports. The value range defined by this specification is `pre-registered`, `redirect_uri`, `entity_id`, `did`. If omitted, the default value is `pre-registered`.
+: OPTIONAL. Array of JSON Strings containing the values of the Client Identifier schemes that the Wallet supports. The values defined by this specification are `pre-registered`, `redirect_uri`, `entity_id`, `did`. If omitted, the default value is `pre-registered`. Other values may be used when defined in the profiles of this specification.
 
 ## Obtaining Wallet's Metadata
 
