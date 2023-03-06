@@ -154,10 +154,10 @@ Note that the diagram does not illustrate all of the optional features of this s
         |                |      (Request URI)                                   |
         |                |----------------------------------------------------->|
         |                |                                                      |
-        |                |  (2) Request Request Object                          |
+        |                |  (2) Request the Request Object                          |
         |                |<-----------------------------------------------------|
         |                |                                                      |
-        |                |  (2.5) Respond with Request Object                   |
+        |                |  (2.5) Respond with the Request Object                   |
         |                |      (Authorization Request Parameters)              |
         |                |----------------------------------------------------->|
         |                |                                                      |
