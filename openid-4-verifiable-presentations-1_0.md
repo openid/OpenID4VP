@@ -397,25 +397,34 @@ with a matching `presentation_submission` parameter.
 
 ## Response Mode "direct_post" {#response_mode_post}
 
-There are use-cases when the Authorization Request was received from a Verifier that is unreachable using redirects (i.e. it is on another device) from the Wallet on which the requested Credential is stored.
+The response mode `direct_post` allows the Wallet to send the response data to an endpoint controlled by the Verifier via a HTTPS POST request. 
 
-For such use-cases, this specification defines a new Response Mode `direct_post` to enable the Wallet to send the response to the Verifier via an HTTPS connection.
+It has been defined to address the following use cases: 
 
-This specification defines the following Response Mode in accordance with [@!OAuth.Responses]:
+* Verifier and Wallet are located on different devices, thus the Wallet cannot send the Authorization Response to the Wallet using a redirect
+* The Authorization Response size exeeds the URL length limits of user agents 
+
+The Response Mode is defined in accordance with [@!OAuth.Responses] as follows:
 
 `direct_post`:
 : In this mode, Authorization Response parameters are encoded in the body using the `application/x-www-form-urlencoded` content type and sent using the HTTP `POST` method instead of redirecting back to the Client.
-  
-HTTP POST request MUST be sent to the URL obtained from the `redirect_uri` parameter in the Authorization Request.
 
-Note: Response Mode `direct_post` could be less secure than redirect-based Response Mode. For details, see (#session-binding).
+This specification also defines the following new Authorization Request parameter to be used in conjunction with Response Mode `direct_post`: 
+
+`response_uri`:
+: the URI the Wallet MUST send the response data to using a HTTPS POST request . 
+
+The Response URI receives all parameters as defined by the respective Response Type. Additional, the following parameters are defined: 
+
+`nonce`:
+: The value as received by the Wallet in the `nonce` authorization request parameter.  
 
 The following is a non-normative example Request Object with Response Mode `direct_post`:
 
 ```json
 {
    "client_id": "https://client.example.org/post",
-   "redirect_uri": "https://client.example.org/post",
+   "response_uri": "https://client.example.org/post",
    "response_type": "vp_token",
    "response_mode": "direct_post"
    "presentation_definition": {...},
@@ -431,7 +440,7 @@ https://wallet.example.com?
     &request_uri=https%3A%2F%2Fclient.example.org%2F567545564
 ```
 
-The respective HTTP POST response to the Verifier would look like this:
+The respective HTTPS POST request to the Response URI of the Verifier would look like this:
 
 ```
   POST /post HTTP/1.1
@@ -439,9 +448,33 @@ The respective HTTP POST response to the Verifier would look like this:
     Content-Type: application/x-www-form-urlencoded
 
     presentation_submission=...&
-    vp_token=...
+    vp_token=...&
+    nonce=n-0S6_WzA2Mj
 
 ```
+
+If the request was processed sucessfully, the Verifier MUST respond with one of the following HTTP status codes:
+
+* `202`: the response data was received sucessfully. No further steps required by the Wallet. 
+* `200`: the response data was received sucessfully. The response MUST include a parameter `redirect_uri`. The Wallet MUST send the user agent to this URI. This allows the Verifier to continue 
+the interaction with the End-User. It also allows the Verifier to ensure the transaction was conducted in a Wallet residing on the same device where the transaction started. This requires the 
+Verifier's Response URI to add a secret to the Redirect URI, e.g. a code, that cannot be guessed by an attacker and validate this secrect when the response data is processed. For details how 
+the Verifier MAY use this URI to ensure the end 2 end device binding of the transaction see (#security_consideration_direct_post_same_device).
+
+This is an example response:
+
+```
+  HTTP/1.1 200 OK
+  Content-Type: application/json;charset=UTF-8
+  Cache-Control: no-store
+  Pragma: no-cache
+
+  {
+    "redirect_uri":"https://client.example.org/cb#code=091535f699ea575c7937fa5f0f454aee",
+  }
+```
+
+Note: Response Mode `direct_post` without the `redirect_uri` could be less secure than the redirect-based Response Modes. For details, see (#session-binding).
 
 Note that in the Response Mode `direct_post` or `direct_post.jwt`, the Wallet can change the UI based on the Verifier's response to the HTTP POST request.
 
@@ -716,9 +749,31 @@ One level of nesting `path_nested` objects is sufficient to describe a VC includ
 
 # Security Considerations {#security_considerations}
 
-## Sending VP Token using Response Mode "direct_post" {#session-binding}
+## Sending VP Token using Response Mode "direct_post" 
 
-When HTTP "POST" method is used to send VP Token, there is no session for the Verifier to validate whether the Response is sent by the same Wallet that has received the Authorization Request. It is RECOMMENDED for the Verifiers to implement mechanisms to strengthen such binding. For more details on possible attacks and mitigations see [@I-D.ietf-oauth-cross-device-security].
+### With Redirect URI {#security_consideration_direct_post_same_device}
+
+The Redirect URI allows the Verifier to check whether the transaction was concluded in a Wallet residing on the same device where the flow was started. The Verifier MUST therefore include a transaction specific secret into the Redirect URI. 
+
+The concrete design is at the discretion of the Verifier since it does not affect the interface between the Verifier and the Wallet. 
+
+This specification proposes a design that is inspired by the way the Authorization Code flow (in conjunction with PKCE) works. 
+
+This is the design proposal: 
+
+1. The Verifier creates a transaction specific secret `s` and hashes it with a suitable hashing algorithm. 
+2. The Verifier sends the hashed secret as `nonce` parameter value with the authorization request. 
+3. The Wallet will send the `nonce` value with the request to the Response URI. 
+4. The Verifier (Backend) stores the response data (linked to the `nonce` value) and creates a fresh response code that it also links with the respective response data. 
+5. The Verifier (Backend) returns the Redirect URI, which contains the Response Code as `code` parameter.
+6. The Verifier (Frontend) receives the Request and extracts the `code` parameter.
+7. The Verifier (Frontend) sends the `code` and the transaction specific secret `s` to its backend to process the authorization response.
+8. The Verifier (Backend) checks whether `code` and the hash of `s` is associated with any of the response data packages it has stored. 
+9. If this check succeeds, the transaction continues with the processing of the respective response data. Otherwise, the transaction is aborted. 
+
+### Without Redirect URI {#session-binding}
+
+When HTTP "POST" method is used to send VP Token without the further protection provided by the redirect URI, there is no session for the Verifier to validate whether the Response is sent by the same Wallet that has received the Authorization Request. It is RECOMMENDED for the Verifiers to implement mechanisms to strengthen such binding. For more details on possible attacks and mitigations see [@I-D.ietf-oauth-cross-device-security].
 
 ## Preventing Replay Attacks {#preventing-replay}
 
