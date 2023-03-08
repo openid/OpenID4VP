@@ -168,7 +168,51 @@ Figure: Same Device Flow
 
 (1) The Verifier sends an Authorization Request to the Wallet. The request contains a Presentation Definition as defined in [@!DIF.PresentationExchange] that describes what type of Credentials in what formats and which individual Claims within those Credentials (Selective Disclosure) the Verifier wants to get presented. The Wallet processes the request and determines what credentials are available matching the Verifier's request. The Wallet also authenticates the user and gathers her consent to present the requested Credentials. 
 
-(2) The Wallet prepares the Verifiable Presentation(s) of the requested and confirmed Verifable Credential(s). It then sends am Autorization Response to the Verifier, where this/those Verifiable Presentations are contained in the `vp_token` parameter.
+(2) The Wallet prepares the Verifiable Presentation(s) of the requested and confirmed Verifable Credential(s). It then sends an Autorization Response to the Verifier, where this/those Verifiable Presentations is/are contained in the `vp_token` parameter.
+
+## Cross Device Flow {#cross_device}
+
+Below is a diagram of a flow where the End-User presents a Credential to a Verifier residing on a different device than the device the Wallet resides on.
+
+In this flow, the Verifier prepares a Authorization Request and renders it as a QR Code. The User then uses the Wallet app to scan the QR Code Flow. The Verifiable Presentations are sent to the Verifier in a direct HTTP POST request to a URL controlled by the Verifier. The flow uses the newly defined Response Type `vp_token` in conjunction with the newly defined Response Mode `direct_post`. In order to keep the size of the QR Code small, the actual Authorization Request just contains a Request Object URL according to [@!RFC9101], which the wallet uses to retrieve the actual Authorization Request data. 
+
+Note that the diagram does not illustrate all of the optional features of this specification. 
+
+!---
+~~~ ascii-art
++--------------+   +-------------+                                    +-----------------+
+| User         |   |   Verifier  |                                    |      Wallet     |
++--------------+   +-------------+                                    +-----------------+  
+        |                |                                                      |
+        |    interacts   |                                                      |
+        |--------------->|                                                      |
+        |                |  (1) Authorization Request                           |
+        |                |      (Request URI)                                   |
+        |                |----------------------------------------------------->|
+        |                |                                                      |
+        |                |  (2) Request the Request Object                      |
+        |                |<-----------------------------------------------------|
+        |                |                                                      |
+        |                |  (2.5) Respond with the Request Object               |
+        |                |      (Presentation Definition)                       |
+        |                |----------------------------------------------------->|
+        |                |                                                      |
+        |   User Authentication / Consent                                       |
+        |                |                                                      |
+        |                |  (3)   Authorization Response as HTTPS POST          |
+        |                |  (VP Token with Credential Presentations )           |
+        |                |<-----------------------------------------------------|
+~~~
+!---
+Figure: Cross Device Flow
+
+(1) The Verifier sends an Authorization Request to the Wallet. The request contains a request URI referring to the actual request data. 
+
+(2) The Wallet sends a HTTPS GET request to the request URI in order to retrieve the authorization request data.
+
+(2.5) The HTTP GET response contains the request data. It especially contains a Presentation Definition as defined in [@!DIF.PresentationExchange] that describes what type of Credentials in what formats and which individual Claims within those Credentials (Selective Disclosure) the Verifier wants to get presented. The Wallet processes the request and determines what credentials are available matching the Verifier's request. The Wallet also authenticates the user and gathers her consent to present the requested Credentials. 
+
+(3) The Wallet prepares the Verifiable Presentation(s) of the requested and confirmed Verifable Credential(s). It then sends this/those Verifiable Presentations in the `vp_token` parameter of a HTTP POST request to the Verifier.
 
 # Scope
 
