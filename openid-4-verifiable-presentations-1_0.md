@@ -136,9 +136,11 @@ This specification supports the response being sent using a redirect but also us
 
 Implementations can also be built on top of OpenID Connect Core, since OpenID Connect Core is based on OAuth 2.0. To benefit from the subject-signed ID Token feature, this specification can also be combined with the Self-Issued OP v2 specification [@SIOPv2]. 
 
-## Response Type vp_token {#response_type_vp_token}
+## Same Device Flow {#same_device}
 
-Below is a diagram of a flow where the Credential request data is sent as Request Object by reference according to [@!RFC9101] and the Credential presentation is sent as fragment encoded URI `vp_token` response parameter. This flow uses the `response_type` `vp_token` and the `response_mode` `fragment`.  
+Below is a diagram of a flow where the End-User presents a Credential to a Verifier residing on the same device as the Wallet.
+
+The Flow utilizes simple redirects from the Verifier to the Wallet and back where the Verifiable Presentations are returned to the Verifier in the fragment part of the redirect URI. The flow uses the newly defined Response Type `vp_token` in conjunction with the Response Mode `fragment`. 
 
 Note that the diagram does not illustrate all of the optional features of this specification. 
 
@@ -151,24 +153,22 @@ Note that the diagram does not illustrate all of the optional features of this s
         |    interacts   |                                                      |
         |--------------->|                                                      |
         |                |  (1) Authorization Request                           |
-        |                |      (Request URI)                                   |
+        |                |  (Presentation Definition)                           |
         |                |----------------------------------------------------->|
         |                |                                                      |
-        |                |  (2) Request the Request Object                          |
-        |                |<-----------------------------------------------------|
-        |                |                                                      |
-        |                |  (2.5) Respond with the Request Object                   |
-        |                |      (Authorization Request Parameters)              |
-        |                |----------------------------------------------------->|
         |                |                                                      |
         |   User Authentication / Consent                                       |
         |                |                                                      |
-        |                |  (3)   Authorization Response                        |
-        |                |  (VP Token with Credential Presentations )           |
+        |                |  (2)   Authorization Response                        |
+        |                |  (VP Token with Credential Presentation(s))           |
         |                |<-----------------------------------------------------|
 ~~~
 !---
-Figure: Flow with `response_type` `vp_token`, `response_mode` `fragment` and Authorization Request Parameters as a Request Object by reference
+Figure: Same Device Flow
+
+(1) The Verifier sends an Authorization Request to the Wallet. The request contains a Presentation Definition as defined in [@!DIF.PresentationExchange] that describes what type of Credentials in what formats and which individual Claims within those Credentials (Selective Disclosure) the Verifier wants to get presented. The Wallet processes the request and determines what credentials are available matching the Verifier's request. The Wallet also authenticates the user and gathers her consent to present the requested Credentials. 
+
+(2) The Wallet prepares the Verifiable Presentation(s) of the requested and confirmed Verifable Credential(s). It then sends am Autorization Response to the Verifier, where this/those Verifiable Presentations are contained in the `vp_token` parameter.
 
 # Scope
 
