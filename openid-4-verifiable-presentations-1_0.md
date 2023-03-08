@@ -82,7 +82,7 @@ W3C Verifiable Credential:
 :  A Verifiable Credential compliant to the [@VC_DATA] specification.
 
 Presentation:
-:  Data that is shared with a specific Verifier, derived from one or more Verifiable Credentials that can be from the same or different Credential Issuers.
+:  Data that is presented with a specific Verifier, derived from one or more Verifiable Credentials that can be from the same or different Credential Issuers.
 
 Verifiable Presentation (VP):
 :  A Holder-signed Credential whose authenticity can be cryptographically verified to provide Cryptographic Holder Binding. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] (mdoc) and [@Hyperledger.Indy] (AnonCreds).
