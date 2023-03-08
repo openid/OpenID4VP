@@ -757,18 +757,18 @@ The Redirect URI allows the Verifier to check whether the transaction was conclu
 
 The concrete design is at the discretion of the Verifier since it does not affect the interface between the Verifier and the Wallet. 
 
-This specification proposes a design that is inspired by the way the Authorization Code flow (in conjunction with PKCE) works. 
+This specification proposes a design that is inspired by the way the Authorization Code flow [@!RFC6749] works in conjunction with PKCE [@!RFC7636]. 
 
 This is the design proposal: 
 
-1. The Verifier creates a transaction specific secret `s` and hashes it with a suitable hashing algorithm. 
+1. The Verifier creates a transaction specific secret `secret` and hashes it with a suitable hashing algorithm. 
 2. The Verifier sends the hashed secret as `nonce` parameter value with the authorization request. 
 3. The Wallet will send the `nonce` value with the request to the Response URI. 
 4. The Verifier (Backend) stores the response data (linked to the `nonce` value) and creates a fresh response code that it also links with the respective response data. 
 5. The Verifier (Backend) returns the Redirect URI, which contains the Response Code as `code` parameter.
 6. The Verifier (Frontend) receives the Request and extracts the `code` parameter.
-7. The Verifier (Frontend) sends the `code` and the transaction specific secret `s` to its backend to process the authorization response.
-8. The Verifier (Backend) checks whether `code` and the hash of `s` is associated with any of the response data packages it has stored. 
+7. The Verifier (Frontend) sends the `code` and the transaction specific secret `secret` to its backend to process the authorization response.
+8. The Verifier (Backend) checks whether `code` and the hash of `secret` is associated with any of the response data packages it has stored. 
 9. If this check succeeds, the transaction continues with the processing of the respective response data. Otherwise, the transaction is aborted. 
 
 ### Without Redirect URI {#session-binding}
