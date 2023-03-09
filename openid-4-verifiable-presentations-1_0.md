@@ -463,7 +463,7 @@ If the request was processed sucessfully, the Verifier MUST respond with HTTP st
 `redirect_uri`:
 :`redirect_uri`. The Wallet MUST send the User Agent to this URI. This allows the Verifier to continue the interaction with the End-User after the Wallet sends Authorization Response as an HTTPS POST request. It also allows the Verifier to ensure the transaction was conducted in a Wallet residing on the same device where the transaction started, or ensure the End-User interaction continues on the device where the Wallet resides when the transaction started on the different device. So that only the entitled front end can pick up the data from the Verifier's backend, Verifier's Response URI MUST add a secret to the Redirect URI, e.g. a code, that cannot be guessed by an attacker and validate this secrect when the response data is processed. For details how the Verifier MAY use this URI to ensure the End-to-End device binding of the transaction see (#security_consideration_direct_post_same_device). 
 
-This is an example response:
+The following is a non-normative example of the response from the Verifier to the Wallet upon receiving Authorization Response at the Response URI:
 
 ```
   HTTP/1.1 200 OK
