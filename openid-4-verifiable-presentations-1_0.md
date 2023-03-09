@@ -455,10 +455,10 @@ The following is a non-normative example of the response object that is sent via
 
 ```
 
-If the request was processed sucessfully, the Verifier MUST respond with one of the following HTTP status codes:
+If the request was processed sucessfully, the Verifier MUST respond with HTTP status code 200. The response MAY contain the following parameters:
 
-* `202`: the response data was received sucessfully. No further steps required by the Wallet. 
-* `200`: the response data was received sucessfully. The response MUST include a parameter `redirect_uri`. The Wallet MUST send the User Agent to this URI. This allows the Verifier to continue the interaction with the End-User after the Wallet sends Authorization Response as an HTTPS POST request. It also allows the Verifier to ensure the transaction was conducted in a Wallet residing on the same device where the transaction started, or ensure the End-User interaction continues on the device where the Wallet resides when the transaction started on the different device. So that only the entitled front end can pick up the data from the Verifier's backend, Verifier's Response URI MUST add a secret to the Redirect URI, e.g. a code, that cannot be guessed by an attacker and validate this secrect when the response data is processed. For details how the Verifier MAY use this URI to ensure the End-to-End device binding of the transaction see (#security_consideration_direct_post_same_device).
+`redirect_uri`:
+:`redirect_uri`. The Wallet MUST send the User Agent to this URI. This allows the Verifier to continue the interaction with the End-User after the Wallet sends Authorization Response as an HTTPS POST request. It also allows the Verifier to ensure the transaction was conducted in a Wallet residing on the same device where the transaction started, or ensure the End-User interaction continues on the device where the Wallet resides when the transaction started on the different device. So that only the entitled front end can pick up the data from the Verifier's backend, Verifier's Response URI MUST add a secret to the Redirect URI, e.g. a code, that cannot be guessed by an attacker and validate this secrect when the response data is processed. For details how the Verifier MAY use this URI to ensure the End-to-End device binding of the transaction see (#security_consideration_direct_post_same_device). 
 
 This is an example response:
 
@@ -472,6 +472,8 @@ This is an example response:
     "redirect_uri":"https://client.example.org/cb#code=091535f699ea575c7937fa5f0f454aee",
   }
 ```
+
+If the response does not contain a parameter, the Wallet is not required by this specification to perform any further steps.
 
 Note: Response Mode `direct_post` without the `redirect_uri` could be less secure than the redirect-based Response Modes. For details, see (#session-binding).
 
