@@ -469,7 +469,6 @@ The following is a non-normative example of the response from the Verifier to th
   HTTP/1.1 200 OK
   Content-Type: application/json;charset=UTF-8
   Cache-Control: no-store
-  Pragma: no-cache
 
   {
     "redirect_uri":"https://client.example.org/cb#code=091535f699ea575c7937fa5f0f454aee",
