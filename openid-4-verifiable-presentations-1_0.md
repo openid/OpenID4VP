@@ -341,7 +341,7 @@ This specification defines the following values for the `client_id_scheme` param
 
 * `pre-registered`: This value represents the [@!RFC6749] default behavior, i.e., the Client Identifier needs to be known to the Wallet in advance of the Authorization Request. The Verifier's metadata is obtained using [@!RFC7591] or through out-of-band mechanisms.
 
-* `redirect_uri`: This value indicates that the Verifier's Redirect URI MUST also be the value of the Client Identifier. In this case, the Authorization Request MUST NOT be signed and all Client metadata parameters MUST be passed using the `client_metadata` or `client_metadata_uri` parameter defined in (#vp_token_request). 
+* `redirect_uri`: This value indicates that the Verifier's Redirect URI is also the value of the Client Identifier. In this case, the Authorization Request MUST NOT be signed, the Verifier MAY omit the `redirect_uri` Authorization Request parameter, and all Client metadata parameters MUST be passed using the `client_metadata` or `client_metadata_uri` parameter defined in (#vp_token_request). 
 
 Below is a non-normative example of a request when `client_id` equals `redirect_uri`.
 
