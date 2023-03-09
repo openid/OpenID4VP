@@ -454,6 +454,7 @@ To sign, or sign and encrypt the Authorization Response, implementations MAY use
 To encrypt an unsigned Authorization Response, this specification extends [@!JARM] to allow the JWT containing the response parameters to be only encrypted as a JWE. 
 
 If the JWT is only a JWE, the following processing rules MUST be followed:
+
 - `iss`, `exp` and `aud` MAY be omitted in the JWT Claims Set of the JWE, and if omitted the processing rules as per [@!JARM] Section 2.4 related to these claims do not apply.
 - The processing rules as per [@!JARM] Section 2.4 related to JWS processing MUST be ignored.
 
