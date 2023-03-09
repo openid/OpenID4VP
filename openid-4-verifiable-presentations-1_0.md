@@ -402,7 +402,7 @@ The response mode `direct_post` allows the Wallet to send the response data to a
 It has been defined to address the following use cases: 
 
 * Verifier and Wallet are located on different devices, thus the Wallet cannot send the Authorization Response to the Wallet using a redirect
-* The Authorization Response size exeeds the URL length limits of user agents 
+* The Authorization Response size exeeds the URL length limits of user agents and the wallet is unable to, due to its application architecture, host an endpoint where the verifier can retrieve the response from.
 
 The Response Mode is defined in accordance with [@!OAuth.Responses] as follows:
 
