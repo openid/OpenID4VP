@@ -405,7 +405,7 @@ The behavior with respect to the VP Token is unspecified for any other individua
 When VP Token is returned, the respective response MUST include the following parameters:
 
 `vp_token`:
-: REQUIRED. JSON String or JSON object that MUST contain a single Verifiable Presentation or an array of JSON Strings and JSON objects each of them containing a Verifiable Presentations. Each Verifiable Presentation MUST be represented as a JSON string (that is a Base64url encoded value) or a JSON object depending on a format as defined in Annex E of [@!OpenID.VCI]. If Appendix E of [@!OpenID.VCI] defines a rule for encoding the respective Credential format in the Credential Response, this rules MUST also be followed when encoding credentials of this format in the `vp_token` response parameter. Otherwise, this specification does not require any additional encoding when a Credential format is already represented as a JSON object or a JSON string.
+: REQUIRED. JSON String or JSON object that MUST contain a single Verifiable Presentation or an array of JSON Strings and JSON objects each of them containing a Verifiable Presentations. Each Verifiable Presentation MUST be represented as a JSON string (that is a Base64url encoded value) or a JSON object depending on a format as defined in Annex E of [@!OpenID.VCI].  When a single Verifiable Presentation is returned, the array syntax MUST NOT be used.  If Appendix E of [@!OpenID.VCI] defines a rule for encoding the respective Credential format in the Credential Response, this rules MUST also be followed when encoding credentials of this format in the `vp_token` response parameter. Otherwise, this specification does not require any additional encoding when a Credential format is already represented as a JSON object or a JSON string.
 
 `presentation_submission`:
 : REQUIRED. The `presentation_submission` element as defined in [@!DIF.PresentationExchange] links the identifier of the `input_descriptor` element in the corresponding request to the respective Verifiable Presentations within the VP Token. The root of the path expressions in the descriptor map is the respective Verifiable Presentation, pointing to the respective Verifiable Credentials.
@@ -1377,11 +1377,15 @@ The technology described in this specification was made available from contribut
 
    [[ To be removed from the final specification ]]
 
+   -16
+
+   * Added `client_id_scheme` parameter
+   * Defined that single VP Tokens must not use the array syntax for single Verifiable Presentations
+
    -15
 
    * Added definition of VP Token 
    * Editorial improvements for better readability (restructered request and response section, consistent terminology and casing)
-   * Added `client_id_scheme` parameter
 
    -14
 
