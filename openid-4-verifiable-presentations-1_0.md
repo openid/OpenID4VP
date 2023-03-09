@@ -891,10 +891,10 @@ Implementers MUST make sure that JSONPath used as part of `presentation_definiti
     <author fullname="Michael B. Jones">
       <organization>Microsoft</organization>
     </author>
-    <author fullname="Tobias Looker">
-      <organization>Mattr</organization>
+    <author initials="T." surname="Lodderstedt" fullname="Torsten Lodderstedt">
+      <organization>yes.com</organization>
     </author>
-   <date day="20" month="Jul" year="2021"/>
+   <date day="1" month="January" year="2023"/>
   </front>
 </reference>
 
@@ -1073,7 +1073,7 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
           <author initials="T." surname="Looker" fullname="Tobias Looker">
             <organization>Mattr</organization>
           </author>
-          <date day="20" month="June" year="2022"/>
+          <date day="3" month="February" year="2023"/>
         </front>
 </reference>
 
