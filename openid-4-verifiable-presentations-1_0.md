@@ -409,15 +409,17 @@ The Response Mode is defined in accordance with [@!OAuth.Responses] as follows:
 `direct_post`:
 : In this mode, Authorization Response parameters are encoded in the body using the `application/x-www-form-urlencoded` content type and sent using the HTTP `POST` method instead of redirecting back to the Client.
 
-This specification also defines the following new Authorization Request parameter to be used in conjunction with Response Mode `direct_post`: 
+The new Authorization Request parameter are defined to be used in conjunction with Response Mode `direct_post` as follows: 
 
 `response_uri`:
-: the URI the Wallet MUST send the response data to using a HTTPS POST request . 
+: the URI to which the Wallet MUST send the Authorization Response using an HTTPS POST request as defined by the Response Mode `direct_post`. 
 
-The Response URI receives all parameters as defined by the respective Response Type. Additional, the following parameters are defined: 
+The Response URI receives all parameters as defined by the respective Response Type.
+
+Additionally, the following parameters are defined to be returned in the response from the Verifier to the Wallet upon receiving Authorization Response at the Response URI:
 
 `nonce`:
-: The value as received by the Wallet in the `nonce` authorization request parameter.  
+: The value as received by the Wallet in the `nonce` Authorization Request parameter.  
 
 The following is a non-normative example Request Object with Response Mode `direct_post`:
 
@@ -426,7 +428,7 @@ The following is a non-normative example Request Object with Response Mode `dire
    "client_id": "https://client.example.org/post",
    "response_uri": "https://client.example.org/post",
    "response_type": "vp_token",
-   "response_mode": "direct_post"
+   "response_mode": "direct_post",
    "presentation_definition": {...},
    "nonce": "n-0S6_WzA2Mj"
 }
@@ -440,7 +442,7 @@ https://wallet.example.com?
     &request_uri=https%3A%2F%2Fclient.example.org%2F567545564
 ```
 
-The respective HTTPS POST request to the Response URI of the Verifier would look like this:
+The following is a non-normative example of the response object that is sent via an HTTPS POST request to the Response URI:
 
 ```
   POST /post HTTP/1.1
@@ -456,10 +458,7 @@ The respective HTTPS POST request to the Response URI of the Verifier would look
 If the request was processed sucessfully, the Verifier MUST respond with one of the following HTTP status codes:
 
 * `202`: the response data was received sucessfully. No further steps required by the Wallet. 
-* `200`: the response data was received sucessfully. The response MUST include a parameter `redirect_uri`. The Wallet MUST send the user agent to this URI. This allows the Verifier to continue 
-the interaction with the End-User. It also allows the Verifier to ensure the transaction was conducted in a Wallet residing on the same device where the transaction started. This requires the 
-Verifier's Response URI to add a secret to the Redirect URI, e.g. a code, that cannot be guessed by an attacker and validate this secrect when the response data is processed. For details how 
-the Verifier MAY use this URI to ensure the end 2 end device binding of the transaction see (#security_consideration_direct_post_same_device).
+* `200`: the response data was received sucessfully. The response MUST include a parameter `redirect_uri`. The Wallet MUST send the User Agent to this URI. This allows the Verifier to continue the interaction with the End-User after the Wallet sends Authorization Response as an HTTPS POST request. It also allows the Verifier to ensure the transaction was conducted in a Wallet residing on the same device where the transaction started, or ensure the End-User interaction continues on the device where the Wallet resides when the transaction started on the different device. So that only the entitled front end can pick up the data from the Verifier's backend, Verifier's Response URI MUST add a secret to the Redirect URI, e.g. a code, that cannot be guessed by an attacker and validate this secrect when the response data is processed. For details how the Verifier MAY use this URI to ensure the End-to-End device binding of the transaction see (#security_consideration_direct_post_same_device).
 
 This is an example response:
 
