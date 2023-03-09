@@ -501,7 +501,16 @@ This section defines how Authorization Response containing a VP Token can be sig
 
 To sign, or sign and encrypt the Authorization Response, implementations MAY use JWT Secured Authorization Response Mode for OAuth 2.0 (JARM) [@!JARM]. 
 
-To encrypt an unsigned Authorization Response, this specification extends JARM to allow the JWT containing the response parameters to be only encrypted.
+To encrypt an unsigned Authorization Response, this specification extends [@!JARM] to allow the JWT containing the response parameters to be only encrypted as a JWE. 
+
+If the JWT is only a JWE, the following processing rules MUST be followed:
+
+- `iss`, `exp` and `aud` MAY be omitted in the JWT Claims Set of the JWE, and if omitted the processing rules as per [@!JARM] Section 2.4 related to these claims do not apply.
+- The processing rules as per [@!JARM] Section 2.4 related to JWS processing MUST be ignored.
+
+The following is a non-normative example of a JWT Claims Set used in an Authorization Response that is encrypted and not signed:
+
+<{{examples/response/jarm_jwt_enc_only_vc_json_body.json}}
 
 The JWT response document MUST include `vp_token` and `presentation_submission` parameters as defined in (#response-parameters).
 
