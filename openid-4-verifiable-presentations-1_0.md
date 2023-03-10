@@ -541,7 +541,7 @@ To encrypt an unsigned Authorization Response, this specification extends [@!JAR
 
 If the JWT is only a JWE, the following processing rules MUST be followed:
 
-- `iss`, `exp` and `aud` MAY be omitted in the JWT Claims Set of the JWE, and if omitted the processing rules as per [@!JARM] Section 2.4 related to these claims do not apply.
+- `iss`, `exp` and `aud` MUST be omitted in the JWT Claims Set of the JWE, and the processing rules as per [@!JARM] Section 2.4 related to these claims do not apply.
 - The processing rules as per [@!JARM] Section 2.4 related to JWS processing MUST be ignored.
 
 The following is a non-normative example of a JWT Claims Set used in an Authorization Response that is encrypted and not signed:
