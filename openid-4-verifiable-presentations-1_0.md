@@ -1025,6 +1025,10 @@ Implementations of this specification MUST have security mechanisms in place to 
 
 Clients intending to authenticate the end-user utilizing a claim in a Verifiable Credential MUST ensure this claim is stable for the end-user as well locally unique and never reassigned within the Credential Issuer to another end-user. Such a claim MUST also only be used in combination with the Credential Issuer identifier to ensure global uniqueness and to prevent attacks where an attacker obtains the same claim from a different Credential Issuer and tries to impersonate the legitimate user. 
 
+## Response Encryption without Signatures
+
+Clients receiving encrypted responses that are not signed cannot rely on the trustworthiness of the values provided by `iss`, `aud` and `exp` if an attacker receives a victim’s `vp_token` generated for the intended client and then creates a new JWE response encrypted to the client’s public key.
+
 ## DIF Presentation Exchange 2.0.0
 
 ### Fetching Presentation Definitions by Reference
