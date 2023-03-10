@@ -1027,7 +1027,7 @@ Clients intending to authenticate the end-user utilizing a claim in a Verifiable
 
 ## Response Encryption without Signatures
 
-Clients receiving encrypted responses that are not signed cannot rely on the trustworthiness of the values provided by `iss`, `aud` and `exp` if an attacker receives a victim’s `vp_token` generated for the intended client and then creates a new JWE response encrypted to the client’s public key.
+Clients receiving encrypted responses that are not signed cannot rely on the trustworthiness of the values provided by `iss`, `aud` and `exp` if an attacker receives a victim’s `vp_token` generated for the intended client. Then, an attacker can then create a new JWE response encrypted to the client’s public key with different values for `iss`, `aud` and `exp`.
 
 ## DIF Presentation Exchange 2.0.0
 
