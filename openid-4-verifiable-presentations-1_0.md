@@ -465,7 +465,7 @@ The following new Authorization Request parameter is defined to be used in conju
 `response_uri`:
 : OPTIONAL. The URI to which the Wallet MUST send the Authorization Response using an HTTPS POST request as defined by the Response Mode `direct_post`. The Response URI receives all Authorization Response parameters as defined by the respective Response Type. When the `response_uri` parameter is present, the `redirect_uri` Authorization Request parameter MUST NOT be present. If the `redirect_uri` request parameter is present when the Response Mode is `direct_post`, the Wallet MUST return an `invalid_request` Authorization Response error.
 
-// add text that "to help frontend identify the request and protect the backend "
+Note: the Verifier's component providing the user interface (Frontend) and the Verifier's component providing the Response URI (Response Endpoint) need to be able to map authorization requests to the respective authorization responses. The Verifier MAY use the `state` Authorization Request parameter to add appropriate data to the Authorization Response. 
 
 The following is a non-normative example of the payload of a Request Object with Response Mode `direct_post`:
 
@@ -741,6 +741,52 @@ Current version of this document does not support presentation of a VP nested in
 
 One level of nesting `path_nested` objects is sufficient to describe a VC included inside a VP.
 
+## Response Mode `direct_post` {#reference_design_direct_post}
+
+The design of the interactions between the different components of the Verifier (especially Frontend and Response Endpoint) is at the discretion of the Verifier since it does not affect the interface between the Verifier and the Wallet. In order to support implementers, this specification proposes a reference design that is illustrated in the following sequence diagram:
+
+!---
+~~~ ascii-art
++-------+   +------------+   +------------+                                         +----------+
+| User  |   |  Verifier  |   |  Verifier  |                                         |  Wallet  |
+|       |   |  Frontend  |   |  Backend   |                                         |          |
++-------+   +------------+   +------------+                                         +----------+  
+    |              |                |                                                     |
+    |   interacts  |                |                                                     |
+    |------------->|                |                                                     |
+    |              |  (1) Authorization Request                                           |
+    |              |      (`response_uri`, `nonce`, `state`)                              |
+    |              |--------------------------------------------------------------------->|
+    |              |                |                                                     |
+    | User Authentication / Consent |                                                     |
+    |              |                |                                                     |
+    |              |                | (2) Authorization Response                          |
+    |              |                |     to Response URI, using HTTP POST request        |
+    |              |                |     (VP Token with `nonce`, `state`)                |
+    |              |                |<----------------------------------------------------|
+    |              |                |                                                     |
+    |              |                | (3) Response                                        |
+    |              |                | (`redirect_uri` with `response_code`)               |
+    |              |                |---------------------------------------------------->|
+    |              |                |                                                     |
+    |              |  (4) Redirect to the Redirect URI (`response_code`)                  |
+    |              |<---------------------------------------------------------------------|
+    |              |                |                                                     |
+    |              |   (5) fetch response data (session_secret, response_code)            |
+    |              |--------------->|                                                     |
+    |              |                |                                                     |
+~~~
+!---
+Figure: Reference Design for Response Mode `direct_post`
+
+(1) The Verifier creates a transaction specific secret `session_secret`, links it to the frontend session, and hashes it with a suitable hashing algorithm to produce an identifier for the authorization request that is used a `state` value in the Authorization Request. The Verifier also creates a `nonce` used to detect replay attempts of the `vp_token`.  It then sends the Authorization Request to the Wallet. The Wallet will upon receiving the request authenticate the user and ask for consent to release the request Credential(s).   
+(2) The Wallet sends the Authorization Response with `vp_token`, `presentation_submission` and `state` to the `response_uri` of the Verifier.  
+(3) The Verifier's (Response Endpoint) stores the response data (linked to the `state` value) and creates a fresh `response_code` that it also links with the respective response data. It then returns the `redirect_uri`, which includes the `response_code` to the Wallet. 
+Note: if the Verifier's Response Endpoint does not return a `redirect_uri`, processing at the Wallet stops at that step. The Verifier is supposed to fetch the Authorization Response without waiting for a redirect.  
+(4) The Wallet sends the user agent to the Verifier (`redirect_uri`). The Verifier receives the Request and extracts the `response_code` parameter.
+(5) The Verifier (Frontend) sends the `response_code` and the `session_secret` to its backend with the request initating the processing of the Authorization Response. If the hash of the `session_secret` matches an Authorization Response and this Authorization Response is linked to the `response_code` processing continues. Otherwise, the transaction fails and is terminated. 
+Note: if the transaction does not use the `redirect_uri`, e.g. it is a transaction reaching across devices, the Verifier's Frontend would only use the `session_secret` to fetch the Authorization Response.  
+
 # Security Considerations {#security_considerations}
 
 ## Preventing Replay of the VP Token {#preventing-replay}
@@ -802,17 +848,12 @@ Here is a non-normative example for format=`ldp_vp` (only relevant part):
 
 In the example above, the requested `nonce` value is included as the `challenge` and `client_id` as the `domain` value in the proof of the Verifiable Presentation.
 
-### Flow that uses Redirects with HTTP POST
-
-// potentially merge with Preventing Replay with Redirect-based flows section.
+### Flow that uses Response Mode `direct_post` with Redirects
 
 The additional redirect after the HTTP Post request to the Response URI enables the Verifier to use the `nonce` value as described in (#preventing-replay) to detect replay attempts. In order to implement that, the Verifier (when processing the redirect), obtains the response data from its backend hosting the Response URI, extracts the Verifiable Presentations and verifies the `nonce` binding. 
 
-The identifier used to lookup the response data is at the discretion of the Verfier. This specification recommends to use data encoded in the `state` Authorization Request parameter for that purpose. This ensures the respective data is available at the Response URI and the Redirect URI in a format controlled by the Verifier. 
-
-### Flow that does not use Redirect {#session-binding}
-
-// #preventing-replay should be revised.
+The identifier used to lookup the response data is at the discretion of the Verfier. This specification recommends to use data encoded in the `state` Authorization Request parameter for that purpose. This ensures the respective data is available at the Response URI and the Redirect URI in a format controlled by the Verifier. See (#reference_design_direct_post) for more details. 
+### Flow that uses Response Mode `direct_post` only {#session-binding}
 
 When using the response mode `direct_post` without the further protection provided by the redirect URI, there is no session context for the Verifier to detect replay attempts across sessions. Therefore, the Verifier cannot implement the `nonce` binding as required in (#preventing-replay), but it MUST nevertheless enforce the audience restriction as required in (#preventing-replay).  
 
@@ -829,52 +870,6 @@ The Verifier SHOULD protect its Response URI from inadvertent requests by checki
 Even though the redirect directly enables detection of replay attempts, an attacker might also launch a session fixation attack on the flow. An attacker would start the process at a device under his control, capture the Authorization Request and relay it to the device of a victim. The attacker would then periodically try to conclude the process, which would cause the Verifier on his device to try to fetch and verify the Authorization Response. As the session binding would be correct in this case (the `state` was choosen and stored by his Verifier instance), this process would succceed, whereas the check in the Verifier on the victim's device would fail.
 
 To prevent session fixation attacks, the Verifier MUST include a transaction specific secret into the Redirect URI returned by it Response URI. This specification RECOMMENDS the parameter name `response_code`. The Verifier's backend MUST require the frontend to pass the respective Response Code when fetching the Authorization Response.
-
-// move this to the implementation considerations
-
-!---
-~~~ ascii-art
-+-------+   +------------+   +------------+                                         +----------+
-| User  |   |  Verifier  |   |  Verifier  |                                         |  Wallet  |
-|       |   |  Frontend  |   |  Backend   |                                         |          |
-+-------+   +------------+   +------------+                                         +----------+  
-    |              |                |                                                     |
-    |   interacts  |                |                                                     |
-    |------------->|                |                                                     |
-    |              |  (1) Authorization Request                                           |
-    |              |      (`response_uri`, `nonce`, `state` [opt])                        |
-    |              |--------------------------------------------------------------------->|
-    |              |                |                                                     |
-    | User Authentication / Consent |                                                     |
-    |              |                |                                                     |
-    |              |                | (2) Authorization Response                          |
-    |              |                |     to Response URI, using HTTP POST request        |
-    |              |                |     (VP Token with `nonce`, `state` [opt])          |
-    |              |                |<----------------------------------------------------|
-    |              |                |                                                     |
-    |              |                | Response                                            |
-    |              |                | (`redirect_uri`, `response_code`[opt])              |
-    |              |                | Note: the flow ends if redirect_uri is not returned |
-    |              |                |---------------------------------------------------->|
-    |              |                |                                                     |
-    |              |  (3) Redirect to the Redirect URI (`response_code`[opt])             |
-    |              |--------------------------------------------------------------------->|
-    |              |                |                                                     |
-~~~
-!---
-Figure: Response Mode `direct_post with Redirect URI
-
-The design of the interactions between the different components of the Verifier is at the discretion of the Verifier since it does not affect the interface between the Verifier and the Wallet. In order to support implementers, this specification proposes the following reference design: 
-
-1. The Verifier creates a transaction specific secret `secret` and hashes it with a suitable hashing algorithm. 
-2. The Verifier sends the hashed secret as `state` parameter value with the authorization request. 
-3. The Wallet will send the `state` value with the request to the Response URI. 
-4. The Verifier (Backend) stores the response data (linked to the `state` value) and creates a fresh response code that it also links with the respective response data. 
-5. The Verifier (Backend) returns the Redirect URI, which contains the Response Code as `response_code` parameter.
-6. The Verifier (Frontend) receives the Request and extracts the `response_code` parameter.
-7. The Verifier (Frontend) sends the `response_code` and the transaction specific secret `secret` to its backend with the request initating the processing of the Authorization Response.
-8. The Verifier (Backend) checks whether `response_code` and the hash of `secret` is associated with any of the response data packages it has stored. 
-9. If this check succeeds, the transaction continues with the processing of the respective response data. Otherwise, the transaction is aborted.
 
 ## Validation of Verifiable Presentations
 
