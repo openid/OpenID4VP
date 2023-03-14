@@ -447,12 +447,12 @@ with a matching `presentation_submission` parameter.
 
 ## Response Mode "direct_post" {#response_mode_post}
 
-The response mode `direct_post` allows the Wallet to send the response data to an endpoint controlled by the Verifier via a HTTPS POST request. 
+The response mode `direct_post` allows the Wallet to send the Authorization Response to an endpoint controlled by the Verifier via a HTTPS POST request. 
 
 It has been defined to address the following use cases: 
 
 * Verifier and Wallet are located on different devices, thus the Wallet cannot send the Authorization Response to the Verifier using a redirect.
-* The Authorization Response size exeeds the URL length limits of user agents, so flows relying only on redirects (such as Response Mode `fragment`) cannot be used. In those cases, the response mode `direct_post` is the most privacy preserving way to convey the Verifiable Presentations from the Wallet to the Verifier. 
+* The Authorization Response size exceeds the URL length limits of user agents, so flows relying only on redirects (such as Response Mode `fragment`) cannot be used. In those cases, the response mode `direct_post` is the most privacy preserving way to convey the Verifiable Presentations from the Wallet to the Verifier. 
 
 The Response Mode is defined in accordance with [@!OAuth.Responses] as follows:
 
@@ -462,7 +462,7 @@ The Response Mode is defined in accordance with [@!OAuth.Responses] as follows:
 The following new Authorization Request parameter is defined to be used in conjunction with Response Mode `direct_post`: 
 
 `response_uri`:
-: OPTIONAL. The URI to which the Wallet MUST send the Authorization Response using an HTTPS POST request as defined by the Response Mode `direct_post`. The Response URI receives all Authorization Response parameters as defined by the respective Response Type. When the `response_uri` parameter is present, the `redirect_uri` Authorization Request parameter MUST NOT be present. If the `redirect_uri` request parameter is present when the Response Mode is `direct_post`, the Wallet MUST return an `invalid_request` Authorization Response error.
+: OPTIONAL. The Response URI to which the Wallet MUST send the Authorization Response using an HTTPS POST request as defined by the Response Mode `direct_post`. The Response URI receives all Authorization Response parameters as defined by the respective Response Type. When the `response_uri` parameter is present, the `redirect_uri` Authorization Request parameter MUST NOT be present. If the `redirect_uri` Authorization Rquest parameter is present when the Response Mode is `direct_post`, the Wallet MUST return an `invalid_request` Authorization Response error.
 
 Note: the Verifier's component providing the user interface (Frontend) and the Verifier's component providing the Response URI (Response Endpoint) need to be able to map authorization requests to the respective authorization responses. The Verifier MAY use the `state` Authorization Request parameter to add appropriate data to the Authorization Response. 
 
@@ -483,7 +483,7 @@ The following is a non-normative example of the payload of a Request Object with
 }
 ```
 
-The following is a non-normative example of a Request URI that can reference the Request Object in the example above (either directly or as QR Code):
+The Authorization Request Object from above could be used in a Request URI as follows (either directly or as QR Code):
 
 ```
 https://wallet.example.com?
@@ -503,14 +503,14 @@ The following is a non-normative example of the Authorization Response that is s
     state=eyJhbGciOiJFUzI...ky6-sVA
 ```
 
-If the request was processed sucessfully, the Verifier MUST respond with HTTP status code 200. The response MAY contain the following parameters:
+If the request to the Response URI was processed sucessfully, the Verifier MUST respond with HTTP status code 200. The response MAY contain the following parameters:
 
 `redirect_uri`:
-: OPTIONAL. The Wallet MUST send the User Agent to this URI. The Redirect URI allows the Verifier to continue the interaction with the End-User after the Wallet has sent the Authorization Response to the Response URI. It especially enables the Verifier to prevent replay ((#replay_prevention_direct_post_redirect)) and session fixation ((#session_fixation_direct_post)) attacks. See  for details.
+: OPTIONAL. The Wallet MUST send the User Agent to this Redirect URI. The Redirect URI allows the Verifier to continue the interaction with the End-User after the Wallet has sent the Authorization Response to the Response URI. It especially enables the Verifier to prevent replay ((#replay_prevention_direct_post_redirect)) and session fixation ((#session_fixation_direct_post)) attacks. See  for details.
 
 The value of the Redirect URI is at the discretion of the Verifier. However, the Verifier MUST add a transaction specific secret to the URL to ensure only the receiver of the redirect is able to fetch and process the Authorization Response. It is RECOMMENDED to add a parameter `response_code` to the URL for that purpose. 
 
-The following is a non-normative example of the response from the Verifier to the Wallet upon receiving Authorization Response at the Response URI:
+The following is a non-normative example of the response from the Verifier to the Wallet upon receiving the Authorization Response at the Response URI:
 
 ```
   HTTP/1.1 200 OK
@@ -526,7 +526,7 @@ If the response does not contain a parameter, the Wallet is not required by this
 
 Note: Response Mode `direct_post` without the `redirect_uri` could be less secure than the redirect-based Response Modes. For details, see (#security_considerations_direct_post).
 
-Note that in the Response Mode `direct_post` or `direct_post.jwt`, the Wallet can change the UI based on the Verifier's response to the HTTP POST request.
+Note that in the Response Mode `direct_post` or `direct_post.jwt`, the Wallet can change the UI based on the Verifier's response to submission of the Authorization Response.
 
 ## Signed and Encrypted Responses {#jarm}
 
