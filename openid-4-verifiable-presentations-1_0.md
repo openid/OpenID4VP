@@ -35,14 +35,6 @@ organization="Microsoft"
     email = "kristina.yasuda@microsoft.com"
 
 [[author]]
-initials="A."
-surname="Lemmon"
-fullname="Adam Lemmon"
-organization="Convergence.tech"
-    [author.address]
-    email = "adam@convergence.tech"
-    
-[[author]]
 initials="T."
 surname="Looker"
 fullname="Tobias Looker"
