@@ -452,8 +452,7 @@ The response mode `direct_post` allows the Wallet to send the response data to a
 It has been defined to address the following use cases: 
 
 * Verifier and Wallet are located on different devices, thus the Wallet cannot send the Authorization Response to the Verifier using a redirect.
-* The Authorization Response size exeeds the URL length limits of user agents, so the flows relying only on the redirects (such as Response Mode `fragment`) cannot be used.
-* The wallet is unable to, due to its application architecture, host an endpoint where the verifier can retrieve the response from, so the flows requiring Wallet backend (such as Response Mode `code`) cannot be used.
+* The Authorization Response size exeeds the URL length limits of user agents, so the flows relying only on the redirects (such as Response Mode `fragment`) cannot be used. In those cases, the response mode `direct_post` is the most privacy preserving way to convey the Verifiable Presentations from the Wallet to the Verifier. 
 
 The Response Mode is defined in accordance with [@!OAuth.Responses] as follows:
 
@@ -467,11 +466,14 @@ The following new Authorization Request parameter is defined to be used in conju
 
 Note: the Verifier's component providing the user interface (Frontend) and the Verifier's component providing the Response URI (Response Endpoint) need to be able to map authorization requests to the respective authorization responses. The Verifier MAY use the `state` Authorization Request parameter to add appropriate data to the Authorization Response. 
 
+Note: if the `client_id_scheme` `redirect_uri` is used in conjunction with response mode `direct_post`, the `client_id` value MUST be equal to the `response_uri` value,´. Alternatively, the `response_uri` value can be omited.  
+
 The following is a non-normative example of the payload of a Request Object with Response Mode `direct_post`:
 
 ```json
 {
    "client_id": "https://client.example.org/post",
+   "client_id_scheme": "redirect_uri",
    "response_uri": "https://client.example.org/post",
    "response_type": "vp_token",
    "response_mode": "direct_post",
