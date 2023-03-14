@@ -452,7 +452,7 @@ The response mode `direct_post` allows the Wallet to send the response data to a
 It has been defined to address the following use cases: 
 
 * Verifier and Wallet are located on different devices, thus the Wallet cannot send the Authorization Response to the Verifier using a redirect.
-* The Authorization Response size exeeds the URL length limits of user agents, so the flows relying only on the redirects (such as Response Mode `fragment`) cannot be used. In those cases, the response mode `direct_post` is the most privacy preserving way to convey the Verifiable Presentations from the Wallet to the Verifier. 
+* The Authorization Response size exeeds the URL length limits of user agents, so flows relying only on redirects (such as Response Mode `fragment`) cannot be used. In those cases, the response mode `direct_post` is the most privacy preserving way to convey the Verifiable Presentations from the Wallet to the Verifier. 
 
 The Response Mode is defined in accordance with [@!OAuth.Responses] as follows:
 
@@ -466,7 +466,7 @@ The following new Authorization Request parameter is defined to be used in conju
 
 Note: the Verifier's component providing the user interface (Frontend) and the Verifier's component providing the Response URI (Response Endpoint) need to be able to map authorization requests to the respective authorization responses. The Verifier MAY use the `state` Authorization Request parameter to add appropriate data to the Authorization Response. 
 
-Note: if the `client_id_scheme` `redirect_uri` is used in conjunction with response mode `direct_post`, the `client_id` value MUST be equal to the `response_uri` value,´. Alternatively, the `response_uri` value can be omited.  
+Note: if the `client_id_scheme` `redirect_uri` is used in conjunction with response mode `direct_post`, the `client_id` value MUST be equal to the `response_uri` value. Alternatively, the `response_uri` value can be omited.  
 
 The following is a non-normative example of the payload of a Request Object with Response Mode `direct_post`:
 
@@ -506,7 +506,9 @@ The following is a non-normative example of the Authorization Response that is s
 If the request was processed sucessfully, the Verifier MUST respond with HTTP status code 200. The response MAY contain the following parameters:
 
 `redirect_uri`:
-: OPTIONAL. The Wallet MUST send the User Agent to this URI. The value of the Redirect URI is at the discretion of the Verifier. However, the Verifier MUST add a transaction specific secret to the URL to ensure only the receiver of the redirect is able to fetch and process the Authorization Response. It is RECOMMENDED to add a parameter `response_code` to the URL for that purpose. The Redirect URI allows the Verifier to continue the interaction with the End-User after the Wallet has sent the Authorization Response to the Response URI. It especially enables the Verifier to prevent replay and session fixation attacks. See (#security_consideration_direct_post_same_device) for details.
+: OPTIONAL. The Wallet MUST send the User Agent to this URI. The Redirect URI allows the Verifier to continue the interaction with the End-User after the Wallet has sent the Authorization Response to the Response URI. It especially enables the Verifier to prevent replay ((#replay_prevention_direct_post_redirect)) and session fixation ((#session_fixation_direct_post)) attacks. See  for details.
+
+The value of the Redirect URI is at the discretion of the Verifier. However, the Verifier MUST add a transaction specific secret to the URL to ensure only the receiver of the redirect is able to fetch and process the Authorization Response. It is RECOMMENDED to add a parameter `response_code` to the URL for that purpose. 
 
 The following is a non-normative example of the response from the Verifier to the Wallet upon receiving Authorization Response at the Response URI:
 
@@ -522,7 +524,7 @@ The following is a non-normative example of the response from the Verifier to th
 
 If the response does not contain a parameter, the Wallet is not required by this specification to perform any further steps.
 
-Note: Response Mode `direct_post` without the `redirect_uri` could be less secure than the redirect-based Response Modes. For details, see (#session-binding).
+Note: Response Mode `direct_post` without the `redirect_uri` could be less secure than the redirect-based Response Modes. For details, see (#security_considerations_direct_post).
 
 Note that in the Response Mode `direct_post` or `direct_post.jwt`, the Wallet can change the UI based on the Verifier's response to the HTTP POST request.
 
@@ -749,34 +751,34 @@ The design of the interactions between the different components of the Verifier 
 
 !---
 ~~~ ascii-art
-+-------+   +------------+   +------------+                                         +----------+
-| User  |   |  Verifier  |   |  Verifier  |                                         |  Wallet  |
-|       |   |  Frontend  |   |  Backend   |                                         |          |
-+-------+   +------------+   +------------+                                         +----------+  
-    |              |                |                                                     |
-    |   interacts  |                |                                                     |
-    |------------->|                |                                                     |
-    |              |  (1) Authorization Request                                           |
-    |              |      (`response_uri`, `nonce`, `state`)                              |
-    |              |--------------------------------------------------------------------->|
-    |              |                |                                                     |
-    | User Authentication / Consent |                                                     |
-    |              |                |                                                     |
-    |              |                | (2) Authorization Response                          |
-    |              |                |     to Response URI, using HTTP POST request        |
-    |              |                |     (VP Token with `nonce`, `state`)                |
-    |              |                |<----------------------------------------------------|
-    |              |                |                                                     |
-    |              |                | (3) Response                                        |
-    |              |                | (`redirect_uri` with `response_code`)               |
-    |              |                |---------------------------------------------------->|
-    |              |                |                                                     |
-    |              |  (4) Redirect to the Redirect URI (`response_code`)                  |
-    |              |<---------------------------------------------------------------------|
-    |              |                |                                                     |
-    |              |   (5) fetch response data (session_secret, response_code)            |
-    |              |--------------->|                                                     |
-    |              |                |                                                     |
++-------+   +------------+   +------------+                                  +----------+
+| User  |   |  Verifier  |   |  Verifier  |                                  |  Wallet  |
+|       |   |  Frontend  |   |  Backend   |                                  |          |
++-------+   +------------+   +------------+                                  +----------+  
+    |              |                |                                              |
+    |   interacts  |                |                                              |
+    |------------->|                |                                              |
+    |              |  (1) Authorization Request                                    |
+    |              |      (`response_uri`, `nonce`, `state`                        |
+    |              |-------------------------------------------------------------->|
+    |              |                |                                              |
+    | User Authentication / Consent |                                              |
+    |              |                |                                              |
+    |              |                | (2) Authorization Response                   |
+    |              |                |     to Response URI, using HTTP POST request |
+    |              |                |     (VP Token with `nonce`, `state`)         |
+    |              |                |<---------------------------------------------|
+    |              |                |                                              |
+    |              |                | (3) Response                                 |
+    |              |                | (`redirect_uri` with `response_code`)        |
+    |              |                |--------------------------------------------->|
+    |              |                |                                              |
+    |              |  (4) Redirect to the Redirect URI (`response_code`)           |
+    |              |<--------------------------------------------------------------|
+    |              |                |                                              |
+    |              |   (5) fetch response data (session_secret, response_code)     |
+    |              |--------------->|                                              |
+    |              |                |                                              |
 ~~~
 !---
 Figure: Reference Design for Response Mode `direct_post`
@@ -793,9 +795,7 @@ Note: if the transaction does not use the `redirect_uri`, e.g. it is a transacti
 
 ## Preventing Replay of the VP Token {#preventing-replay}
 
-### Flows that use only Redirects
-
-To prevent replay attacks, Verifiable Presentation container objects MUST be linked to `client_id` and `nonce` from the Authentication Request. The `client_id` is used to detect presentation of Verifiable Credentials to a different party other than the intended. The `nonce` value binds the Presentation to a certain authentication transaction and allows the Verifier to detect injection of a Presentation in the flow, which is especially important in the flows where the Presentation is passed through the front-channel. 
+To prevent replay attacks in flows that only use redirects, Verifiable Presentation container objects MUST be linked to `client_id` and `nonce` from the Authentication Request. The `client_id` is used to detect presentation of Verifiable Credentials to a different party other than the intended. The `nonce` value binds the Presentation to a certain authentication transaction and allows the Verifier to detect injection of a Presentation in the flow, which is especially important in the flows where the Presentation is passed through the front-channel. 
 
 Note: These values MAY be represented in different ways in a Verifiable Presentation (directly as claims or indirectly be incorporation in proof calculation) according to the selected proof format denoted by the format claim in the Verifiable Presentation container.
 
@@ -850,28 +850,39 @@ Here is a non-normative example for format=`ldp_vp` (only relevant part):
 
 In the example above, the requested `nonce` value is included as the `challenge` and `client_id` as the `domain` value in the proof of the Verifiable Presentation.
 
-### Flow that uses Response Mode `direct_post` with Redirects
+## Response Mode "direct_post" {#security_considerations_direct_post}
 
-The additional redirect after the HTTP Post request to the Response URI enables the Verifier to use the `nonce` value as described in (#preventing-replay) to detect replay attempts. In order to implement that, the Verifier (when processing the redirect), obtains the response data from its backend hosting the Response URI, extracts the Verifiable Presentations and verifies the `nonce` binding. 
+### Validation of the Response URI
 
-The identifier used to lookup the response data is at the discretion of the Verfier. This specification recommends to use data encoded in the `state` Authorization Request parameter for that purpose. This ensures the respective data is available at the Response URI and the Redirect URI in a format controlled by the Verifier. See (#reference_design_direct_post) for more details. 
-### Flow that uses Response Mode `direct_post` only {#session-binding}
+The Wallet MUST ensure Authorization Response data cannot leak through Response URIs. When using pre-registered Response URIs, the Wallet MUST comply with best practices for Redirect URI validation as defined in [@!I-D.ietf-oauth-security-topics]. The Wallet MAY also rely on client authentication to establish trust in the Response URI provided by a certain Verifier. 
+
+### Protection of the Response URI
+
+The Verifier SHOULD protect its Response URI from inadvertent requests by by using the value of the `state` Authorization Request Parameter as access token for the request. It MAY also use JARM [@!JARM] to authenticate the originator of the request. 
+
+### Replay Prevention
+
+#### `direct_post` with Redirects {#replay_prevention_direct_post_redirect}
+
+The additional redirect after the HTTP Post request to the Response URI enables the Verifier to use the `nonce` value as described in (#preventing-replay) to detect replay attempts. In order to implement that, the Verifier (when processing the redirect), obtains the response data from its backend hosting the Response URI, extracts the Verifiable Presentations, and verifies the `nonce` binding. 
+
+The identifier used to lookup the response data is at the discretion of the Verfier. It is RECOMMENDED to use data encoded in the `state` Authorization Request parameter for that purpose. This ensures the respective data is available at the Response URI and the Redirect URI in a format controlled by the Verifier. 
+
+See (#reference_design_direct_post) for more implementation considerations.
+
+#### `direct_post` only {#replay_prevention_direct_post_wo_redirect}
 
 When using the response mode `direct_post` without the further protection provided by the redirect URI, there is no session context for the Verifier to detect replay attempts across sessions. Therefore, the Verifier cannot implement the `nonce` binding as required in (#preventing-replay), but it MUST nevertheless enforce the audience restriction as required in (#preventing-replay).  
 
 It is RECOMMENDED for the Verifiers to implement mechanisms to strengthen such binding. For more details on possible attacks and mitigations see [@I-D.ietf-oauth-cross-device-security].
 
-## Response Mode "direct_post" 
+### Session Fixation {#session_fixation_direct_post}
 
-### Protection of the Response URI
+An attacker might launch a session fixation attack on flow using the Response Mode `direct_post`. An attacker would start the process at a device under his control, capture the Authorization Request and relay it to the device of a victim. The attacker would then periodically try to conclude the process, which would cause the Verifier on his device to try to fetch and verify the Authorization Response. As the session binding would be correct in this case (the `state` was choosen and stored by his Verifier instance), this process would succceed, whereas the check in the Verifier on the victim's device would fail.
 
-The Verifier SHOULD protect its Response URI from inadvertent requests by checking that the value of the received `state` parameter corresponds to the one received in the sent in the Authorization Request. It MAY also use JARM [@!JARM] to authenticate the originator of the request. 
+Session fixation attacks can be prevented, if the Verifier uses the Response Mode `direct_post` in conjunction with a Redirect URI. The Verifier MUST include a transaction specific secret into the Redirect URI returned by it Response URI, this specification RECOMMENDS to use the parameter name `response_code`, and the Verifier's Response Endpoint MUST require the frontend to pass the respective `response_code` when fetching the Authorization Response. That stops session fixation attacks as long as the attacker is unable to get access to the Response Code. 
 
-### Preventing Session Fixation {#security_consideration_direct_post_same_device}
-
-Even though the redirect directly enables detection of replay attempts, an attacker might also launch a session fixation attack on the flow. An attacker would start the process at a device under his control, capture the Authorization Request and relay it to the device of a victim. The attacker would then periodically try to conclude the process, which would cause the Verifier on his device to try to fetch and verify the Authorization Response. As the session binding would be correct in this case (the `state` was choosen and stored by his Verifier instance), this process would succceed, whereas the check in the Verifier on the victim's device would fail.
-
-To prevent session fixation attacks, the Verifier MUST include a transaction specific secret into the Redirect URI returned by it Response URI. This specification RECOMMENDS the parameter name `response_code`. The Verifier's backend MUST require the frontend to pass the respective Response Code when fetching the Authorization Response.
+See (#reference_design_direct_post) for more implementation considerations.
 
 ## Validation of Verifiable Presentations
 
