@@ -834,31 +834,32 @@ To prevent session fixation attacks, the Verifier MUST include a transaction spe
 
 !---
 ~~~ ascii-art
-+-------+   +------------+   +------------+                              +-----------------+
-| User  |   |  Verifier  |   |  Verifier  |                              |      Wallet     |
-|       |   |  Frontend  |   |  Backend   |                              |                 |
-+-------+   +------------+   +------------+                              +-----------------+  
-    |              |                |                                              |
-    |   interacts  |                |                                              |
-    |------------->|                |                                              |
-    |              |  (1) Authorization Request                                    |
-    |              |      (`response_uri`, `nonce`, `state` [opt])                 |
-    |              |-------------------------------------------------------------->|
-    |              |                |                                              |
-    | User Authentication / Consent |                                              |
-    |              |                |                                              |
-    |              |                | (2) Authorization Response                   |
-    |              |                |     to Response URI, using HTTP POST request |
-    |              |                |     (VP Token with `nonce`, `state` [opt])   |
-    |              |                |<---------------------------------------------|
-    |              |                |                                              |
-    |              |                | Response                                     |
-    |              |                | (with `redirect_uri`, `response_code`[opt])  |
-    |              |                | Note: the flow ends here when redirect_uri is not returned  |
-    |              |                |--------------------------------------------->|
-    |              |                |                                              |
-    |              |  (3) Redirect to the Redirect URI (with `response_code`[opt]) |
-    |              |-------------------------------------------------------------->|
++-------+   +------------+   +------------+                                         +----------+
+| User  |   |  Verifier  |   |  Verifier  |                                         |  Wallet  |
+|       |   |  Frontend  |   |  Backend   |                                         |          |
++-------+   +------------+   +------------+                                         +----------+  
+    |              |                |                                                     |
+    |   interacts  |                |                                                     |
+    |------------->|                |                                                     |
+    |              |  (1) Authorization Request                                           |
+    |              |      (`response_uri`, `nonce`, `state` [opt])                        |
+    |              |--------------------------------------------------------------------->|
+    |              |                |                                                     |
+    | User Authentication / Consent |                                                     |
+    |              |                |                                                     |
+    |              |                | (2) Authorization Response                          |
+    |              |                |     to Response URI, using HTTP POST request        |
+    |              |                |     (VP Token with `nonce`, `state` [opt])          |
+    |              |                |<----------------------------------------------------|
+    |              |                |                                                     |
+    |              |                | Response                                            |
+    |              |                | (`redirect_uri`, `response_code`[opt])              |
+    |              |                | Note: the flow ends if redirect_uri is not returned |
+    |              |                |---------------------------------------------------->|
+    |              |                |                                                     |
+    |              |  (3) Redirect to the Redirect URI (`response_code`[opt])             |
+    |              |--------------------------------------------------------------------->|
+    |              |                |                                                     |
 ~~~
 !---
 Figure: Response Mode `direct_post with Redirect URI
