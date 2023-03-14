@@ -5,7 +5,7 @@ ipr = "none"
 workgroup = "connect"
 keyword = ["security", "openid", "ssi"]
 
-[seriesInfo]
+[seriesInfo] 
 name = "Internet-Draft"
 value = "openid-4-verifiable-presentations-1_0-17"
 status = "standard"
