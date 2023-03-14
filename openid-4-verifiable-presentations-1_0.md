@@ -808,8 +808,6 @@ In the example above, the requested `nonce` value is included as the `challenge`
 
 The additional redirect after the HTTP Post request to the Response URI enables the Verifier to use the `nonce` value as described in (#preventing-replay) to detect replay attempts. In order to implement that, the Verifier (when processing the redirect), obtains the response data from its backend hosting the Response URI, extracts the Verifiable Presentations and verifies the `nonce` binding. 
 
-The identifier used to lookup the response data is at the discretion of the Verfier. This specification recommends to use data encoded in the `state` Authorization Request parameter for that purpose. This ensures the respective data is available at the Response URI and the Redirect URI in a format controlled by the Verifier. 
-
 ### Flow that does not use Redirect {#session-binding}
 
 // #preventing-replay should be revised.
@@ -864,7 +862,11 @@ To prevent session fixation attacks, the Verifier MUST include a transaction spe
 !---
 Figure: Response Mode `direct_post with Redirect URI
 
-The design of the interactions between the different components of the Verifier is at the discretion of the Verifier since it does not affect the interface between the Verifier and the Wallet. In order to support implementers, this specification proposes the following reference design: 
+The design of the interactions between the different components of the Verifier is at the discretion of the Verifier since they do not affect the interface between the Verifier and the Wallet.
+
+For example, the Verifier can decide which identifier to use to lookup the data received in the Authorization Response. This specification recommends to use data encoded in the `state` Authorization Request parameter for that purpose. This ensures the respective data is available at the Response URI and the Redirect URI in a format controlled by the Verifier. 
+
+In order to support implementers, this specification proposes the following reference design:
 
 1. The Verifier creates a transaction specific secret `secret` and hashes it with a suitable hashing algorithm. 
 2. The Verifier sends the hashed secret as `state` parameter value with the authorization request. 
