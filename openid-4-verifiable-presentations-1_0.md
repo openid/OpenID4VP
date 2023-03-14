@@ -451,20 +451,20 @@ The response mode `direct_post` allows the Wallet to send the response data to a
 
 It has been defined to address the following use cases: 
 
-* Verifier and Wallet are located on different devices, thus the Wallet cannot send the Authorization Response to the Wallet using a redirect.
+* Verifier and Wallet are located on different devices, thus the Wallet cannot send the Authorization Response to the Verifier using a redirect.
 * The Authorization Response size exeeds the URL length limits of user agents and the wallet is unable to, due to its application architecture, host an endpoint where the verifier can retrieve the response from.
 
 The Response Mode is defined in accordance with [@!OAuth.Responses] as follows:
 
 `direct_post`:
-: In this mode, the Authorization Response is sent to the Verifier using a HTTP `POST` request to an endpoint controlled by the Verifier. The Authorization Request parameters are encoded in the body using the `application/x-www-form-urlencoded` content type. 
+: In this mode, the Authorization Response is sent to the Verifier using a HTTP `POST` request to an endpoint controlled by the Verifier. The Authorization Response parameters are encoded in the body using the `application/x-www-form-urlencoded` content type. 
 
 The following new Authorization Request parameter is defined to be used in conjunction with Response Mode `direct_post`: 
 
 `response_uri`:
 : OPTIONAL. The URI to which the Wallet MUST send the Authorization Response using an HTTPS POST request as defined by the Response Mode `direct_post`. The Response URI receives all parameters as defined by the respective Response Type. When the `response_uri` parameter is present, the `redirect_uri` Authorization Request parameter MUST NOT be present. If the `redirect_uri` request parameter is present when the Response Mode is `direct_post`, the Wallet MUST return an `invalid_request` Authorization Response error.
 
-The following is a non-normative example Request Object with Response Mode `direct_post`:
+The following is a non-normative example of the payload of a Request Object with Response Mode `direct_post`:
 
 ```json
 {
@@ -478,7 +478,7 @@ The following is a non-normative example Request Object with Response Mode `dire
 }
 ```
 
-that could be used in a Request URI like this (either directly or as QR Code). 
+The following is a non-normative example of a Request URI that can reference the Request Object in the example above (either directly or as QR Code):
 
 ```
 https://wallet.example.com?
@@ -486,7 +486,7 @@ https://wallet.example.com?
     &request_uri=https%3A%2F%2Fclient.example.org%2F567545564
 ```
 
-The following is a non-normative example of the response object that is sent via an HTTPS POST request to the Response URI:
+The following is a non-normative example of the Authorization Response that is sent via an HTTPS POST request to the Response URI:
 
 ```
   POST /post HTTP/1.1
@@ -803,7 +803,7 @@ In the example above, the requested `nonce` value is included as the `challenge`
 
 ### Protection of the Response URI
 
-The Verifier SHOULD protect its Response Endpoint from inadvertent requests by using the value of the `state` Authorization Request Parameter as access token for the request. It MAY also use JARM [@!JARM] to authentcate the originator of the request. 
+The Verifier SHOULD protect its Response URI from inadvertent requests by checking that the value of the received `state` parameter corresponds to the one received in the sent in the Authorization Request. It MAY also use JARM [@!JARM] to authentcate the originator of the request. 
 
 ### Without Redirect URI {#session-binding}
 
