@@ -866,7 +866,7 @@ In the example above, the requested `nonce` value is included as the `challenge`
 
 ### Validation of the Response URI
 
-The Wallet MUST ensure Authorization Response data cannot leak through Response URIs. When using pre-registered Response URIs, the Wallet MUST comply with best practices for Redirect URI validation as defined in [@!I-D.ietf-oauth-security-topics]. The Wallet MAY also rely on client authentication to establish trust in the Response URI provided by a certain Verifier. 
+The Wallet MUST ensure the data in the Authorization Response cannot leak through Response URIs. When using pre-registered Response URIs, the Wallet MUST comply with best practices for Redirect URI validation as defined in [@!I-D.ietf-oauth-security-topics]. The Wallet MAY also rely on client authentication to establish trust in the Response URI provided by a certain Verifier. 
 
 ### Protection of the Response URI
 
