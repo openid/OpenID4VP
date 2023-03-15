@@ -483,7 +483,7 @@ The following is a non-normative example of the payload of a Request Object with
 }
 ```
 
-The Authorization Request Object from above could be used in a Request URI as follows (either directly or as QR Code):
+The following non-normative example of an Authorization Request refers to the Authorization Request Object from above through the `request_uri` parameter. The Authorization Request can either be used either directly (as deep link) or as QR Code:
 
 ```
 https://wallet.example.com?
