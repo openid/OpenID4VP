@@ -452,12 +452,12 @@ The response mode `direct_post` allows the Wallet to send the Authorization Resp
 It has been defined to address the following use cases: 
 
 * Verifier and Wallet are located on different devices, thus the Wallet cannot send the Authorization Response to the Verifier using a redirect.
-* The Authorization Response size exceeds the URL length limits of user agents, so flows relying only on redirects (such as Response Mode `fragment`) cannot be used. In those cases, the response mode `direct_post` is the most privacy preserving way to convey the Verifiable Presentations from the Wallet to the Verifier. 
+* The Authorization Response size exceeds the URL length limits of user agents, so flows relying only on redirects (such as Response Mode `fragment`) cannot be used. In those cases, the response mode `direct_post` is the way to convey the Verifiable Presentations to the Verifier without the need for the Wallet to have a backend.
 
 The Response Mode is defined in accordance with [@!OAuth.Responses] as follows:
 
 `direct_post`:
-: In this mode, the Authorization Response is sent to the Verifier using a HTTP POST request to an endpoint controlled by the Verifier. The Authorization Response parameters are encoded in the body using the `application/x-www-form-urlencoded` content type. 
+: In this mode, the Authorization Response is sent to the Verifier using a HTTP POST request to an endpoint controlled by the Verifier. The Authorization Response parameters are encoded in the body using the `application/x-www-form-urlencoded` content type. The flow can end with HTTP POST request from the Wallet to the Verifier, or it can end with a redirect that follows the HTTP POST request, if the Verifier's responds with a Redirect URI to the Wallet.
 
 The following new Authorization Request parameter is defined to be used in conjunction with Response Mode `direct_post`: 
 
@@ -503,7 +503,9 @@ The following is a non-normative example of the Authorization Response that is s
     state=eyJhbGciOiJFUzI...ky6-sVA
 ```
 
-If the request to the Response URI was processed sucessfully, the Verifier MUST respond with HTTP status code 200. The response MAY contain the following parameters:
+If the request to the Response URI was processed sucessfully, the Verifier MUST respond with HTTP status code 200. 
+
+The following new parameter is defined to be used in this response, when the Verifier wants the Wallet to redirect the user after the HTTP POST request:
 
 `redirect_uri`:
 : OPTIONAL. The Wallet MUST send the User Agent to this Redirect URI. The Redirect URI allows the Verifier to continue the interaction with the End-User after the Wallet has sent the Authorization Response to the Response URI. It especially enables the Verifier to prevent replay ((#replay_prevention_direct_post_redirect)) and session fixation ((#session_fixation_direct_post)) attacks. See  for details.
@@ -524,9 +526,9 @@ The following is a non-normative example of the response from the Verifier to th
 
 If the response does not contain a parameter, the Wallet is not required by this specification to perform any further steps.
 
-Note: Response Mode `direct_post` without the `redirect_uri` could be less secure than the redirect-based Response Modes. For details, see (#security_considerations_direct_post).
+Note: In the Response Mode `direct_post` or `direct_post.jwt`, the Wallet can change the UI based on the Verifier's response to submission of the Authorization Response.
 
-Note that in the Response Mode `direct_post` or `direct_post.jwt`, the Wallet can change the UI based on the Verifier's response to submission of the Authorization Response.
+Note: Response Mode `direct_post` without the `redirect_uri` could be less secure than the redirect-based Response Modes. For details, see (#security_considerations_direct_post).
 
 ## Signed and Encrypted Responses {#jarm}
 
@@ -858,7 +860,7 @@ The Wallet MUST ensure Authorization Response data cannot leak through Response 
 
 ### Protection of the Response URI
 
-The Verifier SHOULD protect its Response URI from inadvertent requests by by using the value of the `state` Authorization Request Parameter as access token for the request. It MAY also use JARM [@!JARM] to authenticate the originator of the request. 
+The Verifier SHOULD protect its Response URI from inadvertent requests by checking that the value of the received `state` parameter corresponds to a recent Authorization Request. It MAY also use JARM [@!JARM] to authenticate the originator of the request. 
 
 ### Replay Prevention
 
