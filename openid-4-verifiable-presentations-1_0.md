@@ -512,7 +512,7 @@ The following new parameter is defined to be used in this response, when the Ver
 
 The value of the Redirect URI is at the discretion of the Verifier. However, the Verifier MUST add a transaction specific secret to the URL to ensure only the receiver of the redirect is able to fetch and process the Authorization Response. It is RECOMMENDED to add a parameter `response_code` to the URL for that purpose. 
 
-The following is a non-normative example of the response from the Verifier to the Wallet upon receiving the Authorization Response at the Response URI:
+The following is a non-normative example of the response from the Verifier to the Wallet upon receiving the Authorization Response at the Response URI (using a `response_code` parameter from (#reference_design_direct_post)):
 
 ```
   HTTP/1.1 200 OK
@@ -749,7 +749,9 @@ One level of nesting `path_nested` objects is sufficient to describe a VC includ
 
 ## Response Mode `direct_post` {#reference_design_direct_post}
 
-The design of the interactions between the different components of the Verifier (especially Frontend and Response Endpoint) is at the discretion of the Verifier since it does not affect the interface between the Verifier and the Wallet. In order to support implementers, this specification proposes a reference design that is illustrated in the following sequence diagram:
+The design of the interactions between the different components of the Verifier (especially Frontend and Response Endpoint) is at the discretion of the Verifier since it does not affect the interface between the Verifier and the Wallet. In order to support implementers, this specification proposes a reference design that is based on the Security Considerations given in (#security_considerations_direct_post). 
+
+The reference design is illustrated in the following sequence diagram:
 
 !---
 ~~~ ascii-art
