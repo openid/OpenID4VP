@@ -1025,7 +1025,7 @@ Implementations of this specification MUST have security mechanisms in place to 
 
 Clients intending to authenticate the end-user utilizing a claim in a Verifiable Credential MUST ensure this claim is stable for the end-user as well locally unique and never reassigned within the Credential Issuer to another end-user. Such a claim MUST also only be used in combination with the Credential Issuer identifier to ensure global uniqueness and to prevent attacks where an attacker obtains the same claim from a different Credential Issuer and tries to impersonate the legitimate user. 
 
-## Response Encryption without Signatures
+## Response Encryption without Signing
 
 If an Authorization Response is encrypted only and not signed, clients cannot verify the authorship of the response parameters and cannot rely on the integrity of response parameters if they are not protected by other means. An attacker might be able to alter response parameters such as `presentation_submission` if the encryption key of the client is public.
 
