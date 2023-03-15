@@ -1455,6 +1455,10 @@ The technology described in this specification was made available from contribut
 
    [[ To be removed from the final specification ]]
 
+   -17
+
+   * Added sequence diagrams for same and cross device flows to overview section
+
    -16
 
    * Added `client_id_scheme` parameter
