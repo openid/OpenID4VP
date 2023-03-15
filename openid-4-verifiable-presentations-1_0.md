@@ -1027,9 +1027,7 @@ Clients intending to authenticate the end-user utilizing a claim in a Verifiable
 
 ## Response Encryption without Signing
 
-If an Authorization Response is encrypted only and not signed, clients cannot verify the authorship of the response parameters and cannot rely on the integrity of response parameters if they are not protected by other means. An attacker might be able to alter response parameters such as `presentation_submission` if the encryption key of the client is public.
-
-Clients receiving an encrypted Authorization Response that is not signed cannot rely on the trustworthiness of the values provided by `iss`, `aud` and `exp` if an attacker receives a victim’s `vp_token` generated for the intended client. Then, an attacker can create a new Authorization Response encrypted to the client’s public key with different values for `iss`, `aud` and `exp`.
+If an Authorization Response is encrypted only and not signed, Verifiers cannot verify that the Authorization Response parameters have not been tampered with except for `vp_token`. An attacker might be able to alter Authorization Response parameters such as `presentation_submission` and generate a new Authorization Response encrypted to the Verifier if the encryption key of the Verifier is public. Using an encrypted Authorization Response without further protection has the same security considerations concerning integrity protection as sending the Authorization Response in plaintext. 
 
 ## DIF Presentation Exchange 2.0.0
 
