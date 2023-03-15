@@ -7,7 +7,7 @@ keyword = ["security", "openid", "ssi"]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "openid-4-verifiable-presentations-1_0-16"
+value = "openid-4-verifiable-presentations-1_0-17"
 status = "standard"
 
 [[author]]
@@ -140,7 +140,7 @@ Implementations can also be built on top of OpenID Connect Core, since OpenID Co
 
 Below is a diagram of a flow where the End-User presents a Credential to a Verifier residing on the same device as the Wallet.
 
-The Flow utilizes simple redirects from the Verifier to the Wallet and back where the Verifiable Presentations are returned to the Verifier in the fragment part of the redirect URI. The flow uses the newly defined Response Type `vp_token` in conjunction with the Response Mode `fragment`. 
+The Flow utilizes simple redirects to pass Authorization Request and Response between the Verifier and the Wallet. The Verifiable Presentations are returned to the Verifier in the fragment part of the Redirect URI. 
 
 Note that the diagram does not illustrate all of the optional features of this specification. 
 
@@ -160,15 +160,15 @@ Note that the diagram does not illustrate all of the optional features of this s
         |   User Authentication / Consent                                       |
         |                |                                                      |
         |                |  (2)   Authorization Response                        |
-        |                |  (VP Token with Credential Presentation(s))           |
+        |                |  (VP Token with Verifiable Presentation(s))          |
         |                |<-----------------------------------------------------|
 ~~~
 !---
 Figure: Same Device Flow
 
-(1) The Verifier sends an Authorization Request to the Wallet. The request contains a Presentation Definition as defined in [@!DIF.PresentationExchange] that describes what type of Credentials in what formats and which individual Claims within those Credentials (Selective Disclosure) the Verifier wants to get presented. The Wallet processes the request and determines what credentials are available matching the Verifier's request. The Wallet also authenticates the user and gathers her consent to present the requested Credentials. 
+(1) The Verifier sends an Authorization Request to the Wallet. The request contains a Presentation Definition as defined in [@!DIF.PresentationExchange] that describes what type of Credentials in what formats and which individual Claims within those Credentials (Selective Disclosure) the Verifier wants to get presented. The Wallet processes the request and determines what credentials are available matching the Verifier's request. The Wallet also authenticates the End-User and gathers her consent to present the requested Credentials. 
 
-(2) The Wallet prepares the Verifiable Presentation(s) of the requested and confirmed Verifable Credential(s). It then sends an Autorization Response to the Verifier, where this/those Verifiable Presentations is/are contained in the `vp_token` parameter.
+(2) The Wallet prepares the Verifiable Presentation(s) of the requested and confirmed Verifable Credential(s). It then sends to the Verifier an Autorization Response where the Verifiable Presentation(s) are contained in the `vp_token` parameter.
 
 ## Cross Device Flow {#cross_device}
 
@@ -199,20 +199,20 @@ Note that the diagram does not illustrate all of the optional features of this s
         |                |                                                      |
         |   User Authentication / Consent                                       |
         |                |                                                      |
-        |                |  (3)   Authorization Response as HTTPS POST          |
-        |                |  (VP Token with Credential Presentations )           |
+        |                |  (3)   Authorization Response as HTTP POST          |
+        |                |  (VP Token with Verifiable Presentation(s))          |
         |                |<-----------------------------------------------------|
 ~~~
 !---
 Figure: Cross Device Flow
 
-(1) The Verifier sends an Authorization Request to the Wallet. The request contains a request URI referring to the actual request data. 
+(1) The Verifier sends to the Wallet an Authorization Request that contains a Request URI from where to obtain the Request Object containing request parameters. 
 
-(2) The Wallet sends a HTTPS GET request to the request URI in order to retrieve the authorization request data.
+(2) The Wallet sends an HTTP GET request to the Request URI to retrieve the Request Object.
 
-(2.5) The HTTP GET response contains the request data. It especially contains a Presentation Definition as defined in [@!DIF.PresentationExchange] that describes what type of Credentials in what formats and which individual Claims within those Credentials (Selective Disclosure) the Verifier wants to get presented. The Wallet processes the request and determines what credentials are available matching the Verifier's request. The Wallet also authenticates the user and gathers her consent to present the requested Credentials. 
+(2.5) (2.5) The HTTP GET response returns the Request Object containing Authorization Request parameters. It especially contains a Presentation Definition as defined in [@!DIF.PresentationExchange] that describes what type of Credentials in what formats and which individual Claims within those Credentials (Selective Disclosure) the Verifier wants to get presented. The Wallet processes the Request Object and determines what credentials are available matching the Verifier's request. The Wallet also authenticates the End-User and gathers her consent to present the requested Credentials. 
 
-(3) The Wallet prepares the Verifiable Presentation(s) of the requested and confirmed Verifable Credential(s). It then sends this/those Verifiable Presentations in the `vp_token` parameter of a HTTP POST request to the Verifier.
+(3) The Wallet prepares the Verifiable Presentation(s) of the requested and confirmed Verifable Credential(s). It then sends to the Verifier an Autorization Response where the Verifiable Presentation(s) are contained in the `vp_token` parameter.
 
 # Scope
 
