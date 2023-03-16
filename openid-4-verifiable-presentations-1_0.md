@@ -1027,7 +1027,7 @@ Clients intending to authenticate the end-user utilizing a claim in a Verifiable
 
 ## Response Encryption
 
-If an Authorization Response is encrypted but does not use sender authentication (e.g., JWS), Verifiers cannot verify that Authorization Response parameters originated from the legitimate Wallet and have not been tampered with. An attacker might be able to alter Authorization Response parameters such as `presentation_submission` and generate a new encrypted Authorization Response for the Verifier, if the encryption key of the Verifier is public. Note that an attack might also replace a `vp_token` with another `vp_token`.  When considering integrity protection and sender authenticity, Verifiers have to treat an encrypted Authorization Response in the same way as when the Authorization Response is sent in plaintext unless additional integrity protection and sender authentication is used.
+If an Authorization Response is encrypted but does not use sender authentication (e.g., JWS), Verifiers cannot verify that Authorization Response parameters originated from the legitimate Wallet and have not been tampered with. An attacker might be able to alter Authorization Response parameters such as `presentation_submission` and generate a new encrypted Authorization Response for the Verifier, if the encryption key of the Verifier is public. Note that an attacker might also replace a `vp_token` with another `vp_token`.  When considering integrity protection and sender authenticity, Verifiers have to treat an encrypted Authorization Response in the same way as when the Authorization Response is sent in plaintext unless additional integrity protection and sender authentication is used.
 
 ## DIF Presentation Exchange 2.0.0
 
