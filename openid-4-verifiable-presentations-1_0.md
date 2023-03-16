@@ -748,6 +748,10 @@ Current version of this document does not support presentation of a VP nested in
 
 One level of nesting `path_nested` objects is sufficient to describe a VC included inside a VP.
 
+## State Management
+
+`state` parameter defined in Section 4.1.1 of [@!RFC6749] may be used to identify a request to which a particular response is bound to.
+
 # Security Considerations {#security_considerations}
 
 ## Sending VP Token using Response Mode "direct_post" 
