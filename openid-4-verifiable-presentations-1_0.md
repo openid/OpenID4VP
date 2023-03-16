@@ -807,15 +807,21 @@ Note: if the transaction does not use the `redirect_uri`, e.g. it is a transacti
 
 ## Preventing Replay of the VP Token {#preventing-replay}
 
-An attacker could try to inject a VP Token (or individual Verifiable Presentations), that was obtained from a previous Authorization Response, into another Authorization Response thus impersonating the End-User that originally presented that VP Token or an individual Verifiable Presentation, respectively.
+An attacker could try to inject a VP Token (or an individual Verifiable Presentation), that was obtained from a previous Authorization Response, into another Authorization Response thus impersonating the End-User that originally presented that VP Token or the respective Verifiable Presentation.
 
-Implementers of this specification MUST implement suitable controls as defined in this section to detect such an attack. The measures described in this section are applied on the level of the individual Verifiable Presentation. The VP Token only serves as a container for Verifiable Presentations without further meaning. 
+Implementers of this specification MUST implement the controls as defined in this section to detect such an attack. 
 
-### Presentation with Cryptographic Proof of Possession
+This specification assumes that a Verifiable Credential is always presented with a cryptographic proof of possession which can be a Verifiable Presentation. This cryptographic proof of possession MUST be bound by the Wallet to the intended audience (the Client Identifier of the Verifier) and the respective transaction (identified by the Nonce in the Authorization Request) and the Verifier MUST verify this binding. 
 
-If the Verifiable Credential is presented with a cryptographic proof of possession, which can be a Verifiable Presentation, this cryptographic proof of possession MUST be bound by the Wallet to the intended audience and the respective transaction and the Verifier MUST verify this binding. Verifiable Presentation container objects MUST be linked to `client_id` and `nonce` from the Authentication Request. The `client_id` is used to detect the presentation of Verifiable Credentials to a different party other than the intended. This prevents a legitimate recipient of a Verifiable Presentation to present it to other Verifiers. The `nonce` value binds the Presentation to a certain authentication transaction and allows the Verifier to detect injection of a Presentation in the flow, which is especially important in the flows where the Presentation is passed through the front-channel. 
+The Verifier MUST create a fresh, cryptographically random numbers with sufficient entropy for every Authorization Request, store it with its current session, and pass it in the `nonce` Authorization Request Parameter to the Wallet.  
 
-Note: These values MAY be represented in different ways in a Verifiable Presentation (directly as claims or indirectly be incorporation in proof calculation) according to the selected proof format denoted by the format claim in the Verifiable Presentation container.
+The Wallet MUST link every Verifiable Presentation returned to the Verifier in the `vp_token` to the `client_id` and the `nonce` of the respective Authentication Request. 
+
+The Verifier MUST validate every individual Verifiable Presentation in an Authorization Response and ensure, it is linked to the `client_id` it had used for the respective Authorization Request and that the Verifiable Presentation is also linked to the `nonce` parameter value used in the respective Authorization Request.
+
+The `client_id` is used to detect the presentation of Verifiable Credentials to a different party other than the intended. This prevents a legitimate recipient of a Verifiable Presentation to present it to other Verifiers. The `nonce` value binds the Presentation to a certain authentication transaction and allows the Verifier to detect injection of a Presentation in the flow, which is especially important in the flows where the Presentation is passed through the front-channel. 
+
+Note: Different formats for Verifiable Presentations and signature/proof schemes use different ways to represent the intended audience and the session binding. Some use claims to directly represent those values, others include the values into the calculation of cryptographic proofs. There are also different naming conventions across the different formats. The format of the resepective presentation is determined from the format information in the presentation submission in the Authorization Response. 
 
 Here is a non-normative example of a Verifiable Presentation with a format identifier `jwt_vp_json` (only relevant part):
 
@@ -866,9 +872,13 @@ Here is a non-normative example for format=`ldp_vp` (only relevant part):
 
 In the example above, the requested `nonce` value is included as the `challenge` and `client_id` as the `domain` value in the proof of the Verifiable Presentation.
 
-### Presentation without Cryptographic Proof of Possession
+## Validation of Verifiable Presentations
 
-If the Verifiable Credential is not presented with a cryptographic proof of possession but relies on other methods for Holder Binding, the Verifier MUST verify this Holder Binding in order to ensure the Verifiable Credential is presented by the legitimate Holder. That might require the presentation of other Verifiable Credentials (with cryptographic Holder Binding) or the out-of-band validation of physical credentials or biometric traits.
+A Verifier MUST validate the integrity, authenticity, and Holder Binding of any Verifiable Presentation provided by an OP according to the rules of the respective Presentation format. 
+
+Note: Some of the available mechanisms are outlined in Section 4.3.2 of [@!DIF.PresentationExchange].
+
+It is NOT RECOMMENDED for the Subject to delegate the presentation of the Credential to a third party.
 
 ## Session Fixation {#session_fixation}
 
@@ -902,16 +912,6 @@ Implementations of this specification MUST have security mechanisms in place to 
 
 * Authentication between the different parts
 * The Verifier may include the hash of a cryptographically random number in the request and require the component requesting the Authorization Request data to provide the cryptographically random number.
-
-## Validation of Verifiable Presentations
-
-A Verifier MUST validate the integrity, authenticity, and Holder Binding of any Verifiable Presentation provided by an OP according to the rules of the respective Presentation format. 
-
-This requirement holds true even if those Verifiable Presentations are embedded within a signed OpenID Connect assertion, such as an ID Token or a UserInfo response. This is required because Verifiable Presentations might be signed by the same Holder but with different key material and/or the OpenID Connect assertions may be signed by a third party (e.g., a traditional OP). In both cases, just checking the signature of the respective OpenID Connect assertion does not, for example, check the Holder Binding.
-
-Note: Some of the available mechanisms are outlined in Section 4.3.2 of [@!DIF.PresentationExchange].
-
-It is NOT RECOMMENDED for the Subject to delegate the presentation of the Credential to a third party.
 
 ## Fetching Presentation Definitions by Reference
 
