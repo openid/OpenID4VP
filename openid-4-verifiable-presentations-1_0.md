@@ -201,7 +201,7 @@ Note that the diagram does not illustrate all of the optional features of this s
         |                |                                                      |
         |   User Authentication / Consent                                       |
         |                |                                                      |
-        |                |  (3)   Authorization Response as HTTP POST          |
+        |                |  (3)   Authorization Response as HTTP POST           |
         |                |  (VP Token with Verifiable Presentation(s))          |
         |                |<-----------------------------------------------------|
 ~~~
