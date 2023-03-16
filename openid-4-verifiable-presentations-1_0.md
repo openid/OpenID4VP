@@ -809,7 +809,7 @@ Here is a non-normative example of the payload of a Verifiable Presentation with
 
 In the example above, the requested `nonce` value is included as the `nonce` and `client_id` as the `aud` value in the proof of the Verifiable Presentation.
 
-Here is a non-normative example for a Verifiable Presentation with a format identifier `ldp_vp` (only relevant part):
+Here is a non-normative example for a Verifiable Presentation of a format identifier `ldp_vp` without a `proof` property:
 
 ```json
 {
