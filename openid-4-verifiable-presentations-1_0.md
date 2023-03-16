@@ -173,7 +173,7 @@ This specification defines the following new parameters:
 
 `client_id_scheme`: 
 : OPTIONAL. A string identifying the scheme of the value in the `client_id` Authorization Request parameter (Client Identifier scheme). The Verifier uses this parameter to indicate how the Wallet is supposed to interpret the Client Identifier and associated data in the process of Client identification, authentication, and authorization. A certain Client Identifier scheme MAY require the Verifier to sign the request as means of authentication and/or pass additional request parameters and require the Wallet to process those additional request parameters. The `client_id_scheme` parameter enables deployments of this specification to use different mechanisms to obtain and validate Client metadata beyond the scope of [@!RFC6749]. If the parameter is not present, the Wallet MUST behave as specified in [@!RFC6749]. See (#client_metadata_management) for the values defined by this specification. 
-The `client_id_scheme` parameter namespaces the respective Client Identifier. This means if a request uses the `client_id_scheme` parameter, the Wallet MUST interpret the Client Identifier of the Verifier in the context of the Client Identifier scheme. If the same Client Identifier is used with different Client Identifier schemes, those occurences MUST be treated as different Verifiers. Note that the Verifier needs determine which client id schemes the Wallet supports prior to sending the Authorisation Request in order to choose a supported scheme.
+The `client_id_scheme` parameter namespaces the respective Client Identifier. This means if a request uses the `client_id_scheme` parameter, the Wallet MUST interpret the Client Identifier of the Verifier in the context of the Client Identifier scheme. If the same Client Identifier is used with different Client Identifier schemes, those occurences MUST be treated as different Verifiers. Note that the Verifier needs determine which Client Identifier schemes the Wallet supports prior to sending the Authorisation Request in order to choose a supported scheme.
 
 Presentation Definition is a JSON Object that articulates what Verifiable Presentation(s) the Verifier is requesting to be presented as defined in Section 5 of [@!DIF.PresentationExchange].
 
@@ -466,7 +466,7 @@ The following new Authorization Request parameter is defined to be used in conju
 
 Note: the Verifier's component providing the user interface (Frontend) and the Verifier's component providing the Response URI (Response Endpoint) need to be able to map authorization requests to the respective authorization responses. The Verifier MAY use the `state` Authorization Request parameter to add appropriate data to the Authorization Response. 
 
-Note: if the `client_id_scheme` `redirect_uri` is used in conjunction with response mode `direct_post`, the `client_id` value MUST be equal to the `response_uri` value. Alternatively, the `response_uri` value can be omited.  
+Note: if the Client Identifier scheme `redirect_uri` is used in conjunction with response mode `direct_post`, the `client_id` value MUST be equal to the `response_uri` value. Alternatively, the `response_uri` value can be omited.  
 
 The following is a non-normative example of the payload of a Request Object with Response Mode `direct_post`:
 
@@ -813,7 +813,7 @@ Implementers of this specification MUST implement suitable controls as defined i
 
 ### Presentation with Cryptographic Proof of Possession
 
-If the Verifiable Credential is presented with a cryptographic proof of possession, which can be a Verifiable Presentation, this cryptographic proof of possession MUST be bound to the intended audience and the respective transaction. Verifiable Presentation container objects MUST be linked to `client_id` and `nonce` from the Authentication Request. The `client_id` is used to detect the presentation of Verifiable Credentials to a different party other than the intended. This prevents a legitimate recipient of a Verifiable Presentation to present it to other Verifiers. The `nonce` value binds the Presentation to a certain authentication transaction and allows the Verifier to detect injection of a Presentation in the flow, which is especially important in the flows where the Presentation is passed through the front-channel. 
+If the Verifiable Credential is presented with a cryptographic proof of possession, which can be a Verifiable Presentation, this cryptographic proof of possession MUST be bound by the Wallet to the intended audience and the respective transaction and the Verifier MUST verify this binding. Verifiable Presentation container objects MUST be linked to `client_id` and `nonce` from the Authentication Request. The `client_id` is used to detect the presentation of Verifiable Credentials to a different party other than the intended. This prevents a legitimate recipient of a Verifiable Presentation to present it to other Verifiers. The `nonce` value binds the Presentation to a certain authentication transaction and allows the Verifier to detect injection of a Presentation in the flow, which is especially important in the flows where the Presentation is passed through the front-channel. 
 
 Note: These values MAY be represented in different ways in a Verifiable Presentation (directly as claims or indirectly be incorporation in proof calculation) according to the selected proof format denoted by the format claim in the Verifiable Presentation container.
 
@@ -868,17 +868,17 @@ In the example above, the requested `nonce` value is included as the `challenge`
 
 ### Presentation without Cryptographic Proof of Possession
 
-If the Verifiable Credential is not presented with a cryptographic proof of possession but relies on other methods for Holder Binding, the Verifier MUST verify this Holder Binding in order to ensure the Verifiable Credential is presented by the legitimate Holder. That might require the presentation of other Verifiable Credentials (with cryptographic Holder Binding) or the out of bound validation of physical credentials or biometric traits.
+If the Verifiable Credential is not presented with a cryptographic proof of possession but relies on other methods for Holder Binding, the Verifier MUST verify this Holder Binding in order to ensure the Verifiable Credential is presented by the legitimate Holder. That might require the presentation of other Verifiable Credentials (with cryptographic Holder Binding) or the out-of-band validation of physical credentials or biometric traits.
 
 ## Session Fixation {#session_fixation}
 
 To perform a Session Fixation attack, an attacker would start the process at a device under his control, capture the Authorization Request and relay it to the device of a victim. The attacker would then periodically try to conclude the process, which would cause the Verifier on his device to try to fetch and verify the Authorization Response. 
 
-Such an attack is impossible against flows implemented with the response mode `fragment` as the VP Token is conveyed in the Authorization Response through a redirect on the device where the actual transaction was conducted, the victims device in case of an session fixation attempt. 
+Such an attack is impossible against flows implemented with the response mode `fragment` as the VP Token is conveyed in the Authorization Response through a redirect on the device where the actual transaction was conducted, the victim's device in case of an session fixation attempt. 
 
-However, the response mode `direct_post` susceptible to such an attack as the result is sent from the Wallet out of bound to the Verifier's Response Endpoint. 
+However, the response mode `direct_post` is susceptible to such an attack as the result is sent from the Wallet out-of-band to the Verifier's Response Endpoint. 
 
-This kind of attack can be detected, if rersponse mode `direct_post` is used in conjunction with the Redirect URI, which causes the Wallet to redirect the flow to the Verifier's experience at the device where the transaction was conclused. The Verifier MUST include a transaction specific secret (Response Code) into the Redirect URI returned by it Response URI and the Verifier's Response Endpoint MUST require the frontend to pass the respective Response Code when fetching the Authorization Response. That stops session fixation attacks as long as the attacker is unable to get access to the Response Code. 
+This kind of attack can be detected if response mode `direct_post` is used in conjunction with the Redirect URI, which causes the Wallet to redirect the flow to the Verifier's experience at the device where the transaction was concluded. The Verifier MUST include a transaction specific secret (Response Code) into the Redirect URI returned by it Response URI and the Verifier's Response Endpoint MUST require the frontend to pass the respective Response Code when fetching the Authorization Response. That stops session fixation attacks as long as the attacker is unable to get access to the Response Code. 
 
 See (#reference_design_direct_post) for more implementation considerations.
 
@@ -893,6 +893,15 @@ The Wallet MUST ensure the data in the Authorization Response cannot leak throug
 ### Protection of the Response URI
 
 The Verifier SHOULD protect its Response URI from inadvertent requests by checking that the value of the received `state` parameter corresponds to a recent Authorization Request. It MAY also use JARM [@!JARM] to authenticate the originator of the request. 
+
+### Protection of the Authorization Response Data
+
+This specification assumes that the Verifier's Response Endpoint offers an internal interface to other components of the Verifier to obtain (and subsequently process) Authorization Response data. An attacker could try to obtain Authorization Response Data from a Verifier's Response Endpoint by looking up this data through the internal interface. This could lead to leakage valid Verifiable Presentations containing PII. 
+
+Implementations of this specification MUST have security mechanisms in place to prevent inadvertent requests against this internal interface. Implementation options to fulfill this requirement include: 
+
+* Authentication between the different parts
+* The Verifier may include the hash of a cryptographically random number in the request and require the component requesting the Authorization Request data to provide the cryptographically random number.
 
 ## Validation of Verifiable Presentations
 
