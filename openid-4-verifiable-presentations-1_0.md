@@ -544,7 +544,7 @@ If the JWT is only a JWE, the following processing rules MUST be followed:
 - `iss`, `exp` and `aud` MUST be omitted in the JWT Claims Set of the JWE, and the processing rules as per [@!JARM] Section 2.4 related to these claims do not apply.
 - The processing rules as per [@!JARM] Section 2.4 related to JWS processing MUST be ignored.
 
-The following is a non-normative example of a JWT Claims Set used in an Authorization Response that is encrypted and not signed:
+The following is a non-normative example of the payload of a JWT used in an Authorization Response that is encrypted and not signed:
 
 <{{examples/response/jarm_jwt_enc_only_vc_json_body.json}}
 
@@ -566,7 +566,7 @@ The following is a non-normative example of a response using the `presentation_s
 
 <{{examples/response/jarm_jwt_vc_json_post.txt}}
 
-This is the JWT used in the example above before base64url encoding and signing:
+The following is a non-normative example of the payload of the JWT used in the example above before base64url encoding and signing:
 
 <{{examples/response/jarm_jwt_vc_json_body.json}}
 
@@ -784,7 +784,7 @@ Note: These values MAY be represented in different ways in a Verifiable Presenta
 
 Note: This specification assumes that a Verifiable Credential is always presented with a cryptographic proof of possession which can be a Verifiable Presentation. This cryptographic proof of possession is bound to audience and transaction as described in this section.
 
-Here is a non-normative example of a Verifiable Presentation with a format identifier `jwt_vp_json` (only relevant part):
+Here is a non-normative example of the payload of a Verifiable Presentation with a format identifier `jwt_vp_json`:
 
 ```json
 {
@@ -809,7 +809,7 @@ Here is a non-normative example of a Verifiable Presentation with a format ident
 
 In the example above, the requested `nonce` value is included as the `nonce` and `client_id` as the `aud` value in the proof of the Verifiable Presentation.
 
-Here is a non-normative example for format=`ldp_vp` (only relevant part):
+Here is a non-normative example for a Verifiable Presentation of a format identifier `ldp_vp` without a `proof` property:
 
 ```json
 {
@@ -1113,7 +1113,7 @@ The Credential format identifiers are `jwt_vc_json` for a W3C Verifiable Credent
 
 #### Example Credential
 
-The following is a JWT-based W3C Verifiable Credential that will be used through this section.
+The following is a non-normative example of the payload of a JWT-based W3C Verifiable Credential that will be used through this section.
 
 <{{examples/credentials/jwt_vc.json}}
 
@@ -1139,7 +1139,7 @@ The content of the `presentation_submission` is given in the following:
 
 <{{examples/response/ps_jwt_vc.json}}
 
-It refers to the VP in the `vp_token` parameter provided in the same response, which looks as follows.
+The following is a non-normative example of the payload of the VP in the `vp_token` parameter provided in the same response and referred to by the `presentation_submission` above:
 
 <{{examples/response/jwt_vp.json}}
 
@@ -1334,7 +1334,7 @@ The example response looks like this.
 
 In addition to the `presentation_submission` and `vp_token`, it also contains an `id_token`.
 
-The `id_token` content is shown in the following.
+The following is a non-normative example of the payload of an ID Token:
 
 ```json
 {
