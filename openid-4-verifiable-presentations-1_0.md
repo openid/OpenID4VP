@@ -35,14 +35,6 @@ organization="Microsoft"
     email = "kristina.yasuda@microsoft.com"
 
 [[author]]
-initials="A."
-surname="Lemmon"
-fullname="Adam Lemmon"
-organization="Convergence.tech"
-    [author.address]
-    email = "adam@convergence.tech"
-    
-[[author]]
 initials="T."
 surname="Looker"
 fullname="Tobias Looker"
@@ -137,6 +129,84 @@ This specification supports the response being sent using a redirect but also us
 Implementations can also be built on top of OpenID Connect Core, since OpenID Connect Core is based on OAuth 2.0. To benefit from the subject-signed ID Token feature, this specification can also be combined with the Self-Issued OP v2 specification [@SIOPv2].
 
 Any of the OAuth 2.0 related specifications, such as [@RFC9126], and [@RFC9101] and Best Current Practice (BCP) documents, such as [@RFC8252] and [@I-D.ietf-oauth-security-topics], can be implemented on top of this specification.
+
+## Same Device Flow {#same_device}
+
+Below is a diagram of a flow where the End-User presents a Credential to a Verifier residing on the same device as the Wallet.
+
+The Flow utilizes simple redirects to pass Authorization Request and Response between the Verifier and the Wallet. The Verifiable Presentations are returned to the Verifier in the fragment part of the Redirect URI. 
+
+Note that the diagram does not illustrate all of the optional features of this specification. 
+
+!---
+~~~ ascii-art
++--------------+   +-------------+                                    +-----------------+
+| User         |   |   Verifier  |                                    |      Wallet     |
++--------------+   +-------------+                                    +-----------------+  
+        |                |                                                      |
+        |    interacts   |                                                      |
+        |--------------->|                                                      |
+        |                |  (1) Authorization Request                           |
+        |                |  (Presentation Definition)                           |
+        |                |----------------------------------------------------->|
+        |                |                                                      |
+        |                |                                                      |
+        |   User Authentication / Consent                                       |
+        |                |                                                      |
+        |                |  (2)   Authorization Response                        |
+        |                |  (VP Token with Verifiable Presentation(s))          |
+        |                |<-----------------------------------------------------|
+~~~
+!---
+Figure: Same Device Flow
+
+(1) The Verifier sends an Authorization Request to the Wallet. The request contains a Presentation Definition as defined in [@!DIF.PresentationExchange] that describes what type of Credentials in what formats and which individual Claims within those Credentials (Selective Disclosure) the Verifier wants to get presented. The Wallet processes the request and determines what credentials are available matching the Verifier's request. The Wallet also authenticates the End-User and gathers her consent to present the requested Credentials. 
+
+(2) The Wallet prepares the Verifiable Presentation(s) of the requested and confirmed Verifable Credential(s). It then sends to the Verifier an Autorization Response where the Verifiable Presentation(s) are contained in the `vp_token` parameter.
+
+## Cross Device Flow {#cross_device}
+
+Below is a diagram of a flow where the End-User presents a Credential to a Verifier residing on a different device than the device the Wallet resides on.
+
+In this flow, the Verifier prepares a Authorization Request and renders it as a QR Code. The User then uses the Wallet app to scan the QR Code Flow. The Verifiable Presentations are sent to the Verifier in a direct HTTP POST request to a URL controlled by the Verifier. The flow uses the newly defined Response Type `vp_token` in conjunction with the newly defined Response Mode `direct_post`. In order to keep the size of the QR Code small, the actual Authorization Request just contains a Request Object URL according to [@!RFC9101], which the wallet uses to retrieve the actual Authorization Request data. 
+
+Note that the diagram does not illustrate all of the optional features of this specification. 
+
+!---
+~~~ ascii-art
++--------------+   +-------------+                                    +-----------------+
+| User         |   |   Verifier  |                                    |      Wallet     |
++--------------+   +-------------+                                    +-----------------+  
+        |                |                                                      |
+        |    interacts   |                                                      |
+        |--------------->|                                                      |
+        |                |  (1) Authorization Request                           |
+        |                |      (Request URI)                                   |
+        |                |----------------------------------------------------->|
+        |                |                                                      |
+        |                |  (2) Request the Request Object                      |
+        |                |<-----------------------------------------------------|
+        |                |                                                      |
+        |                |  (2.5) Respond with the Request Object               |
+        |                |      (Presentation Definition)                       |
+        |                |----------------------------------------------------->|
+        |                |                                                      |
+        |   User Authentication / Consent                                       |
+        |                |                                                      |
+        |                |  (3)   Authorization Response as HTTP POST           |
+        |                |  (VP Token with Verifiable Presentation(s))          |
+        |                |<-----------------------------------------------------|
+~~~
+!---
+Figure: Cross Device Flow
+
+(1) The Verifier sends to the Wallet an Authorization Request that contains a Request URI from where to obtain the Request Object containing request parameters. 
+
+(2) The Wallet sends an HTTP GET request to the Request URI to retrieve the Request Object.
+
+(2.5) The HTTP GET response returns the Request Object containing Authorization Request parameters. It especially contains a Presentation Definition as defined in [@!DIF.PresentationExchange] that describes what type of Credentials in what formats and which individual Claims within those Credentials (Selective Disclosure) the Verifier wants to get presented. The Wallet processes the Request Object and determines what credentials are available matching the Verifier's request. The Wallet also authenticates the End-User and gathers her consent to present the requested Credentials. 
+
+(3) The Wallet prepares the Verifiable Presentation(s) of the requested and confirmed Verifable Credential(s). It then sends to the Verifier an Autorization Response where the Verifiable Presentation(s) are contained in the `vp_token` parameter.
 
 # Scope
 
@@ -540,10 +610,10 @@ To encrypt an unsigned Authorization Response, this specification extends [@!JAR
 
 If the JWT is only a JWE, the following processing rules MUST be followed:
 
-- `iss`, `exp` and `aud` MAY be omitted in the JWT Claims Set of the JWE, and if omitted the processing rules as per [@!JARM] Section 2.4 related to these claims do not apply.
+- `iss`, `exp` and `aud` MUST be omitted in the JWT Claims Set of the JWE, and the processing rules as per [@!JARM] Section 2.4 related to these claims do not apply.
 - The processing rules as per [@!JARM] Section 2.4 related to JWS processing MUST be ignored.
 
-The following is a non-normative example of a JWT Claims Set used in an Authorization Response that is encrypted and not signed:
+The following is a non-normative example of the payload of a JWT used in an Authorization Response that is encrypted and not signed:
 
 <{{examples/response/jarm_jwt_enc_only_vc_json_body.json}}
 
@@ -565,7 +635,7 @@ The following is a non-normative example of a response using the `presentation_s
 
 <{{examples/response/jarm_jwt_vc_json_post.txt}}
 
-This is the JWT used in the example above before base64url encoding and signing:
+The following is a non-normative example of the payload of the JWT used in the example above before base64url encoding and signing:
 
 <{{examples/response/jarm_jwt_vc_json_body.json}}
 
@@ -856,7 +926,7 @@ The `client_id` is used to detect the presentation of Verifiable Credentials to 
 
 Note: Different formats for Verifiable Presentations and signature/proof schemes use different ways to represent the intended audience and the session binding. Some use claims to directly represent those values, others include the values into the calculation of cryptographic proofs. There are also different naming conventions across the different formats. The format of the resepective presentation is determined from the format information in the presentation submission in the Authorization Response. 
 
-Here is a non-normative example of a Verifiable Presentation with a format identifier `jwt_vp_json` (only relevant part):
+Here is a non-normative example of the payload of a Verifiable Presentation with a format identifier `jwt_vp_json`:
 
 ```json
 {
@@ -881,7 +951,7 @@ Here is a non-normative example of a Verifiable Presentation with a format ident
 
 In the example above, the requested `nonce` value is included as the `nonce` and `client_id` as the `aud` value in the proof of the Verifiable Presentation.
 
-Here is a non-normative example for format=`ldp_vp` (only relevant part):
+Here is a non-normative example for a Verifiable Presentation of a format identifier `ldp_vp` without a `proof` property:
 
 ```json
 {
@@ -1216,7 +1286,7 @@ The Credential format identifiers are `jwt_vc_json` for a W3C Verifiable Credent
 
 #### Example Credential
 
-The following is a JWT-based W3C Verifiable Credential that will be used through this section.
+The following is a non-normative example of the payload of a JWT-based W3C Verifiable Credential that will be used through this section.
 
 <{{examples/credentials/jwt_vc.json}}
 
@@ -1242,7 +1312,7 @@ The content of the `presentation_submission` is given in the following:
 
 <{{examples/response/ps_jwt_vc.json}}
 
-It refers to the VP in the `vp_token` parameter provided in the same response, which looks as follows.
+The following is a non-normative example of the payload of the VP in the `vp_token` parameter provided in the same response and referred to by the `presentation_submission` above:
 
 <{{examples/response/jwt_vp.json}}
 
@@ -1437,7 +1507,7 @@ The example response looks like this.
 
 In addition to the `presentation_submission` and `vp_token`, it also contains an `id_token`.
 
-The `id_token` content is shown in the following.
+The following is a non-normative example of the payload of an ID Token:
 
 ```json
 {
@@ -1466,7 +1536,7 @@ Note: Plan to register the following response types in the [OAuth Authorization 
 
 # Acknowledgements {#Acknowledgements}
 
-We would like to thank John Bradley, Brian Campbell, David Chadwick, Giuseppe De Marco, Daniel Fett, George Fletcher, Fabian Hauck, Joseph Heenan, Alen Horvat, Andrew Hughes, Edmund Jay, Michael B. Jones, Gaurav Khot, Ronald Koenig, Kenichi Nakamura, Nat Sakimura, Arjen van Veen, and Jacob Ward for their valuable feedback and contributions that helped to evolve this specification.
+We would like to thank John Bradley, Brian Campbell, David Chadwick, Giuseppe De Marco, Daniel Fett, George Fletcher, Fabian Hauck, Joseph Heenan, Alen Horvat, Andrew Hughes, Edmund Jay, Michael B. Jones, Gaurav Khot, Ronald Koenig, Adam Lemmon, Kenichi Nakamura, Nat Sakimura, Arjen van Veen, and Jacob Ward for their valuable feedback and contributions that helped to evolve this specification.
 
 # Notices
 
@@ -1483,6 +1553,7 @@ The technology described in this specification was made available from contribut
    -17
 
    * direct_post response mode uses state to identify response 
+   * Added sequence diagrams for same and cross device flows to overview section
 
    -16
 
