@@ -35,14 +35,6 @@ organization="Microsoft"
     email = "kristina.yasuda@microsoft.com"
 
 [[author]]
-initials="A."
-surname="Lemmon"
-fullname="Adam Lemmon"
-organization="Convergence.tech"
-    [author.address]
-    email = "adam@convergence.tech"
-    
-[[author]]
 initials="T."
 surname="Looker"
 fullname="Tobias Looker"
@@ -1441,7 +1433,7 @@ Note: Plan to register the following response types in the [OAuth Authorization 
 
 # Acknowledgements {#Acknowledgements}
 
-We would like to thank John Bradley, Brian Campbell, David Chadwick, Giuseppe De Marco, Daniel Fett, George Fletcher, Fabian Hauck, Joseph Heenan, Alen Horvat, Andrew Hughes, Edmund Jay, Michael B. Jones, Gaurav Khot, Ronald Koenig, Kenichi Nakamura, Nat Sakimura, Arjen van Veen, and Jacob Ward for their valuable feedback and contributions that helped to evolve this specification.
+We would like to thank John Bradley, Brian Campbell, David Chadwick, Giuseppe De Marco, Daniel Fett, George Fletcher, Fabian Hauck, Joseph Heenan, Alen Horvat, Andrew Hughes, Edmund Jay, Michael B. Jones, Gaurav Khot, Ronald Koenig, Adam Lemmon, Kenichi Nakamura, Nat Sakimura, Arjen van Veen, and Jacob Ward for their valuable feedback and contributions that helped to evolve this specification.
 
 # Notices
 
