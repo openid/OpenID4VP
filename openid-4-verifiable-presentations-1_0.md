@@ -855,6 +855,10 @@ Clients intending to authenticate the end-user utilizing a claim in a Verifiable
 
 Implementers MUST make sure that JSONPath used as part of `presentation_definition` and `presentation_submission` parameters cannot be used to execute arbitrary scripts on a server. This can be achieved, for example, by implementing the entire syntax of the query without relying on the parsers of programming language engine. For details, see Section 4 of [@I-D.ietf-jsonpath-base].
 
+## Filters property in Presentation Exchange
+
+Implementers should be careful with what is used as a filter property in [@!DIF.PresentationExchange]. For example, when using regular expressions or JSON Schemas as filters, implementers should ensure that computations and resource access are bounded with the security in mind to prevent attacks such as denial of service or unauthorized access.
+
 {backmatter}
 
 <reference anchor="VC_DATA" target="https://www.w3.org/TR/vc-data-model">
