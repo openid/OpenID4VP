@@ -225,7 +225,7 @@ Presentation of Credentials using OpenID for Verifiable Presentations can be com
 
 The Authorization Request follows the definition given in [@!RFC6749].
 
-The Verifier may send Authorization Request as Request Object by value or by reference as defined in Section 6.1 of [@!OpenID.Core] or [@RFC9101].
+The Verifier may send Authorization Request as Request Object by value or by reference as defined in JWT-Secured Authorization Request (JAR) [@RFC9101].
 
 This specification defines the following new parameters:
 
@@ -396,7 +396,7 @@ The usage of the response mode `direct_post` (see (#response_mode_post)) in conj
 
 ## `aud` of a Request Object
 
-When the Verifier is sending a Request Object as defined in Section 6.1 of [@!OpenID.Core] or [@!RFC9101], the `aud` Claim value depends on whether the recipient of the request can be identified by the Verifier or not:
+When the Verifier is sending a Request Object as defined in [@!RFC9101], the `aud` Claim value depends on whether the recipient of the request can be identified by the Verifier or not:
 
 - the `aud` Claim MUST equal to the `issuer` Claim value, when Dynamic Discovery is performed.
 - the `aud` Claim MUST be "https://self-issued.me/v2", when Static Discovery metadata is used.
