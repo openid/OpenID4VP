@@ -927,9 +927,9 @@ Implementers MUST make sure that JSONPath used as part of `presentation_definiti
 
 {backmatter}
 
-<reference anchor="VC_DATA" target="https://www.w3.org/TR/vc-data-model">
+<reference anchor="VC_DATA" target="https://www.w3.org/TR/2022/REC-vc-data-model-20220303/">
   <front>
-    <title>Verifiable Credentials Data Model 1.0</title>
+    <title>Verifiable Credentials Data Model 1.1</title>
     <author fullname="Manu Sporny">
       <organization>Digital Bazaar</organization>
     </author>
