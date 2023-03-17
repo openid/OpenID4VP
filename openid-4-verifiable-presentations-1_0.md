@@ -990,7 +990,7 @@ Implementers MUST make sure that JSONPath used as part of `presentation_definiti
   </front>
 </reference>
 
-<reference anchor="DIF.PresentationExchange" target="https://identity.foundation/presentation-exchange">
+<reference anchor="DIF.PresentationExchange" target="https://identity.foundation/presentation-exchange/spec/v2.0.0/">
         <front>
           <title>Presentation Exchange 2.0.0</title>
 		  <author fullname="Daniel Buchner">
