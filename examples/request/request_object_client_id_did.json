@@ -1,10 +1,13 @@
 {
    "client_id": "did:example:123",
+   "client_id_scheme": "did",
+   "response_types": "vp_token",
    "redirect_uri": "https://client.example.org/callback",
-   "response_type": "vp_token id_token",
+   "nonce":"n-0S6_WzA2Mj",
+   "presentation_definition": "...",
    "client_metadata": {
       "vp_formats": {
-         "jwt_vp_json": {
+         "jwt_vp": {
             "alg": [
                "EdDSA",
                "ES256K"
@@ -15,8 +18,6 @@
                "Ed25519Signature2018"
             ]
          }
-      },
-      "client_name": "My Example (SIOP)",
-      "application_type": "web"
+      }
    }
 }
