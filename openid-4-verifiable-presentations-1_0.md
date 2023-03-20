@@ -676,6 +676,16 @@ This document also defines the following additional error codes and error descri
 
 - The Presentation Definition URL can be reached, but the specified `presentation_definition` cannot be found at the URL.
 
+## VP Token Validation
+
+Verifiers MUST validate the VP Token in the following manner:
+
+1. Determine the number of VPs returned in the VP Token and identify in which VP requested VC(s) are included, using the Input Descriptor Mapping Object(s) in the Presntation Submission.
+1. Validate the signature of each of the VP(s) passed in the VP Token. 
+1. Confirm that the VC(s) meet all criteria sent in the Presentation Definition in the Authorization Request.
+1. Validate signature(s) on each VC(s).
+1. Perform the checks required by the Verifier’s policy, based on the set of trust requirements such as trust frameworks it belongs to, such as revocation checks.
+
 # Wallet Invocation {#wallet-invocation}
 
 The Verifier has the choice of the following mechanisms to invoke a Wallet:
