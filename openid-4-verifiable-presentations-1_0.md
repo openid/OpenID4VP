@@ -5,7 +5,7 @@ ipr = "none"
 workgroup = "connect"
 keyword = ["security", "openid", "ssi"]
 
-[seriesInfo] 
+[seriesInfo]
 name = "Internet-Draft"
 value = "openid-4-verifiable-presentations-1_0-17"
 status = "standard"
@@ -521,7 +521,7 @@ The response mode `direct_post` allows the Wallet to send the Authorization Resp
 
 It has been defined to address the following use cases: 
 
-* Verifier and Wallet are located on different devices, thus the Wallet cannot send the Authorization Response to the Verifier using a redirect.
+* Verifier and Wallet are located on different devices, thus the Wallet cannot send the Authorization Response to the Verifier using a redirect. 
 * The Authorization Response size exceeds the URL length limits of user agents, so flows relying only on redirects (such as Response Mode `fragment`) cannot be used. In those cases, the response mode `direct_post` is the way to convey the Verifiable Presentations to the Verifier without the need for the Wallet to have a backend.
 
 The Response Mode is defined in accordance with [@!OAuth.Responses] as follows:
@@ -592,7 +592,7 @@ The following is a non-normative example of the response from the Verifier to th
   Cache-Control: no-store
 
   {
-    "redirect_uri":"https://client.example.org/cb#response_code=091535f699ea575c7937fa5f0f454aee"
+    "redirect_uri":"https://client.example.org/cb#response_code=091535f699ea575c7937fa5f0f454aee" 
   }
 ```
 
@@ -629,7 +629,7 @@ To sign the Authorization Response, the Wallet MUST use a private key that corre
 
 This specification also defines a new Response Mode `direct_post.jwt`, which allows for JARM to be used with response mode `direct_post` defined in (#response_mode_post).
 
-The Response Mode `direct_post.jwt` causes the Wallet to send the Authorization Response using a HTTPS POST request instead of redirecting back to the Verifier as defined in (#response_mode_post). The Wallet adds the `response` parameter containing the JWT as defined in Section 4.1. of [@!JARM] and (#jarm) in the body of an HTTPS POST request using the `application/x-www-form-urlencoded` content type.
+The Response Mode `direct_post.jwt` causes the Wallet to send the Authorization Response using an HTTPS POST request instead of redirecting back to the Verifier as defined in (#response_mode_post). The Wallet adds the `response` parameter containing the JWT as defined in Section 4.1. of [@!JARM] and (#jarm) in the body of an HTTPS POST request using the `application/x-www-form-urlencoded` content type.
 
 The following is a non-normative example of a response using the `presentation_submission` and `vp_token` values from (#jwt_vc). (line breaks for display purposes only):
 
@@ -908,7 +908,7 @@ Note: if the Verifier's Response Endpoint did not return a `redirect_uri` in ste
 
 # Security Considerations {#security_considerations}
 
-## Preventing Replay of the VP Token {#preventing-replay}
+## Preventing Replay of the VP Token {#preventing-replay} 
 
 An attacker could try to inject a VP Token (or an individual Verifiable Presentation), that was obtained from a previous Authorization Response, into another Authorization Response thus impersonating the End-User that originally presented that VP Token or the respective Verifiable Presentation.
 
@@ -977,7 +977,7 @@ In the example above, the requested `nonce` value is included as the `challenge`
 
 ## Validation of Verifiable Presentations
 
-A Verifier MUST validate the integrity, authenticity, and Holder Binding of any Verifiable Presentation provided by an Wallet according to the rules of the respective Presentation format. 
+A Verifier MUST validate the integrity, authenticity, and Holder Binding of any Verifiable Presentation provided by a Wallet according to the rules of the respective Presentation format. 
 
 Note: Some of the available mechanisms are outlined in Section 4.3.2 of [@!DIF.PresentationExchange].
 
