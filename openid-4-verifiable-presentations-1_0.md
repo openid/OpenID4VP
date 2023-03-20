@@ -196,8 +196,6 @@ The following additional considerations are given for pre-existing Authorization
 `response_mode`:
 : OPTIONAL. Defined in [@!OAuth.Responses]. This parameter is used (through the new response mode `direct_post`) to ask the Wallet to send the response to the Verifier via an HTTPS connection (see (#response_mode_post) for more details). It is also used to request signing and encrypting (see (#jarm) for more details). If the parameter is not present, the default value is `fragment`. 
 
-The three ways to request Credential presentation are mutually exclusive. A request MUST NOT contain more than one of `presentation_definition`, `presentation_definition_uri`, or a `scope` value representing a Presentation Definition. The Wallet MUST refuse any request violating this requirement.
-
 This is an example Authorization Request: 
 
 ```
@@ -587,7 +585,8 @@ The error response follows the rules as defined in [@!RFC6749], with the followi
 - The request contains more than one out of the following three options to communicate a requested credential: a `presentation_definition` parameter, a `presentation_definition_uri` parameter, or a scope value representing a Presentation Definition.
 - Requested Presentation Definition does not conform to the DIF PEv2 specification [@!DIF.PresentationExchange].
 - The Wallet does not support the `client_id_scheme` value passed in the Authorization Request.
-- The Client Identifier passed in the request did not belong to the Client Identifier scheme indicated in the Authorization Request, or requirements of a certain scheme was violated, for example an unsigned request was sent with Client Identifier scheme `entity_id`.  
+- The Client Identifier passed in the request did not belong to the Client Identifier scheme indicated in the Authorization Request, or requirements of a certain scheme was violated, for example an unsigned request was sent with Client Identifier scheme `entity_id`.
+- A request contained more than one of the following: `presentation_definition`, `presentation_definition_uri`, or a `scope` value representing a Presentation Definition.
 
 `invalid_client`:
 
