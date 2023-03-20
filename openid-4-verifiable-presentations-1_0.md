@@ -752,6 +752,8 @@ One level of nesting `path_nested` objects is sufficient to describe a VC includ
 
 The `state` parameter defined in Section 4.1.1 of [@!RFC6749] may be used by a verifier to link requests and responses. Also see Section 3.6 and Section 5.3.5 of [@RFC6819], and [@I-D.ietf-oauth-security-topics].
 
+When using Response Mode `direct_post`, also see (#security_considerations_direct_post).
+
 # Security Considerations {#security_considerations}
 
 ## Sending VP Token using Response Mode "direct_post" 
