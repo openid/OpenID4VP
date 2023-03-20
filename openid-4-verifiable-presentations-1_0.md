@@ -254,7 +254,7 @@ A public key to be used by the Wallet as an input to the key agreement to encryp
 The following additional considerations are given for pre-existing Authorization Request parameters:
 
 `nonce`:
-: REQUIRED. Defined in  [@!OpenID.Core]. It is used to securely bind the Verifiable Presentation(s) provided by the Wallet to the particular transaction.
+: REQUIRED. Defined in  [@!OpenID.Core]. It is used to securely bind the Verifiable Presentation(s) provided by the Wallet to the particular transaction. See (#preventing-replay) for details. 
 
 `scope`:
 : OPTIONAL. Defined in [@!RFC6749]. The Wallet MAY allow Verifiers to request presentation of Verifiable Credentials by utilizing a pre-defined scope value. See (#request_scope) for more details.
@@ -582,7 +582,7 @@ The following new parameter is defined to be used in this response from the Resp
 
 Note: Response Mode `direct_post` without the `redirect_uri` could be less secure than Response Modes with redirects. For details, see ((#session_fixation)).
 
-The value of the Redirect URI is at the discretion of the Verifier. However, the Verifier MUST add a transaction specific secret to the URL to ensure only the receiver of the redirect is able to fetch and process the Authorization Response. It is RECOMMENDED to add a parameter `response_code` to the URL for that purpose. 
+The value of the Redirect URI is at the discretion of the Verifier. However, the Verifier MUST add a fresh, cryptographically random number to the URL. This number is used to ensure only the receiver of the redirect is able to fetch and process the Authorization Response. The number could be added as a path component or a parameter to the URL. It is RECOMMENDED to use a cryptographic random value of 128 bits or more at the time of the writing of this specification. For implementation considerations see (#implementation_considerations_direct_post).
 
 The following is a non-normative example of the response from the Verifier to the Wallet upon receiving the Authorization Response at the Response Endpoint (using a `response_code` parameter from (#implementation_considerations_direct_post)):
 
@@ -977,7 +977,7 @@ In the example above, the requested `nonce` value is included as the `challenge`
 
 ## Validation of Verifiable Presentations
 
-A Verifier MUST validate the integrity, authenticity, and Holder Binding of any Verifiable Presentation provided by an OP according to the rules of the respective Presentation format. 
+A Verifier MUST validate the integrity, authenticity, and Holder Binding of any Verifiable Presentation provided by an Wallet according to the rules of the respective Presentation format. 
 
 Note: Some of the available mechanisms are outlined in Section 4.3.2 of [@!DIF.PresentationExchange].
 
