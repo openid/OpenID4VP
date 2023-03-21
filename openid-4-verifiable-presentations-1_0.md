@@ -696,7 +696,7 @@ This specification defines new metadata parameters according to [@!RFC8414].
 
 * `presentation_definition_uri_supported`: OPTIONAL. Boolean value specifying whether the Wallet supports the transfer of `presentation_definition` by reference, with true indicating support. If omitted, the default value is true.
 * `vp_formats_supported`: REQUIRED. An object containing a list of key value pairs, where the key is a string identifying a Credential format supported by the Wallet. Valid Credential format identifier values are defined in Annex E of [@!OpenID.VCI]. Other values may be used when defined in the profiles of this specification. The value is an object containing a parameter defined below:
-    * `alg_values_supported`: An object where the value is an array of case sensitive strings that identify the cryptographic suites that are supported. Cipher suites for Verifiable Credentials in `jwt_vc_json`, `json_vc_json-ld`, `jwt_vp_json`, `json_vp_json-ld` formats defined in (#alternative_credential_formats) should use algorithm names defined in [IANA JOSE Algorithms Registry](https://www.iana.org/assignments/jose/jose.xhtml#web-signature-encryption-algorithms). Cipher suites for Verifiable Credentials in `ldp_vc` and `ldp_vp` format should use signature suites names defined in [Linked Data Cryptographic Suite Registry](https://w3c-ccg.github.io/ld-cryptosuite-registry/). Cipher suites for Verifiable Credentials in `mso_mdoc` format should use signature suites names defined in ISO/IEC 18013-5:2021. Parties using other Credential formats will need to agree upon the meanings of the values used, which may be context-specific.
+    * `alg_values_supported`: An object where the value is an array of case sensitive strings that identify the cryptographic suites that are supported. Cipher suites for Verifiable Credentials in `jwt_vc_json`, `json_vc_json-ld`, `jwt_vp_json`, `json_vp_json-ld` formats should use algorithm names defined in [IANA JOSE Algorithms Registry](https://www.iana.org/assignments/jose/jose.xhtml#web-signature-encryption-algorithms). Cipher suites for Verifiable Credentials in `ldp_vc` and `ldp_vp` format should use signature suites names defined in [Linked Data Cryptographic Suite Registry](https://w3c-ccg.github.io/ld-cryptosuite-registry/). Cipher suites for Verifiable Credentials in `mso_mdoc` format should use signature suites names defined in ISO/IEC 18013-5:2021. Parties using other Credential formats will need to agree upon the meanings of the values used, which may be context-specific.
 
 Below is a non-normative example of a `vp_formats_supported` parameter:
 
@@ -738,7 +738,7 @@ This specification defines how the Wallet can determine Credential formats, proo
 This specification defines the following new metadata parameters according to [@!RFC7591], to be used by the Verifier:
 
 `vp_formats`:
-: REQUIRED. An object defining the formats and proof types of Verifiable Presentations and Verifiable Credentials that a Verifier supports. Valid format identifier values are defined in (#alternative_credential_formats) and include `jwt_vc_json`, `jwt_vc_json-ld`, `ldp_vc`, `jwt_vp_json`, `jwt_vp_json-ld`, `ldp_vp`, and `mso_mdoc`. Deployments can extend the formats supported, provided Issuers, Holders and Verifiers all understand the new format.
+: REQUIRED. An object defining the formats and proof types of Verifiable Presentations and Verifiable Credentials that a Verifier supports. Valid format identifier values are defined in Annex E of [@!OpenID.VCI] and include `jwt_vc_json`, `jwt_vc_json-ld`, `ldp_vc`, `jwt_vp_json`, `jwt_vp_json-ld`, `ldp_vp`, and `mso_mdoc`. Deployments can extend the formats supported, provided Issuers, Holders and Verifiers all understand the new format.
 
 `client_id_scheme`:
 : OPTIONAL. JSON String identifying the client's id scheme. The value range defined by this specification is `pre-registered`, `redirect_uri`, `entity_id`, `did`. If omitted, the default value is `pre-registered`. 
@@ -935,7 +935,7 @@ The `client_id` is used to detect the presentation of Verifiable Credentials to 
 
 Note: Different formats for Verifiable Presentations and signature/proof schemes use different ways to represent the intended audience and the session binding. Some use claims to directly represent those values, others include the values into the calculation of cryptographic proofs. There are also different naming conventions across the different formats. The format of the resepective presentation is determined from the format information in the presentation submission in the Authorization Response. 
 
-Here is a non-normative example of the payload of a Verifiable Presentation with a format identifier `jwt_vp_json` defined in (#jwt_vc):
+Here is a non-normative example of the payload of a Verifiable Presentation with a format identifier `jwt_vp_json`:
 
 ```json
 {
