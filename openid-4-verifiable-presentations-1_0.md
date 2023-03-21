@@ -1170,7 +1170,7 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </front>
  </reference>
 
-# Examples {#alternative_credential_formats}
+# Examples with Credentials in Various Formats {#alternative_credential_formats}
 
 OpenID for Verifiable Presentations is Credential format agnostic, i.e. it is designed to allow applications to request and receive Verifiable Presentations and Verifiable Credentials in any format, not limited to the formats defined in [@!VC_DATA]. This section aims to illustrate this with examples utilizing different Credential formats. Customization of OpenID for Verifiable Presentation for Credential formats other than those defined in [@!VC_DATA] uses extension points of Presentation Exchange [@!DIF.PresentationExchange]. 
 
