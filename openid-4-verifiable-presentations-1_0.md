@@ -817,6 +817,12 @@ Current version of this document does not support presentation of a VP nested in
 
 One level of nesting `path_nested` objects is sufficient to describe a VC included inside a VP.
 
+## State Management
+
+The `state` parameter defined in Section 4.1.1 of [@!RFC6749] may be used by a verifier to link requests and responses. Also see Section 3.6 and Section 5.3.5 of [@RFC6819], and [@I-D.ietf-oauth-security-topics].
+
+When using Response Mode `direct_post`, also see (#security_considerations_direct_post).
+
 ## Response Mode `direct_post` {#implementation_considerations_direct_post}
 
 The design of the interactions between the different components of the Verifier (especially Frontend and Response Endpoint) when using Response Mode `direct_post` is at the discretion of the Verifier since it does not affect the interface between the Verifier and the Wallet. 
