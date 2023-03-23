@@ -209,17 +209,15 @@ This is an example Authorization Request:
 
 This parameter contains a Presentation Definition JSON object conforming to the syntax defined in Section 5 of [@!DIF.PresentationExchange].
 
-The following shows an example `presentation_definition` parameter:
+The following is a non-normative example how `presentation_definition` parameter can simply be used to request the presentation of a Credential of a certain type:
 
 <{{examples/request/vp_token_type_only.json}}
 
-This simple example requests the presentation of a Credential of a certain type.
-
-The following example shows how the Verifier can request selective disclosure or certain claims from a Credential of a particular type.
+The following non-normative example shows how the Verifier can request selective disclosure or certain claims from a Credential of a particular type.
 
 <{{examples/request/vp_token_type_and_claims.json}}
 
-Clients can also ask for alternative Verifiable Credentials being presented, which is shown in the next example:
+The following non-normative example shows how the Verifiers can also ask for alternative Verifiable Credentials being presented:
 
 <{{examples/request/vp_token_alternative_credentials.json}}
 
@@ -425,21 +423,21 @@ The following is an example response to a request of a response type `vp_token`,
     &vp_token=...
 ```
 
-This is an example of a VP Token containing a single Verifiable Presentation
+The following is a non-normative example of a VP Token containing a single Verifiable Presentation:
 
 <{{examples/response/vp_token_raw_ldp_vp.json}}
 
-with a matching `presentation_submission`.
+The following is a non-normative example of a `presentation_submission` parameter sent alongside a VP in the example above. It corresponds to a second Presentation Definition example in (#request_presentation_definition):
 
 <{{examples/response/presentation_submission.json}}
 
 A `descriptor_map` element MUST contain a `path_nested` parameter referring to the actual Credential carried in the respective Verifiable Presentation. 
 
-This is an example of a VP Token containing multiple Verifiable Presentations,   
+The following is a non-normative example of a VP Token containing multiple Verifiable Presentations:
 
 <{{examples/response/vp_token_multiple_vps.json}}
 
-with a matching `presentation_submission` parameter.
+The following is a non-normative example of a `presentation_submission` parameter sent alongside a VP in the example above. It does not correspond to any Presentation Definition examples in this specification:
 
 <{{examples/response/presentation_submission_multiple_vps.json}}
 
@@ -1215,7 +1213,7 @@ The `constraints` object requires the selected Credential to conform with the sc
 
 #### Request Example with Selective Release of Claims
 
-The next example leverages the AnonCreds' capabilities for selective disclosure by requesting a subset of the claims in the Credential to be disclosed to the Verifier.
+The next example leverages the AnonCreds' capabilities for selective releasee by requesting a subset of the claims in the Credential to be disclosed to the Verifier.
 
 The presentation request looks the same as above. The difference is in the `presentation_definition` parameter as shown in the following:
 
