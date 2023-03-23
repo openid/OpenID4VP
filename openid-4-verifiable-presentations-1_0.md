@@ -604,11 +604,11 @@ Note: In the Response Mode `direct_post` or `direct_post.jwt`, the Wallet can ch
 
 ## Signed and Encrypted Responses {#jarm}
 
-This section defines how Authorization Response containing a VP Token can be signed and/or encrypted at the application level when the Response Type value is `vp_token` or `vp_token id_token`.
+This section defines how Authorization Response containing a VP Token can be signed and/or encrypted at the application level when the Response Type value is `vp_token` or `vp_token id_token`. It enables protecting the Authorization Response that contains personal data from leakage when it is returned through the browser (front channel).
 
-To sign, or sign and encrypt the Authorization Response, implementations MAY use JWT Secured Authorization Response Mode for OAuth 2.0 (JARM) [@!JARM]. 
+To sign, or sign and encrypt the Authorization Response, implementations MAY use JWT Secured Authorization Response Mode for OAuth 2.0 (JARM) [@!JARM].
 
-To encrypt an unsigned Authorization Response, this specification extends [@!JARM] to allow the JWT containing the response parameters to be only encrypted as a JWE. 
+This specification also defines how to encrypt an unsigned Authorization Response using mechanisms defined in [@!JARM]. The JWT containing the response parameters can be only encrypted as a JWE. It has been defined because the choice of the key used for signing to prevent it from becoming a correlation factor, and the establishment of trust in that key to ensure authenticity can be a challenge. For security considerations of encrypted but unsigned responses, see (#encrypting_unsigned_response).
 
 If the JWT is only a JWE, the following processing rules MUST be followed:
 
@@ -1027,7 +1027,17 @@ Implementations of this specification MUST have security mechanisms in place to 
 
 ## User Authentication using Verifiable Credentials
 
-Clients intending to authenticate the end-user utilizing a claim in a Verifiable Credential MUST ensure this claim is stable for the end-user as well locally unique and never reassigned within the Credential Issuer to another end-user. Such a claim MUST also only be used in combination with the Credential Issuer identifier to ensure global uniqueness and to prevent attacks where an attacker obtains the same claim from a different Credential Issuer and tries to impersonate the legitimate user. 
+Clients intending to authenticate the end-user utilizing a claim in a Verifiable Credential MUST ensure this claim is stable for the end-user as well locally unique and never reassigned within the Credential Issuer to another end-user. Such a claim MUST also only be used in combination with the Credential Issuer identifier to ensure global uniqueness and to prevent attacks where an attacker obtains the same claim from a different Credential Issuer and tries to impersonate the legitimate user.
+
+## Encrypting an Unsigned Response {#encrypting_unsigned_response}
+
+This specification defines in (#jarm) how to encrypt an unsigned Authorization Response using mechanisms defined in [@!JARM].
+
+Therefore, Verifiers MUST NOT assume a response is integrity protected based solely on the response being received when Response Mode is one of those defined in [@!JARM], or `direct_post.jwt` defined in (#direct_post_jwt).
+
+When Authorization Response is encrypted but not signed, the attacker who knows an encryption key of the Verifier might be able to generate a new encrypted Authorization Response for the Verifier. Such attacker-generated Authorization Response might contain parameters such as `presentation_submission` that has been modified by the attacker.
+
+Note that attacker might be able to inject a new `vp_token`, but this can be detected as defined in (#preventing-replay).
 
 ## DIF Presentation Exchange 2.0.0
 
