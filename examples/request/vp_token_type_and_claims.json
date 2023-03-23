@@ -1,8 +1,8 @@
 {
-    "id": "vp token example",
+    "id": "example with selective disclosure",
     "input_descriptors": [
         {
-            "id": "id card credential with constraints",
+            "id": "ID card with constraints",
             "format": {
                 "ldp_vc": {
                     "proof_type": [
