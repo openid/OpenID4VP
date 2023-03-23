@@ -682,15 +682,13 @@ This document also defines the following additional error codes and error descri
 
 Verifiers MUST validate the VP Token in the following manner:
 
-1. Determine the number of VPs returned in the VP Token and identify in which VP requested VC(s) are included, using the Input Descriptor Mapping Object(s) in the Presntation Submission.
-1. Validate the integrity, authenticity, and Holder Binding of any Verifiable Presentation provided in the VP Token by a Wallet according to the rules of the respective Presentation format.
+1. Determine the number of VPs returned in the VP Token and identify in which VP which requested VC is included, using the Input Descriptor Mapping Object(s) in the Presentation Submission.
+1. Validate the integrity, authenticity, and Holder Binding of any Verifiable Presentation provided in the VP Token according to the rules of the respective Presentation format. See (#preventing-replay) for the checks required to prevent replay of a VP.
 1. If applicable, perform the checks on the Credential(s) specific to the Credential Format (i.e., validation of the signature(s) on each VC), if applicable.
 1. Confirm that the returned Credential(s) meet all criteria sent in the Presentation Definition in the Authorization Request.
 1. Perform the checks required by the Verifier’s policy based on the set of trust requirements such as trust frameworks it belongs to (i.e., revocation checks), if applicable.
 
 Note: Some of the processing rules of the Presentation Definition and the Presentation Submission are outlined in [@!DIF.PresentationExchange].
-
-It is NOT RECOMMENDED for the Subject to delegate the presentation of the Credential to a third party.
 
 # Wallet Invocation {#wallet-invocation}
 
