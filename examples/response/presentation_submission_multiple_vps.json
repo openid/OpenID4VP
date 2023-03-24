@@ -1,6 +1,6 @@
 {
-    "id": "Selective disclosure example presentation",
-    "definition_id": "Selective disclosure example",
+    "id": "Presentation example 2",
+    "definition_id": "Example with multiple VPs",
     "descriptor_map": [
         {
             "id": "ID Card with constraints",

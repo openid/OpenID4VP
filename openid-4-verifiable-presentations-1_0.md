@@ -223,7 +223,7 @@ OpenID for Verifiable Presentations extends existing OAuth 2.0 mechanisms as fol
 * The [@!DIF.PresentationExchange] `format` parameter is used throughout the protocol in order to enable customization according to the specific needs of a particular Credential format. Examples in (#alternative_credential_formats) are given for credential formats as specified in [@VC_DATA], [@ISO.18013-5], and [@Hyperledger.Indy].
 * A new `client_id_scheme` Authorization Request parameter is defined to enable deployments of this specification to use different mechanisms to obtain and validate metadata of the Verifier beyond the scope of [@!RFC6749].
 
-Presentation of Credentials using OpenID for Verifiable Presentations can be combined with the user authentication using [@SIOPv2], and the issuance of OAuth 2.0 Access Tokens.
+Presentation of Verifiable Credentials using OpenID for Verifiable Presentations can be combined with the user authentication using [@SIOPv2], and the issuance of OAuth 2.0 Access Tokens.
 
 # Authorization Request {#vp_token_request}
 
@@ -281,17 +281,15 @@ This is an example Authorization Request:
 
 This parameter contains a Presentation Definition JSON object conforming to the syntax defined in Section 5 of [@!DIF.PresentationExchange].
 
-The following shows an example `presentation_definition` parameter:
+The following is a non-normative example how `presentation_definition` parameter can simply be used to request the presentation of a Credential of a certain type:
 
 <{{examples/request/vp_token_type_only.json}}
 
-This simple example requests the presentation of a Credential of a certain type.
-
-The following example shows how the Verifier can request selective disclosure or certain claims from a Credential of a particular type.
+The following non-normative example shows how the Verifier can request selective disclosure or certain claims from a Credential of a particular type.
 
 <{{examples/request/vp_token_type_and_claims.json}}
 
-Clients can also ask for alternative Verifiable Credentials being presented, which is shown in the next example:
+The following non-normative example shows how the Verifiers can also ask for alternative Verifiable Credentials being presented:
 
 <{{examples/request/vp_token_alternative_credentials.json}}
 
@@ -356,7 +354,7 @@ Content-Type: application/json
 Wallets MAY support requesting presentation of Verifiable Credentials using OAuth 2.0 scope values. 
 
 Such a scope value MUST be an alias for a well-defined Presentation Definition as it will be 
-referred to in the `presentation_submission` response parameter. 
+referred to in the `presentation_submission` response parameter defined in (#response-parameters). 
 
 The concrete scope values and the mapping between a certain scope value and the respective 
 Presentation Definition is out of scope of this specification. 
@@ -480,15 +478,13 @@ When VP Token is returned, the respective response MUST include the following pa
 : REQUIRED. JSON String or JSON object that MUST contain a single Verifiable Presentation or an array of JSON Strings and JSON objects each of them containing a Verifiable Presentations. Each Verifiable Presentation MUST be represented as a JSON string (that is a Base64url encoded value) or a JSON object depending on a format as defined in Annex E of [@!OpenID.VCI].  When a single Verifiable Presentation is returned, the array syntax MUST NOT be used.  If Appendix E of [@!OpenID.VCI] defines a rule for encoding the respective Credential format in the Credential Response, this rules MUST also be followed when encoding credentials of this format in the `vp_token` response parameter. Otherwise, this specification does not require any additional encoding when a Credential format is already represented as a JSON object or a JSON string.
 
 `presentation_submission`:
-: REQUIRED. The `presentation_submission` element as defined in [@!DIF.PresentationExchange] links the identifier of the `input_descriptor` element in the corresponding request to the respective Verifiable Presentations within the VP Token. The root of the path expressions in the descriptor map is the respective Verifiable Presentation, pointing to the respective Verifiable Credentials.
+: REQUIRED. The `presentation_submission` element as defined in [@!DIF.PresentationExchange]. It contains mappings between the requested Verifiable Credentials and where to find them within the returned VP Token. This is expressed via elements in the `descriptor_map` array, known as Input Descriptor Mapping Objects. These objects contain a field called `path`, which, for this specification, MUST have the value `$` (top level root path) when only one Verifiable Presentation is contained in the VP Token, and MUST have the value `$[n]` (indexed path from root) when there are multiple Verifiable Presentations, where `n` is the index to select. The `path_nested` object inside an Input Descriptor Mapping Object is used to describe how to find a returned Credential within a Verifiable Presentation, and the value of the `path` field in it will ultimately depend on the credential format. Non-normative examples can be found further in this section. 
 
 Other parameters, such as `state` or `code` (from [@!RFC6749]), or `id_token` (from [@!OpenID.Core]), and `iss` (from [@RFC9207]) MAY be included in the response as defined in the respective specifications.
 
 The `presentation_submission` element MUST be included as a separate response parameter alongside the vp_token. Clients MUST ignore any `presentation_submission` element included inside a VP.
 
 Including the `presentation_submission` parameter as a separate response parameter allows the Wallet to provide the Verifier with additional information about the format and structure in advance of the processing of the VP Token, and can be used even with the Credential formats that do not allow for the direct inclusion of `presentation_submission` parameters inside a Credential itself.
-
-In case the Wallet returns a single Verifiable Presentation in the VP Token, the `descriptor_map` would then contain a simple path expression "$".
 
 The following is an example response to a request of a response type `vp_token`, where the `presentation_submission` is a separate response parameter: 
 
@@ -499,21 +495,21 @@ The following is an example response to a request of a response type `vp_token`,
     &vp_token=...
 ```
 
-This is an example of a VP Token containing a single Verifiable Presentation
+The following is a non-normative example of a VP Token containing a single Verifiable Presentation:
 
 <{{examples/response/vp_token_raw_ldp_vp.json}}
 
-with a matching `presentation_submission`.
+The following is a non-normative example of a `presentation_submission` parameter sent alongside a VP in the example above. It corresponds to a second Presentation Definition example in (#request_presentation_definition):
 
 <{{examples/response/presentation_submission.json}}
 
 A `descriptor_map` element MUST contain a `path_nested` parameter referring to the actual Credential carried in the respective Verifiable Presentation. 
 
-This is an example of a VP Token containing multiple Verifiable Presentations,   
+The following is a non-normative example of a VP Token containing multiple Verifiable Presentations:
 
 <{{examples/response/vp_token_multiple_vps.json}}
 
-with a matching `presentation_submission` parameter.
+The following is a non-normative example of a `presentation_submission` parameter sent alongside a VP in the example above. It does not correspond to any Presentation Definition examples in this specification:
 
 <{{examples/response/presentation_submission_multiple_vps.json}}
 
@@ -1039,6 +1035,10 @@ When Authorization Response is encrypted but not signed, the attacker who knows 
 
 Note that attacker might be able to inject a new `vp_token`, but this can be detected as defined in (#preventing-replay).
 
+## Response Encryption
+
+If an encrypted Authorization Response has no additional integrity protection, an attacker might be able to alter Authorization Response parameters such as `presentation_submission` and generate a new encrypted Authorization Response for the Verifier, if the encryption key of the Verifier is known to the attacker. Note this includes injecting a new `vp_token`. Since the contents of the `vp_token` are integrity protected, tampering the `vp_token` is detectable by the Verifier.
+
 ## DIF Presentation Exchange 2.0.0
 
 ### Fetching Presentation Definitions by Reference
@@ -1415,7 +1415,7 @@ The `constraints` object requires the selected Credential to conform with the sc
 
 #### Request Example with Selective Release of Claims
 
-The next example leverages the AnonCreds' capabilities for selective disclosure by requesting a subset of the claims in the Credential to be disclosed to the Verifier.
+The next example leverages the AnonCreds' capabilities for selective releasee by requesting a subset of the claims in the Credential to be disclosed to the Verifier.
 
 The presentation request looks the same as above. The difference is in the `presentation_definition` parameter as shown in the following:
 
