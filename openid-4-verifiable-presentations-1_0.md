@@ -1027,9 +1027,7 @@ Clients intending to authenticate the end-user utilizing a claim in a Verifiable
 
 ## Response Encryption
 
-If an encrypted Authorization Response has no additional MITM protection, an attacker might be able to alter Authorization Response parameters such as `presentation_submission` and generate a new encrypted Authorization Response for the Verifier, if the encryption key of the Verifier is known to the attacker. Note this includes injecting a new `vp_token`.
-
-Verifiers have to treat an encrypted Authorization Response in the same way as when the Authorization Response is sent in plaintext unless the issuer of the Authorization Response and the integrity can be verified -- for example by nesting a JWS in the JWE that is signed by a known public key of the Wallet.
+If an encrypted Authorization Response has no additional integrity protection, an attacker might be able to alter Authorization Response parameters such as `presentation_submission` and generate a new encrypted Authorization Response for the Verifier, if the encryption key of the Verifier is known to the attacker. Note this includes injecting a new `vp_token`. Since the contents of the `vp_token` are integrity protected, tampering the `vp_token` is detectable by the Verifier.
 
 ## DIF Presentation Exchange 2.0.0
 
