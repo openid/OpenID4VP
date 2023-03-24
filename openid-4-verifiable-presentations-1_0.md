@@ -1025,6 +1025,10 @@ Implementations of this specification MUST have security mechanisms in place to 
 
 Clients intending to authenticate the end-user utilizing a claim in a Verifiable Credential MUST ensure this claim is stable for the end-user as well locally unique and never reassigned within the Credential Issuer to another end-user. Such a claim MUST also only be used in combination with the Credential Issuer identifier to ensure global uniqueness and to prevent attacks where an attacker obtains the same claim from a different Credential Issuer and tries to impersonate the legitimate user. 
 
+## Response Encryption
+
+If an encrypted Authorization Response has no additional integrity protection, an attacker might be able to alter Authorization Response parameters such as `presentation_submission` and generate a new encrypted Authorization Response for the Verifier, if the encryption key of the Verifier is known to the attacker. Note this includes injecting a new `vp_token`. Since the contents of the `vp_token` are integrity protected, tampering the `vp_token` is detectable by the Verifier.
+
 ## DIF Presentation Exchange 2.0.0
 
 ### Fetching Presentation Definitions by Reference
