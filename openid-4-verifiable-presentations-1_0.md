@@ -69,7 +69,7 @@ This specification uses the terms "Access Token", "Authorization Request", "Auth
 This specification also defines the following terms. In the case where a term has a definition that differs, the definition below is authoritative.
 
 Credential:
-:  A set of one or more claims about a subject made by a Credential Issuer. Note that this definition of a term "Credential" in this specification is different from that in [@!OpenID.Core].
+:  A set of one or more claims about a subject made by a Credential Issuer. Note that the definition of the term "Credential" in this specification is different from that in [@!OpenID.Core].
 
 Verifiable Credential (VC):
 :  An Issuer-signed Credential whose authenticity can be cryptographically verified. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] (mdoc) and [@Hyperledger.Indy] (AnonCreds).
@@ -93,7 +93,7 @@ Holder:
 :  An entity that receives Verifiable Credentials and has control over them to present them to the Verifiers as Verifiable Presentations.
 
 Verifier:
-:  An entity that requests, receives and validates Verifiable Presentations. During presentation of Credentials, Verifier acts as an OAuth 2.0 Client towards the Wallet that is acting as an OAuth 2.0 Authorization Server. The Verifier is a specific case of OAuth 2.0 Client, just like Relying Party (RP) in [@OpenID.Core].
+:  An entity that requests, receives, and validates Verifiable Presentations. During presentation of Credentials, Verifier acts as an OAuth 2.0 Client towards the Wallet that is acting as an OAuth 2.0 Authorization Server. The Verifier is a specific case of OAuth 2.0 Client, just like Relying Party (RP) in [@OpenID.Core].
 
 Issuer-Holder-Verifier Model:
 :  A model for exchanging claims, where claims are issued in the form of Verifiable Credentials independent of the process of presenting them as Verifiable Presentation to the Verifiers. An issued Verifiable Credential can (but must not necessarily) be used multiple times.
@@ -105,7 +105,7 @@ Cryptographic Holder Binding:
 :  Ability of the Holder to prove legitimate possession of a Verifiable Credential by proving control over the same private key during the issuance and presentation. Mechanism might depend on the Credential Format. For example, in `jwt_vc_json` Credential Format, a VC with Cryptographic Holder Binding contains a public key or a reference to a public key that matches to the private key controlled by the Holder. 
 
 Claim-based Holder Binding:
-:  Ability of the Holder to prove legitimate possession of a Verifiable Credential by proofing certain claims, e.g. name and date of birth, for example by presenting another Verifiable Credential. Claim-based Holder Binding allows long term, cross device use of a Credential as it does not depend on cryptographic key material stored on a certain device. One example of such a Verifiable Credential could be a Diploma.
+:  Ability of the Holder to prove legitimate possession of a Verifiable Credential by proofing certain claims, e.g., name and date of birth, for example by presenting another Verifiable Credential. Claim-based Holder Binding allows long term, cross device use of a Credential as it does not depend on cryptographic key material stored on a certain device. One example of such a Verifiable Credential could be a Diploma.
 
 Biometrics-based Holder Binding:
 :  Ability of the Holder to prove legitimate possession of a Verifiable Credential by demonstrating a certain biometric trait, such as finger print or face. One example of a Verifiable Credential with biometric Holder Binding is a mobile drivers license [@ISO.18013-5], which contains a portrait of the Holder.
@@ -124,9 +124,9 @@ As the primary extension, OpenID for Verifiable Presentations introduces the VP 
 
 This specification supports any Credential format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] (mdoc), and [@Hyperledger.Indy] (AnonCreds). Credentials of multiple formats can be presented in the same transaction. The examples given in the main part of this specification use W3C Verifiable Credentials, while examples in other Credential formats are given in (#alternative_credential_formats). 
 
-Implementations can use any pre-existing OAuth 2.0 Grant Type and Response Type in conjunction with this specifications to support different deployment architectures.
+Implementations can use any pre-existing OAuth 2.0 Grant Type and Response Type in conjunction with this specification to support different deployment architectures.
 
-OpenID for Verifiable Presentations supports scenarios where the Authorization Request is sent both when the Verifier is interacting with the End-User using the device that is same or different frim the device on which requested Credential(s) are stored.
+OpenID for Verifiable Presentations supports scenarios where the Authorization Request is sent both when the Verifier is interacting with the End-User using the device that is same or different from the device on which requested Credential(s) are stored.
 
 This specification supports the response being sent using a redirect but also using an HTTPS POST request. This enables the response to be sent across devices, or when the response size exceeds the redirect URL character size limitation.
 
@@ -136,11 +136,11 @@ Any of the OAuth 2.0 related specifications, such as [@RFC9126] and [@RFC9101], 
 
 ## Same Device Flow {#same_device}
 
-Below is a diagram of a flow where the End-User presents a Credential to a Verifier interacting with the End-User on a same device as the device the Wallet resides on.
+Below is a diagram of a flow where the End-User presents a Credential to a Verifier interacting with the End-User on the same device that the device the Wallet resides on.
 
 The flow utilizes simple redirects to pass Authorization Request and Response between the Verifier and the Wallet. The Verifiable Presentations are returned to the Verifier in the fragment part of the Redirect URI, when Response Mode is `fragment`. 
 
-Note: The diagram does not illustrate all of the optional features of this specification. 
+Note: The diagram does not illustrate all the optional features of this specification.
 
 !---
 ~~~ ascii-art
@@ -166,15 +166,15 @@ Figure: Same Device Flow
 
 (1) The Verifier sends an Authorization Request to the Wallet. It contains a Presentation Definition as defined in [@!DIF.PresentationExchange] that describes the requirements of the Credential(s) that the Verifier is requesting to be presented. Such requirements could include what type of Credential(s), in what format(s), which individual Claims within those Credential(s) (Selective Disclosure), etc. The Wallet processes the Authorization Request and determines what Credentials are available matching the Verifier's request. The Wallet also authenticates the End-User and gathers consent to present the requested Credentials. 
 
-(2) The Wallet prepares presentation of the Verifiable Credential(s) that the End-User has consented to. It then sends to the Verifier an Autorization Response where the Verifiable Presentation(s) are contained in the `vp_token` parameter.
+(2) The Wallet prepares presentation of the Verifiable Credential(s) that the End-User has consented to. It then sends to the Verifier an Authorization Response where the Verifiable Presentation(s) are contained in the `vp_token` parameter.
 
 ## Cross Device Flow {#cross_device}
 
 Below is a diagram of a flow where the End-User presents a Credential to a Verifier interacting with the End-User on a different device as the device the Wallet resides on.
 
-In this flow, the Verifier prepares an Authorization Request and renders it as a QR Code. The User then uses the Wallet to scan the QR Code. The Verifiable Presentations are sent to the Verifier in a direct HTTPS POST request to a URL controlled by the Verifier. The flow uses the Response Type `vp_token` in conjunction with the Response Mode `direct_post`, both defined in this specidication. In order to keep the size of the QR Code small and be able to sign and optionally encrypt the Request Object, the actual Authorization Request contains just a Request URI according to [@!RFC9101], which the wallet uses to retrieve the actual Authorization Request data. 
+In this flow, the Verifier prepares an Authorization Request and renders it as a QR Code. The User then uses the Wallet to scan the QR Code. The Verifiable Presentations are sent to the Verifier in a direct HTTPS POST request to a URL controlled by the Verifier. The flow uses the Response Type `vp_token` in conjunction with the Response Mode `direct_post`, both defined in this specification. In order to keep the size of the QR Code small and be able to sign and optionally encrypt the Request Object, the actual Authorization Request contains just a Request URI according to [@!RFC9101], which the wallet uses to retrieve the actual Authorization Request data.
 
-Note: The diagram does not illustrate all of the optional features of this specification. 
+Note: The diagram does not illustrate all the optional features of this specification.
 
 !---
 ~~~ ascii-art
@@ -211,7 +211,7 @@ Figure: Cross Device Flow
 
 (2.5) The HTTPS GET response returns the Request Object containing Authorization Request parameters. It especially contains a Presentation Definition as defined in [@!DIF.PresentationExchange] that describes the requirements of the Credential(s) that the Verifier is requesting to be presented. Such requirements could include what type of Credential(s), in what format(s), which individual Claims within those Credential(s) (Selective Disclosure), etc. The Wallet processes the Request Object and determines what Credentials are available matching the Verifier's request. The Wallet also authenticates the End-User and gathers her consent to present the requested Credentials. 
 
-(3) The Wallet prepares presentation of the Verifiable Credential(s) that the End-User has consented to. It then sends to the Verifier an Autorization Response where the Verifiable Presentation(s) are contained in the `vp_token` parameter.
+(3) The Wallet prepares presentation of the Verifiable Credential(s) that the End-User has consented to. It then sends to the Verifier an Authorization Response where the Verifiable Presentation(s) are contained in the `vp_token` parameter.
 
 # Scope
 
@@ -220,7 +220,7 @@ OpenID for Verifiable Presentations extends existing OAuth 2.0 mechanisms as fol
 * A new `presentation_definition` Authorization Request parameter that uses the [@!DIF.PresentationExchange] syntax is defined to request presentation of Verifiable Credentials in arbitrary formats. See (#vp_token_request) for more details. 
 * A new `vp_token` response parameter is defined to return Verifiable Presentations to the Verifier in either Authorization or Token Response depending on the Response Type. See (#response) for more details. 
 * New Response Types `vp_token` and `id_token vp_token` are defined to request Verifiable Credentials to be returned in the Authorization Response (standalone or along with a subject-signed ID Token [@!SIOPv2]). See (#response) for more details.
-* A new OAuth 2.0 Response Mode `direct_post` is defined to support sending the response across devices, or when the size of the response exceeds the redirect URL character size limitation. See (#response_mode_post) for more detials.
+* A new OAuth 2.0 Response Mode `direct_post` is defined to support sending the response across devices, or when the size of the response exceeds the redirect URL character size limitation. See (#response_mode_post) for more details.
 * The [@!DIF.PresentationExchange] `format` parameter is used throughout the protocol in order to enable customization according to the specific needs of a particular Credential format. Examples in (#alternative_credential_formats) are given for Credential formats as specified in [@VC_DATA], [@ISO.18013-5], and [@Hyperledger.Indy].
 * A new `client_id_scheme` Authorization Request parameter is defined to enable deployments of this specification to use different mechanisms to obtain and validate metadata of the Verifier beyond the scope of [@!RFC6749].
 
@@ -234,9 +234,9 @@ The Verifier may send Authorization Request as Request Object by value or by ref
 
 The Verifier articulates requirements of the Credential(s) that are requested using `presentation_definition` and `presentation_definition_uri` parameters that contain a Presentation Definition JSON object as defined in Section 5 of [@!DIF.PresentationExchange].
 
-The Verifier communicates Client Identifier Scheme that indicate how the Wallet is supposed to interpret the Client Identifier and associated data in the process of Client identification, authentication, and authorization using `client_id_scheme` parameter. This parameter enables deployments of this specification to use different mechanisms to obtain and validate Client metadata beyond the scope of [@!RFC6749]. A certain Client Identifier scheme MAY require the Verifier to sign the Authorization Request as means of authentication and/or pass additional parameters and require the Wallet to process them. 
+The Verifier communicates a Client Identifier Scheme that indicate how the Wallet is supposed to interpret the Client Identifier and associated data in the process of Client identification, authentication, and authorization using `client_id_scheme` parameter. This parameter enables deployments of this specification to use different mechanisms to obtain and validate Client metadata beyond the scope of [@!RFC6749]. A certain Client Identifier Scheme MAY require the Verifier to sign the Authorization Request as means of authentication and/or pass additional parameters and require the Wallet to process them.
 
-Depending on a Client Identifier Scheme, the Verifier can communicate a JSON object with its metadata using `client_metadata` and `client_metadata_uri` parameters that contain key value pairs defined in Section 4.3 and Section 2.1 of the OpenID Connect Dynamic Client Registration 1.0 [@!OpenID.Registration] specification as well as [@!RFC7591].
+Depending on the Client Identifier Scheme, the Verifier can communicate a JSON object with its metadata using `client_metadata` and `client_metadata_uri` parameters that contain key value pairs defined in Section 4.3 and Section 2.1 of the OpenID Connect Dynamic Client Registration 1.0 [@!OpenID.Registration] specification as well as [@!RFC7591].
 
 This specification enables the Verifier to send both Presentation Definition JSON object and JSON object with its metadata by value or by reference.
 
@@ -246,18 +246,18 @@ This specification defines the following new parameters:
 : A string containing a Presentation Definition JSON object. See (#request_presentation_definition) for more details. This parameter MUST be present when `presentation_definition_uri` parameter, or a `scope` value representing a Presentation Definition is not present.
 
 `presentation_definition_uri`:
-: A string containing an HTTPS URL pointing to a resource where a Presentation Definition JSON object can be retrieved. This parameter MUST be present when `presentation_definition_uri` parameter, or a `scope` value representing a Presentation Definitionis is not present. See (#request_presentation_definition_uri) for more details.
+: A string containing an HTTPS URL pointing to a resource where a Presentation Definition JSON object can be retrieved. This parameter MUST be present when `presentation_definition_uri` parameter, or a `scope` value representing a Presentation Definition is not present. See (#request_presentation_definition_uri) for more details.
 
 `client_id_scheme`: 
-: OPTIONAL. A string identifying the scheme of the value in the `client_id` Authorization Request parameter (Client Identifier scheme). The `client_id_scheme` parameter namespaces the respective Client Identifier. If an Authorization Request uses the `client_id_scheme` parameter, the Wallet MUST interpret the Client Identifier of the Verifier in the context of the Client Identifier scheme. If the parameter is not present, the Wallet MUST behave as specified in [@!RFC6749]. See (#client_metadata_management) for the values defined by this specification. If the same Client Identifier is used with different Client Identifier schemes, those occurences MUST be treated as different Verifiers. Note that the Verifier needs to determine which Client Identifier schemes the Wallet supports prior to sending the Authorization Request in order to choose a supported scheme.
+: OPTIONAL. A string identifying the scheme of the value in the `client_id` Authorization Request parameter (Client Identifier scheme). The `client_id_scheme` parameter namespaces the respective Client Identifier. If an Authorization Request uses the `client_id_scheme` parameter, the Wallet MUST interpret the Client Identifier of the Verifier in the context of the Client Identifier scheme. If the parameter is not present, the Wallet MUST behave as specified in [@!RFC6749]. See (#client_metadata_management) for the values defined by this specification. If the same Client Identifier is used with different Client Identifier schemes, those occurrences MUST be treated as different Verifiers. Note that the Verifier needs to determine which Client Identifier schemes the Wallet supports prior to sending the Authorization Request in order to choose a supported scheme.
 
 `client_metadata`:
-: OPTIONAL. A JSON object containing the Verifier's metadata values. MUST be UTF-8 encoded. MUST NOT be present if `client_metadata_uri` parameter is present.
+: OPTIONAL. A JSON object containing the Verifier's metadata values. It MUST be UTF-8 encoded. It MUST NOT be present if `client_metadata_uri` parameter is present.
 
 `client_metadata_uri`: 
-: OPTIONAL. A string containing an HTTPS URL pointing to a resource where a JSON object with the Verifier's metadata can be retrieved. The scheme used in the `client_metadata_uri` value MUST be `https`. The `client_metadata_uri` value MUST be reachable by the Wallet. MUST NOT be present if `client_metadata` parameter is present.
+: OPTIONAL. A string containing an HTTPS URL pointing to a resource where a JSON object with the Verifier's metadata can be retrieved. The scheme used in the `client_metadata_uri` value MUST be `https`. The `client_metadata_uri` value MUST be reachable by the Wallet. It MUST NOT be present if `client_metadata` parameter is present.
 
-A public key to be used by the Wallet as an input to the key agreement to encrypt Authorization Response (see (#jarm)) MAY be passed by the Verifier using `jwks` or `jwks_uri` claim within the `client_metadata` or `client_metadata_uri` request parameter.
+A public key to be used by the Wallet as an input to the key agreement to encrypt Authorization Response (see (#jarm)). It MAY be passed by the Verifier using the `jwks` or the `jwks_uri` claim within the `client_metadata` or `client_metadata_uri` request parameter.
 
 The following additional considerations are given for pre-existing Authorization Request parameters:
 
@@ -316,7 +316,7 @@ The following is a non-normative example of an HTTPS GET request sent after the 
   Host: server.example.com
 ```
 
-The following is a non-noemative example of an HTTPS GET response sent by the Verifier in response to the above HTTPS GET request:
+The following is a non-normative example of an HTTPS GET response sent by the Verifier in response to the above HTTPS GET request:
 
 ```
 HTTP/1.1 200 OK
@@ -327,7 +327,7 @@ Content-Type: application/json
     "id": "vp token example",
     "input_descriptors": [
         {
-            "id": "id card Credential",
+            "id": "id card credential",
             "format": {
                 "ldp_vc": {
                     "proof_type": [
@@ -355,7 +355,7 @@ Content-Type: application/json
 
 ## Using `scope` Parameter to Request Verifiable Credential(s) {#request_scope}
 
-The Wallets MAY support requesting presentation of Verifiable Credentials using OAuth 2.0 scope values. 
+Wallets MAY support requesting presentation of Verifiable Credentials using OAuth 2.0 scope values.
 
 Such a scope value MUST be an alias for a well-defined Presentation Definition that will be 
 referred to in the `presentation_submission` response parameter. 
@@ -388,7 +388,7 @@ which is an alias for the first Presentation Definition example given in (#reque
 This specification defines the response type `vp_token`.
 
 `vp_token`:
-:  When supplied as the `response_type` parameter in an Authorization Request, a successful response MUST include the `vp_token` parameter. The Wallet SHOULD NOT return an OAuth 2.0 Authorization Code, Access Token, or Access Token Type in a successful response to the grant request. The default Response Mode for this Response Type is `fragment`, i.e. the Authorization Response parameters are encoded in the fragment added to the `redirect_uri` when redirecting back to the Client. The response type `vp_token` can be used with other response modes as defined in [@!OAuth.Responses]. Both successful and error responses SHOULD be returned using the supplied Response Mode, or if none is supplied, using the default Response Mode.
+:  When supplied as the `response_type` parameter in an Authorization Request, a successful response MUST include the `vp_token` parameter. The Wallet SHOULD NOT return an OAuth 2.0 Authorization Code, Access Token, or Access Token Type in a successful response to the grant request. The default Response Mode for this Response Type is `fragment`, i.e., the Authorization Response parameters are encoded in the fragment added to the `redirect_uri` when redirecting back to the Client. The response type `vp_token` can be used with other response modes as defined in [@!OAuth.Responses]. Both successful and error responses SHOULD be returned using the supplied Response Mode, or if none is supplied, using the default Response Mode.
 
 See (#response) on how the `response_type` value determines the response used to return a VP Token.
 
@@ -402,7 +402,7 @@ The usage of the response mode `direct_post` (see (#response_mode_post)) in conj
 
 When the Verifier is sending a Request Object as defined in [@!RFC9101], the `aud` Claim value depends on whether the recipient of the request can be identified by the Verifier or not:
 
-- the `aud` Claim MUST equal to the `issuer` Claim value, when Dynamic Discovery is performed.
+- the `aud` Claim MUST equal to the `issuer` Claim value when Dynamic Discovery is performed.
 - the `aud` Claim MUST be "https://self-issued.me/v2", when Static Discovery metadata is used.
 
 Note: "https://self-issued.me/v2" is a symbolic string and can be used as an `aud` Claim value even when this specification is used standalone, without SIOPv2. 
@@ -476,7 +476,7 @@ The behavior with respect to the VP Token is unspecified for any other individua
 
 ## Response Parameters {#response-parameters}
 
-When VP Token is returned, the respective response MUST include the following parameters:
+When a VP Token is returned, the respective response MUST include the following parameters:
 
 `vp_token`:
 : REQUIRED. JSON String or JSON object that MUST contain a single Verifiable Presentation or an array of JSON Strings and JSON objects each of them containing a Verifiable Presentations. Each Verifiable Presentation MUST be represented as a JSON string (that is a Base64url encoded value) or a JSON object depending on a format as defined in Annex E of [@!OpenID.VCI].  When a single Verifiable Presentation is returned, the array syntax MUST NOT be used.  If Appendix E of [@!OpenID.VCI] defines a rule for encoding the respective Credential format in the Credential Response, this rules MUST also be followed when encoding Credentials of this format in the `vp_token` response parameter. Otherwise, this specification does not require any additional encoding when a Credential format is already represented as a JSON object or a JSON string.
@@ -523,7 +523,7 @@ The response mode `direct_post` allows the Wallet to send the Authorization Resp
 
 It has been defined to address the following use cases: 
 
-* Verifier and Wallet are located on different devices, thus the Wallet cannot send the Authorization Response to the Verifier using a redirect. 
+* Verifier and Wallet are located on different devices; thus, the Wallet cannot send the Authorization Response to the Verifier using a redirect.
 * The Authorization Response size exceeds the URL length limits of user agents, so flows relying only on redirects (such as Response Mode `fragment`) cannot be used. In those cases, the response mode `direct_post` is the way to convey the Verifiable Presentations to the Verifier without the need for the Wallet to have a backend.
 
 The Response Mode is defined in accordance with [@!OAuth.Responses] as follows:
@@ -555,7 +555,7 @@ The following is a non-normative example of the payload of a Request Object with
 }
 ```
 
-The following non-normative example of an Authorization Request refers to the Authorization Request Object from above through the `request_uri` parameter. The Authorization Request can either be displayed to the End-User either  directly (as a deep link) or as a QR Code:
+The following non-normative example of an Authorization Request refers to the Authorization Request Object from above through the `request_uri` parameter. The Authorization Request can be displayed to the End-User either directly (as a deep link) or as a QR Code:
 
 ```
 https://wallet.example.com?
@@ -584,7 +584,7 @@ The following new parameter is defined to be used in this response from the Resp
 
 Note: Response Mode `direct_post` without the `redirect_uri` could be less secure than Response Modes with redirects. For details, see ((#session_fixation)).
 
-The value of the Redirect URI is at the discretion of the Verifier. However, the Verifier MUST add a fresh, cryptographically random number to the URL. This number is used to ensure only the receiver of the redirect is able to fetch and process the Authorization Response. The number could be added as a path component or a parameter to the URL. It is RECOMMENDED to use a cryptographic random value of 128 bits or more at the time of the writing of this specification. For implementation considerations see (#implementation_considerations_direct_post).
+The value of the Redirect URI is at the discretion of the Verifier. However, the Verifier MUST add a fresh, cryptographically random number to the URL. This number is used to ensure only the receiver of the redirect can fetch and process the Authorization Response. The number could be added as a path component or a parameter to the URL. It is RECOMMENDED to use a cryptographic random value of 128 bits or more at the time of the writing of this specification. For implementation considerations see (#implementation_considerations_direct_post).
 
 The following is a non-normative example of the response from the Verifier to the Wallet upon receiving the Authorization Response at the Response Endpoint (using a `response_code` parameter from (#implementation_considerations_direct_post)):
 
@@ -724,7 +724,7 @@ vp_formats_supported": {
 
 Verifier utilizing this specification has multiple options to obtain Wallet's metadata:
 
-* Verifier obtains Wallet's metadata prior to a transaction, e.g. using [@!RFC8414] or out-of-band mechanisms. See (#as_metadata_parameters) for the details.
+* Verifier obtains Wallet's metadata prior to a transaction, e.g., using [@!RFC8414] or out-of-band mechanisms. See (#as_metadata_parameters) for the details.
 * Verifier has pre-obtained static set of Wallet's metadata. See (#openid4vp-profile) for the example.
 
 # Verifier Metadata (Client Metadata) {#client_metadata}
@@ -783,7 +783,7 @@ The following is a non-normative example of a set of static configuration values
 
 Often Clients will want to request Verifiable Credentials from a Credential Issuer who is a participant of a federation, or adheres to a known trust scheme, rather than from a specific Credential Issuer, for example, a "BSc Chemistry Degree" Credential from a US University rather than from a specifically named university.
 
-In order to facilitate this, federations will need to determine how a Credential Issuer can indicate in a Verifiable Credential that they are a member of one or more federations/trust schemes. Once this is done, the Verifier will be able to create a `presentation_definition` that includes this filtering criteria. This will enable the Wallet to select all the Verifiable Credentials that match this criteria and then by some means (for example, by asking the user) determine which matching Verifiable Credential to return to the Client. Upon receiving this Verifiable Credential, the Verifier will be able to call its federation API to determine if the Credential Issuer is indeed a member of the federation/trust scheme that it says it is.
+To facilitate this, federations will need to determine how a Credential Issuer can indicate in a Verifiable Credential that they are a member of one or more federations/trust schemes. Once this is done, the Verifier will be able to create a `presentation_definition` that includes this filtering criteria. This will enable the Wallet to select all the Verifiable Credentials that match this criteria and then by some means (for example, by asking the user) determine which matching Verifiable Credential to return to the Client. Upon receiving this Verifiable Credential, the Verifier will be able to call its federation API to determine if the Credential Issuer is indeed a member of the federation/trust scheme that it says it is.
 
 Indicating the federations/trust schemes used by a Credential Issuer MAY be achieved by defining a `termsOfUse` property [@!VC_DATA].
 
@@ -931,9 +931,9 @@ The Wallet MUST link every Verifiable Presentation returned to the Verifier in t
 
 The Verifier MUST validate every individual Verifiable Presentation in an Authorization Response and ensure that it is linked to the values of the `client_id` and the `nonce` parameter it had used for the respective Authorization Request.
 
-The `client_id` is used to detect the presentation of Verifiable Credentials to a different party other than the intended. This prevents a legitimate recipient of a Verifiable Presentation from present it to other Verifiers. The `nonce` value binds the Presentation to a certain authentication transaction and allows the Verifier to detect injection of a Presentation in the flow, which is especially important in the flows where the Presentation is passed through the front-channel. 
+The `client_id` is used to detect the presentation of Verifiable Credentials to a different party other than the intended. This prevents a legitimate recipient of a Verifiable Presentation from presenting it to other Verifiers. The `nonce` value binds the Presentation to a certain authentication transaction and allows the Verifier to detect injection of a Presentation in the flow, which is especially important in the flows where the Presentation is passed through the front-channel.
 
-Note: Different formats for Verifiable Presentations and signature/proof schemes use different ways to represent the intended audience and the session binding. Some use claims to directly represent those values, others include the values into the calculation of cryptographic proofs. There are also different naming conventions across the different formats. The format of the resepective presentation is determined from the format information in the presentation submission in the Authorization Response. 
+Note: Different formats for Verifiable Presentations and signature/proof schemes use different ways to represent the intended audience and the session binding. Some use claims to directly represent those values, others include the values into the calculation of cryptographic proofs. There are also different naming conventions across the different formats. The format of the respective presentation is determined from the format information in the presentation submission in the Authorization Response.
 
 The following is a non-normative example of the payload of a Verifiable Presentation of a format identifier `jwt_vp_json`:
 
@@ -1226,7 +1226,7 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
 
 <reference anchor="ISO.18013-5" target="https://www.iso.org/standard/69084.html">
         <front>
-          <title>ISO/IEC 18013-5:2021 Personal identification — ISO-compliant driving licence — Part 5: Mobile driving licence (mDL)  application</title>
+          <title>ISO/IEC 18013-5:2021 Personal identification — ISO-compliant driving license — Part 5: Mobile driving license (mDL)  application</title>
           <author>
             <organization> ISO/IEC JTC 1/SC 17 Cards and security devices for personal identification</organization>
           </author>
@@ -1293,7 +1293,7 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
 
 # Examples {#alternative_credential_formats}
 
-OpenID for Verifiable Presentations is Credential format agnostic, i.e. it is designed to allow applications to request and receive Verifiable Presentations and Verifiable Credentials in any format, not limited to the formats defined in [@!VC_DATA]. This section aims to illustrate this with examples utilizing different Credential formats. Customization of OpenID for Verifiable Presentation for Credential formats other than those defined in [@!VC_DATA] uses extension points of Presentation Exchange [@!DIF.PresentationExchange]. 
+OpenID for Verifiable Presentations is Credential format agnostic, i.e., it is designed to allow applications to request and receive Verifiable Presentations and Verifiable Credentials in any format, not limited to the formats defined in [@!VC_DATA]. This section aims to illustrate this with examples utilizing different Credential formats. Customization of OpenID for Verifiable Presentation for Credential formats other than those defined in [@!VC_DATA] uses extension points of Presentation Exchange [@!DIF.PresentationExchange].
 
 ## W3C Verifiable Credentials
 
@@ -1337,7 +1337,7 @@ The following is a non-normative example of the payload of the VP in the `vp_tok
 
 <{{examples/response/jwt_vp.json}}
 
-Note: The VP's `nonce` claim contains the value of the `nonce` of the presentation request and the `aud` claims contains the Client ID of the Verifier. This allows the Verifier to detect replay of a Presentation as recommended in (#preventing-replay). 
+Note: The VP's `nonce` claim contains the value of the `nonce` of the presentation request and the `aud` claim contains the Client ID of the Verifier. This allows the Verifier to detect replay of a Presentation as recommended in (#preventing-replay).
 
 ### LDP VCs
 
@@ -1357,11 +1357,11 @@ The following is a non-normative example of an Authorization Request:
 
 <{{examples/request/request.txt}}
 
-The following is a non-normative example of the contents of a `presentation_definition` parameter that contain the requirements regarding the Credential to be presented:
+The following is a non-normative example of the contents of a `presentation_definition` parameter that contains the requirements regarding the Credential to be presented:
 
 <{{examples/request/pd_ldp_vc.json}}
 
-This `presentation_definition` parameter contains a single `input_descriptor` element, which sets the desired format to LDP VC and defines a constraint over the `type` parameter to select Verifiable Credentials of type `IDredential`. 
+This `presentation_definition` parameter contains a single `input_descriptor` element, which sets the desired format to LDP VC and defines a constraint over the `type` parameter to select Verifiable Credentials of type `IDCredential`.
 
 #### Presentation Response
 
@@ -1433,15 +1433,15 @@ The following is a non-normative example of the content of the `presentation_def
 
 <{{examples/response/ps_ac_vc_sd.json}}
 
-The `descriptor_map` refers to the `input_descriptor` element with an identifier `id_credential` and tells the Verifier that there is a proof of AnonCred Credential (`format` is `ac_vp`) directly in the vp_token (path is the root designated by `$`). Furthermore it indicates using `path_nested` parameter that the user claims can be found embedded in the proof underneath `requested_proof.revealed_attr_groups.id_card_credential`.
+The `descriptor_map` refers to the `input_descriptor` element with an identifier `id_credential` and tells the Verifier that there is a proof of AnonCred Credential (`format` is `ac_vp`) directly in the vp_token (path is the root designated by `$`). Furthermore, it indicates using `path_nested` parameter that the user claims can be found embedded in the proof underneath `requested_proof.revealed_attr_groups.id_card_credential`.
 
 The following is the content of the `presentation_definition` parameter:
 
 <{{examples/response/ac_vp_sd.json}}
 
-## ISO mobile Driving Licence (mDL)
+## ISO mobile Driving License (mDL)
 
-This section illustrates how a mobile driving licence (mDL) Credential expressed using a data model and data sets defined in [@ISO.18013-5] encoded as CBOR can be presented from the End-User's device directly to the Verifier using this specification.
+This section illustrates how a mobile driving license (mDL) Credential expressed using a data model and data sets defined in [@ISO.18013-5] encoded as CBOR can be presented from the End-User's device directly to the Verifier using this specification.
 
 The Credential format identifier is `mso_mdoc`.
 
@@ -1455,7 +1455,7 @@ The following is a non-normative example of the content of the `presentation_def
 
 <{{examples/request/pd_mdl_iso_cbor.json}}
 
-To start with, the `format` parameter in the `input_descriptor` element is set to `mso_mdoc`, i.e. it requests presentation of an mDL in CBOR format. 
+To start with, the `format` parameter in the `input_descriptor` element is set to `mso_mdoc`, i.e., it requests presentation of an mDL in CBOR format.
 
 To request user claims in ISO/IEC 18013-5:2021 mDL, a `doctype` and `namespace` of the claim needs to be specified. Moreover, the Verifiers needs to indicate whether it intends to retain obtained user claims or not, using `intent_to_retain` property.
 
@@ -1479,7 +1479,7 @@ The following is a non-normative example of an ISO/IEC 18013-5:2021 mDL encoded 
 
 <{{examples/response/mdl_iso_cbor.json}}
 
-In the `deviceSigned` item, `deviceAuth` item includes a signature by the deviceKey that belongs to the End-User. It is used to prove legitimate possession of the Credential, since the Issuer has signed over the deviceKey during the issuance of the Credential. 
+In the `deviceSigned` item, the `deviceAuth` item includes a signature by the deviceKey that belongs to the End-User. It is used to prove legitimate possession of the Credential, since the Issuer has signed over the deviceKey during the issuance of the Credential.
 
 Note: The deviceKey does not have to be HW-bound.
 
@@ -1487,7 +1487,7 @@ In the `issueSigned` item, `issuerAuth` item includes Issuer's signature over th
 
 Note: The user claims in the `deviceSigned` item correspond to self-attested claims inside a Self-Issued ID Token (none in the example below), and user claims in the `issuerSigned` item correspond to the user claims included in a VP Token signed by a trusted third party.
 
-Note: The reason why hashes of the user claims are included in the `issuerAuth` item lies in the selective release mechanism. Selective release of the user claims in an ISO/IEC 18013-5:2021 mDL is performed by the Issuer signing over the hashes of all the user claims during the issuance, and only the actual values of the claims that the End-User has agreed to reveal to the Verifier being included during the presentation. 
+Note: The reason hashes of the user claims are included in the `issuerAuth` item lies in the selective release mechanism. Selective release of the user claims in an ISO/IEC 18013-5:2021 mDL is performed by the Issuer signing over the hashes of all the user claims during the issuance, and only the actual values of the claims that the End-User has agreed to reveal to the Verifier being included during the presentation.
 
 The example in this section is also applicable to the electronic identification Verifiable Credentials expressed using data models defined in ISO/IEC TR 23220-2.
 
@@ -1514,7 +1514,7 @@ The following is a non-normative example of a request that combines this specifi
 The differences to the example requests in the previous sections are:
 
 * `response_type` is set to `id_token`. If the request also includes a `presentation_definition` parameter, the Wallet is supposed to return the `presentation_submission` and `vp_token` parameters in the same response as the `id_token` parameter. 
-* The request includes the `scope` parameter with value `openid` making this an OpenID Connect request. Additionally, the request also contains the parameter `id_token_type` with value `subject_signed` requesting a Self-Issuer ID Token, i.e. the request is a SIOP request. 
+* The request includes the `scope` parameter with value `openid` making this an OpenID Connect request. Additionally, the request also contains the parameter `id_token_type` with value `subject_signed` requesting a Self-Issuer ID Token, i.e., the request is a SIOP request.
 
 ### Response
 
@@ -1543,7 +1543,7 @@ The following is a non-normative example of the payload of a subject-signed ID T
 }
 ```
 
-Note: The `nonce` and `aud` are set to the `nonce` of the request and the Client ID of the Verifier, respectively, in the same way as for the Verifier, Verifiable Presentations to prevent replay. 
+Note: The `nonce` and `aud` are set to the `nonce` of the request and the Client ID of the Verifier, respectively, in the same way as for the Verifier, Verifiable Presentations to prevent replay.
 
 # IANA Considerations
 
@@ -1586,7 +1586,7 @@ The technology described in this specification was made available from contribut
    -15
 
    * Added definition of VP Token 
-   * Editorial improvements for better readability (restructered request and response section, consistent terminology and casing)
+   * Editorial improvements for better readability (restructured request and response section, consistent terminology, and casing)
 
    -14
 
@@ -1611,7 +1611,7 @@ The technology described in this specification was made available from contribut
    -10
 
    * Added AnonCreds example
-   * Added ISO mobile Driving Licence (mDL) example
+   * Added ISO mobile Driving License (mDL) example
 
    -09
 
