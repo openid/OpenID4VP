@@ -102,7 +102,7 @@ Holder Binding:
 : Ability of the Holder to prove legitimate possession of a Verifiable Credential. 
 
 Cryptographic Holder Binding:
-:  Ability of the Holder to prove legitimate possession of a Verifiable Credential by proving control over the same private key during the issuance and presentation. Mechanism might depend on the Credential Format. For example, in `jwt_vc_json` Credential Format, a VC with Cryptographic Holder Binding contains a public key or a reference to a public key that matches to the private key controlled by the Holder. 
+:  Ability of the Holder to prove legitimate possession of a Verifiable Credential by proving control over the same private key during the issuance and presentation. Mechanism might depend on the Credential Format. For example, in `jwt_vc_json` Credential Format, a Verifiable Credential with Cryptographic Holder Binding contains a public key or a reference to a public key that matches to the private key controlled by the Holder. 
 
 Claim-based Holder Binding:
 :  Ability of the Holder to prove legitimate possession of a Verifiable Credential by proofing certain claims, e.g., name and date of birth, for example by presenting another Verifiable Credential. Claim-based Holder Binding allows long term, cross device use of a Credential as it does not depend on cryptographic key material stored on a certain device. One example of such a Verifiable Credential could be a Diploma.
@@ -138,7 +138,7 @@ Any of the OAuth 2.0 related specifications, such as [@RFC9126] and [@RFC9101], 
 
 Below is a diagram of a flow where the End-User presents a Credential to a Verifier interacting with the End-User on the same device that the device the Wallet resides on.
 
-The flow utilizes simple redirects to pass Authorization Request and Response between the Verifier and the Wallet. The Verifiable Presentations are returned to the Verifier in the fragment part of the Redirect URI, when Response Mode is `fragment`. 
+The flow utilizes simple redirects to pass Authorization Request and Response between the Verifier and the Wallet. The Verifiable Presentations are returned to the Verifier in the fragment part of the redirect URI, when Response Mode is `fragment`. 
 
 Note: The diagram does not illustrate all the optional features of this specification.
 
@@ -297,11 +297,11 @@ The following non-normative example shows how the Verifiers can also ask for alt
 
 <{{examples/request/vp_token_alternative_credentials.json}}
 
-The VC and VP formats supported by the Wallet should be published in its metadata using the metadata parameter `vp_formats_supported` (see (#as_metadata_parameters)). 
+The Verifiable Credential and Verifiable Presentation formats supported by the Wallet should be published in its metadata using the metadata parameter `vp_formats_supported` (see (#as_metadata_parameters)). 
 
 The formats supported by a Verifier may be set up using the metadata parameter `vp_formats` (see (#client_metadata_parameters)). The Wallet MUST ignore any `format` property inside a `presentation_definition` object if that `format` was not included in the `vp_formats` property of the metadata.
 
-Note: When a Verifier is requesting presentation of a VP containing a VC, the Verifier MUST indicate in the `vp_formats` parameter the supported formats of both VC and VP.
+Note: When a Verifier is requesting presentation of a Verifiable Presentation containing a Verifiable Credential, the Verifier MUST indicate in the `vp_formats` parameter the supported formats of both Verifiable Credential and Verifiable Presentation.
 
 ## `presentation_definition_uri` Parameter {#request_presentation_definition_uri}
 
@@ -385,10 +385,10 @@ which is an alias for the first Presentation Definition example given in (#reque
 
 ## Response Type `vp_token` {#response_type_vp_token}
 
-This specification defines the response type `vp_token`.
+This specification defines the Response Type `vp_token`.
 
 `vp_token`:
-:  When supplied as the `response_type` parameter in an Authorization Request, a successful response MUST include the `vp_token` parameter. The Wallet SHOULD NOT return an OAuth 2.0 Authorization Code, Access Token, or Access Token Type in a successful response to the grant request. The default Response Mode for this Response Type is `fragment`, i.e., the Authorization Response parameters are encoded in the fragment added to the `redirect_uri` when redirecting back to the Client. The response type `vp_token` can be used with other Response Modes as defined in [@!OAuth.Responses]. Both successful and error responses SHOULD be returned using the supplied Response Mode, or if none is supplied, using the default Response Mode.
+:  When supplied as the `response_type` parameter in an Authorization Request, a successful response MUST include the `vp_token` parameter. The Wallet SHOULD NOT return an OAuth 2.0 Authorization Code, Access Token, or Access Token Type in a successful response to the grant request. The default Response Mode for this Response Type is `fragment`, i.e., the Authorization Response parameters are encoded in the fragment added to the `redirect_uri` when redirecting back to the Client. The Response Type `vp_token` can be used with other Response Modes as defined in [@!OAuth.Responses]. Both successful and error responses SHOULD be returned using the supplied Response Mode, or if none is supplied, using the default Response Mode.
 
 See (#response) on how the `response_type` value determines the response used to return a VP Token.
 
@@ -415,7 +415,7 @@ This specification defines the following values for the `client_id_scheme` param
 
 * `pre-registered`: This value represents the [@!RFC6749] default behavior, i.e., the Client Identifier needs to be known to the Wallet in advance of the Authorization Request. The Verifier's metadata is obtained using [@!RFC7591] or through out-of-band mechanisms.
 
-* `redirect_uri`: This value indicates that the Verifier's Redirect URI is also the value of the Client Identifier. In this case, the Authorization Request MUST NOT be signed, the Verifier MAY omit the `redirect_uri` Authorization Request parameter, and all Client metadata parameters MUST be passed using the `client_metadata` or `client_metadata_uri` parameter defined in (#vp_token_request). 
+* `redirect_uri`: This value indicates that the Verifier's redirect URI is also the value of the Client Identifier. In this case, the Authorization Request MUST NOT be signed, the Verifier MAY omit the `redirect_uri` Authorization Request parameter, and all Client metadata parameters MUST be passed using the `client_metadata` or `client_metadata_uri` parameter defined in (#vp_token_request). 
 
 The following is a non-normative example of a request when `client_id` equals `redirect_uri`.
 
@@ -486,11 +486,11 @@ When a VP Token is returned, the respective response MUST include the following 
 
 Other parameters, such as `state` or `code` (from [@!RFC6749]), or `id_token` (from [@!OpenID.Core]), and `iss` (from [@RFC9207]) MAY be included in the response as defined in the respective specifications.
 
-The `presentation_submission` element MUST be included as a separate response parameter alongside the vp_token. Clients MUST ignore any `presentation_submission` element included inside a VP.
+The `presentation_submission` element MUST be included as a separate response parameter alongside the vp_token. Clients MUST ignore any `presentation_submission` element included inside a Verifiable Presentation.
 
 Including the `presentation_submission` parameter as a separate response parameter allows the Wallet to provide the Verifier with additional information about the format and structure in advance of the processing of the VP Token, and can be used even with the Credential formats that do not allow for the direct inclusion of `presentation_submission` parameters inside a Credential itself.
 
-The following is an example response to a request of a response type `vp_token`, where the `presentation_submission` is a separate response parameter: 
+The following is an example response to a request of a Response Type `vp_token`, where the `presentation_submission` is a separate response parameter: 
 
 ```
   HTTP/1.1 302 Found
@@ -529,7 +529,7 @@ It has been defined to address the following use cases:
 The Response Mode is defined in accordance with [@!OAuth.Responses] as follows:
 
 `direct_post`:
-: In this mode, the Authorization Response is sent to the Verifier using an HTTPS POST request to an endpoint controlled by the Verifier. The Authorization Response parameters are encoded in the body using the `application/x-www-form-urlencoded` content type. The flow can end with an HTTPS POST request from the Wallet to the Verifier, or it can end with a redirect that follows the HTTPS POST request, if the Verifier responds with a Redirect URI to the Wallet.
+: In this mode, the Authorization Response is sent to the Verifier using an HTTPS POST request to an endpoint controlled by the Verifier. The Authorization Response parameters are encoded in the body using the `application/x-www-form-urlencoded` content type. The flow can end with an HTTPS POST request from the Wallet to the Verifier, or it can end with a redirect that follows the HTTPS POST request, if the Verifier responds with a redirect URI to the Wallet.
 
 The following new Authorization Request parameter is defined to be used in conjunction with Response Mode `direct_post`: 
 
@@ -580,11 +580,11 @@ If the Response Endpoint has successfully processed the request, it MUST respond
 The following new parameter is defined to be used in this response from the Response Endpoint:
 
 `redirect_uri`:
-: OPTIONAL. The Wallet MUST send the User Agent to this Redirect URI. The Redirect URI allows the Verifier to continue the interaction with the End-User on the device where the Wallet resides after the Wallet has sent the Authorization Response to the Response URI. It especially enables the Verifier to prevent session fixation ((#session_fixation)) attacks.
+: OPTIONAL. The Wallet MUST send the User Agent to this redirect URI. The redirect URI allows the Verifier to continue the interaction with the End-User on the device where the Wallet resides after the Wallet has sent the Authorization Response to the Response URI. It especially enables the Verifier to prevent session fixation ((#session_fixation)) attacks.
 
 Note: Response Mode `direct_post` without the `redirect_uri` could be less secure than Response Modes with redirects. For details, see ((#session_fixation)).
 
-The value of the Redirect URI is at the discretion of the Verifier. However, the Verifier MUST add a fresh, cryptographically random number to the URL. This number is used to ensure only the receiver of the redirect can fetch and process the Authorization Response. The number could be added as a path component or a parameter to the URL. It is RECOMMENDED to use a cryptographic random value of 128 bits or more at the time of the writing of this specification. For implementation considerations see (#implementation_considerations_direct_post).
+The value of the redirect URI is at the discretion of the Verifier. However, the Verifier MUST add a fresh, cryptographically random number to the URL. This number is used to ensure only the receiver of the redirect can fetch and process the Authorization Response. The number could be added as a path component or a parameter to the URL. It is RECOMMENDED to use a cryptographic random value of 128 bits or more at the time of the writing of this specification. For implementation considerations see (#implementation_considerations_direct_post).
 
 The following is a non-normative example of the response from the Verifier to the Wallet upon receiving the Authorization Response at the Response Endpoint (using a `response_code` parameter from (#implementation_considerations_direct_post)):
 
@@ -812,13 +812,13 @@ The following is a non-normative example of a `claims` parameter containing a `p
 
 <{{examples/request/vp_token_federation.json}}
 
-This example will choose a VC that has been issued by a university that is a member of the `ukuniversities.ac.uk` federation and that uses the TRAIN terms of use specification for asserting federation memberships.
+This example will choose a Verifiable Credential that has been issued by a university that is a member of the `ukuniversities.ac.uk` federation and that uses the TRAIN terms of use specification for asserting federation memberships.
 
 ## Nested Verifiable Presentations
 
-Current version of this document does not support presentation of a VP nested inside another VP, even though [@!DIF.PresentationExchange] specification theoretically supports this by stating that the nesting of `path_nested` objects "may be any number of levels deep".
+Current version of this document does not support presentation of a Verifiable Presentation nested inside another Verifiable Presentation, even though [@!DIF.PresentationExchange] specification theoretically supports this by stating that the nesting of `path_nested` objects "may be any number of levels deep".
 
-One level of nesting `path_nested` objects is sufficient to describe a VC included inside a VP.
+One level of nesting `path_nested` objects is sufficient to describe a Verifiable Credential included inside a Verifiable Presentation.
 
 ## State Management
 
@@ -868,7 +868,7 @@ The design is illustrated in the following sequence diagram:
     |              |                            | (redirect_uri with response_code)|
     |              |                            |--------------------------------->|
     |              |                            |                                  |
-    |              |  (7) Redirect to the Redirect URI (response_code)             |
+    |              |  (7) Redirect to the redirect URI (response_code)             |
     |              |<--------------------------------------------------------------|
     |              |                            |                                  |
     |              |  (8) fetch response data   |                                  |
@@ -996,11 +996,11 @@ It is NOT RECOMMENDED for the Subject to delegate the presentation of the Creden
 
 To perform a Session Fixation attack, an attacker would start the process using a Verifier executed on a device under his control, capture the Authorization Request and relay it to the device of a victim. The attacker would then periodically try to conclude the process in his Verifier, which would cause the Verifier on his device to try to fetch and verify the Authorization Response. 
 
-Such an attack is impossible against flows implemented with the Response Mode `fragment` as the Wallet will always send the VP Token to the Redirect Endpoint on the same device where it resides. This means an attacker could extract a valid Authorization Request from a Verifier on his device and trick a Victim into performing the same Authorization Request on her device. But there is technically no way for an attacker to get hold of the resulting VP Token. 
+Such an attack is impossible against flows implemented with the Response Mode `fragment` as the Wallet will always send the VP Token to the redirect endpoint on the same device where it resides. This means an attacker could extract a valid Authorization Request from a Verifier on his device and trick a Victim into performing the same Authorization Request on her device. But there is technically no way for an attacker to get hold of the resulting VP Token. 
 
 However, the Response Mode `direct_post` is susceptible to such an attack as the result is sent from the Wallet out-of-band to the Verifier's Response Endpoint. 
 
-This kind of attack can be detected if the Response Mode `direct_post` is used in conjunction with the Redirect URI, which causes the Wallet to redirect the flow to the Verifier's frontend at the device where the transaction was concluded. The Verifier's Response Endpoint MUST include a fresh secret (Response Code) into the Redirect URI returned to the Wallet and the Verifier's Response Endpoint MUST require the frontend to pass the respective Response Code when fetching the Authorization Response. That stops session fixation attacks as long as the attacker is unable to get access to the Response Code. 
+This kind of attack can be detected if the Response Mode `direct_post` is used in conjunction with the redirect URI, which causes the Wallet to redirect the flow to the Verifier's frontend at the device where the transaction was concluded. The Verifier's Response Endpoint MUST include a fresh secret (Response Code) into the redirect URI returned to the Wallet and the Verifier's Response Endpoint MUST require the frontend to pass the respective Response Code when fetching the Authorization Response. That stops session fixation attacks as long as the attacker is unable to get access to the Response Code. 
 
 See (#implementation_considerations_direct_post) for more implementation considerations.
 
@@ -1010,7 +1010,7 @@ When using the Response Mode `direct_post` without the further protection provid
 
 ### Validation of the Response URI
 
-The Wallet MUST ensure the data in the Authorization Response cannot leak through Response URIs. When using pre-registered Response URIs, the Wallet MUST comply with best practices for Redirect URI validation as defined in [@I-D.ietf-oauth-security-topics]. The Wallet MAY also rely on a Client Identifier scheme in conjunction with client authentication and integrity protection of the request to establish trust in the Response URI provided by a certain Verifier.
+The Wallet MUST ensure the data in the Authorization Response cannot leak through Response URIs. When using pre-registered Response URIs, the Wallet MUST comply with best practices for redirect URI validation as defined in [@I-D.ietf-oauth-security-topics]. The Wallet MAY also rely on a Client Identifier scheme in conjunction with client authentication and integrity protection of the request to establish trust in the Response URI provided by a certain Verifier.
 
 ### Protection of the Response URI
 
@@ -1333,7 +1333,7 @@ The following is a non-normative example of the content of the `presentation_sub
 
 <{{examples/response/ps_jwt_vc.json}}
 
-The following is a non-normative example of the payload of the VP in the `vp_token` parameter provided in the same response and referred to by the `presentation_submission` above:
+The following is a non-normative example of the payload of the Verifiable Presentation in the `vp_token` parameter provided in the same response and referred to by the `presentation_submission` above:
 
 <{{examples/response/jwt_vp.json}}
 
@@ -1373,7 +1373,7 @@ The following is a non-normative example of the content of the `presentation_sub
 
 <{{examples/response/ps_ldp_vc.json}}
 
-The following is a non-normative example of the VP in the `vp_token` parameter provided in the same response and referred to by the `presentation_submission` above:
+The following is a non-normative example of the Verifiable Presentation in the `vp_token` parameter provided in the same response and referred to by the `presentation_submission` above:
 
 <{{examples/response/ldp_vp.json}}
 
@@ -1555,7 +1555,7 @@ Note: The `nonce` and `aud` are set to the `nonce` of the request and the Client
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
 * Specification Document(s): https://openid.net/specs/openid-4-verifiable-presentations-1_0.html
 
-Note: Plan to register the following response types in the [OAuth Authorization Endpoint Response Types IANA Registry](https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml#endpoint).
+Note: Plan to register the following Response Types in the [OAuth Authorization Endpoint Response Types IANA Registry](https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml#endpoint).
 
 # Acknowledgements {#Acknowledgements}
 
