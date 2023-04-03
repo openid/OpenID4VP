@@ -486,11 +486,11 @@ When a VP Token is returned, the respective response MUST include the following 
 
 Other parameters, such as `state` or `code` (from [@!RFC6749]), or `id_token` (from [@!OpenID.Core]), and `iss` (from [@RFC9207]) MAY be included in the response as defined in the respective specifications.
 
-The `presentation_submission` element MUST be included as a separate response parameter alongside the vp_token. Clients MUST ignore any `presentation_submission` element included inside a Verifiable Presentation.
+The `presentation_submission` element MUST be included as a separate response parameter alongside the VP token. Clients MUST ignore any `presentation_submission` element included inside a Verifiable Presentation.
 
 Including the `presentation_submission` parameter as a separate response parameter allows the Wallet to provide the Verifier with additional information about the format and structure in advance of the processing of the VP Token, and can be used even with the Credential formats that do not allow for the direct inclusion of `presentation_submission` parameters inside a Credential itself.
 
-The following is an example response to a request of a Response Type `vp_token`, where the `presentation_submission` is a separate response parameter: 
+The following is a non-normative example of an Authorization Response when the Response Type value in the Authorization Request was `vp_token`: 
 
 ```
   HTTP/1.1 302 Found
