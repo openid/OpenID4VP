@@ -407,7 +407,7 @@ When the Verifier is sending a Request Object as defined in [@!RFC9101], the `au
 
 Note: "https://self-issued.me/v2" is a symbolic string and can be used as an `aud` Claim value even when this specification is used standalone, without SIOPv2. 
 
-## Verifier metadata Management {#client_metadata_management}
+## Verifier Metadata Management {#client_metadata_management}
 
 The `client_id_scheme` enables deployments of this specification to use different mechanisms to obtain and validate metadata of the Verifier beyond the scope of [@!RFC6749]. The term `client_id_scheme` is used since the Verifier is acting as an OAuth 2.0 Client.
 
