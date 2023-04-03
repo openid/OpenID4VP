@@ -126,7 +126,7 @@ This specification supports any Credential format used in the Issuer-Holder-Veri
 
 Implementations can use any pre-existing OAuth 2.0 Grant Type and Response Type in conjunction with this specification to support different deployment architectures.
 
-OpenID for Verifiable Presentations supports scenarios where the Authorization Request is sent both when the Verifier is interacting with the End-User using the device that is same or different from the device on which requested Credential(s) are stored.
+OpenID for Verifiable Presentations supports scenarios where the Authorization Request is sent both when the Verifier is interacting with the End-User using the device that is the same or different from the device on which requested Credential(s) are stored.
 
 This specification supports the response being sent using a redirect but also using an HTTPS POST request. This enables the response to be sent across devices, or when the response size exceeds the redirect URL character size limitation.
 
@@ -238,7 +238,7 @@ The Verifier communicates a Client Identifier Scheme that indicate how the Walle
 
 Depending on the Client Identifier Scheme, the Verifier can communicate a JSON object with its metadata using `client_metadata` and `client_metadata_uri` parameters that contain key value pairs defined in Section 4.3 and Section 2.1 of the OpenID Connect Dynamic Client Registration 1.0 [@!OpenID.Registration] specification as well as [@!RFC7591]. The parameter names include a term `client` since the Verifier is acting as an OAuth 2.0 Client.
 
-This specification enables the Verifier to send both Presentation Definition JSON object and JSON object with its metadata by value or by reference.
+This specification enables the Verifier to send both Presentation Definition JSON object with its metadata by value or by reference.
 
 This specification defines the following new parameters:
 
@@ -246,7 +246,7 @@ This specification defines the following new parameters:
 : A string containing a Presentation Definition JSON object. See (#request_presentation_definition) for more details. This parameter MUST be present when `presentation_definition_uri` parameter, or a `scope` value representing a Presentation Definition is not present.
 
 `presentation_definition_uri`:
-: A string containing an HTTPS URL pointing to a resource where a Presentation Definition JSON object can be retrieved. This parameter MUST be present when `presentation_definition_uri` parameter, or a `scope` value representing a Presentation Definition is not present. See (#request_presentation_definition_uri) for more details.
+: A string containing an HTTPS URL pointing to a resource where a Presentation Definition JSON object can be retrieved. This parameter MUST be present when `presentation_definition` parameter, or a `scope` value representing a Presentation Definition is not present. See (#request_presentation_definition_uri) for more details.
 
 `client_id_scheme`: 
 : OPTIONAL. A string identifying the scheme of the value in the `client_id` Authorization Request parameter (Client Identifier scheme). The `client_id_scheme` parameter namespaces the respective Client Identifier. If an Authorization Request uses the `client_id_scheme` parameter, the Wallet MUST interpret the Client Identifier of the Verifier in the context of the Client Identifier scheme. If the parameter is not present, the Wallet MUST behave as specified in [@!RFC6749]. See (#client_metadata_management) for the values defined by this specification. If the same Client Identifier is used with different Client Identifier schemes, those occurrences MUST be treated as different Verifiers. Note that the Verifier needs to determine which Client Identifier schemes the Wallet supports prior to sending the Authorization Request in order to choose a supported scheme.
@@ -301,7 +301,7 @@ The Verifiable Credential and Verifiable Presentation formats supported by the W
 
 The formats supported by a Verifier may be set up using the metadata parameter `vp_formats` (see (#client_metadata_parameters)). The Wallet MUST ignore any `format` property inside a `presentation_definition` object if that `format` was not included in the `vp_formats` property of the metadata.
 
-Note: When a Verifier is requesting presentation of a Verifiable Presentation containing a Verifiable Credential, the Verifier MUST indicate in the `vp_formats` parameter the supported formats of both Verifiable Credential and Verifiable Presentation.
+Note: When a Verifier is requesting the presentation of a Verifiable Presentation containing a Verifiable Credential, the Verifier MUST indicate in the `vp_formats` parameter the supported formats of both Verifiable Credential and Verifiable Presentation.
 
 ## `presentation_definition_uri` Parameter {#request_presentation_definition_uri}
 
@@ -407,7 +407,7 @@ When the Verifier is sending a Request Object as defined in [@!RFC9101], the `au
 
 Note: "https://self-issued.me/v2" is a symbolic string and can be used as an `aud` Claim value even when this specification is used standalone, without SIOPv2. 
 
-## Verifier metadata Management {#client_metadata_management}
+## Verifier Metadata Management {#client_metadata_management}
 
 The `client_id_scheme` enables deployments of this specification to use different mechanisms to obtain and validate metadata of the Verifier beyond the scope of [@!RFC6749]. The term `client_id_scheme` is used since the Verifier is acting as an OAuth 2.0 Client.
 
@@ -575,7 +575,7 @@ The following is a non-normative example of the Authorization Response that is s
     state=eyJhbGciOiJFUzI...ky6-sVA
 ```
 
-If the Response Endpoint has successfully processed the request, it MUST respond with HTTPS status code 200. 
+If the Response Endpoint has successfully processed the request, it MUST respond with HTTP status code 200. 
 
 The following new parameter is defined to be used in this response from the Response Endpoint:
 
