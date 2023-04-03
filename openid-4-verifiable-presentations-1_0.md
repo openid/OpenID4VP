@@ -126,7 +126,7 @@ This specification supports any Credential format used in the Issuer-Holder-Veri
 
 Implementations can use any pre-existing OAuth 2.0 Grant Type and Response Type in conjunction with this specification to support different deployment architectures.
 
-OpenID for Verifiable Presentations supports scenarios where the Authorization Request is sent both when the Verifier is interacting with the End-User using the device that is same or different from the device on which requested Credential(s) are stored.
+OpenID for Verifiable Presentations supports scenarios where the Authorization Request is sent both when the Verifier is interacting with the End-User using the device that is the same or different from the device on which requested Credential(s) are stored.
 
 This specification supports the response being sent using a redirect but also using an HTTPS POST request. This enables the response to be sent across devices, or when the response size exceeds the redirect URL character size limitation.
 
@@ -238,7 +238,7 @@ The Verifier communicates a Client Identifier Scheme that indicate how the Walle
 
 Depending on the Client Identifier Scheme, the Verifier can communicate a JSON object with its metadata using `client_metadata` and `client_metadata_uri` parameters that contain key value pairs defined in Section 4.3 and Section 2.1 of the OpenID Connect Dynamic Client Registration 1.0 [@!OpenID.Registration] specification as well as [@!RFC7591]. The parameter names include a term `client` since the Verifier is acting as an OAuth 2.0 Client.
 
-This specification enables the Verifier to send both Presentation Definition JSON object and JSON object with its metadata by value or by reference.
+This specification enables the Verifier to send both Presentation Definition JSON object with its metadata by value or by reference.
 
 This specification defines the following new parameters:
 
