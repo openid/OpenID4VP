@@ -575,7 +575,7 @@ The following is a non-normative example of the Authorization Response that is s
     state=eyJhbGciOiJFUzI...ky6-sVA
 ```
 
-If the Response Endpoint has successfully processed the request, it MUST respond with HTTPS status code 200. 
+If the Response Endpoint has successfully processed the request, it MUST respond with HTTP status code 200. 
 
 The following new parameter is defined to be used in this response from the Response Endpoint:
 
