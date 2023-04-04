@@ -551,7 +551,7 @@ The following is a non-normative example of the payload of a Request Object with
    "response_mode": "direct_post",
    "presentation_definition": {...},
    "nonce": "n-0S6_WzA2Mj",
-   "state" : "eyJhbGciOiJFUzI...ky6-sVA
+   "state" : "eyJhb...6-sVA
 }
 ```
 
@@ -572,7 +572,7 @@ The following is a non-normative example of the Authorization Response that is s
 
     presentation_submission=...&
     vp_token=...&
-    state=eyJhbGciOiJFUzI...ky6-sVA
+    state=eyJhb...6-sVA
 ```
 
 If the Response Endpoint has successfully processed the request, it MUST respond with HTTPS status code 200. 
