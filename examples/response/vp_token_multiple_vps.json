@@ -29,7 +29,7 @@
                 "proof": {
                     "type": "Ed25519Signature2018",
                     "created": "2021-03-19T15:30:15Z",
-                    "jws": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..",
+                    "jws": "eyJhb...IAoDA",
                     "proofPurpose": "assertionMethod",
                     "verificationMethod": "did:example:issuer#keys-1"
                 }
@@ -42,7 +42,7 @@
             "created": "2021-03-19T15:30:15Z",
             "challenge": "n-0S6_WzA2Mj",
             "domain": "https://client.example.org/cb",
-            "jws": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..",
+            "jws": "eyJhb...JQdBw",
             "proofPurpose": "authentication",
             "verificationMethod": "did:example:holder#key-1"
         }

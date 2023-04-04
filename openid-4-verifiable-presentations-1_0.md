@@ -238,7 +238,7 @@ The Verifier communicates a Client Identifier Scheme that indicate how the Walle
 
 Depending on the Client Identifier Scheme, the Verifier can communicate a JSON object with its metadata using `client_metadata` and `client_metadata_uri` parameters that contain key value pairs defined in Section 4.3 and Section 2.1 of the OpenID Connect Dynamic Client Registration 1.0 [@!OpenID.Registration] specification as well as [@!RFC7591]. The parameter names include a term `client` since the Verifier is acting as an OAuth 2.0 Client.
 
-This specification enables the Verifier to send both Presentation Definition JSON object with its metadata by value or by reference.
+This specification enables the Verifier to send both Presentation Definition JSON object and Client Metadata JSON object by value or by reference.
 
 This specification defines the following new parameters:
 
@@ -575,7 +575,7 @@ The following is a non-normative example of the Authorization Response that is s
     state=eyJhbGciOiJFUzI...ky6-sVA
 ```
 
-If the Response Endpoint has successfully processed the request, it MUST respond with HTTP status code 200. 
+If the Response Endpoint has successfully processed the request, it MUST respond with HTTPS status code 200. 
 
 The following new parameter is defined to be used in this response from the Response Endpoint:
 
