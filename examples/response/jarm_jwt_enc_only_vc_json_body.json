@@ -1,5 +1,5 @@
 {
-    "vp_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6I...pupFfLRhf9QpqMBjYgP62KvhIvW8BbkGUelYMetA",
+    "vp_token": "eyJhb...YMetA",
     "presentation_submission": {
         "definition_id": "example_jwt_vc",
         "id": "example_jwt_vc_presentation_submission",
