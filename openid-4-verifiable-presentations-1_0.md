@@ -715,19 +715,19 @@ This specification defines new metadata parameters according to [@!RFC8414].
 The following is a non-normative example of a `vp_formats_supported` parameter:
 
 ```
-vp_formats_supported": {
-    "jwt_vc_json": {
-      "alg_values_supported": [
-        "ES256K",
-        "ES384"
-      ]
-    },
-    "jwt_vp_json": {
-      "alg_values_supported": [
-        "ES256K",
-        "EdDSA"
-      ]
-    }
+"vp_formats_supported": {
+  "jwt_vc_json": {
+    "alg_values_supported": [
+      "ES256K",
+      "ES384"
+    ]
+  },
+  "jwt_vp_json": {
+    "alg_values_supported": [
+      "ES256K",
+      "EdDSA"
+    ]
+  }
 }
 ```
 
@@ -1230,7 +1230,7 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
 
 <reference anchor="ISO.18013-5" target="https://www.iso.org/standard/69084.html">
         <front>
-          <title>ISO/IEC 18013-5:2021 Personal identification - ISO-compliant driving license - Part 5: Mobile driving license (mDL)  application</title>
+          <title>ISO/IEC 18013-5:2021 Personal identification — ISO-compliant driving license — Part 5: Mobile driving license (mDL)  application</title>
           <author>
             <organization> ISO/IEC JTC 1/SC 17 Cards and security devices for personal identification</organization>
           </author>
