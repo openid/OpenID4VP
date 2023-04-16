@@ -1,9 +1,9 @@
 {
-    "id": "Selective disclosure example presentation",
-    "definition_id": "Selective disclosure example",
+    "id": "Presentation example 1",
+    "definition_id": "Example with selective disclosure",
     "descriptor_map": [
         {
-            "id": "ID Card with constraints",
+            "id": "ID card with constraints",
             "format": "ldp_vp",
             "path": "$",
             "path_nested": {
