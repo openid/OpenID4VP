@@ -688,7 +688,7 @@ Verifiers MUST validate the VP Token in the following manner:
 1. Validate the integrity, authenticity, and Holder Binding of any Verifiable Presentation provided in the VP Token according to the rules of the respective Presentation format. See (#preventing-replay) for the checks required to prevent replay of a VP.
 1. If applicable, perform the checks on the Credential(s) specific to the Credential Format (i.e., validation of the signature(s) on each VC), if applicable.
 1. Confirm that the returned Credential(s) meet all criteria sent in the Presentation Definition in the Authorization Request.
-1. Perform the checks required by the Verifierâ€™s policy based on the set of trust requirements such as trust frameworks it belongs to (i.e., revocation checks), if applicable.
+1. Perform the checks required by the Verifier's policy based on the set of trust requirements such as trust frameworks it belongs to (i.e., revocation checks), if applicable.
 
 Note: Some of the processing rules of the Presentation Definition and the Presentation Submission are outlined in [@!DIF.PresentationExchange].
 
@@ -716,18 +716,18 @@ The following is a non-normative example of a `vp_formats_supported` parameter:
 
 ```
 vp_formats_supported": {
-â€Œ "jwt_vc_json": {
-  â€Œ "alg_values_supported": [
-    â€Œ "ES256K",
-    â€Œ "ES384"
-  â€Œ ]
-â€Œ },
-â€Œ "jwt_vp_json": {
-  â€Œ "alg_values_supported": [
-    â€Œ "ES256K",
-     "EdDSA"
-  â€Œ ]
-â€Œ }
+    "jwt_vc_json": {
+      "alg_values_supported": [
+        "ES256K",
+        "ES384"
+      ]
+    },
+    "jwt_vp_json": {
+      "alg_values_supported": [
+        "ES256K",
+        "EdDSA"
+      ]
+    }
 }
 ```
 
@@ -1230,7 +1230,7 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
 
 <reference anchor="ISO.18013-5" target="https://www.iso.org/standard/69084.html">
         <front>
-          <title>ISO/IEC 18013-5:2021 Personal identification â€” ISO-compliant driving license â€” Part 5: Mobile driving license (mDL)  application</title>
+          <title>ISO/IEC 18013-5:2021 Personal identification - ISO-compliant driving license - Part 5: Mobile driving license (mDL)  application</title>
           <author>
             <organization> ISO/IEC JTC 1/SC 17 Cards and security devices for personal identification</organization>
           </author>
@@ -1670,4 +1670,3 @@ The technology described in this specification was made available from contribut
    -00 
 
    *  initial revision
-   
