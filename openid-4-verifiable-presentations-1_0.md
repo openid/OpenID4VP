@@ -360,7 +360,7 @@ Wallets MAY support requesting presentation of Verifiable Credentials using OAut
 Such a scope value MUST be an alias for a well-defined Presentation Definition that will be 
 referred to in the `presentation_submission` response parameter. 
 
-The concrete scope values, and the mapping between a certain scope value and the respective 
+The specific scope values, and the mapping between a certain scope value and the respective 
 Presentation Definition is out of scope of this specification. 
 
 Possible options include normative text in a separate specification defining scope values along with a description of their
@@ -580,11 +580,11 @@ If the Response Endpoint has successfully processed the request, it MUST respond
 The following new parameter is defined to be used in this response from the Response Endpoint:
 
 `redirect_uri`:
-: OPTIONAL. The Wallet MUST send the User Agent to this redirect URI. The redirect URI allows the Verifier to continue the interaction with the End-User on the device where the Wallet resides after the Wallet has sent the Authorization Response to the Response URI. It especially enables the Verifier to prevent session fixation ((#session_fixation)) attacks.
+: OPTIONAL. When the redirect parameter is used the Wallet MUST send the User Agent to this redirect URI. The redirect URI allows the Verifier to continue the interaction with the End-User on the device where the Wallet resides after the Wallet has sent the Authorization Response to the Response URI. It especially enables the Verifier to prevent session fixation ((#session_fixation)) attacks.
 
 Note: Response Mode `direct_post` without the `redirect_uri` could be less secure than Response Modes with redirects. For details, see ((#session_fixation)).
 
-The value of the redirect URI is at the discretion of the Verifier. However, the Verifier MUST add a fresh, cryptographically random number to the URL. This number is used to ensure only the receiver of the redirect can fetch and process the Authorization Response. The number could be added as a path component or a parameter to the URL. It is RECOMMENDED to use a cryptographic random value of 128 bits or more at the time of the writing of this specification. For implementation considerations see (#implementation_considerations_direct_post).
+The value of the redirect URI is at the discretion of the Verifier. However, the Verifier MUST include a fresh, cryptographically random number in the URL. This number is used to ensure only the receiver of the redirect can fetch and process the Authorization Response. The number could be added as a path component or a parameter to the URL. It is RECOMMENDED to use a cryptographic random value of 128 bits or more at the time of the writing of this specification. For implementation considerations see (#implementation_considerations_direct_post).
 
 The following is a non-normative example of the response from the Verifier to the Wallet upon receiving the Authorization Response at the Response Endpoint (using a `response_code` parameter from (#implementation_considerations_direct_post)):
 
@@ -657,7 +657,6 @@ The error response follows the rules as defined in [@!RFC6749], with the followi
 - Requested Presentation Definition does not conform to the DIF PEv2 specification [@!DIF.PresentationExchange].
 - The Wallet does not support the `client_id_scheme` value passed in the Authorization Request.
 - The Client Identifier passed in the request did not belong to the Client Identifier scheme indicated in the Authorization Request, or requirements of a certain scheme was violated, for example an unsigned request was sent with Client Identifier scheme `entity_id`.
-- A request contained more than one of the following: `presentation_definition`, `presentation_definition_uri`, or a `scope` value representing a Presentation Definition.
 
 `invalid_client`:
 
@@ -686,9 +685,9 @@ Verifiers MUST validate the VP Token in the following manner:
 
 1. Determine the number of VPs returned in the VP Token and identify in which VP which requested VC is included, using the Input Descriptor Mapping Object(s) in the Presentation Submission.
 1. Validate the integrity, authenticity, and Holder Binding of any Verifiable Presentation provided in the VP Token according to the rules of the respective Presentation format. See (#preventing-replay) for the checks required to prevent replay of a VP.
-1. If applicable, perform the checks on the Credential(s) specific to the Credential Format (i.e., validation of the signature(s) on each VC), if applicable.
-1. Confirm that the returned Credential(s) meet all criteria sent in the Presentation Definition in the Authorization Request.
-1. Perform the checks required by the Verifier’s policy based on the set of trust requirements such as trust frameworks it belongs to (i.e., revocation checks), if applicable.
+2. If applicable, perform the checks on the Credential(s) specific to the Credential Format (i.e., validation of the signature(s) on each VC).
+3. Confirm that the returned Credential(s) meet all criteria sent in the Presentation Definition in the Authorization Request.
+4. Perform the checks required by the Verifier’s policy based on the set of trust requirements such as trust frameworks it belongs to (i.e., revocation checks), if applicable.
 
 Note: Some of the processing rules of the Presentation Definition and the Presentation Submission are outlined in [@!DIF.PresentationExchange].
 
@@ -796,7 +795,7 @@ The following is a non-normative example of a set of static configuration values
 
 ## Support for Federations/Trust Schemes
 
-Often Verifiers will want to request Verifiable Credentials from a Credential Issuer who is a participant of a federation, or adheres to a known trust scheme, rather than from a specific Credential Issuer, for example, a "BSc Chemistry Degree" Credential from a US University rather than from a specifically named university.
+Often Verifiers will want to request Verifiable Credentials from a Credential Issuer who is a participant of a federation, or adheres to a known trust scheme, rather than from a specific Credential Issuer, for example, a "BSc Chemistry Degree" Credential from the imaginary "eduCreds" trust scheme rather than from a specifically named university.
 
 To facilitate this, federations will need to determine how a Credential Issuer can indicate in a Verifiable Credential that they are a member of one or more federations/trust schemes. Once this is done, the Verifier will be able to create a `presentation_definition` that includes this filtering criteria. This will enable the Wallet to select all the Verifiable Credentials that match this criteria and then by some means (for example, by asking the user) determine which matching Verifiable Credential to return to the Verifier. Upon receiving this Verifiable Credential, the Verifier will be able to call its federation API to determine if the Credential Issuer is indeed a member of the federation/trust scheme that it says it is.
 
@@ -946,7 +945,7 @@ The Wallet MUST link every Verifiable Presentation returned to the Verifier in t
 
 The Verifier MUST validate every individual Verifiable Presentation in an Authorization Response and ensure that it is linked to the values of the `client_id` and the `nonce` parameter it had used for the respective Authorization Request.
 
-The `client_id` is used to detect the presentation of Verifiable Credentials to a different party other than the intended. This prevents a legitimate recipient of a Verifiable Presentation from presenting it to other Verifiers. The `nonce` value binds the Presentation to a certain authentication transaction and allows the Verifier to detect injection of a Presentation in the flow, which is especially important in the flows where the Presentation is passed through the front-channel.
+The `client_id` is used to detect the presentation of Verifiable Credentials to a party other than the one intended. This allows Verifiers take appropriate action in that case, such as not accepting the Verifiable Presentation. The `nonce` value binds the Presentation to a certain authentication transaction and allows the Verifier to detect injection of a Presentation in the flow, which is especially important in the flows where the Presentation is passed through the front-channel.
 
 Note: Different formats for Verifiable Presentations and signature/proof schemes use different ways to represent the intended audience and the session binding. Some use claims to directly represent those values, others include the values into the calculation of cryptographic proofs. There are also different naming conventions across the different formats. The format of the respective presentation is determined from the format information in the presentation submission in the Authorization Response.
 
