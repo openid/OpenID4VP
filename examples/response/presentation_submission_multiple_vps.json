@@ -14,10 +14,10 @@
         {
             "id": "Ontario Health Insurance Plan",
             "format": "jwt_vp_json",
-            "path": "$[1].presentation",
+            "path": "$[1]",
             "path_nested": {
                 "format": "jwt_vc_json",
-                "path": "$[1].presentation.vp.verifiableCredential[0]"
+                "path": "$[1].vp.verifiableCredential[0]"
             }
         }
     ]
