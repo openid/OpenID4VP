@@ -1,5 +1,5 @@
 {
     "typ": "oauth-authz-req+jwt",
     "alg": "RS256",
-    "kid": "did:example:123/1"
+    "kid": "did:example:123#1"
 }
