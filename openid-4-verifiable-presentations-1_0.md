@@ -1274,7 +1274,7 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
 
 <reference anchor="OpenID.Federation" target="https://openid.net/specs/openid-connect-federation-1_0.html">
         <front>
-          <title>OpenID Connect Federation 1.0 - draft 17></title>
+          <title>OpenID Connect Federation 1.0 - draft 28></title>
 		  <author fullname="R. Hedberg, Ed.">
             <organization>Independent</organization>
           </author>
@@ -1290,7 +1290,7 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
           <author fullname="John Bradley">
             <organization>Yubico</organization>
           </author>
-          <date day="9" month="Sept" year="2021"/>
+          <date day="24" month="March" year="2023"/>
         </front>
  </reference>
 
