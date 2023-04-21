@@ -1272,7 +1272,7 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </front>
 </reference>
 
-<reference anchor="OpenID.Federation" target="https://openid.net/specs/openid-connect-federation-1_0.html">
+<reference anchor="OpenID.Federation" target="https://openid.net/specs/openid-connect-federation-1_0-28.html">
         <front>
           <title>OpenID Connect Federation 1.0 - draft 28></title>
 		  <author fullname="R. Hedberg, Ed.">
