@@ -1,5 +1,5 @@
 %%%
-title = "OpenID for Verifiable Presentations - draft 17"
+title = "OpenID for Verifiable Presentations - draft 18"
 abbrev = "openid-4-vp"
 ipr = "none"
 workgroup = "connect"
@@ -7,7 +7,7 @@ keyword = ["security", "openid", "ssi"]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "openid-4-verifiable-presentations-1_0-17"
+value = "openid-4-verifiable-presentations-1_0-18"
 status = "standard"
 
 [[author]]
@@ -1581,6 +1581,10 @@ The technology described in this specification was made available from contribut
 # Document History
 
    [[ To be removed from the final specification ]]
+
+   -18
+
+   * editorial update based on the 45 days review period prior to the Vote for proposed Second Implementer’s Draft
 
    -17
 
