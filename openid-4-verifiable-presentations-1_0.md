@@ -448,7 +448,9 @@ Body
 
 <{{examples/request/request_object_client_id_did.json}}
 
-To use `client_id_scheme` values `entity_id` and `did`, Verifiers MUST be confidential clients. This might require changes to the technical design of native apps as such apps are typically public clients.
+* `verifier_attestation`: This Client Identifier Scheme allows the Verifier to authenticate using a JWT that is bound to a certain public key as defined in (#verifier_attestation_jwt). When the Client Identifier Scheme is `verifier_attestation`, the Client Identifier MUST equal the `sub` claim value in the Verifier attestation JWT. The request MUST be signed with the private key corresponding to the public key in the `cnf` claim in the Verifier attestation JWT. The Verifier attestation JWT MUST be added to the `va` JOSE Header of the request object. The Wallet MUST validate the signature on the Verifier attestation JWT. The `iss` claim value of the Verifier Attestation JWT MUST identify a party the Wallet trusts for issuing Verifier Attestation JWTs. If the Verifier Attestation JWT contains a `redirect_uris` claim, the `redirect_uri` request parameter value MUST exactly match one of the `redirect_uris` claim entries. Otherwise, if the Wallet can establish trust in the Client Identifier through the issuer of the attestation or by mapping claims in the attestation to a list of trusted entities, it may allow the client to freely choose the `redirect_uri` value. If not and the attestation contains a `client_uri` claim, the FQDN of the `redirect_uri` value MUST match the `client_uri` claim value. Otherwise, the Wallet MUST refuse the request. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter.
+
+To use `client_id_scheme` values `entity_id`, `verifier_attestation`, and `did`, Verifiers MUST be confidential clients. This might require changes to the technical design of native apps as such apps are typically public clients.
 
 Other specifications can define further values for the `client_id_scheme` parameter. It is RECOMMENDED to use collision-resistant names for such values.
 
@@ -756,6 +758,25 @@ Deployments can extend the formats supported, provided Issuers, Holders and Veri
 
 `client_id_scheme`:
 : OPTIONAL. JSON String identifying the Client Identifier scheme. The value range defined by this specification is `pre-registered`, `redirect_uri`, `entity_id`, `did`. If omitted, the default value is `pre-registered`. 
+
+# Verifier Attestation JWTs {#verifier_attestation_jwt}
+
+The Verifier Attestation JWT is a JWT especially designed to allow Verifiers to authenticate towards a Wallet in a secure and flexible manner. This JWT MUST contain the following claims:
+
+* `iss`: the issuer of the Verifier Attestation
+* `sub`: the Client Identifier of the Verifier
+* `exp`: expiration of the Verifier Attestation
+* `cnf`: This claim determines a public key for whichs corresponding private key the Verifier MUST proof possession of when presenting the Verifier Attestation JWT. This additional security measure allows the Verifier to obtain a Verifier Attestion JWT from a trusted issuer and use it for a long time independent of that issuer without the risk of an advisary impersonating the Verifier by replaying a captured attestation. 
+
+The Verifier Attestation JWT MAY contain all claims as defined in [@!RFC7591]. 
+
+Verifier Attestation JWTs compliant with this specification MUST use the media type `application/va+jwt` as defined in (#va_media_type).
+
+A Verifier Attestation JWT MUST set the `typ` JOSE header to `va+jwt`.
+
+The Verifier Attestation JWT MAY be conveyed in the header of a JWS signed object (JOSE header). For this purpose, this specification defines the following header claim: 
+
+* `va`: This JOSE header MUST contain a Verifier Attestation JWT in compact serialization. 
 
 # Implementation Considerations
 
@@ -1556,6 +1577,8 @@ Note: The `nonce` and `aud` are set to the `nonce` of the request and the Client
 
 # IANA Considerations
 
+## Response Types
+
 * Response Type Name: `vp_token`
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
 * Specification Document(s): https://openid.net/specs/openid-4-verifiable-presentations-1_0.html
@@ -1565,6 +1588,49 @@ Note: The `nonce` and `aud` are set to the `nonce` of the request and the Client
 * Specification Document(s): https://openid.net/specs/openid-4-verifiable-presentations-1_0.html
 
 Note: Plan to register the following Response Types in the [OAuth Authorization Endpoint Response Types IANA Registry](https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml#endpoint).
+
+## Media Types
+### application/vc+sd-jwt {#va_media_type}
+
+The Internet media type for a Verifier Attestation JWT is `application/va+jwt`.
+
+Type name: : `application`
+
+Subtype name: : `va+jwt`
+
+Required parameters: : n/a
+
+Optional parameters: : n/a
+
+Encoding considerations: : Compact Serialization as defined in [@!RFC7519].
+
+Security considerations: : See Security Considerations in in [@!RFC7519].
+
+Interoperability considerations: : n/a
+
+- Published specification: : TODO
+- Applications that use this media type: : Applications that issue, present,
+  verify verifier attestation VCs.
+- Additional information:
+  - Magic number(s): n/a
+  - File extension(s): n/a
+  - Macintosh file type code(s): n/a
+  - Person & email address to contact for further information: TBD
+  - Intended usage: COMMON
+  - Restrictions on usage: none
+  - Author: tbd <TODO@email.com>
+  - Change controller: OpenID Foundation
+
+
+## JWS Headers
+### va {#va_media_type}
+This specification registers the following JWS header name in the IANA "JSON Web Signature and Encryption Header Parameters" registry established by [@!RFC7515].
+
+* Header Parameter Name: `va`
+* Header Parameter Description: Verifier Attestation JWT
+* Header Parameter Usage Location: JWS
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Specification Document(s): (#verifier_attestation_jwt)
 
 # Acknowledgements {#Acknowledgements}
 
