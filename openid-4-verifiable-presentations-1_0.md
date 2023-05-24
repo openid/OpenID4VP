@@ -774,9 +774,9 @@ Verifier Attestation JWTs compliant with this specification MUST use the media t
 
 A Verifier Attestation JWT MUST set the `typ` JOSE header to `va+jwt`.
 
-The Verifier Attestation JWT MAY be conveyed in the header of a JWS signed object (JOSE header). For this purpose, this specification defines the following header claim: 
+The Verifier Attestation JWT MAY be conveyed in the header of a JWS signed object (JOSE header). For this purpose, this specification defines the following header: 
 
-* `va`: This JOSE header MUST contain a Verifier Attestation JWT in compact serialization. 
+* `va`: This JOSE header MUST contain a Verifier Attestation JWT. 
 
 # Implementation Considerations
 
