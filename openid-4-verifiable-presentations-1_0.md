@@ -771,7 +771,7 @@ A Verifier Attestation JWT MUST contain the following claims:
 * `exp`: the expiration of the Verifier Attestation JWT
 * `cnf`: Contains the confirmation method as defined in [@!RFC7800]. It MUST contain a JWK as defined in Section 3.2 of [RFC7800]. This claim determines the public key for which's corresponding private key the Verifier MUST proof possession of when presenting the Verifier Attestation JWT. This additional security measure allows the Verifier to obtain a Verifier Attestion JWT from a trusted issuer and use it for a long time independent of that issuer without the risk of an advisary impersonating the Verifier by replaying a captured attestation. 
 
-The Verifier Attestation JWT MAY use any claim registered in the "JSON Web Token Claims" registry as defined in [RFC7519].
+The Verifier Attestation JWT MAY use any claim registered in the "JSON Web Token Claims" registry as defined in [@!RFC7519].
 
 Verifier Attestation JWTs compliant with this specification MUST use the media type `application/va+jwt` as defined in (#va_media_type).
 
