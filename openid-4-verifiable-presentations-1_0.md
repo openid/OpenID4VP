@@ -759,16 +759,19 @@ Deployments can extend the formats supported, provided Issuers, Holders and Veri
 `client_id_scheme`:
 : OPTIONAL. JSON String identifying the Client Identifier scheme. The value range defined by this specification is `pre-registered`, `redirect_uri`, `entity_id`, `did`. If omitted, the default value is `pre-registered`. 
 
-# Verifier Attestation JWTs {#verifier_attestation_jwt}
+# Verifier Attestation JWT {#verifier_attestation_jwt}
 
-The Verifier Attestation JWT is a JWT especially designed to allow Verifiers to authenticate towards a Wallet in a secure and flexible manner. This JWT MUST contain the following claims:
+The Verifier Attestation JWT is a JWT especially designed to allow Verifiers to authenticate towards a Wallet in a secure and flexible manner. A Verifier Attestation JWT is issued to the Verifier by a party that wallets trust for the purpose of authentication and authorization of Verifiers. The way this trust established is out of scope of this specification. Every Verifier is bound to a public key, the Verifier MUST always present a Verifier Attestation JWT along with the proof of possession for this key.   
 
-* `iss`: the issuer of the Verifier Attestation
+A Verifier Attestation JWT MUST contain the following claims:
+
+* `iss`: the issuer of the Verifier Attestation JWT
 * `sub`: the Client Identifier of the Verifier
-* `exp`: expiration of the Verifier Attestation
-* `cnf`: This claim determines a public key for whichs corresponding private key the Verifier MUST proof possession of when presenting the Verifier Attestation JWT. This additional security measure allows the Verifier to obtain a Verifier Attestion JWT from a trusted issuer and use it for a long time independent of that issuer without the risk of an advisary impersonating the Verifier by replaying a captured attestation. 
+* `iat`: the time at which the Verifier Attestation JWT was issued
+* `exp`: the expiration of the Verifier Attestation JWT
+* `cnf`: Contains the confirmation method as defined in [@!RFC7800]. It MUST contain a JWK as defined in Section 3.2 of [RFC7800]. This claim determines the public key for which's corresponding private key the Verifier MUST proof possession of when presenting the Verifier Attestation JWT. This additional security measure allows the Verifier to obtain a Verifier Attestion JWT from a trusted issuer and use it for a long time independent of that issuer without the risk of an advisary impersonating the Verifier by replaying a captured attestation. 
 
-The Verifier Attestation JWT MAY contain all claims as defined in [@!RFC7591]. 
+The Verifier Attestation JWT MAY use any claim registered in the "JSON Web Token Claims" registry as defined in [RFC7519].
 
 Verifier Attestation JWTs compliant with this specification MUST use the media type `application/va+jwt` as defined in (#va_media_type).
 
@@ -1590,7 +1593,7 @@ Note: The `nonce` and `aud` are set to the `nonce` of the request and the Client
 Note: Plan to register the following Response Types in the [OAuth Authorization Endpoint Response Types IANA Registry](https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml#endpoint).
 
 ## Media Types
-### application/vc+sd-jwt {#va_media_type}
+### application/va+jwt {#va_media_type}
 
 The Internet media type for a Verifier Attestation JWT is `application/va+jwt`.
 
