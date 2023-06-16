@@ -1,5 +1,5 @@
 %%%
-title = "OpenID for Verifiable Presentations - draft 18"
+title = "OpenID for Verifiable Presentations - draft 19"
 abbrev = "openid-4-vp"
 ipr = "none"
 workgroup = "connect"
@@ -7,7 +7,7 @@ keyword = ["security", "openid", "ssi"]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "openid-4-verifiable-presentations-1_0-18"
+value = "openid-4-verifiable-presentations-1_0-19"
 status = "standard"
 
 [[author]]
@@ -448,7 +448,12 @@ Body
 
 <{{examples/request/request_object_client_id_did.json}}
 
-To use `client_id_scheme` values `entity_id` and `did`, Verifiers MUST be confidential clients. This might require changes to the technical design of native apps as such apps are typically public clients.
+* `x509_san_dns`: When the Client Identifier Scheme is `x509_san_dns`, the Client Identifier MUST be a DNS name and match a `dNSName` Subject Alternative Name (SAN) [@!RFC5280] entry in the leaf certificate passed with the request. The request MUST be signed with the private key corresponding to the public key in the leaf X.509 certificate of the certificate chain added to the request in the `x5c` JOSE header [@!RFC7515] of the signed request object. The Wallet MUST validate the signature and the trust chain of the X.509 certificate. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter. If the Wallet can establish trust in the Client Identifier authenticated through the certificate, e.g. because the Client Identifier is contained in a list of trusted Client Identifiers, it may allow the client to freely choose the `redirect_uri` value. If not, the FQDN of the `redirect_uri` value MUST match the Client Identifier.
+
+
+* `x509_san_uri`: When the Client Identifier Scheme is `x509_san_uri`, the Client Identifier MUST be a URI and match a `uniformResourceIdentifier` Subject Alternative Name (SAN) [@!RFC5280] entry in the leaf certificate passed with the request. The request MUST be signed with the private key corresponding to the public key in the leaf X.509 certificate of the certificate chain added to the request in the `x5c` JOSE header [@!RFC7515] of the signed request object. The Wallet MUST validate the signature and the trust chain of the X.509 certificate. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter. If the Wallet can establish trust in the Client Identifier authenticated through the certificate, e.g. because the Client Identifier is contained in a list of trusted Client Identifiers, it may allow the client to freely choose the `redirect_uri` value. If not, the `redirect_uri` value MUST match the Client Identifier.
+
+To use `client_id_scheme` values `entity_id`, `did`, `x509_san_dns`, and `x509_san_uri`, Verifiers MUST be confidential clients. This might require changes to the technical design of native apps as such apps are typically public clients.
 
 Other specifications can define further values for the `client_id_scheme` parameter. It is RECOMMENDED to use collision-resistant names for such values.
 
@@ -685,9 +690,9 @@ Verifiers MUST validate the VP Token in the following manner:
 
 1. Determine the number of VPs returned in the VP Token and identify in which VP which requested VC is included, using the Input Descriptor Mapping Object(s) in the Presentation Submission.
 1. Validate the integrity, authenticity, and Holder Binding of any Verifiable Presentation provided in the VP Token according to the rules of the respective Presentation format. See (#preventing-replay) for the checks required to prevent replay of a VP.
-2. If applicable, perform the checks on the Credential(s) specific to the Credential Format (i.e., validation of the signature(s) on each VC).
-3. Confirm that the returned Credential(s) meet all criteria sent in the Presentation Definition in the Authorization Request.
-4. Perform the checks required by the Verifier’s policy based on the set of trust requirements such as trust frameworks it belongs to (i.e., revocation checks), if applicable.
+1. Perform the checks on the Credential(s) specific to the Credential Format (i.e., validation of the signature(s) on each VC).
+1. Confirm that the returned Credential(s) meet all criteria sent in the Presentation Definition in the Authorization Request.
+1. Perform the checks required by the Verifier's policy based on the set of trust requirements such as trust frameworks it belongs to (i.e., revocation checks), if applicable.
 
 Note: Some of the processing rules of the Presentation Definition and the Presentation Submission are outlined in [@!DIF.PresentationExchange].
 
@@ -714,19 +719,19 @@ This specification defines new metadata parameters according to [@!RFC8414].
 The following is a non-normative example of a `vp_formats_supported` parameter:
 
 ```
-vp_formats_supported": {
-‌ "jwt_vc_json": {
-  ‌ "alg_values_supported": [
-    ‌ "ES256K",
-    ‌ "ES384"
-  ‌ ]
-‌ },
-‌ "jwt_vp_json": {
-  ‌ "alg_values_supported": [
-    ‌ "ES256K",
-     "EdDSA"
-  ‌ ]
-‌ }
+"vp_formats_supported": {
+  "jwt_vc_json": {
+    "alg_values_supported": [
+      "ES256K",
+      "ES384"
+    ]
+  },
+  "jwt_vp_json": {
+    "alg_values_supported": [
+      "ES256K",
+      "EdDSA"
+    ]
+  }
 }
 ```
 
@@ -1581,6 +1586,10 @@ The technology described in this specification was made available from contribut
 # Document History
 
    [[ To be removed from the final specification ]]
+
+   -19
+
+   * added "x509_san_uri" and "x509_san_dns" client id scheme value
 
    -18
 
