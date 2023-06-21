@@ -543,7 +543,7 @@ The following new Authorization Request parameter is defined to be used in conju
 
 Note: The Verifier's component providing the user interface (Frontend) and the Verifier's component providing the Response URI (Response Endpoint) need to be able to map authorization requests to the respective authorization responses. The Verifier MAY use the `state` Authorization Request parameter to add appropriate data to the Authorization Response for that purpose, for details see (#implementation_considerations_direct_post). 
 
-Note: If the Client Identifier scheme `redirect_uri` is used in conjunction with the Response Mode `direct_post`, and the `redirect_uri` parameter is present, the `client_id` value MUST be equal to the `response_uri` value.
+Note: If the Client Identifier scheme `redirect_uri` is used in conjunction with the Response Mode `direct_post`, and the `response_uri` parameter is present, the `client_id` value MUST be equal to the `response_uri` value.
 
 The following is a non-normative example of the payload of a Request Object with Response Mode `direct_post`:
 
