@@ -773,9 +773,9 @@ A Verifier Attestation JWT MUST contain the following claims:
 
 The Verifier Attestation JWT MAY use any claim registered in the "JSON Web Token Claims" registry as defined in [@!RFC7519].
 
-Verifier Attestation JWTs compliant with this specification MUST use the media type `application/va+jwt` as defined in (#va_media_type).
+Verifier Attestation JWTs compliant with this specification MUST use the media type `application/verifier-attestation+jwt` as defined in (#va_media_type).
 
-A Verifier Attestation JWT MUST set the `typ` JOSE header to `va+jwt`.
+A Verifier Attestation JWT MUST set the `typ` JOSE header to `verifier-attestation+jwt`.
 
 The Verifier Attestation JWT MAY be conveyed in the header of a JWS signed object (JOSE header). 
 
@@ -783,7 +783,7 @@ This specification introduces a JOSE header, which can be used to add a JWT to s
 
 * `jwt`: This JOSE header MUST contain a JWT. 
 
-In the context of this specification, such a JWT MUST set the `typ` JOSE header to `va+jwt`.
+In the context of this specification, such a JWT MUST set the `typ` JOSE header to `verifier-attestation+jwt`.
 
 # Implementation Considerations
 
@@ -1597,13 +1597,13 @@ Note: The `nonce` and `aud` are set to the `nonce` of the request and the Client
 Note: Plan to register the following Response Types in the [OAuth Authorization Endpoint Response Types IANA Registry](https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml#endpoint).
 
 ## Media Types
-### application/va+jwt {#va_media_type}
+### application/verifier-attestation+jwt {#va_media_type}
 
-The Internet media type for a Verifier Attestation JWT is `application/va+jwt`.
+The Internet media type for a Verifier Attestation JWT is `application/verifier-attestation+jwt`.
 
 Type name: : `application`
 
-Subtype name: : `va+jwt`
+Subtype name: : `verifier-attestation+jwt`
 
 Required parameters: : n/a
 
