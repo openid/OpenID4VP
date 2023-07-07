@@ -1630,11 +1630,11 @@ Interoperability considerations: : n/a
 
 
 ## JWS Headers
-### va {#va_media_type}
+### JWT {#va_media_type}
 This specification registers the following JWS header name in the IANA "JSON Web Signature and Encryption Header Parameters" registry established by [@!RFC7515].
 
-* Header Parameter Name: `va`
-* Header Parameter Description: Verifier Attestation JWT
+* Header Parameter Name: `JWT`
+* Header Parameter Description: This header contains a JWT. Processing rules MAY depend on the `typ` header value of the respective JWT. 
 * Header Parameter Usage Location: JWS
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
 * Specification Document(s): (#verifier_attestation_jwt)
