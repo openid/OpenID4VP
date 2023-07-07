@@ -1630,7 +1630,7 @@ Interoperability considerations: : n/a
 
 
 ## JWS Headers
-### JWT {#va_media_type}
+### JWT {#jose_header}
 This specification registers the following JWS header name in the IANA "JSON Web Signature and Encryption Header Parameters" registry established by [@!RFC7515].
 
 * Header Parameter Name: `JWT`
