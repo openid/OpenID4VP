@@ -767,8 +767,9 @@ A Verifier Attestation JWT MUST contain the following claims:
 
 * `iss`: REQUIRED. This claim identifies the issuer of the Verifier Attestation JWT. The `iss` value MAY be used to retrieve the issuer's public key. How the trust is established between Wallet and Issuer and how the public key is obtained for validating the attestation's signature is out of scope of this specification. 
 * `sub`: REQUIRED. The value of this claim MUST be the `client_id` of the client making the credential request.
-* `iat`: REQUIRED. (number). The value of this claim MUST be the time at which the Verifier Attestation JWT was issued using the syntax defined in [RFC7519].
-* `exp`: REQUIRED. (number). The value of this claim MUST be the time at which the Verifier Attestation JWT expires using the syntax defined in [RFC7519]. 
+* `iat`: OPTIONAL. (number). The value of this claim MUST be the time at which the Verifier Attestation JWT was issued using the syntax defined in [RFC7519].
+* `exp`: REQUIRED. (number). The value of this claim MUST be the time at which the Verifier Attestation JWT expires using the syntax defined in [RFC7519]. The Wallet MUST reject any Verifier Attestation JWT with an expiration time that has passed, subject to allowable clock skew between systems.
+* `nbf`: OPTIONAL. The Verifier Attestation JWT MAY contain an "nbf" (not before) claim that identifies the time before which the token MUST NOT be accepted for processing.
 * `cnf`: REQUIRED. This claim contains the confirmation method as defined in [@!RFC7800]. It MUST contain a JWK as defined in Section 3.2 of [RFC7800]. This claim determines the public key for which's corresponding private key the Verifier MUST proof possession of when presenting the Verifier Attestation JWT. This additional security measure allows the Verifier to obtain a Verifier Attestion JWT from a trusted issuer and use it for a long time independent of that issuer without the risk of an advisary impersonating the Verifier by replaying a captured attestation. 
 
 The Verifier Attestation JWT MAY use any claim registered in the "JSON Web Token Claims" registry as defined in [@!RFC7519].
