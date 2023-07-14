@@ -1,5 +1,5 @@
 %%%
-title = "OpenID for Verifiable Presentations - draft 18"
+title = "OpenID for Verifiable Presentations - draft 20"
 abbrev = "openid-4-vp"
 ipr = "none"
 workgroup = "connect"
@@ -7,7 +7,7 @@ keyword = ["security", "openid", "ssi"]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "openid-4-verifiable-presentations-1_0-18"
+value = "openid-4-verifiable-presentations-1_0-20"
 status = "standard"
 
 [[author]]
@@ -228,11 +228,11 @@ Presentation of Verifiable Credentials using OpenID for Verifiable Presentations
 
 # Authorization Request {#vp_token_request}
 
-The Authorization Request follows the definition given in [@!RFC6749].
+The Authorization Request follows the definition given in [@!RFC6749] taking into account the recommendations given in [@!I-D.ietf-oauth-security-topics].
 
 The Verifier may send an Authorization Request as Request Object by value or by reference as defined in JWT-Secured Authorization Request (JAR) [@RFC9101].
 
-The Verifier articulates requirements of the Credential(s) that are requested using `presentation_definition` and `presentation_definition_uri` parameters that contain a Presentation Definition JSON object as defined in Section 5 of [@!DIF.PresentationExchange].
+The Verifier articulates requirements of the Credential(s) that are requested using `presentation_definition` and `presentation_definition_uri` parameters that contain a Presentation Definition JSON object as defined in Section 5 of [@!DIF.PresentationExchange]. Wallet implementations MUST process Presentation Definition JSON object and select candidate Verifiable Credential(s) using the evaluation process described in Section 8 of [@!DIF.PresentationExchange].
 
 The Verifier communicates a Client Identifier Scheme that indicate how the Wallet is supposed to interpret the Client Identifier and associated data in the process of Client identification, authentication, and authorization using `client_id_scheme` parameter. This parameter enables deployments of this specification to use different mechanisms to obtain and validate Client metadata beyond the scope of [@!RFC6749]. A certain Client Identifier Scheme MAY require the Verifier to sign the Authorization Request as means of authentication and/or pass additional parameters and require the Wallet to process them.
 
@@ -450,7 +450,11 @@ Body
 
 * `verifier_attestation`: This Client Identifier Scheme allows the Verifier to authenticate using a JWT that is bound to a certain public key as defined in (#verifier_attestation_jwt). When the Client Identifier Scheme is `verifier_attestation`, the Client Identifier MUST equal the `sub` claim value in the Verifier attestation JWT. The request MUST be signed with the private key corresponding to the public key in the `cnf` claim in the Verifier attestation JWT. This serves as proof of possesion of this key. The Verifier attestation JWT MUST be added to the `jwt` JOSE Header of the request object (see (#verifier_attestation_jwt)). The Wallet MUST validate the signature on the Verifier attestation JWT. The `iss` claim value of the Verifier Attestation JWT MUST identify a party the Wallet trusts for issuing Verifier Attestation JWTs. If the Wallet cannot establish trust, it MUST refuse the request. If the issuer of the Verifier Attestation JWT adds a `redirect_uris` claim to the attestation, the Wallet MUST ensure the `redirect_uri` request parameter value exactly matches one of the `redirect_uris` claim entries. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` or or the `client_metadata_uri` parameter.
 
-To use `client_id_scheme` values `entity_id`, `verifier_attestation`, and `did`, Verifiers MUST be confidential clients. This might require changes to the technical design of native apps as such apps are typically public clients.
+* `x509_san_dns`: When the Client Identifier Scheme is `x509_san_dns`, the Client Identifier MUST be a DNS name and match a `dNSName` Subject Alternative Name (SAN) [@!RFC5280] entry in the leaf certificate passed with the request. The request MUST be signed with the private key corresponding to the public key in the leaf X.509 certificate of the certificate chain added to the request in the `x5c` JOSE header [@!RFC7515] of the signed request object. The Wallet MUST validate the signature and the trust chain of the X.509 certificate. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter. If the Wallet can establish trust in the Client Identifier authenticated through the certificate, e.g. because the Client Identifier is contained in a list of trusted Client Identifiers, it may allow the client to freely choose the `redirect_uri` value. If not, the FQDN of the `redirect_uri` value MUST match the Client Identifier.
+
+* `x509_san_uri`: When the Client Identifier Scheme is `x509_san_uri`, the Client Identifier MUST be a URI and match a `uniformResourceIdentifier` Subject Alternative Name (SAN) [@!RFC5280] entry in the leaf certificate passed with the request. The request MUST be signed with the private key corresponding to the public key in the leaf X.509 certificate of the certificate chain added to the request in the `x5c` JOSE header [@!RFC7515] of the signed request object. The Wallet MUST validate the signature and the trust chain of the X.509 certificate. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter. If the Wallet can establish trust in the Client Identifier authenticated through the certificate, e.g. because the Client Identifier is contained in a list of trusted Client Identifiers, it may allow the client to freely choose the `redirect_uri` value. If not, the `redirect_uri` value MUST match the Client Identifier.
+
+To use `client_id_scheme` values `entity_id`, `did`, `verifier_attestation`, `x509_san_dns`, and `x509_san_uri`, Verifiers MUST be confidential clients. This might require changes to the technical design of native apps as such apps are typically public clients.
 
 Other specifications can define further values for the `client_id_scheme` parameter. It is RECOMMENDED to use collision-resistant names for such values.
 
@@ -536,11 +540,11 @@ The Response Mode is defined in accordance with [@!OAuth.Responses] as follows:
 The following new Authorization Request parameter is defined to be used in conjunction with Response Mode `direct_post`: 
 
 `response_uri`:
-: OPTIONAL. The Response URI to which the Wallet MUST send the Authorization Response using an HTTPS POST request as defined by the Response Mode `direct_post`. The Response URI receives all Authorization Response parameters as defined by the respective Response Type. When the `response_uri` parameter is present, the `redirect_uri` Authorization Request parameter MUST NOT be present. If the `redirect_uri` Authorization Request parameter is present when the Response Mode is `direct_post`, the Wallet MUST return an `invalid_request` Authorization Response error.
+: OPTIONAL. MUST be present when the Response Mode `direct_post` is used. The Response URI to which the Wallet MUST send the Authorization Response using an HTTPS POST request as defined by the Response Mode `direct_post`. The Response URI receives all Authorization Response parameters as defined by the respective Response Type. When the `response_uri` parameter is present, the `redirect_uri` Authorization Request parameter MUST NOT be present. If the `redirect_uri` Authorization Request parameter is present when the Response Mode is `direct_post`, the Wallet MUST return an `invalid_request` Authorization Response error.
 
 Note: The Verifier's component providing the user interface (Frontend) and the Verifier's component providing the Response URI (Response Endpoint) need to be able to map authorization requests to the respective authorization responses. The Verifier MAY use the `state` Authorization Request parameter to add appropriate data to the Authorization Response for that purpose, for details see (#implementation_considerations_direct_post). 
 
-Note: If the Client Identifier scheme `redirect_uri` is used in conjunction with the Response Mode `direct_post`, and the `redirect_uri` parameter is present, the `client_id` value MUST be equal to the `response_uri` value.
+Note: If the Client Identifier scheme `redirect_uri` is used in conjunction with the Response Mode `direct_post`, and the `response_uri` parameter is present, the `client_id` value MUST be equal to the `response_uri` value.
 
 The following is a non-normative example of the payload of a Request Object with Response Mode `direct_post`:
 
@@ -687,9 +691,9 @@ Verifiers MUST validate the VP Token in the following manner:
 
 1. Determine the number of VPs returned in the VP Token and identify in which VP which requested VC is included, using the Input Descriptor Mapping Object(s) in the Presentation Submission.
 1. Validate the integrity, authenticity, and Holder Binding of any Verifiable Presentation provided in the VP Token according to the rules of the respective Presentation format. See (#preventing-replay) for the checks required to prevent replay of a VP.
-2. If applicable, perform the checks on the Credential(s) specific to the Credential Format (i.e., validation of the signature(s) on each VC).
-3. Confirm that the returned Credential(s) meet all criteria sent in the Presentation Definition in the Authorization Request.
-4. Perform the checks required by the Verifier’s policy based on the set of trust requirements such as trust frameworks it belongs to (i.e., revocation checks), if applicable.
+1. Perform the checks on the Credential(s) specific to the Credential Format (i.e., validation of the signature(s) on each VC).
+1. Confirm that the returned Credential(s) meet all criteria sent in the Presentation Definition in the Authorization Request.
+1. Perform the checks required by the Verifier's policy based on the set of trust requirements such as trust frameworks it belongs to (i.e., revocation checks), if applicable.
 
 Note: Some of the processing rules of the Presentation Definition and the Presentation Submission are outlined in [@!DIF.PresentationExchange].
 
@@ -716,19 +720,19 @@ This specification defines new metadata parameters according to [@!RFC8414].
 The following is a non-normative example of a `vp_formats_supported` parameter:
 
 ```
-vp_formats_supported": {
-‌ "jwt_vc_json": {
-  ‌ "alg_values_supported": [
-    ‌ "ES256K",
-    ‌ "ES384"
-  ‌ ]
-‌ },
-‌ "jwt_vp_json": {
-  ‌ "alg_values_supported": [
-    ‌ "ES256K",
-     "EdDSA"
-  ‌ ]
-‌ }
+"vp_formats_supported": {
+  "jwt_vc_json": {
+    "alg_values_supported": [
+      "ES256K",
+      "ES384"
+    ]
+  },
+  "jwt_vp_json": {
+    "alg_values_supported": [
+      "ES256K",
+      "EdDSA"
+    ]
+  }
 }
 ```
 
@@ -1655,6 +1659,14 @@ The technology described in this specification was made available from contribut
 # Document History
 
    [[ To be removed from the final specification ]]
+
+   -20
+
+   * added "verifier_attestation" client id scheme value
+ 
+   -19
+
+   * added "x509_san_uri" and "x509_san_dns" client id scheme value
 
    -18
 
