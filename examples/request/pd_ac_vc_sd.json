@@ -24,12 +24,12 @@
                },
                {
                   "path": [
-                     "$.values.first_name"
+                     "$.values.given_name"
                   ]
                },
                {
                   "path": [
-                     "$.values.last_name"
+                     "$.values.family_name"
                   ]
                }
             ]

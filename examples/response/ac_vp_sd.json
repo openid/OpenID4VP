@@ -6,11 +6,11 @@
             "id_card_credential": {
                 "sub_proof_index": 0,
                 "values": {
-                    "last_name": {
+                    "family_name": {
                         "raw": "Wonderland",
                         "encoded": "167908493…94017654562035"
                     },
-                    "first_name": {
+                    "given_name": {
                         "raw": "Alice",
                         "encoded": "270346400…99344178781507"
                     }
