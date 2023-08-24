@@ -1083,6 +1083,12 @@ Implementers MUST make sure that JSONPath used as part of `presentation_definiti
 
 Implementers should be careful with what is used as a filter property in [@!DIF.PresentationExchange]. For example, when using regular expressions or JSON Schemas as filters, implementers should ensure that computations and resource access are bounded with the security in mind to prevent attacks such as denial of service or unauthorized access.
 
+##  TLS Requirements
+
+Implementations MUST follow [@!BCP195].
+
+Whenever TLS is used, a TLS server certificate check MUST be performed, per [@!RFC6125].
+
 {backmatter}
 
 <reference anchor="VC_DATA" target="https://www.w3.org/TR/2022/REC-vc-data-model-20220303/">
@@ -1267,6 +1273,16 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
             <organization> ISO/IEC JTC 1/SC 17 Cards and security devices for personal identification</organization>
           </author>
           <date year="2021"/>
+        </front>
+</reference>
+
+<reference anchor="BCP195" target="https://www.rfc-editor.org/info/bcp195">
+        <front>
+          <title>BCP195</title>
+          <author>
+            <organization>IETF</organization>
+          </author>
+          <date year="2022"/>
         </front>
 </reference>
 
