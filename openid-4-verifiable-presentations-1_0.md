@@ -830,7 +830,7 @@ The following is a non-normative example of a set of static configuration values
 
 ## Support for Federations and Trust Schemes
 
-The Verifier who wants to obtain Verifiable Credentials issued by Credential Issuer who is a participant of a federation, or adheres to a known trust scheme, MUST create a `presentation_definition` that includes a known property within such federation, that allows to distinguish the request according to it.
+The Verifier who wants to obtain Verifiable Credentials issued by Credential Issuer who is a participant of a federation, or adheres to a known trust scheme, MUST create a `presentation_definition` which includes information that can be traced back to a specific federation or trust scheme.
 
 To facilitate this, federations will need to determine how a Credential Issuer can indicate in a Verifiable Credential that they are a member of one or more federations. Once this is done, the Verifier will be able to create a `presentation_definition` that includes this filtering criteria. 
 
