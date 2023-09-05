@@ -34,5 +34,5 @@ docker run -v `pwd`:/data danielfett/markdown2rfc openid-4-verifiable-presentati
 
 ### Who do I talk to? ###
 
-* The WG can be reached via the mailing list openid-specs-ekyc-ida@lists.openid.net
+* The WG can be reached via the mailing list [openid-specs-digital-credentials-protocols@lists.openid.net](mailto:openid-specs-digital-credentials-protocols@lists.openid.net) (join the ML [here](https://lists.openid.net/mailman/listinfo/openid-specs-digital-credentials-protocols)).
 
