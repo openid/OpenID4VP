@@ -2,7 +2,7 @@ name: OID4VCI document push
 on:
   push:
     paths:
-      - 'openid-4-verifiable-prentations-1_0.md'
+      - 'openid-4-verifiable-presentations-1_0.md'
 
 jobs:
     compile:
