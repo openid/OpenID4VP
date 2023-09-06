@@ -359,11 +359,13 @@ Content-Type: application/json
 
 Wallets MAY support requesting presentation of Verifiable Credentials using OAuth 2.0 `scope` values.
 
-In the case where all the Input Descriptors defined within the Presentation Definition are required within the request, the value contained in the scope parameter MUST match to the Presentation Definition id value. In the case where only a subset of Verifiable Credentials is required, each value contained in the scope parameter MUST match to one Input Descriptor(s) `id` value, as defined within the Presentation Definition.
+In the case where all the Input Descriptors defined within the Presentation Definition are required within the request, the value contained in the `scope` parameter MUST match to the Presentation Definition `id` value. In the case where only a subset of Verifiable Credentials is required, each value contained in the `scope` parameter MUST match to one Input Descriptor(s) `id` value, as defined within the Presentation Definition.
 
-Since the values contained in the `scope` parameter are expressed as a list of space-delimited and case-sensitive strings, according to [@RFC6749], the Verifier that supports the `scope` parameter to request Verifiable Credential(s) MUST NOT include spaces in the Input Descriptors `id` values intended to be used within the `scope` parameter. It is then RECOMMENDED to use collision-resistant scopes values.
+Since the values contained in the `scope` parameter are expressed as a list of space-delimited and case-sensitive strings as defined in [@RFC6749], `id` values of the Input Descriptors and Presentation Definitions used as the `scope` parameter to request Verifiable Credential(s) MUST NOT include spaces. 
 
-It also required that the Presentation Definition id value MUST be different to the ones defined for the Input Descriptors defined within it.
+It is RECOMMENDED to use collision-resistant `scope` values.
+
+It is also required that the Presentation Definition `id` value MUST be different to the ones defined for the Input Descriptors defined within it.
 
 The Verifier that intends to use this feature MUST publish its Presentation Definition within its metadata, using the parameter name `presentation_definition`.
 
