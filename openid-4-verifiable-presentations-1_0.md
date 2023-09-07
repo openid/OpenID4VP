@@ -828,9 +828,9 @@ The following is a non-normative example of a set of static configuration values
 }
 ```
 
-## Support for Federations and Trust Schemes
+## Support for Federations and Trust Frameworks
 
-The Verifier who wants to obtain Verifiable Credentials issued by Credential Issuer who is a participant of a federation, or adheres to a known trust scheme, MUST create a `presentation_definition` which includes information that can be traced back to a specific federation or trust scheme.
+The Verifier who wants to obtain Verifiable Credentials issued by Credential Issuer who is a participant of a federation, or adheres to a known trust framework, MUST create a `presentation_definition` which includes information that can be traced back to a specific federation or trust framework.
 
 To facilitate this, federations will need to determine how a Credential Issuer can indicate in a Verifiable Credential that they are a member of one or more federations. Once this is done, the Verifier will be able to create a `presentation_definition` that includes this filtering criteria. 
 
@@ -838,7 +838,7 @@ The Wallet that receives such Presentation Definitions MUST select the Verifiabl
 
 Upon receiving this Verifiable Credential, the Verifier is able to use the federation API to determine if the Credential Issuer is indeed a member of the federation that it says it is.
 
-A Verifier that receives the Verifiable Credentials matching this criteria MUST verify the status of the Credential Issuer within the related federation. Since there may be several mechanisms to determine how a Credential Issuer can demonstrate to be part of such federation or adehere to a specific trust scheme, all about the status evaluation methods for a specific federation or trust scheme is referred to the technical specifications of these.
+A Verifier that receives the Verifiable Credentials matching this criteria MUST verify the status of the Credential Issuer within the related federation. Since there may be several mechanisms to determine how a Credential Issuer can demonstrate to be part of such federation or adehere to a specific trust framework, all about the status evaluation methods for a specific federation or trust framework is referred to the technical specifications of these.
 
 ## Nested Verifiable Presentations
 
