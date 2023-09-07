@@ -367,7 +367,9 @@ It is RECOMMENDED to use collision-resistant `scope` values.
 
 It is also required that the Presentation Definition `id` value MUST be different to the ones defined for the Input Descriptors defined within it.
 
-The Verifier that intends to use this feature MUST publish its Presentation Definition within its metadata, using the parameter name `presentation_definition`.
+When the `scope` values are not defined within the Trust Framework and then not implictly agreed between the parties,
+the Verifier that intends to use this feature MUST publish its Presentation Definition within its metadata using the parameter name `presentation_definition`. 
+This allows the Wallet instances to match the `scope` value to the Presentation Definition contained within the metadata.
 
 Below a non-normative example of a Presentation Definition containing the Input Descriptor(s) intended to be references in the `scope` parameter:
 
