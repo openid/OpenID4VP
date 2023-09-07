@@ -832,7 +832,7 @@ The following is a non-normative example of a set of static configuration values
 
 The Verifier who wants to obtain Verifiable Credentials issued by Credential Issuer who is a participant of a federation, or adheres to a known trust framework, MUST create a `presentation_definition` which includes information that can be traced back to a specific federation or trust framework.
 
-To facilitate this, federations will need to determine how a Credential Issuer can indicate in a Verifiable Credential that they are a member of one or more federations. Once this is done, the Verifier will be able to create a `presentation_definition` that includes this filtering criteria. 
+To facilitate this, federations need to determine how a Credential Issuer indicates in a Verifiable Credential that it is a member of one or more federations. Once this is done, the Verifier will be able to create a `presentation_definition` that includes this filtering criteria. 
 
 The Wallet that receives such Presentation Definitions MUST select the Verifiable Credentials that match this criteria, if one is available, to be released to the Verifier.
 
