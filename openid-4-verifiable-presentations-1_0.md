@@ -1487,7 +1487,7 @@ This example is identic to the previous one with the following exceptions: It se
 
 A non-normative example of the Authorization Response would look the same as in the examples of other Credential formats. It would contain the `presentation_submission` and `vp_token` parameters.
 
-The following is a non-normative example of the content of the `presentation_definition` parameter:
+The following is a non-normative example of the content of the `presentation_submission` parameter:
 
 <{{examples/response/ps_ac_vc_sd.json}}
 
@@ -1527,7 +1527,7 @@ Setting `limit_disclosure` property defined in [@!DIF.PresentationExchange] to `
 
 A non-normative example of the Authorization Response would look the same as in the examples of other Credential formats in this Annex.
 
-The following is a non-normative example of the content of the `presentation_definition` parameter:
+The following is a non-normative example of the content of the `presentation_submission` parameter:
 
 <{{examples/response/ps_mdl_iso_cbor.json}}
 
