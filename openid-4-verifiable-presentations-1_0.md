@@ -762,9 +762,6 @@ This specification defines the following new metadata parameters according to [@
 : REQUIRED. An object defining the formats and proof types of Verifiable Presentations and Verifiable Credentials that a Verifier supports. For specific values that can be used, see (#alternative_credential_formats).
 Deployments can extend the formats supported, provided Issuers, Holders and Verifiers all understand the new format.
 
-`client_id_scheme`:
-: OPTIONAL. JSON String identifying the Client Identifier scheme. The value range defined by this specification is `pre-registered`, `redirect_uri`, `entity_id`, `did`. If omitted, the default value is `pre-registered`. 
-
 # Verifier Attestation JWT {#verifier_attestation_jwt}
 
 The Verifier Attestation JWT is a JWT especially designed to allow a Wallet to authenticate a Verifier in a secure and flexible manner. A Verifier Attestation JWT is issued to the Verifier by a party that wallets trust for the purpose of authentication and authorization of Verifiers. The way this trust established is out of scope of this specification. Every Verifier is bound to a public key, the Verifier MUST always present a Verifier Attestation JWT along with the proof of possession for this key. In the case of the `client_id_scheme` `verifier_attestation`, the authorization request is signed with this key, which serves as proof of possession.
