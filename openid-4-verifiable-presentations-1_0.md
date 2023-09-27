@@ -126,7 +126,7 @@ This specification supports any Credential format used in the Issuer-Holder-Veri
 
 Implementations can use any pre-existing OAuth 2.0 Grant Type and Response Type in conjunction with this specification to support different deployment architectures.
 
-OpenID for Verifiable Presentations supports scenarios where the Authorization Request is sent both when the Verifier is interacting with the End-User using the device that is the same or different from the device on which requested Credential(s) are stored.
+OpenID for Verifiable Presentations supports scenarios where the Authorization Request is sent both when the Verifier is interacting with the End-User using the device that is the same or different from the device on which requested Credential(s) are stored. It also allows the Verifier to first discover the Wallet's capabilities before the actual presentation request is created and passed to the wallet. 
 
 This specification supports the response being sent using a redirect but also using an HTTPS POST request. This enables the response to be sent across devices, or when the response size exceeds the redirect URL character size limitation.
 
@@ -215,6 +215,53 @@ Figure: Cross Device Flow
 
 (3) The Wallet prepares the Verifiable Presentation(s) of the Verifiable Credential(s) that the End-User has consented to. It then sends to the Verifier an Authorization Response where the Verifiable Presentation(s) are contained in the `vp_token` parameter.
 
+## Advanced Flow with Wallet Capabilities Discovery {#adv_flow}
+
+Below is a diagram of a flow where the End-User presents a Credential to a Verifier interacting with the End-User on a different device as the device the Wallet resides on. In this case, the Verifier starts the flow by discovering the Wallet's capabilities through an additional message exchange. This is especially useful, if the Verifier starts the process using a URL serving as alias for a group of wallets (e.g. a custom scheme) but would like to tailor the presentation request to the particular wallet. 
+
+In this flow, the Verifier first prepares a discovery request and sends it to the Wallet. The Wallet answers this request by sending an HTTP POST request to the Verifier, providing the Verifier with its Issuer URL and further parameters. The Verifier then creates a presentation request tailored to the capabilities and trust domain of the partiular Wallet and passes the request object in the HTTP POST response. The rest of the flow works like described in (#same_device). The discovery request can also be used in cross device scenarios, the Verifier would render the disovery message in a QR code.  
+
+Note: The diagram does not illustrate all the optional features of this specification.
+
+Note: The usage of the Request URI as defined in [@!RFC9101] does not depend on any other choices made in the protocol extensibility points, i.e., it can be used in the Same Device Flow, too.
+
+!---
+~~~ ascii-art
+~~~ ascii-art
++--------------+   +--------------+                                    +--------------+
+|     User     |   |   Verifier   |                                    |    Wallet    |
++--------------+   +--------------+                                    +--------------+  
+        |                 |                                                   |
+        |    Interacts    |                                                   |
+        |---------------->|                                                   |
+        |                 |  (1) Discovery Request                            |
+        |                 |  (Presentation Request URI)                       |
+        |                 |-------------------------------------------------->|
+        |                 |                                                   |
+        |                 |  (2) Request the Request Object                   |
+        |                 |<--------------------------------------------------|
+        |                 |                                                   |
+        |                 |  (2.5) Respond with the Request Object            |
+        |                 |      (Presentation Definition)                    |
+        |                 |-------------------------------------------------->|
+        |                 |                                                   |
+        |   User Authentication / Consent                                     |
+        |                 |                                                   |
+        |                 |  (3)   Authorization Response                     |
+        |                 |  (VP Token with Verifiable Presentation(s))       |
+        |                 |<--------------------------------------------------|
+~~~
+!---
+Figure: Cross Device Flow
+
+(1) The Verifier sends to the Wallet a Discovery Request that contains a Presentation URI from where to obtain the Request Object containing the actual Authorization Request object. 
+
+(2) The Wallet sends an HTTPS POST request to the Presentation URI to retrieve the Request Object.
+
+(2.5) The HTTPS POST response returns the Request Object containing Authorization Request parameters. It especially contains a Presentation Definition as defined in [@!DIF.PresentationExchange] that describes the requirements of the Credential(s) that the Verifier is requesting to be presented. Such requirements could include what type of Credential(s), in what format(s), which individual Claims within those Credential(s) (Selective Disclosure), etc. The Wallet processes the Request Object and determines what Credentials are available matching the Verifier's request. The Wallet also authenticates the End-User and gathers her consent to present the requested Credentials. 
+
+(3) The Wallet prepares the Verifiable Presentation(s) of the Verifiable Credential(s) that the End-User has consented to. It then sends to the Verifier an Authorization Response where the Verifiable Presentation(s) are contained in the `vp_token` parameter.
+
 # Scope
 
 OpenID for Verifiable Presentations extends existing OAuth 2.0 mechanisms as following:
@@ -227,6 +274,84 @@ OpenID for Verifiable Presentations extends existing OAuth 2.0 mechanisms as fol
 * A new `client_id_scheme` Authorization Request parameter is defined to enable deployments of this specification to use different mechanisms to obtain and validate metadata of the Verifier beyond the scope of [@!RFC6749].
 
 Presentation of Verifiable Credentials using OpenID for Verifiable Presentations can be combined with the user authentication using [@SIOPv2], and the issuance of OAuth 2.0 Access Tokens.
+
+# Discovery Request
+
+The Discovery Request allows Verifers to discover the Wallet's capabilities before they create the actual presentation request. It also allows the Wallet to authenticate towards the Verifier and to provide the Verifier with additional data used in the creation of the request signature and to encrypt the request at the application layer (if needed).
+
+The Discovery Request message has the following parameters:
+
+`presentation_request_uri`:
+: A string containing an HTTPS URL pointing to a resource under the control of the Verifier where the Wallet is supposed to obtain the presentation request object. 
+
+`context`:
+: A string identifying the context of the discovery request from the perspective of the Verifier. The value is opqaue to the Wallet, it MUST pass this value to the Presentation Endpoint Request (see below). 
+
+The Discovery Request is represented as a JSON object, where all parameters are top level JSON claims. 
+
+The following is an example request: 
+
+```JSON
+{
+    "presentation_request_uri": "verifier.example.com/presentation_request",
+    "context": "register_kyc"
+}
+```
+
+The Discovery Request is either send the Discovery Endpoint of the Wallet or it is rendered as a QR Code and scanned with the Wallet or a camera app. 
+
+Note: the Discovery Request intentionally does not use OAuth parameters, such as a `client_id`. The idea is to allow the Verifier to select the Client Identifier it wants to use for interacting with the Wallet after it has determined the trust mechanisms and domains the wallet supports.   
+
+## Discovery Endpoint
+
+This is an HTTPS endpoint offered by the Wallet. The Discovery Request MUST be sent as a HTTPS GET request or an HTTP redirect to the Discovery Endpoint URL defined in (#wallet-metadata)
+
+The HTTPS URL contains a single URI query parameter `discovery` where the value is the JSON object as defined above. 
+
+## Presentation Endpoint
+
+The Presentation Endpoint is an HTTPS endpoint exposed by the Verifier. 
+
+### Presentation Request
+
+Presentation Requests MUST be HTTPS POST requests with the "application/json" media type.
+
+The follwowing parameters are defined: 
+
+`context`:
+: A JSON String containing the value of the corresponding Discovery Request's `context` parameter.
+
+`issuer`:
+: A JSON containg a HTTPS URL designating the Issuer URL of the Wallet. 
+
+`w_nonce`:
+: A JSON String containg a cryptographic nonce the Verifier MUST use when creating the signed presentation request object. 
+
+`client_assertion`
+: A JSON String containing a wallet attestation along with a proof of posession of the confiration key as defined in [@!I-D.ietf-oauth-attestation-based-client-auth]. This assertion is used to authenticate the Wallet towards the Verifier. 
+
+### Presentation Response
+
+Presentation Response MUST be HTTPS POST response with the "application/json" media type.
+
+The follwowing parameters are defined: 
+
+`request`:
+: A JSON String containing the signed request object as defined in [@RFC9101]. It MUST fulfill the requirements as defined in (#vp_token_request).
+
+
+### Presentation Error Response
+
+The error code `401` signals to the wallet that it needs to authenticate to the Verifier. In this case, the error response SHOULD contain a `WWW-Authenticate` header for every attestation method the Verifier supports.
+
+This is an example for the wallet attestation method as specified above. The `WWW-Authenticate` contains the nonce value the Wallet MUST use in the calculation of the proof of possession of the respective wallet attestation. 
+
+```
+HTTP/1.1 401 Unauthorized
+    WWW-Authenticate: wallet-attestation error="use_nonce", \
+      error_description="Verifier requires wallet attestation"
+    Nonce: eyJ7S_zG.eyJH0-Z.HX4w-7v
+```
 
 # Authorization Request {#vp_token_request}
 

@@ -5,22 +5,31 @@ autonumber
 
 participant "User Agent" as u
 
-participant "Verifier" as r
+box "Verifier"
+participant "Frontend" as r
+participant "Presentation Endpoint" as rp
+participant "Response Endpoint" as rb
+end box
 
-participant "Verifier Backend" as rb
-
-participant "Wallet" as w
+box "Wallet"
+participant "Discovery Endpoint" as w
+participant "Metadata" as wm
+end box
 
 u --> r : use
 activate r
-r --> r: generate context_id
 
-r --> u: **discover request**\n(presentation_uri, context_id)
+r --> u: **discover request**\n(presentation_uri, context)
 deactivate r
-u --> w: **discover request**\n(presentation_uri, context_id)
+u --> w: **discover request**\n(presentation_uri, context)
 activate w
-w --> rb: **create presentation request** (context_id, iss, ..., w_nonce, \neph_key, wallet attestation, **wallet attestation pop(v_nonce)**)
-rb --> w: **signed request object** (client_id, w_nonce, nonce, response_uri, \npresentation_definition, state)
+w --> rp: **create presentation request** (context, iss, w_nonce, \nwallet attestation, **wallet attestation pop(v_nonce)**)
+note over u, w: HTTP status code 401 signals need to authenticate
+rp --> wm: get wallet metadata
+wm --> rp: wallet metadata
+rp -> rp: create and sign presentation request object (client_id, w_nonce, nonce, response_uri, \npresentation_definition, state)
+rp --> w: **signed request object** (client_id, w_nonce, nonce, response_uri, \npresentation_definition, state)
+note over u, w: do we want to allow unsigned presentation request objects, too?
 w -> w: authenticate and\n authorize Verifier
 
 note over u, w: user authentication and credential selection/confirmation
