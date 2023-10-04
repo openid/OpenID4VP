@@ -260,7 +260,7 @@ Figure: Cross Device Flow
 
 (1) The Verifier sends to the Wallet a Discovery Request that contains a Presentation URI to where Wallet can send information about itself and obtain the Request Object containing the actual Authorization Request. 
 
-(2) The Wallet sends an HTTPS POST request to the Presentation URI to retrieve the Request Object.
+(2) The Wallet sends an HTTPS POST request to the Presentation URI that can contain information about wallet's endpoint, capabilities and attestation.
 
 (2.5) The HTTPS POST response returns the Request Object containing Authorization Request parameters. It especially contains a Presentation Definition as defined in [@!DIF.PresentationExchange] that describes the requirements of the Credential(s) that the Verifier is requesting to be presented. Such requirements could include what type of Credential(s), in what format(s), which individual Claims within those Credential(s) (Selective Disclosure), etc. The Wallet processes the Request Object and determines what Credentials are available matching the Verifier's request. The Wallet also authenticates the End-User and gathers her consent to present the requested Credentials. 
 
