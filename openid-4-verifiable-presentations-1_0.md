@@ -283,7 +283,7 @@ Presentation of Verifiable Credentials using OpenID for Verifiable Presentations
 
 The Discovery Request allows Verifers to discover the Wallet's capabilities before they create the actual presentation request. It also allows the Wallet to authenticate towards the Verifier and to provide the Verifier with additional data used in the creation of the request signature and to encrypt the request at the application layer (if needed).
 
-The Discovery Request message has the following parameters:
+This specification defines the following new parameters for the Discovery Request message:
 
 `presentation_request_uri`:
 : A string containing an HTTPS URL pointing to a resource under the control of the Verifier where the Wallet is supposed to obtain the presentation request object. 
