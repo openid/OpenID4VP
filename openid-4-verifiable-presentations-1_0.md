@@ -217,9 +217,9 @@ Figure: Cross Device Flow
 
 (3) The Wallet prepares the Verifiable Presentation(s) of the Verifiable Credential(s) that the End-User has consented to. It then sends to the Verifier an Authorization Response where the Verifiable Presentation(s) are contained in the `vp_token` parameter.
 
-## Advanced Flow with Wallet Capabilities Discovery {#adv_flow}
+## Same Device Flow with Wallet Capabilities Discovery {#adv_flow}
 
-Below is a diagram shows an advanced flow based on what is describe in ({#same_device}).
+Below is a diagram shows a flow a describe in ({#same_device}) with an additional pre-step used to discover the Wallet's capabilities and tailor the actual request to it.
 
 In this case, the Verifier starts the flow by discovering the Wallet's capabilities through an additional message exchange. This is especially useful, if the Verifier starts the process using a URL serving as alias for a group of wallets (e.g. a custom scheme) but would like to tailor the presentation request to the particular wallet. 
 
