@@ -332,7 +332,7 @@ The follwowing parameters are defined:
 : A JSON String containg a cryptographic nonce the Verifier MUST use when creating the signed presentation request object. 
 
 `client_assertion`
-: A JSON String containing a wallet attestation along with a proof of posession of the confiration key as defined in [@!I-D.ietf-oauth-attestation-based-client-auth]. This assertion is used to authenticate the Wallet towards the Verifier. 
+: A JSON String containing a Wallet attestation along with a proof of possession of the configuration key as defined in [@!I-D.ietf-oauth-attestation-based-client-auth]. This assertion is used to authenticate the Wallet towards the Verifier. 
 
 ### Presentation Response
 
