@@ -258,7 +258,7 @@ Note: The usage of the Request URI as defined in [@!RFC9101] does not depend on 
 !---
 Figure: Cross Device Flow
 
-(1) The Verifier sends to the Wallet a Discovery Request that contains a Presentation URI from where to obtain the Request Object containing the actual Authorization Request object. 
+(1) The Verifier sends to the Wallet a Discovery Request that contains a Presentation URI to where Wallet can send information about itself and obtain the Request Object containing the actual Authorization Request. 
 
 (2) The Wallet sends an HTTPS POST request to the Presentation URI to retrieve the Request Object.
 
