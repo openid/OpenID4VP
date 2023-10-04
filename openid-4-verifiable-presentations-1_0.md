@@ -126,7 +126,9 @@ This specification supports any Credential format used in the Issuer-Holder-Veri
 
 Implementations can use any pre-existing OAuth 2.0 Grant Type and Response Type in conjunction with this specification to support different deployment architectures.
 
-OpenID for Verifiable Presentations supports scenarios where the Authorization Request is sent both when the Verifier is interacting with the End-User using the device that is the same or different from the device on which requested Credential(s) are stored. It also allows the Verifier to first discover the Wallet's capabilities before the actual presentation request is created and passed to the wallet. 
+OpenID for Verifiable Presentations supports scenarios where the Authorization Request is sent both when the Verifier is interacting with the End-User using the device that is the same or different from the device on which requested Credential(s) are stored. 
+
+This specification also provides the Verifier an option to first discover the Wallet's capabilities before the actual presentation request is created and passed to the Wallet. 
 
 This specification supports the response being sent using a redirect but also using an HTTPS POST request. This enables the response to be sent across devices, or when the response size exceeds the redirect URL character size limitation.
 
