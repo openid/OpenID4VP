@@ -310,7 +310,7 @@ Note: the Discovery Request intentionally does not use OAuth parameters, such as
 
 This is an HTTPS endpoint offered by the Wallet. The Discovery Request MUST be sent as an HTTPS GET request or an HTTP redirect to the Discovery Endpoint URL defined in (#wallet-metadata).
 
-The HTTPS URL contains a single URI query parameter `discovery` where the value is the JSON object as defined above. 
+The HTTPS URL MUST contain a single URI query parameter `discovery` where the value is the JSON object as defined above. 
 
 ## Presentation Endpoint
 
