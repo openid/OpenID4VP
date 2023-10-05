@@ -302,7 +302,7 @@ The following is an example request:
 }
 ```
 
-The Discovery Request is either send the Discovery Endpoint of the Wallet or it is rendered as a QR Code and scanned with the Wallet or a camera app. 
+The Discovery Request is either sent to the Discovery Endpoint of the Wallet or is rendered as a QR Code.
 
 Note: the Discovery Request intentionally does not use OAuth parameters, such as a `client_id`. The idea is to allow the Verifier to select the Client Identifier it wants to use for interacting with the Wallet after it has determined the trust mechanisms and domains the Wallet supports.   
 
