@@ -326,7 +326,7 @@ The follwowing parameters are defined:
 : A JSON String containing the value of the corresponding Discovery Request's `context` parameter.
 
 `issuer`:
-: A JSON containing an HTTPS URL designating the Issuer URL of the Wallet. 
+: A JSON containing an HTTPS URL designating the Issuer URL of the Wallet. The Verifier can obtain the Wallet's metadata by adding the well-know location `oauth-authorization-server` as specifid in [@!RFC8414].
 
 `w_nonce`:
 : A JSON String containg a cryptographic nonce the Verifier MUST use when creating the signed presentation request object. 
