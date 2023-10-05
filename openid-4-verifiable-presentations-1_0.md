@@ -291,7 +291,7 @@ This specification defines the following new parameters for the Discovery Reques
 `context`:
 : A string identifying the context of the discovery request from the perspective of the Verifier. The value is opqaue to the Wallet, it MUST pass this value to the Presentation Endpoint Request (see below). 
 
-The Discovery Request is represented as a JSON object, where all parameters are top level JSON claims. 
+The Discovery Request MUST be represented as a JSON object with all parameters as top-level JSON claims. 
 
 The following is an example request: 
 
