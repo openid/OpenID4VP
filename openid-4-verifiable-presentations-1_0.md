@@ -219,7 +219,7 @@ Figure: Cross Device Flow
 
 ## Same Device Flow with Wallet Capabilities Discovery {#adv_flow}
 
-Below is a diagram shows a flow a describe in ({#same_device}) with an additional pre-step used to discover the Wallet's capabilities and tailor the actual request to it.
+Below is a diagram that shows a flow described in (#same_device), but with an additional pre-step used that allows the Verifier to discover the Wallet's capabilities and tailor the actual request.
 
 In this case, the Verifier starts the flow by discovering the Wallet's capabilities through an additional message exchange. This is especially useful, if the Verifier starts the process using a URL serving as alias for a group of wallets (e.g. a custom scheme) but would like to tailor the presentation request to the particular wallet. 
 
