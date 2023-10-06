@@ -1,5 +1,9 @@
 # README #
 
+### Current WG-Draft
+
+The current WG-Draft version is built automatically from the master branch and can be accessed at: https://openid.github.io/OpenID4VP/openid-4-verifiable-presentations-wg-draft.html
+
 ### Running Tests ###
 This repository contains examples from the specifications and the JSON
 schema definitions extracted as separate files in the directories
