@@ -288,7 +288,7 @@ This specification defines the following new parameters for the Discovery Reques
 `presentation_request_uri`:
 : A string containing an HTTPS URL pointing to a resource under the control of the Verifier where the Wallet is supposed to obtain the presentation request object. 
 
-`context`:
+`interaction`:
 : A string identifying the context of the discovery request from the perspective of the Verifier. The value is opqaue to the Wallet, it MUST pass this value to the Presentation Endpoint Request (see below). 
 
 The Discovery Request MUST be represented as a JSON object with all parameters as top-level JSON claims. 
@@ -322,11 +322,11 @@ Presentation Requests MUST be HTTPS POST requests with the "application/json" me
 
 The following parameters are defined: 
 
-`context`:
-: A JSON String containing the value of the corresponding Discovery Request's `context` parameter.
+`interaction`:
+: A JSON String containing the value of the corresponding Discovery Request's `interaction` parameter.
 
 `issuer`:
-: A JSON containing an HTTPS URL designating the Issuer URL of the Wallet (acting as a OAuth Authorization Server). The Verifier MAY obtain the Wallet's metadata by adding the well-know location `oauth-authorization-server` as specifid in [@!RFC8414]. Metadata can also be provided by other means, for example in the wallet attestation. 
+: A JSON containing an HTTPS URL designating the Issuer URL of the Wallet (acting as a OAuth Authorization Server). The Verifier MAY obtain the Wallet's metadata by adding the well-know location `oauth-authorization-server` as specifid in [@!RFC8414]. Metadata MAY also be provided by other means, for example in the wallet attestation. 
 
 `w_nonce`:
 : A JSON String containing as fresh, cryptographically random number with sufficient entropy the Verifier MUST use when creating the signed presentation request object. 
