@@ -308,9 +308,9 @@ Note: the Discovery Request intentionally does not use OAuth parameters, such as
 
 ## Discovery Endpoint
 
-This is an HTTPS endpoint offered by the Wallet. The Discovery Request MUST be sent as an HTTPS GET request or an HTTP redirect to the Discovery Endpoint URL defined in (#wallet-metadata).
+This is an endpoint offered by the Wallet. The Discovery Request can be sent as a HTTPS GET or a HTTP redirect or via a platform specific mechanims, i.e. Android Intents, to the Discovery Endpoint URL defined in (#wallet-metadata).
 
-The HTTPS URL MUST contain a single URI query parameter `discovery` where the value is the JSON object as defined above. 
+The request URI contains a single query parameter `discovery` where the value is the JSON object as defined above. 
 
 ## Presentation Endpoint
 
@@ -320,7 +320,7 @@ The Presentation Endpoint is an HTTPS endpoint exposed by the Verifier.
 
 Presentation Requests MUST be HTTPS POST requests with the "application/json" media type.
 
-The follwowing parameters are defined: 
+The following parameters are defined: 
 
 `context`:
 : A JSON String containing the value of the corresponding Discovery Request's `context` parameter.
@@ -336,15 +336,9 @@ The follwowing parameters are defined:
 
 ### Presentation Request Response
 
-Presentation Response MUST be HTTPS POST response with the "application/json" media type.
+Presentation Response MUST be HTTPS POST response with the "application/oauth-authz-req+jwt" media type and contain a signed request object as defined in [@RFC9101]. It MUST fulfill the requirements as defined in (#vp_token_request).
 
-The follwowing parameters are defined: 
-
-`request`:
-: A JSON String containing the signed request object as defined in [@RFC9101]. It MUST fulfill the requirements as defined in (#vp_token_request).
-
-
-### Presentation Error Response
+### Presentation Request Error Response
 
 The error code `401` signals to the Wallet that it needs to authenticate to the Verifier. In this case, the error response SHOULD contain a `WWW-Authenticate` header for every attestation method the Verifier supports.
 
