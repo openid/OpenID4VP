@@ -334,7 +334,7 @@ The follwowing parameters are defined:
 `client_assertion`
 : A JSON String containing a Wallet attestation along with a proof of possession of the configuration key as defined in [@!I-D.ietf-oauth-attestation-based-client-auth]. This assertion is used to authenticate the Wallet towards the Verifier. 
 
-### Presentation Response
+### Presentation Request Response
 
 Presentation Response MUST be HTTPS POST response with the "application/json" media type.
 
