@@ -227,7 +227,7 @@ In this flow, the Verifier first prepares a discovery request to be provided to 
 
 Note: The diagram does not illustrate all the optional features of this specification.
 
-Note: The usage of the Request URI as defined in [@!RFC9101] does not depend on any other choices made in the protocol extensibility points, i.e., it can be used in the Same Device Flow, too.
+Note: The usage of the Request URI as defined in [@!RFC9101] does not depend on any other choices made in the protocol extensibility points, i.e., it can be used in the Same-Device Flow as well.
 
 !---
 ~~~ ascii-art
