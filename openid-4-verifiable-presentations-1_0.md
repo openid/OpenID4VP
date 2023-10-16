@@ -219,7 +219,7 @@ Figure: Cross Device Flow
 
 ## Same-Device Flow with Wallet Capabilities Discovery {#same_device_with_discovery}
 
-Below is a diagram that shows the flow as described in (#same_device), but with an additional pre-step used that allows the Verifier to discover the Wallet's capabilities and tailor the actual request.
+Below is a diagram that shows the flow as described in (#same_device), with an additional preliminary step that allows the Verifier to discover the Wallet's capabilities before tailoring the actual request.
 
 Essentially, the Verifier starts the flow by discovering the Wallet's capabilities through an additional message exchange. This is especially useful if the Verifier starts the process using a URL serving as an alias for a group of wallets (e.g., a custom scheme) but would like to tailor the presentation request to the particular wallet.
 
@@ -227,7 +227,7 @@ In this flow, the Verifier first prepares a discovery request to be provided to 
 
 Note: The diagram does not illustrate all the optional features of this specification.
 
-Note: The usage of the Request URI as defined in [@!RFC9101] does not depend on any other choices made in the protocol extensibility points, i.e., it can be used in the Same Device Flow, too.
+Note: The usage of the Request URI as defined in [@!RFC9101] does not depend on any other choices made in the protocol extensibility points, i.e., it can be used in the Same-Device Flow as well.
 
 !---
 ~~~ ascii-art
