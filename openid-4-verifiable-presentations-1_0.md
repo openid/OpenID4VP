@@ -221,7 +221,7 @@ Figure: Cross Device Flow
 
 Below is a diagram that shows the flow as described in (#same_device), but with an additional pre-step used that allows the Verifier to discover the Wallet's capabilities and tailor the actual request.
 
-In this case, the Verifier starts the flow by discovering the Wallet's capabilities through an additional message exchange. This is especially useful, if the Verifier starts the process using a URL serving as alias for a group of wallets (e.g. a custom scheme) but would like to tailor the presentation request to the particular wallet. 
+Essentially, the Verifier starts the flow by discovering the Wallet's capabilities through an additional message exchange. This is especially useful if the Verifier starts the process using a URL serving as an alias for a group of wallets (e.g., a custom scheme) but would like to tailor the presentation request to the particular wallet.
 
 In this flow, the Verifier first prepares a discovery request to be provided to the Wallet. The Wallet answers this request by sending an HTTP POST request to the Verifier, providing the Verifier with its Issuer URL (identifying the wallet provider and used to fetch wallet metadata) and further parameters. The Verifier then creates a presentation request tailored to the capabilities and trust domain of the particular Wallet and passes the request object in the HTTP POST response. The rest of the flow works like described in (#same_device). The discovery request can also be used in cross device scenarios where the Verifier would render the discovery message in a QR code.  
 
