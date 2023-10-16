@@ -3,17 +3,17 @@
 
 autonumber
 
+box "Wallet"
+participant "Metadata" as wm
+participant "Discovery Endpoint" as w
+end box
+
 participant "User Agent" as u
 
 box "Verifier"
 participant "Frontend" as r
 participant "Presentation Endpoint" as rp
 participant "Response Endpoint" as rb
-end box
-
-box "Wallet"
-participant "Discovery Endpoint" as w
-participant "Metadata" as wm
 end box
 
 u --> r : use
@@ -25,8 +25,8 @@ u --> w: **discover request**\n(presentation_uri, context)
 activate w
 w --> rp: **create presentation request** (context, iss, w_nonce, \nwallet attestation, **wallet attestation pop(v_nonce)**)
 note over u, w: HTTP status code 401 signals need to authenticate
-rp --> wm: get wallet metadata
-wm --> rp: wallet metadata
+rp --> wm: [OPTIONAL] get wallet metadata
+wm --> rp: [OPTIONAL] wallet metadata
 rp -> rp: create and sign presentation request object (client_id, w_nonce, nonce, response_uri, \npresentation_definition, state)
 rp --> w: **signed request object** (client_id, w_nonce, nonce, response_uri, \npresentation_definition, state)
 note over u, w: do we want to allow unsigned presentation request objects, too?
