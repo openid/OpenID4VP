@@ -298,7 +298,7 @@ The following is an example request:
 ```JSON
 {
     "presentation_request_uri": "verifier.example.com/presentation_request",
-    "context": "register_kyc"
+    "interaction": "register_kyc"
 }
 ```
 
