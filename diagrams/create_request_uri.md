@@ -24,7 +24,7 @@ deactivate r
 u --> w: **signed authorization request**\n(client_id, create_request_uri, state)
 activate w
 w --> w: check authorization request signature
-w --> rp: **create request request** (\nstate,\n[OPTIONAL]iss, \n[OPTIONAL]wallet_metadata, \n[OPTIONAL]w_nonce, \n[OPTIONAL]w_ephm_key, \n[OPTIONAL]wallet attestation, wallet attestation pop(v_nonce))
+w --> rp: POST **create request request** (\nstate,\n[OPTIONAL]iss, \n[OPTIONAL]wallet_metadata, \n[OPTIONAL]w_nonce, \n[OPTIONAL]w_ephm_key, \n[OPTIONAL]wallet attestation, wallet attestation pop(v_nonce))
 note over u, w: HTTP status code 401 signals need to authenticate
 rp --> wm: [OPTIONAL] get wallet metadata
 wm --> rp: [OPTIONAL] wallet metadata
@@ -36,7 +36,7 @@ w -> w: authenticate and\n authorize Verifier
 note over u, w: user authentication and credential selection/confirmation
 
 w -> w: create verifiable\npresentation (credential)
-w --> rb: post response \n(vp_token, presentation_submission, state)
+w --> rb: POST response \n(vp_token, presentation_submission, state)
 rb --> w: redirect_url
 w --> u: response (response_code)
 u --> r: response (response_code)
