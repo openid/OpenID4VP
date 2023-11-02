@@ -475,6 +475,43 @@ To use `client_id_scheme` values `entity_id`, `did`, `verifier_attestation`, `x5
 
 Other specifications can define further values for the `client_id_scheme` parameter. It is RECOMMENDED to use collision-resistant names for such values.
 
+# Create Request Endpoint {#create_response_uri}
+
+This endpoint is offered by the Verifier. The Wallet sends a request to this endpoint if the Verifier requests so by passing the `create_request_uri` authorization request parameter. In case of success, the response is a request object that the Wallet MUST process in the same way as a request object as defined in [@RFC9101]. 
+
+Create Request requests MUST be HTTPS POST requests with the "application/json" media type.
+
+The following parameters are defined: 
+
+`state`:
+: A JSON String containing the value of the corresponding authorization Request's `state` parameter, if present.
+
+`issuer`:
+: A JSON containing an HTTPS URL designating the Issuer URL of the Wallet (acting as a OAuth Authorization Server). The Verifier MAY obtain the Wallet's metadata by adding the well-know location `oauth-authorization-server` as specified in [@!RFC8414]. Metadata MAY also be provided by other means, for example in the wallet attestation. 
+
+`w_nonce`:
+: A JSON String containing as fresh, cryptographically random number with sufficient entropy the Verifier MUST use when creating the signed presentation request object. 
+
+`client_assertion`
+: A JSON String containing a Wallet attestation along with a proof of possession of the public key as defined in [@!I-D.ietf-oauth-attestation-based-client-auth]. This assertion is used to authenticate the Wallet towards the Verifier. 
+
+### Create Request Response
+
+The Create Request Response MUST be HTTPS POST response with the "application/oauth-authz-req+jwt" media type and contain a signed request object as defined in [@RFC9101]. It MUST fulfill the requirements as defined in (#vp_token_request).
+
+### Create Request Error Response
+
+The error code `401` signals to the Wallet that it needs to authenticate to the Verifier. In this case, the error response SHOULD contain a `WWW-Authenticate` header for every attestation method the Verifier supports.
+
+Below a non-normative example for the Wallet attestation method as specified above. The `WWW-Authenticate` contains the nonce value the Wallet MUST use in the calculation of the proof of possession of the wallet attestation. 
+
+```
+HTTP/1.1 401 Unauthorized
+    WWW-Authenticate: wallet-attestation error="use_nonce", \
+      error_description="Verifier requires wallet attestation"
+    Nonce: eyJ7S_zG.eyJH0-Z.HX4w-7v
+```
+
 # Response {#response}
 
 A VP Token is only returned if the corresponding Authorization Request contained a `presentation_definition` parameter, a `presentation_definition_uri` parameter, or a `scope` parameter representing a Presentation Definition (#vp_token_request).
