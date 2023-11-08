@@ -232,7 +232,7 @@ Presentation of Verifiable Credentials using OpenID for Verifiable Presentations
 
 The Authorization Request follows the definition given in [@!RFC6749] taking into account the recommendations given in [@!I-D.ietf-oauth-security-topics].
 
-The Verifier may send an Authorization Request as Request Object by value or by reference as defined in JWT-Secured Authorization Request (JAR) [@RFC9101]. Additionally, the request can be sent as an object containing only a subset of parameters needed to in a subseqent step request the creation of a request object from the verifier through a HTTPS POST request via a newly introduced `create request endpoint`. 
+The Verifier MAY send an Authorization Request as Request Object by value or by reference as defined in JWT-Secured Authorization Request (JAR) [@RFC9101]. Additionally, the request can be an object containing only a subset of parameters needed to, in a subsequent step, request the creation of a request object from the Verifier through an HTTPS POST request via a newly introduced `create request endpoint`. 
 
 The Verifier articulates requirements of the Credential(s) that are requested using `presentation_definition` and `presentation_definition_uri` parameters that contain a Presentation Definition JSON object as defined in Section 5 of [@!DIF.PresentationExchange]. Wallet implementations MUST process Presentation Definition JSON object and select candidate Verifiable Credential(s) using the evaluation process described in Section 8 of [@!DIF.PresentationExchange].
 
