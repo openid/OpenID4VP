@@ -489,7 +489,7 @@ The following parameters are defined:
 : A JSON String containing the value of the corresponding authorization Request's `state` parameter, if present.
 
 `issuer`:
-: A JSON containing an HTTPS URL designating the Issuer URL of the Wallet (acting as a OAuth Authorization Server). The Verifier MAY obtain the Wallet's metadata by adding the well-know location `oauth-authorization-server` as specified in [@!RFC8414]. Metadata MAY also be provided by other means, for example in the wallet attestation. 
+: A JSON containing an HTTPS URL designating the Issuer URL of the Wallet (acting as a OAuth 2.0 Authorization Server). The Verifier MAY obtain the Wallet's metadata by adding the well-know location `oauth-authorization-server` as specified in [@!RFC8414]. Metadata MAY also be provided by other means, for example in the wallet attestation. 
 
 `w_nonce`:
 : A JSON String containing as fresh, cryptographically random number with sufficient entropy the Verifier MUST use when creating the signed presentation request object. 
