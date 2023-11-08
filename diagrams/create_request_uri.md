@@ -24,6 +24,7 @@ deactivate r
 u --> w: **signed authorization request**\n(client_id, create_request_uri, state)
 activate w
 w --> w: check authorization request signature
+w --> w: check on trustworthiness of Verifier (approach on trust mechanism)
 w --> rp: POST **create request request** (\nstate,\n[OPTIONAL]issuer, \n[OPTIONAL]wallet_metadata, \n[OPTIONAL]w_nonce, \n[OPTIONAL]w_ephm_key, \n[OPTIONAL]wallet attestation, wallet attestation pop(v_nonce))
 note over u, w: HTTP status code 401 signals need to authenticate
 rp --> wm: [OPTIONAL] get wallet metadata
