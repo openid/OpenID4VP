@@ -481,7 +481,7 @@ Other specifications can define further values for the `client_id_scheme` parame
 
 This endpoint is offered by the Verifier. The Wallet sends a request to this endpoint if the Verifier requests so by passing the `create_request_uri` authorization request parameter. In case of success, the response is a request object that the Wallet MUST process in the same way as a request object as defined in [@RFC9101]. 
 
-Create Request requests MUST be HTTPS POST requests with the "application/oauth-authz-req+jwt" media type.
+The request MUST use the POST method, the https scheme and the media type set to "application/oauth-authz-req+jwt".
 
 The following parameters are defined: 
 
