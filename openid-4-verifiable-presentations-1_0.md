@@ -505,7 +505,7 @@ The Create Request Response MUST be HTTPS POST response with the "application/oa
 
 The error code `401` signals to the Wallet that it needs to authenticate to the Verifier. In this case, the error response SHOULD contain a `WWW-Authenticate` header for every attestation method the Verifier supports.
 
-Below a non-normative example for the Wallet attestation method as specified above. The `WWW-Authenticate` contains the nonce value the Wallet MUST use in the calculation of the proof of possession of the wallet attestation. 
+Below a non-normative example for the Wallet attestation method as specified above. The `WWW-Authenticate` contains the nonce value the Wallet MUST use in the calculation of the proof of possession of the Wallet attestation. 
 
 ```
 HTTP/1.1 401 Unauthorized
