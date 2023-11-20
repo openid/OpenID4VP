@@ -436,7 +436,7 @@ The following is a non-normative example of a request when `client_id` equals `r
     8%22%5D%7D%7D%7D
 ```
 
-* `entity_id`: This value indicates that the Client Identifier is an Entity Identifier defined in OpenID Connect Federation [@!OpenID.Federation]. Processing rules given in [@!OpenID.Federation] MUST be followed. Automatic Registration as defined in [@!OpenID.Federation] MUST be used. The Authorization Request MAY also contain a `trust_chain` parameter. The final Verifier metadata is obtained from the Trust Chain after applying the policies, according to [@!OpenID.Federation]. The `client_metadata` or `client_metadata_uri` parameter, if present in the Authorization Request, MUST be ignored when this Client Identifier scheme is used.
+* `entity_id`: This value indicates that the Client Identifier is an Entity Identifier defined in OpenID Federation [@!OpenID.Federation]. Processing rules given in [@!OpenID.Federation] MUST be followed. Automatic Registration as defined in [@!OpenID.Federation] MUST be used. The Authorization Request MAY also contain a `trust_chain` parameter. The final Verifier metadata is obtained from the Trust Chain after applying the policies, according to [@!OpenID.Federation]. The `client_metadata` or `client_metadata_uri` parameter, if present in the Authorization Request, MUST be ignored when this Client Identifier scheme is used.
 
 * `did`: This value indicates that the Client Identifier is a DID defined in [@!DID-Core]. The request MUST be signed with a private key associated with the DID. A public key to verify the signature MUST be obtained from the `verificationMethod` property of a DID Document. Since DID Document may include multiple public keys, a particular public key used to sign the request in question MUST be identified by the `kid` in the JOSE Header. To obtain the DID Document, the Wallet MUST use DID Resolution defined by the DID method used by the Verifier. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` or the `client_metadata_uri` parameter as defined in (#vp_token_request). 
 
@@ -1330,7 +1330,7 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
             <organization>Self-Issued Consulting</organization>
           </author>
           <author fullname="A. Solberg">
-            <organization>Siki</organization>
+            <organization>Sikt</organization>
           </author>
           <author fullname="John Bradley">
             <organization>Yubico</organization>
@@ -1343,7 +1343,7 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
           </author>
           <date day="8" month="November" year="2023"/>
         </front>
- </reference>
+</reference>
 
 # Examples with Credentials in Various Formats {#alternative_credential_formats}
 
