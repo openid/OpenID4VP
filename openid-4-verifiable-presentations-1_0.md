@@ -14,15 +14,15 @@ status = "standard"
 initials="O."
 surname="Terbu"
 fullname="Oliver Terbu"
-organization="Spruce Systems, Inc."
+organization="Mattr"
     [author.address]
-    email = "oliver.terbu@spruceid.com"
+    email = "oliver.terbu@mattr.global"
 
 [[author]]
 initials="T."
 surname="Lodderstedt"
 fullname="Torsten Lodderstedt"
-organization="yes.com"
+organization="sprind.org"
     [author.address]
     email = "torsten@lodderstedt.net"
 
@@ -1320,25 +1320,28 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </front>
 </reference>
 
-<reference anchor="OpenID.Federation" target="https://openid.net/specs/openid-connect-federation-1_0-28.html">
+<reference anchor="OpenID.Federation" target="https://openid.net/specs/openid-connect-federation-1_0.html">
         <front>
-          <title>OpenID Connect Federation 1.0 - draft 28></title>
+          <title>OpenID Federation 1.0</title>
 		  <author fullname="R. Hedberg, Ed.">
-            <organization>Independent</organization>
+            <organization>independent</organization>
           </author>
           <author fullname="Michael B. Jones">
-            <organization>Microsoft</organization>
+            <organization>Self-Issued Consulting</organization>
           </author>
           <author fullname="A. Solberg">
-            <organization>Uninett</organization>
-          </author>
-          <author fullname="S. Gulliksson">
-            <organization>Schibsted</organization>
+            <organization>Siki</organization>
           </author>
           <author fullname="John Bradley">
             <organization>Yubico</organization>
           </author>
-          <date day="24" month="March" year="2023"/>
+          <author fullname="Giuseppe De Marco">
+            <organization>independent</organization>
+          </author>
+          <author fullname="Vladimir Dzhuvinov">
+            <organization>Connect2id</organization>
+          </author>
+          <date day="8" month="November" year="2023"/>
         </front>
  </reference>
 
