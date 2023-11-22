@@ -1661,7 +1661,7 @@ This specification registers the following JWS header name in the IANA "JSON Web
 
 # Acknowledgements {#Acknowledgements}
 
-We would like to thank Adam Lemmon, Alen Horvat, Andrew Hughes, Andrii Deinega, Arjen van Veen, Brian Campbell, Christian Bormann, David Chadwick, Daniel Fett, Daniel McGrogan, David Waite, Edmund Jay, Fabian Hauck, Gabe Cohen, Gaurav Khot, George Fletcher, Giuseppe De Marco, Jacob Ideskog, Jacob Ward, Jeremie Miller, John Bradley, Joseph Heenan, Judith Kahrer, Kenichi Nakamura, Mark Dobrinic, Mark Haine, Markus Kreusch, Michael B. Jones, Nat Sakimura, Oliver Terbu, Paul Bastian, Pedro Felix, Richard Barnes, Roland Hedberg, Rolson Quadras, Ronald Koenig, Takahiko Kawasaki, Timo Glasta, Tom Jones, Vittorio Bertocci for their valuable feedback and contributions to this specification.
+We would like to thank Adam Lemmon, Alen Horvat, Andrew Hughes, Andrii Deinega, Arjen van Veen, Brian Campbell, Christian Bormann, David Chadwick, Daniel Fett, Daniel McGrogan, David Waite, Edmund Jay, Fabian Hauck, Gabe Cohen, Gaurav Khot, George Fletcher, Giuseppe De Marco, Jacob Ideskog, Jacob Ward, Jeremie Miller, John Bradley, Joseph Heenan, Judith Kahrer, Kenichi Nakamura, Mark Dobrinic, Mark Haine, Markus Kreusch, Michael B. Jones, Nat Sakimura, Niels Klomp, Oliver Terbu, Paul Bastian, Pedro Felix, Richard Barnes, Roland Hedberg, Rolson Quadras, Ronald Koenig, Takahiko Kawasaki, Timo Glasta, Tom Jones, Vittorio Bertocci for their valuable feedback and contributions to this specification.
 
 # Notices
 
