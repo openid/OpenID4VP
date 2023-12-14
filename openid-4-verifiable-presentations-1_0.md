@@ -357,23 +357,56 @@ Content-Type: application/json
 
 ## Using `scope` Parameter to Request Verifiable Credential(s) {#request_scope}
 
-Wallets MAY support requesting presentation of Verifiable Credentials using OAuth 2.0 scope values.
+Wallets MAY support requesting presentation of Verifiable Credentials using OAuth 2.0 `scope` values.
 
-Such a scope value MUST be an alias for a well-defined Presentation Definition that will be 
-referred to in the `presentation_submission` response parameter. 
+In the case where all the Input Descriptors defined within the Presentation Definition are required within the request, the value contained in the `scope` parameter MUST match to the Presentation Definition `id` value. In the case where only a subset of Verifiable Credentials is required, each value contained in the `scope` parameter MUST match to one Input Descriptor(s) `id` value, as defined within the Presentation Definition.
 
-The specific scope values, and the mapping between a certain scope value and the respective 
-Presentation Definition is out of scope of this specification. 
+Since the values contained in the `scope` parameter are expressed as a list of space-delimited and case-sensitive strings as defined in [@RFC6749], `id` values of the Input Descriptors and Presentation Definitions used as the `scope` parameter to request Verifiable Credential(s) MUST NOT include spaces. 
 
-Possible options include normative text in a separate specification defining scope values along with a description of their
-semantics or machine readable definitions in the Wallet's server metadata, mapping a scope value to an equivalent 
-Presentation Definition JSON object. 
+It is RECOMMENDED to use collision-resistant `scope` values.
 
-Such definition of a scope value MUST allow the Verifier to determine the identifiers of the Presentation Definition and Input Descriptor(s) in the `presentation_submission` response parameter (`definition_id` and `descriptor_map.id` respectively) as well as the Credential formats and types in the `vp_token` response parameter defined in (#response-parameters).  
+It is also required that the Presentation Definition `id` value MUST be different to the ones defined for the Input Descriptors defined within it.
 
-It is RECOMMENDED to use collision-resistant scopes values.
+When the `scope` values are not defined within the Trust Framework and then not implictly agreed between the parties,
+the Verifier that intends to use this feature MUST publish its Presentation Definition within its metadata using the parameter name `presentation_definition`. 
+This allows the Wallet instances to match the `scope` value to the Presentation Definition contained within the metadata.
 
-The following is a non-normative example of an Authorization Request using the scope value `com.example.IDCardCredential_presentation`, 
+Below a non-normative example of a Presentation Definition containing the Input Descriptor(s) intended to be references in the `scope` parameter:
+
+````
+{
+    "id": "vp token example",
+    "input_descriptors": [
+        {
+            "id": "id-card-credential",
+            "format": {
+                "ldp_vc": {
+                    "proof_type": [
+                        "Ed25519Signature2018"
+                    ]
+                }
+            },
+            "constraints": {
+                "fields": [
+                    {
+                        "path": [
+                            "$.type"
+                        ],
+                        "filter": {
+                            "type": "string",
+                            "pattern": "IDCardCredential"
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}
+````
+
+The Wallets that supports the `scope` parameter in the request for Verifiable Credential(s) MUST include the granted scopes in the `presentation_submission` response parameter (`definition_id` and `descriptor_map.id` respectively), to allow the Verifier to determine the Input Descriptor(s) defined in its Presentation Definition.
+
+The following is a non-normative example of an Authorization Request using the `scope` value `com.example.IDCardCredential_presentation`,
 which is an alias for the first Presentation Definition example given in (#request_presentation_definition):
 
 ```
