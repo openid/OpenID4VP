@@ -478,7 +478,7 @@ To use `client_id_scheme` values `entity_id`, `did`, `verifier_attestation`, `x5
 
 Other specifications can define further values for the `client_id_scheme` parameter. It is RECOMMENDED to use collision-resistant names for such values.
 
-# Request URI Mode Create {#response_uri_mode_create}
+## Request URI Mode Create {#request_uri_mode_create}
 
 This request is offered at the Request URI endpoint by the Verifier. In case of success, the response is a request object that the Wallet MUST process in the same way as a request object as defined in [@RFC9101]. 
 
@@ -492,7 +492,7 @@ The following parameters are defined:
 `issuer`:
 : OPTIONAL. A JSON containing an HTTPS URL designating the Issuer URL of the Wallet (acting as a OAuth 2.0 Authorization Server). The Verifier MAY obtain the Wallet's metadata by adding the well-know location `oauth-authorization-server` as specified in [@!RFC8414]. Metadata MAY also be provided by other means, for example in the `wallet_metadata`parameter`.
 
-`wallet_metadata`;
+`wallet_metadata`:
 : OPTIONAL. A JSON Object containing metadata parameters as defined in (#as_metadata_parameters).
 
 `w_nonce`:
