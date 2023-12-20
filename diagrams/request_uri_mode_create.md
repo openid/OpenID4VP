@@ -21,11 +21,11 @@ activate r
 
 r --> u: **signed authorization request**\n(client_id, request_uri, request_uri_mode=create, state)
 deactivate r
-u --> w: **signed authorization request**\n(client_id, equest_uri, request_uri_mode=create, state)
+u --> w: **signed authorization request**\n(client_id, request_uri, request_uri_mode=create, state)
 activate w
 w --> w: check authorization request signature
 w --> w: check on trustworthiness of Verifier (approach on trust mechanism)
-w --> rp: POST **request_uri_** (\nstate,\n[OPTIONAL]issuer, \n[OPTIONAL]wallet_metadata, \n[OPTIONAL]w_nonce, \n[OPTIONAL]w_ephm_key)
+w --> rp: POST **request_uri** (\n[OPTIONALstate,\n[OPTIONAL]issuer, \n[OPTIONAL]wallet_metadata, \n[OPTIONAL]w_nonce, \n[OPTIONAL]w_ephm_key)
 rp --> wm: [OPTIONAL] get wallet metadata
 wm --> rp: [OPTIONAL] wallet metadata
 rp -> rp: create and sign (and optionally encrypt) presentation request object (client_id, w_nonce, nonce, response_uri, \npresentation_definition, state)
