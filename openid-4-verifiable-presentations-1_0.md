@@ -537,7 +537,7 @@ It has been defined to address the following use cases:
 The Response Mode is defined in accordance with [@!OAuth.Responses] as follows:
 
 `direct_post`:
-: In this mode, the Authorization Response is sent to the Verifier using an HTTPS POST request to an endpoint controlled by the Verifier. The Authorization Response parameters are encoded in the body using the `application/x-www-form-urlencoded` content type. The flow can end with an HTTPS POST request from the Wallet to the Verifier, or it can end with a redirect that follows the HTTPS POST request, if the Verifier responds with a redirect URI to the Wallet.
+: In this mode, the Authorization Response is sent to the Verifier using an HTTPS POST request to an endpoint controlled by the Verifier. The Authorization Response parameters are encoded in the body using either the `application/x-www-form-urlencoded` or the `multipart/form-data` content type. The flow can end with an HTTPS POST request from the Wallet to the Verifier, or it can end with a redirect that follows the HTTPS POST request, if the Verifier responds with a redirect URI to the Wallet.
 
 The following new Authorization Request parameter is defined to be used in conjunction with Response Mode `direct_post`: 
 
@@ -571,7 +571,7 @@ https://wallet.example.com?
     &request_uri=https%3A%2F%2Fclient.example.org%2F567545564
 ```
 
-The following is a non-normative example of the Authorization Response that is sent via an HTTPS POST request to the Verifier's Response Endpoint:
+The following is a non-normative example of the Authorization Response that is sent via an HTTPS POST request with body parameters encoded as `application/x-www-form-urlencoded` to the Verifier's Response Endpoint:
 
 ```
   POST /post HTTP/1.1
@@ -584,6 +584,39 @@ The following is a non-normative example of the Authorization Response that is s
 ```
 
 If the Response Endpoint has successfully processed the request, it MUST respond with HTTPS status code 200. 
+
+The following is another non-normative example of the Authorization Response that is sent via an HTTPS POST request with body parameters encoded as `multipart/form-data` to the Verifier Response Endpoint:
+
+```
+  POST /post HTTP/1.1
+    Host: client.example.org
+    Content-Type: multipart/form-data; boundary=FormBoundary
+
+    --FormBoundary
+    Content-Disposition: form-data; name="presentation_submission"
+
+    ...
+    --FormBoundary
+    Content-Disposition: form-data; name="vp_token"
+
+    ...
+    --FormBoundary
+    Content-Disposition: form-data; name="state"
+    
+    eyJhb...6-sVA
+    --FormBoundary
+    Content-Disposition: form-data; name="attachment"; filename="verification.png"
+    Content-Type: image/png
+    
+    [Binary image data]
+    --FormBoundary--
+```
+
+Note: In this case an example of extra parameter `attachment` is sent to the Response Endpoint in order to be processed. This is sent as additional data that the server may require to get additional evidence, ensuring referential integrity extracted from the credentials in the `vp_token` using `Cryptographic Hyperlinks` (see [@I-D.sporny-hashlink]), `Subresource Integrity` (see [@!W3C_SRI]) or other means.
+
+This enables a convenient and efficient way to manage claims consisting in large sized files in presentation.
+
+If the Response Endpoint has successfully processed the request, it MUST respond with HTTPS status code 200.
 
 The following new parameter is defined for use in the response from the endpoint:
 
@@ -1343,6 +1376,15 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
           </author>
           <date day="8" month="November" year="2023"/>
         </front>
+</reference>
+
+<reference anchor="W3C_SRI" target="https://www.w3.org/TR/SRI/">
+  <front>
+    <title>Subresource Integrity</title>
+    <author/>
+  </front>
+  <seriesInfo name="W3C REC" value="SRI"/>
+  <seriesInfo name="W3C" value="SRI"/>
 </reference>
 
 # Examples with Credentials in Various Formats {#alternative_credential_formats}
