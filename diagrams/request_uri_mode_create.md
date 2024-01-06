@@ -39,7 +39,7 @@ w -> w: create verifiable\npresentation (credential)
 w --> rb: POST response \n(vp_token(credential presentation(s) associated with nonce), presentation_submission, state)
 rb --> w: redirect_url
 w --> u: redirect (response_code)
-u --> r: response (response_code)
+u --> r: redirect (response_code)
 activate r
 r --> rb: get presentation response\n (transaction_id, response_code)
 rb --> r: presentation response
