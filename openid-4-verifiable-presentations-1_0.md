@@ -232,7 +232,7 @@ Presentation of Verifiable Credentials using OpenID for Verifiable Presentations
 
 The Authorization Request follows the definition given in [@!RFC6749] taking into account the recommendations given in [@!I-D.ietf-oauth-security-topics].
 
-The Verifier may send an Authorization Request as Request Object by value or by reference as defined in JWT-Secured Authorization Request (JAR) [@RFC9101].
+The Verifier MAY send an Authorization Request as Request Object by value or by reference as defined in JWT-Secured Authorization Request (JAR) [@RFC9101]. Additionally, the request can be an object containing only a subset of parameters needed to, in a subsequent step, request the creation of a request object from the Verifier through an HTTPS POST request via a newly introduced `create request endpoint`. 
 
 The Verifier articulates requirements of the Credential(s) that are requested using `presentation_definition` and `presentation_definition_uri` parameters that contain a Presentation Definition JSON object as defined in Section 5 of [@!DIF.PresentationExchange]. Wallet implementations MUST process Presentation Definition JSON object and select candidate Verifiable Credential(s) using the evaluation process described in Section 8 of [@!DIF.PresentationExchange].
 
@@ -261,6 +261,15 @@ This specification defines the following new parameters:
 
 A public key to be used by the Wallet as an input to the key agreement to encrypt Authorization Response (see (#jarm)). It MAY be passed by the Verifier using the `jwks` or the `jwks_uri` claim within the `client_metadata` or `client_metadata_uri` request parameter.
 
+`request_uri_method`: 
+: OPTIONAL. A string determining the HTTP method to be used with the `request_uri` passed in the same request. This specification defines two values for this parameter: `GET` and `POST`. `GET` is 
+the mode as defined by in [@RFC9101], where the Wallet sends a GET request to fetch a request object. `POST` is a new mode defined in this specification where the Wallet requests the 
+creation of a fresh request object as defined in [@RFC9101] by sending a POST request to the request URI. The details of this request are defined in (#request_uri_method_post). 
+`request_uri_mode` MUST only be present if the request also contains a `request_uri` parameter. If the parameter is not present, the Wallet MUST process the `request_uri` as defined in 
+[@RFC9101]. Wallets not supporting the new method "POST" will send a GET request to the request URI (default behavior as defined in [@RFC9101]). 
+This parameter SHOULD be sent in a signed authorization request in order to allow the Wallet to authenticate the Verifier before it fetches the presentation request from the Verifier's request URI. 
+This allows the Wallet to determine whether the Verifier is trustworthy before sending a request to its Request URI.  
+
 The following additional considerations are given for pre-existing Authorization Request parameters:
 
 `nonce`:
@@ -281,6 +290,29 @@ The following is a non-normative example of an Authorization Request:
     &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
     &presentation_definition=...
     &nonce=n-0S6_WzA2Mj HTTP/1.1
+```
+
+The following is a non-normative example of a request object with a `request_uri_mode`: 
+
+```
+{
+  "iss": "https://client.example.org",
+  "aud": "https://server.example.com",
+  "iat": 1541493724,
+  "exp": 1516247022,
+  "state": "af0ifjsldkj",
+  "nonce": "n-0S6_WzA2Mj",
+  "request_uri": "https://client.example.org/request",
+  "request_uri_mode": "create"
+}
+```
+
+It is sent to the Wallet using the `request` parameter as defined in [@RFC9101] as shown in the following example.
+
+```
+  GET /authorize?
+    client_id=https://client.example.org
+    &request=... HTTP/1.1
 ```
 
 ## `presentation_definition` Parameter {#request_presentation_definition}
@@ -459,6 +491,37 @@ Body
 To use `client_id_scheme` values `entity_id`, `did`, `verifier_attestation`, `x509_san_dns`, and `x509_san_uri`, Verifiers MUST be confidential clients. This might require changes to the technical design of native apps as such apps are typically public clients.
 
 Other specifications can define further values for the `client_id_scheme` parameter. It is RECOMMENDED to use collision-resistant names for such values.
+
+## Request URI Method POST {#request_uri_method_post}
+
+This request is offered at the Request URI endpoint by the Verifier. In case of success, the response is a request object that the Wallet MUST process in the same way as a request object as defined in [@RFC9101]. 
+
+The request MUST use the POST method, the https scheme and the media type set to "application/oauth-authz-req+jwt".
+
+The following parameters are defined: 
+
+`state`:
+: OPTIONAL. A JSON String containing the value of the corresponding authorization Request's `state` parameter, if present.
+
+`issuer`:
+: OPTIONAL. A JSON containing an HTTPS URL designating the Issuer URL of the Wallet (acting as a OAuth 2.0 Authorization Server). The Verifier MAY obtain the Wallet's metadata by adding the well-know location `oauth-authorization-server` as specified in [@!RFC8414]. Metadata MAY also be provided by other means, for example in the `wallet_metadata`parameter`.
+
+`wallet_metadata`:
+: OPTIONAL. A JSON Object containing metadata parameters as defined in (#as_metadata_parameters).
+
+`issuer_nonce`:
+: OPTIONAL. A JSON String containing as fresh, cryptographically random number with sufficient entropy the Verifier MUST use when creating the signed presentation request object. 
+
+`w_ephm_key`:
+: OPTIONAL. A JWK object containing a key the Verifier MUST use to encrypt the request object. 
+
+### Create Request Response
+
+The Create Request Response MUST be HTTPS POST response with the "application/oauth-authz-req+jwt" media type and contain a signed request object as defined in [@RFC9101]. It MUST fulfill the requirements as defined in (#vp_token_request).
+
+### Create Request Error Response
+
+TBD
 
 # Response {#response}
 
