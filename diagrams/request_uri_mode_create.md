@@ -36,7 +36,7 @@ w -> w: authenticate and\n authorize Verifier
 note over u, w: user authentication and credential selection/confirmation
 
 w -> w: create verifiable\npresentation (credential)
-w --> rb: POST response \n(vp_token, presentation_submission, state)
+w --> rb: POST response \n(vp_token(credential presentation(s) associated with nonce), presentation_submission, state)
 rb --> w: redirect_url
 w --> u: response (response_code)
 u --> r: response (response_code)
