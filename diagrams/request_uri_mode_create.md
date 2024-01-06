@@ -19,9 +19,9 @@ end box
 u --> r : use
 activate r
 
-r --> u: **signed authorization request**\n(client_id, request_uri, request_uri_mode=POST, state)
+r --> u: authorization request\n(client_id, request{request_uri, request_uri_mode=POST, state})
 deactivate r
-u --> w: **signed authorization request**\n(client_id, request_uri, request_uri_mode=POST, state)
+u --> w: authorization request\n(client_id, request{request_uri, request_uri_mode=POST, state})
 activate w
 w --> w: check authorization request signature
 w --> w: check on trustworthiness of Verifier (approach on trust mechanism)

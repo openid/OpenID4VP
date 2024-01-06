@@ -301,6 +301,14 @@ The following is a non-normative example of a request object with a `request_uri
 }
 ```
 
+It is sent to the Wallet using the `request` parameter as defined in [@RFC9101] as shown in the following example.
+
+```
+  GET /authorize?
+    client_id=https://client.example.org
+    &request=... HTTP/1.1
+```
+
 ## `presentation_definition` Parameter {#request_presentation_definition}
 
 This parameter contains a Presentation Definition JSON object conforming to the syntax defined in Section 5 of [@!DIF.PresentationExchange].
