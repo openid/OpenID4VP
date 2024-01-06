@@ -495,7 +495,7 @@ The following parameters are defined:
 `wallet_metadata`:
 : OPTIONAL. A JSON Object containing metadata parameters as defined in (#as_metadata_parameters).
 
-`w_nonce`:
+`issuer_nonce`:
 : OPTIONAL. A JSON String containing as fresh, cryptographically random number with sufficient entropy the Verifier MUST use when creating the signed presentation request object. 
 
 `w_ephm_key`:
