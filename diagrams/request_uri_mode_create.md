@@ -33,7 +33,7 @@ rp --> w: **signed (optionally encrypted) request object** (client_id, issuer_no
 note over u, w: do we want to allow unsigned presentation request objects, too?
 w -> w: authenticate and\n authorize Verifier
 
-note over u, w: user authentication and credential selection/confirmation
+note over u, w: User authentication and Credential selection/confirmation
 
 w -> w: create verifiable\npresentation (credential)
 w --> rb: POST response \n(vp_token(credential presentation(s) associated with nonce), presentation_submission, state)

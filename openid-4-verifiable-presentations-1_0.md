@@ -234,7 +234,7 @@ The Authorization Request follows the definition given in [@!RFC6749] taking int
 
 The Verifier MAY send an Authorization Request as Request Object by value or by reference as defined in JWT-Secured Authorization Request (JAR) [@RFC9101]. Additionally, the request can be an object containing only a subset of parameters needed to, in a subsequent step, request the creation of a request object from the Verifier through an HTTPS POST request via a newly introduced `create request endpoint`. 
 
-The Verifier articulates requirements of the Credential(s) that are requested using `presentation_definition` and `presentation_definition_uri` parameters that contain a Presentation Definition JSON object as defined in Section 5 of [@!DIF.PresentationExchange]. Wallet implementations MUST process Presentation Definition JSON object and select candidate Verifiable Credential(s) using the evaluation process described in Section 8 of [@!DIF.PresentationExchange].
+The Verifier specifies the requirements for the Credential(s) being requested using the `presentation_definition` and `presentation_definition_uri` parameters. These parameters contain a Presentation Definition JSON object as outlined in Section 5 of [@!DIF.PresentationExchange]. Wallet implementations are required to process this Presentation Definition JSON object and select suitable Verifiable Credential(s) following the evaluation process detailed in Section 8 of [@!DIF.PresentationExchange].
 
 The Verifier communicates a Client Identifier Scheme that indicate how the Wallet is supposed to interpret the Client Identifier and associated data in the process of Client identification, authentication, and authorization using `client_id_scheme` parameter. This parameter enables deployments of this specification to use different mechanisms to obtain and validate Client metadata beyond the scope of [@!RFC6749]. A certain Client Identifier Scheme MAY require the Verifier to sign the Authorization Request as means of authentication and/or pass additional parameters and require the Wallet to process them.
 
@@ -494,9 +494,9 @@ Other specifications can define further values for the `client_id_scheme` parame
 
 ## Request URI Method POST {#request_uri_method_post}
 
-This request is offered at the Request URI endpoint by the Verifier. In case of success, the response is a request object that the Wallet MUST process in the same way as a request object as defined in [@RFC9101]. 
+This request is offered at the Request URI endpoint by the Verifier. In case of success, the response is a Request Object that the Wallet MUST process in the same way as a Request Object as defined in [@RFC9101]. 
 
-The request MUST use the POST method, the https scheme and the media type set to "application/oauth-authz-req+jwt".
+The request MUST use the HTTP POST method with the https scheme and the media type set to "application/oauth-authz-req+jwt".
 
 The following parameters are defined: 
 
