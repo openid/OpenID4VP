@@ -37,6 +37,7 @@ note over u, w: User authentication and Credential selection/confirmation
 
 w -> w: create verifiable\npresentation (credential)
 w --> rb: POST response \n(vp_token(credential presentation(s) associated with nonce), presentation_submission, state)
+rb -> rb: check state, store vp_token\n & create redirect_url
 rb --> w: redirect_url
 w --> u: redirect (response_code)
 u --> r: redirect (response_code)
