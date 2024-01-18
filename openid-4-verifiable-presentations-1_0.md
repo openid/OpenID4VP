@@ -262,9 +262,7 @@ This specification defines the following new parameters:
 A public key to be used by the Wallet as an input to the key agreement to encrypt Authorization Response (see (#jarm)). It MAY be passed by the Verifier using the `jwks` or the `jwks_uri` claim within the `client_metadata` or `client_metadata_uri` request parameter.
 
 `request_uri_method`: 
-: OPTIONAL. A string determining the HTTP method to be used with the `request_uri` passed in the same request. This specification defines two values for this parameter: `GET` and `POST`. `GET` is 
-the mode as defined by in [@RFC9101], where the Wallet sends a GET request to fetch a request object. `POST` is a new mode defined in this specification where the Wallet requests the 
-creation of a fresh request object as defined in [@RFC9101] by sending a POST request to the request URI. The details of this request are defined in (#request_uri_method_post). 
+: OPTIONAL. A string determining the HTTP method to be used with the `request_uri` passed in the same request. This specification defines two values for this parameter: `GET` and `POST`. `GET` is the mode as defined by in [@RFC9101], where the Wallet sends a GET request to fetch a request object. `POST` is a new mode defined in this specification where the Wallet requests the creation of a fresh request object as defined in [@RFC9101] by sending a POST request to the request URI. The details of this request are defined in (#request_uri_method_post). 
 `request_uri_mode` MUST only be present if the request also contains a `request_uri` parameter. If the parameter is not present, the Wallet MUST process the `request_uri` as defined in 
 [@RFC9101]. Wallets not supporting the new method "POST" will send a GET request to the request URI (default behavior as defined in [@RFC9101]). 
 This parameter SHOULD be sent in a signed authorization request in order to allow the Wallet to authenticate the Verifier before it fetches the presentation request from the Verifier's request URI. 
@@ -518,6 +516,8 @@ The following parameters are defined:
 ### Create Request Response
 
 The Create Request Response MUST be HTTPS POST response with the "application/oauth-authz-req+jwt" media type and contain a signed request object as defined in [@RFC9101]. It MUST fulfill the requirements as defined in (#vp_token_request).
+
+The Wallet MUST extract the set of authorization request parameters from the Request Object returned from the Verifier's request URI. The Wallet MUST only use the parameters in this Request Object, even if the same parameter was provided in an authorization request query parameter or a request object passed in the authorization request through the `request` parameter. The Client ID value in the `client_id` authorization request parameter (or `request` object claim) and in the Request Object 'client_id' claim MUST be identical. The Wallet then validates the request, as specified in OAuth 2.0 [RFC6749].
 
 ### Create Request Error Response
 
