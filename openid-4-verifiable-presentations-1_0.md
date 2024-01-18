@@ -511,13 +511,13 @@ The following parameters are defined:
 `w_ephm_key`:
 : OPTIONAL. A JWK object containing a key the Verifier MUST use to encrypt the request object. 
 
-### Create Request Response
+### Request URI Response
 
-The Create Request Response MUST be HTTPS POST response with the "application/oauth-authz-req+jwt" media type and contain a signed request object as defined in [@RFC9101]. It MUST fulfill the requirements as defined in (#vp_token_request).
+The Request URI Response MUST be HTTPS POST response with the "application/oauth-authz-req+jwt" media type and contain a signed request object as defined in [@RFC9101]. It MUST fulfill the requirements as defined in (#vp_token_request).
 
 The Wallet MUST extract the set of authorization request parameters from the Request Object returned from the Verifier's request URI. The Wallet MUST only use the parameters in this Request Object, even if the same parameter was provided in an authorization request query parameter or a request object passed in the authorization request through the `request` parameter. The Client ID value in the `client_id` authorization request parameter (or `request` object claim) and in the Request Object 'client_id' claim MUST be identical. The Wallet then validates the request, as specified in OAuth 2.0 [RFC6749].
 
-### Create Request Error Response
+### Request URI Error Response
 
 TBD
 
