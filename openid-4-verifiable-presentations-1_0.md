@@ -262,11 +262,9 @@ This specification defines the following new parameters:
 A public key to be used by the Wallet as an input to the key agreement to encrypt Authorization Response (see (#jarm)). It MAY be passed by the Verifier using the `jwks` or the `jwks_uri` claim within the `client_metadata` or `client_metadata_uri` request parameter.
 
 `request_uri_method`: 
-: OPTIONAL. A string determining the HTTP method to be used with the `request_uri` passed in the same request. This specification defines two values for this parameter: `GET` and `POST`. `GET` is the mode as defined by in [@RFC9101], where the Wallet sends a GET request to fetch a request object. `POST` is a new mode defined in this specification where the Wallet requests the creation of a fresh request object as defined in [@RFC9101] by sending a POST request to the request URI. The details of this request are defined in (#request_uri_method_post). 
-`request_uri_mode` MUST only be present if the request also contains a `request_uri` parameter. If the parameter is not present, the Wallet MUST process the `request_uri` as defined in 
-[@RFC9101]. Wallets not supporting the new method "POST" will send a GET request to the request URI (default behavior as defined in [@RFC9101]). 
-This parameter SHOULD be sent in a signed authorization request in order to allow the Wallet to authenticate the Verifier before it fetches the presentation request from the Verifier's request URI. 
-This allows the Wallet to determine whether the Verifier is trustworthy before sending a request to its Request URI.  
+: OPTIONAL. A string determining the HTTP method to be used with the `request_uri` included in the same request. Two values are defined for `request_uri_method` in this specification: `get` and `post`. Please note that these values are case-insensitive. The GET method, as defined in [@RFC9101], involves the Wallet sending a GET request to retrieve a Request Object. The POST method, newly defined in this specification, involves the Wallet requesting the creation of a new Request Object as outlined in [@RFC9101] by sending an HTTP POST request to the request URI. This request using the HTTP POST is detailed in (#request_uri_method_post). 
+`request_uri_method` MUST only be present if the request contains a `request_uri` parameter. If the `request_uri_method` parameter is not present, the Wallet MUST process the `request_uri` as defined in [@RFC9101]. Wallets not supporting the new method `post` will send a GET request to the request URI (default behavior as defined in [@RFC9101]). 
+The `request_uri_method` parameter SHOULD be sent in a signed authorization request in order to allow the Wallet to authenticate the Verifier before it fetches the presentation request from the Verifier's request URI. This allows the Wallet to determine whether the Verifier is trustworthy prior to retrieving the presentation request from the Verifier's request URI.  
 
 The following additional considerations are given for pre-existing Authorization Request parameters:
 
@@ -301,7 +299,7 @@ The following is a non-normative example of a request object with a `request_uri
   "state": "af0ifjsldkj",
   "nonce": "n-0S6_WzA2Mj",
   "request_uri": "https://client.example.org/request",
-  "request_uri_mode": "create"
+  "request_uri_method": "post"
 }
 ```
 
