@@ -548,7 +548,7 @@ Note: The Verifier's component providing the user interface (Frontend) and the V
 
 Note: If the Client Identifier scheme `redirect_uri` is used in conjunction with the Response Mode `direct_post` and the `response_uri` parameter is present, the `client_id` value MUST be equal to the `response_uri` value`.
 
-Note: If the Client Identifier scheme `x509_san_dns`, or `x509_san_uri` is used in conjunction with the Response Mode `direct_post`, or `direct_post.jwt` and the `response_uri` parameter is present, the `client_id` value MUST be equal to the FQDN of the `response_uri` value.
+Note: If the Client Identifier scheme `x509_san_dns` or `x509_san_uri` is used in conjunction with the Response Mode `direct_post` or `direct_post.jwt`, and the `response_uri` parameter is present, the `response_uri` MUST be used instead of the `redirect_uri` to compute the `client_id` value when applicable.
 
 The following is a non-normative example of the payload of a Request Object with Response Mode `direct_post`:
 
