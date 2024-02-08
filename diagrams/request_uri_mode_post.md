@@ -25,7 +25,7 @@ u --> w: authorization request\n(client_id, request{request_uri, request_uri_mod
 activate w
 w --> w: check authorization request signature
 w --> w: check on trustworthiness of Verifier (approach on trust mechanism)
-w --> rp: POST **request_uri** (\n[OPTIONALstate,\n[OPTIONAL]issuer, \n[OPTIONAL]wallet_metadata, \n[OPTIONAL]issuer_nonce, \n[OPTIONAL]w_ephm_key)
+w --> rp: POST **request_uri** (\n[OPTIONAL]state,\n[OPTIONAL]issuer, \n[OPTIONAL]wallet_metadata, \n[OPTIONAL]issuer_nonce, \n[OPTIONAL]w_ephm_key)
 rp --> wm: [OPTIONAL] get wallet metadata
 wm --> rp: [OPTIONAL] wallet metadata
 rp -> rp: create and sign (and optionally encrypt) presentation request object (client_id, issuer_nonce, nonce, response_uri, \npresentation_definition, state)
