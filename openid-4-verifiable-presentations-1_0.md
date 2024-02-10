@@ -200,7 +200,7 @@ Note: The usage of the Request URI as defined in [@!RFC9101] does not depend on 
         |                 |                                                   |
         |   User Authentication / Consent                                     |
         |                 |                                                   |
-        |                 |  (3)   Authorization Response as HTTP POST       |
+        |                 |  (3)   Authorization Response as HTTP POST        |
         |                 |  (VP Token with Verifiable Presentation(s))       |
         |                 |<--------------------------------------------------|
 ~~~
