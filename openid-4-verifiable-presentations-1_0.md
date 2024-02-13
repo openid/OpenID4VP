@@ -674,8 +674,8 @@ Usage of `client_metadata` or `client_metadata_uri` parameters with `client_id` 
 `access_denied`:
 
 - The Wallet did not have the requested Credentials to satisfy the Authorization Request.
-- The end-user did not give consent to share the requested Credentials with the Verifier.
-- The Wallet failed to authenticate the end-user.
+- The End-User did not give consent to share the requested Credentials with the Verifier.
+- The Wallet failed to authenticate the End-User.
 
 This document also defines the following additional error codes and error descriptions:
 
