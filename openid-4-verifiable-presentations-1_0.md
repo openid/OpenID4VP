@@ -596,7 +596,7 @@ The following is a non-normative example of the response from the Verifier to th
 
 ```
   HTTP/1.1 200 OK
-  Content-Type: application/json;charset=UTF-8
+  Content-Type: application/json
   Cache-Control: no-store
 
   {
