@@ -606,7 +606,7 @@ The following is a non-normative example of the response from the Verifier to th
   }
 ```
 
-If the response does not contain the `redirect_uri`, the Wallet is not required to perform any further steps.
+If the response does not contain the `redirect_uri` parameter, the Wallet is not required to perform any further steps.
 
 Note: In the Response Mode `direct_post` or `direct_post.jwt`, the Wallet can change the UI based on the Verifier's callback to the Wallet following the submission of the Authorization Response.
 
