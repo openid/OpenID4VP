@@ -2,7 +2,7 @@
 title = "OpenID for Verifiable Presentations - draft 20"
 abbrev = "openid-4-vp"
 ipr = "none"
-workgroup = "connect"
+workgroup = "dcp"
 keyword = ["security", "openid", "ssi"]
 
 [seriesInfo]
