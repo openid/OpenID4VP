@@ -581,12 +581,24 @@ The following is a non-normative example of the Authorization Response that is s
     state=eyJhb...6-sVA
 ```
 
-If the Response Endpoint has successfully processed the request, it MUST respond with HTTP status code 200. 
+The following is a non-normative example of an Authorization Error Response that is sent as an HTTP POST request to the Verifier's Response Endpoint:
+
+```
+  POST /post HTTP/1.1
+  Host: client.example.org
+  Content-Type: application/x-www-form-urlencoded
+
+    error=invalid_request&
+    error_description=unsupported%20client_id_scheme&
+    state=eyJhb...6-sVA
+```
+
+If the Response Endpoint has successfully processed the Authorization Response or Authorization Error Response, it MUST respond with HTTP status code 200.
 
 The following new parameter is defined for use in the response from the endpoint:
 
 `redirect_uri`:
-: OPTIONAL. When the redirect parameter is used the Wallet MUST send the User Agent to this redirect URI. The redirect URI allows the Verifier to continue the interaction with the End-User on the device where the Wallet resides after the Wallet has sent the Authorization Response to the Response URI. It especially enables the Verifier to prevent session fixation ((#session_fixation)) attacks.
+: OPTIONAL. String containing a URI. When this parameter is present the Wallet MUST redirect the User Agent to this URI. This allows the Verifier to continue the interaction with the End-User on the device where the Wallet resides after the Wallet has sent the Authorization Response to the Response Endpoint. It can be used by the Verifier to prevent session fixation ((#session_fixation)) attacks. The Response Endpoint MAY return the `redirect_uri` parameter in response to successful Authorization Responses or for Error Responses.
 
 Note: Response Mode `direct_post` without the `redirect_uri` could be less secure than Response Modes with redirects. For details, see ((#session_fixation)).
 
