@@ -671,6 +671,12 @@ The error response follows the rules as defined in [@!RFC6749], with the followi
 
 Usage of `client_metadata` or `client_metadata_uri` parameters with `client_id` that the Wallet might be seeing for the first time is mutually exclusive with the registration mechanism where Self-Issued OP assigns `client_id` to the Verifier after receiving Verifier metadata.
 
+`access_denied`:
+
+- The Wallet did not have the requested Credentials to satisfy the Authorization Request.
+- The End-User did not give consent to share the requested Credentials with the Verifier.
+- The Wallet failed to authenticate the End-User.
+
 This document also defines the following additional error codes and error descriptions:
 
 `vp_formats_not_supported`:
