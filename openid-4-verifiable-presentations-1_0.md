@@ -1549,6 +1549,90 @@ Note: The reason hashes of the user claims are included in the `issuerAuth` item
 
 The example in this section is also applicable to the electronic identification Verifiable Credentials expressed using data models defined in ISO/IEC TR 23220-2.
 
+## IETF SD-JWT VC
+
+This section defines how credentials complying with [@!I-D.ietf-oauth-sd-jwt-vc] can be presented to the Verifier using this specification.
+
+### Format Identifier
+
+The Credential format identifier is `vc+sd-jwt`.
+
+#### Example Credential
+
+The following is a non-normative example of the payload of an IETF SD-JWT VC that will be used throughout this section:
+
+<{{examples/credentials/sd_jwt_vc.json}}
+
+The following are disclosures belonging to the claims from the example above.
+
+__Claim `given_name`__:
+
+ * SHA-256 Hash: `jsu9yVulwQQlhFlM_3JlzMaSFzglhQG0DpfayQwLUK4`
+ * Disclosure:\
+`WyIyR0xDNDJzS1F2ZUNmR2ZyeU5STjl3IiwgImdpdmVuX25hbWUiLCAiSm9o`\
+`biJd`
+ * Contents:
+`["2GLC42sKQveCfGfryNRN9w", "given_name", "John"]`
+
+
+__Claim `family_name`__:
+
+ * SHA-256 Hash: `TGf4oLbgwd5JQaHyKVQZU9UdGE0w5rtDsrZzfUaomLo`
+ * Disclosure:\
+`WyJlbHVWNU9nM2dTTklJOEVZbnN4QV9BIiwgImZhbWlseV9uYW1lIiwgIkRv`\
+`ZSJd`
+ * Contents:
+`["eluV5Og3gSNII8EYnsxA_A", "family_name", "Doe"]`
+
+
+__Claim `birthdate`__:
+
+ * SHA-256 Hash: `tiTngp9_jhC389UP8_k67MXqoSfiHq3iK6o9un4we_Y`
+ * Disclosure:\
+`WyI2SWo3dE0tYTVpVlBHYm9TNXRtdlZBIiwgImJpcnRoZGF0ZSIsICIxOTQw`\
+`LTAxLTAxIl0`
+ * Contents:
+`["6Ij7tM-a5iVPGboS5tmvVA", "birthdate", "1940-01-01"]`
+
+### Verifier Metadata
+
+The Verifier SHOULD add a `vp_formats` element to its metadata (e.g. in the `client_metadata` authorization request parameter) to let the wallet know what protection algorithms it supports in conjunction with SD-JWT VCs. The format element MUST have the key `vc+sd-jwt`, the value is an object consisting of the following elements:
+
+* `sd-jwt_alg_values`: OPTIONAL. A JSON array containing identifiers of cryptographic algorithms the verifier supports for protection of a SD-JWT. If present, the `alg` JOSE header (as defined in [@!RFC7515]) of the presented SD-JWT MUST match one of the array values.
+* `kb-jwt_alg_values`: OPTIONAL. A JSON array containing identifiers of cryptographic algorithms the verifier supports for protection of a KB-JWT. If present, the `alg` JOSE header (as defined in [@!RFC7515]) of the presented KB-JWT MUST match one of the array values.
+
+The following is a non-normative example of `client_metadata` request parameter value in a request to present a SD-JWT VC.
+
+<{{examples/client_metadata/sd_jwt_vc_verifier_metadata.json}}
+
+### Presentation Request
+
+The following is a non-normative example of an Authorization Request:
+
+<{{examples/request/request.txt}}
+
+The following is a non-normative example of the contents of a presentation_definition parameter that contains the requirements regarding the Credential to be presented:
+
+<{{examples/request/pd_sd_jwt_vc.json}}>
+
+The presentation of a SD-JWT VC is requested by adding an object named `vc+sd-jwt` to the `format` object of an `input_descriptor`. The object is empty.
+
+Setting `limit_disclosure` property defined in [@!DIF.PresentationExchange] to `required` enables selective release by instructing the Wallet to submit only the disclosures for the claims specified in the fields array.
+
+### Presentation Response
+
+A non-normative example of the Authorization Response would look the same as in the examples of other Credential formats in this Annex.
+
+The following is a non-normative example of the content of the `presentation_submission` parameter:
+
+<{{examples/response/ps_sd_jwt_vc.json}}
+
+The following is a non-normative example of the `vp_token` parameter provided in the same response and referred to by the `presentation_submission` above:
+
+<{{examples/response/token_response_vp_token_sd_jwt_vc.txt}}
+
+In this example the `vp_token` contains only the disclosures for the claims specified in the `presentation_submission`, along with a Key Binding JWT.
+
 ## Combining this specification with SIOPv2
 
 This section shows how SIOP and OpenID for Verifiable Presentations can be combined to present Verifiable Credentials and pseudonymously authenticate an end-user using subject controlled key material.

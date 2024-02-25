@@ -1,0 +1,29 @@
+{
+  "id": "example_sd_jwt_vc_request",
+  "input_descriptors": [
+    {
+      "id": "identity_credential",
+      "format": {
+        "vc+sd-jwt": {}
+      },
+      "constraints": {
+        "limit_disclosure": "required",
+        "fields": [
+          {
+            "path": ["$.vct"],
+            "filter": {
+              "type": "string",
+              "const": "https://credentials.example.com/identity_credential"
+            }
+          },
+          {
+            "path": ["$.family_name"]
+          },
+          {
+            "path": ["$.given_name"]
+          }
+        ]
+      }
+    }
+  ]
+}
