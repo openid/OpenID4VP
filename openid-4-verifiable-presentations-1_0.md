@@ -1,5 +1,5 @@
 %%%
-title = "OpenID for Verifiable Presentations - draft 20"
+title = "OpenID for Verifiable Presentations - Editor's draft"
 abbrev = "openid-4-vp"
 ipr = "none"
 workgroup = "connect"
