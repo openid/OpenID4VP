@@ -1578,7 +1578,7 @@ The following is a non-normative example of a request that combines this specifi
 
 ```
   GET /authorize?
-    response_type=id_token
+    response_type=vp_token%20id_token
     &scope=openid
     &id_token_type=subject_signed
     &client_id=https%3A%2F%2Fclient.example.org%2Fcb
@@ -1590,7 +1590,7 @@ The following is a non-normative example of a request that combines this specifi
 
 The differences to the example requests in the previous sections are:
 
-* `response_type` is set to `id_token`. If the request also includes a `presentation_definition` parameter, the Wallet is supposed to return the `presentation_submission` and `vp_token` parameters in the same response as the `id_token` parameter. 
+* `response_type` is set to `vp_token id_token`. This means the Wallet returns the `presentation_submission` and `vp_token` parameters in the same response as the `id_token` parameter as described in (#response).
 * The request includes the `scope` parameter with value `openid` making this an OpenID Connect request. Additionally, the request also contains the parameter `id_token_type` with value `subject_signed` requesting a Self-Issuer ID Token, i.e., the request is a SIOP request.
 
 ### Response
