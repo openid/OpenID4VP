@@ -1546,11 +1546,11 @@ The following is the content of the `presentation_definition` parameter:
 
 ## mdoc (ISO/IEC 18013 and ISO/IEC 23220)
 
-Refer to the latest version of ISO/IEC TR 18013-7 [@ISO.18013-7] for an OID4VP profile definition and examples of Credentials in the ISO/IEC 18013-5 mdoc format using the document type `org.iso.18013.5.1.mdl` as defined in ISO/IEC 18013-5:2021 [@ISO.18013-5].
+Refer to the latest version of ISO/IEC TR 18013-7 [@ISO.18013-7] for an OID4VP profile definition and examples of Credentials in the ISO/IEC 18013-5:2021 mdoc format using the document type `org.iso.18013.5.1.mdl` as defined in ISO/IEC 18013-5:2021 [@ISO.18013-5].
 
 Also, see the latest version of ISO/IEC TR 23220-4 [@ISO.23220-4] for an OID4VP profile definition and examples for Credentials in the ISO/IEC TR 23220-2 [@ISO.23220-2] mdoc format using any document type.
 
-Note that ISO/IEC 18013-5:2021 is a profile of ISO/IEC TR 23220-2, and ISO/IEC TR 18013-7 is a profile of ISO/IEC 23220-4.
+Note that ISO/IEC 18013-5:2021 is a profile of ISO/IEC TR 23220-2, and ISO/IEC TR 18013-7 is a profile of ISO/IEC TR 23220-4.
 
 The Credential format identifier for Credentials in the mdoc format is `mso_mdoc`.
 
