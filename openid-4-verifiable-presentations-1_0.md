@@ -1292,6 +1292,36 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </front>
 </reference>
 
+<reference anchor="ISO.18013-7" target="https://www.iso.org/standard/82772.html">
+        <front>
+          <title>ISO/IEC DTS 18013-7 Personal identification — ISO-compliant driving license — Part 7: Mobile driving license (mDL) add-on functions</title>
+          <author>
+            <organization> ISO/IEC JTC 1/SC 17 Cards and security devices for personal identification</organization>
+          </author>
+          <date year="2024"/>
+        </front>
+</reference>
+
+<reference anchor="ISO.23220-2" target="https://www.iso.org/standard/86782.html">
+        <front>
+          <title>ISO/IEC DTS 23220-2 Personal identification — Building blocks for identity management via mobile devices, Part 2: Data objects and encoding rules for generic eID systems</title>
+          <author>
+            <organization> ISO/IEC JTC 1/SC 17 Cards and security devices for personal identification</organization>
+          </author>
+          <date year="2024"/>
+        </front>
+</reference>
+
+<reference anchor="ISO.23220-4" target="https://www.iso.org/standard/86782.html">
+        <front>
+          <title>ISO/IEC CD TS 23220-4 Personal identification — Building blocks for identity management via mobile devices, Part 4: Protocols and services for operational phase</title>
+          <author>
+            <organization> ISO/IEC JTC 1/SC 17 Cards and security devices for personal identification</organization>
+          </author>
+          <date year="2024"/>
+        </front>
+</reference>
+
 <reference anchor="BCP195" target="https://www.rfc-editor.org/info/bcp195">
         <front>
           <title>BCP195</title>
@@ -1514,59 +1544,15 @@ The following is the content of the `presentation_definition` parameter:
 
 <{{examples/response/ac_vp_sd.json}}
 
-## ISO mobile Driving License (mDL)
+## mdoc (ISO/IEC 18013 and ISO/IEC 23220)
 
-This section illustrates how a mobile driving license (mDL) Credential expressed using a data model and data sets defined in [@ISO.18013-5] encoded as CBOR can be presented from the End-User's device directly to the Verifier using this specification.
+Refer to the latest version of ISO/IEC TR 18013-7 [@ISO.18013-7] for an OID4VP profile definition and examples of Credentials in the ISO/IEC 18013-5 mdoc format using the document type `org.iso.18013.5.1.mdl` as defined in ISO/IEC 18013-5:2021 [@ISO.18013-5].
 
-The Credential format identifier is `mso_mdoc`.
+Also, see the latest version of ISO/IEC TR 23220-4 [@ISO.23220-4] for an OID4VP profile definition and examples for Credentials in the ISO/IEC TR 23220-2 [@ISO.23220-2] mdoc format using any document type.
 
-Cipher suites should use signature suites names defined in [@ISO.18013-5].
+Note that ISO/IEC 18013-5:2021 is a profile of ISO/IEC TR 23220-2, and ISO/IEC TR 18013-7 is a profile of ISO/IEC 23220-4.
 
-### Presentation Request 
-
-A non-normative example of an Authorization Request would look the same as in the examples of other Credential formats in this Annex. The difference is in the content of the `presentation_definition` parameter. 
-
-<{{examples/request/request.txt}}
-
-The following is a non-normative example of the content of the `presentation_definition` parameter:
-
-<{{examples/request/pd_mdl_iso_cbor.json}}
-
-To start with, the `format` parameter in the `input_descriptor` element is set to `mso_mdoc`, i.e., it requests presentation of an mDL in CBOR format.
-
-To request user claims in ISO/IEC 18013-5:2021 mDL, a `doctype` and `namespace` of the claim needs to be specified. Moreover, the Verifiers needs to indicate whether it intends to retain obtained user claims or not, using `intent_to_retain` property.
-
-Note: `intent_to_retain` is a property introduced in this example to meet requirements of [@ISO.18013-5].
-
-Setting `limit_disclosure` property defined in [@!DIF.PresentationExchange] to `required` enables selective release by instructing the Wallet to submit only the data parameters specified in the fields array. Selective release of claims is a requirement built into an ISO/IEC 18013-5:2021 mDL data model.
-
-### Presentation Response
-
-A non-normative example of the Authorization Response would look the same as in the examples of other Credential formats in this Annex.
-
-The following is a non-normative example of the content of the `presentation_submission` parameter:
-
-<{{examples/response/ps_mdl_iso_cbor.json}}
-
-The `descriptor_map` refers to the `input_descriptor` element with an identifier `mDL` and tells the Verifier that there is an ISO/IEC 18013-5:2021 mDL (`format` is `mso_mdoc`) in CBOR encoding directly in the `vp_token` (path is the root designated by `$`). 
-
-When ISO/IEC 18013-5:2021 mDL is expressed in CBOR the `path_nested` parameter cannot be used to point to the location of the requested claims. The user claims will always be included in the `issuerSigned` item. `path_nested` parameter can be used, however, when a JSON-encoded ISO/IEC 18013-5:2021 mDL is returned.
-
-The following is a non-normative example of an ISO/IEC 18013-5:2021 mDL encoded as CBOR in diagnostic notation (line wraps within values are for display purposes only) as conveyed in the `vp_token` parameter.
-
-<{{examples/response/mdl_iso_cbor.json}}
-
-In the `deviceSigned` item, the `deviceAuth` item includes a signature by the deviceKey that belongs to the End-User. It is used to prove legitimate possession of the Credential, since the Issuer has signed over the deviceKey during the issuance of the Credential.
-
-Note: The deviceKey does not have to be HW-bound.
-
-In the `issueSigned` item, `issuerAuth` item includes Issuer's signature over the hashes of the user claims, and `namespaces` items include user claims within each namespace that the End-User agreed to reveal to the Verifier in that transaction.
-
-Note: The user claims in the `deviceSigned` item correspond to self-attested claims inside a Self-Issued ID Token [@!SIOPv2] (none in the example below), and user claims in the `issuerSigned` item correspond to the user claims included in a VP Token signed by a trusted third party.
-
-Note: The reason hashes of the user claims are included in the `issuerAuth` item lies in the selective release mechanism. Selective release of the user claims in an ISO/IEC 18013-5:2021 mDL is performed by the Issuer signing over the hashes of all the user claims during the issuance, and only the actual values of the claims that the End-User has agreed to reveal to the Verifier being included during the presentation.
-
-The example in this section is also applicable to the electronic identification Verifiable Credentials expressed using data models defined in ISO/IEC TR 23220-2.
+The Credential format identifier for Credentials in the mdoc format is `mso_mdoc`.
 
 ## Combining this specification with SIOPv2
 
@@ -1694,6 +1680,8 @@ The technology described in this specification was made available from contribut
 # Document History
 
    [[ To be removed from the final specification ]]
+   -21
+   * added references to ISO/IEC 23220 and 18013 documents 
 
    -20
 
