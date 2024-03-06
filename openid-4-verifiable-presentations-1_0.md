@@ -734,7 +734,7 @@ This specification defines new metadata parameters according to [@!RFC8414].
 
 * `presentation_definition_uri_supported`: OPTIONAL. Boolean value specifying whether the Wallet supports the transfer of `presentation_definition` by reference, with true indicating support. If omitted, the default value is true.
 * `vp_formats_supported`: REQUIRED. An object containing a list of name/value pairs, where the name is a string identifying a Credential format supported by the Wallet. Valid Credential format identifier values are defined in Appendix A of [@!OpenID.VCI]. Other values may be used when defined in the profiles of this specification. The value is an object containing a parameter defined below:
-    * `alg_values_supported`: OPTIONAL. An object where the value is an array of case sensitive strings that identify the cryptographic suites that are supported. Parties will need to agree upon the meanings of the values used, which may be context-specific. For specific values that can be used depending on the Credential format, see (#alternative_credential_formats). If `alg_values_supported` is omitted, the wallet MAY or MAY NOT support specific cryptographic suites.
+    * `alg_values_supported`: OPTIONAL. An object where the value is an array of case sensitive strings that identify the cryptographic suites that are supported. Parties will need to agree upon the meanings of the values used, which may be context-specific. For specific values that can be used depending on the Credential format, see (#alternative_credential_formats). If `alg_values_supported` is omitted, it is unknown what cryptographic suites the wallet supports.
 
 The following is a non-normative example of a `vp_formats_supported` parameter:
 
