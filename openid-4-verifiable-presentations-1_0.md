@@ -1613,7 +1613,7 @@ The following is a non-normative example of an Authorization Request:
 
 The following is a non-normative example of the contents of a presentation_definition parameter that contains the requirements regarding the Credential to be presented:
 
-<{{examples/request/pd_sd_jwt_vc.json}}>
+<{{examples/request/pd_sd_jwt_vc.json}}
 
 The presentation of a SD-JWT VC is requested by adding an object named `vc+sd-jwt` to the `format` object of an `input_descriptor`. The object is empty.
 
