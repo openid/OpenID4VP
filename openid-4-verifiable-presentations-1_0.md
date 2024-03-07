@@ -951,7 +951,7 @@ The design is illustrated in the following sequence diagram:
 !---
 Figure: Reference Design for Response Mode `direct_post`
 
-(1) The Verifier generates at least 16 fresh, cryptographically random bytes with sufficient entropy, associates it with the session and base64url encodes it for use in the nonce parameter.
+(1) The Verifier produces a `nonce` value by generating at least 16 fresh, cryptographically random bytes with sufficient entropy, associates it with the session and base64url encodes it.
 
 (2) The Verifier initiates a new transaction at its Response Endpoint. 
 
