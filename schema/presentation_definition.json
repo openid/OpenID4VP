@@ -43,10 +43,6 @@
             "constraints": {
               "type": "object",
               "properties": {
-                "limit_disclosure": {
-                  "type": "string",
-                  "enum": ["required", "preferred"]
-                },
                 "fields": {
                   "type": "array",
                   "items": { 
