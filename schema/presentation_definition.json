@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Presentation Definition",
+  "presentation_definition": {
+    "type": "object",
+    "properties": {
+      "id": { "type": "string" },
+      "input_descriptors": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": { "type": "string" },
+            "format": {
+              "type": "object",
+              "oneOf": [
+                {
+                  "properties": {
+                    "alg": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": ["alg"],
+                  "additionalProperties": false
+                },
+                {
+                  "properties": {
+                    "proof_type": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": ["proof_type"],
+                  "additionalProperties": false
+                }
+              ]
+            },            
+            "constraints": {
+              "type": "object",
+              "properties": {
+                "limit_disclosure": {
+                  "type": "string",
+                  "enum": ["required", "preferred"]
+                },
+                "fields": {
+                  "type": "array",
+                  "items": { 
+                    "type": "object",
+                    "properties": {
+                      "path": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "required": [ "path" ],
+                    "additionalProperties": true
+                  }
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "required": [ "id", "constraints" ],
+          "additionalProperties": true
+        }
+      }
+    },
+    "required": [ "id", "input_descriptors" ],
+    "additionalProperties": true
+  }
+}
