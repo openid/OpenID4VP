@@ -263,8 +263,9 @@ A public key to be used by the Wallet as an input to the key agreement to encryp
 
 `request_uri_method`: 
 : OPTIONAL. A string determining the HTTP method to be used with the `request_uri` included in the same request. Two values are defined for `request_uri_method` in this specification: `get` and `post`. Please note that these values are case-insensitive. The GET method, as defined in [@RFC9101], involves the Wallet sending a GET request to retrieve a Request Object. The POST method, newly defined in this specification, involves the Wallet requesting the creation of a new Request Object as outlined in [@RFC9101] by sending an HTTP POST request to the request URI. This request using the HTTP POST is detailed in (#request_uri_method_post). 
-`request_uri_method` MUST only be present if the request contains a `request_uri` parameter. If the `request_uri_method` parameter is not present, the Wallet MUST process the `request_uri` as defined in [@RFC9101]. Wallets not supporting the new method `post` will send a GET request to the request URI (default behavior as defined in [@RFC9101]). 
-The `request_uri_method` parameter SHOULD be sent in a signed authorization request in order to allow the Wallet to authenticate the Verifier before it fetches the presentation request from the Verifier's request URI. This allows the Wallet to authenticate the Verifier (and establish trust in it) prior to retrieving the presentation request from the Verifier's request URI.  
+`request_uri_method` MUST only be present if the request contains a `request_uri` parameter. If the `request_uri_method` parameter is not present, the Wallet MUST process the `request_uri` as defined in [@RFC9101]. Wallets not supporting the new method `post` will send a GET request to the request URI (default behavior as defined in [@RFC9101]).  
+
+If the Verifier uses the `request_uri_method` `post`, it SHOULD add the `client_metadata` parameter to the authorization request and use it to pass its capabilities. This allows the Wallet to determine the intersection of capabilities between Verifier and Wallet and sent only these in the `wallet_metadata` request parameter of the Request URI POST request. If the Verifier will add a `client_id_scheme` to the Request Object, it MUST also add the same `client_id_scheme` to the Authorization Request.   
 
 The following additional considerations are given for pre-existing Authorization Request parameters:
 
@@ -288,27 +289,15 @@ The following is a non-normative example of an Authorization Request:
     &nonce=n-0S6_WzA2Mj HTTP/1.1
 ```
 
-The following is a non-normative example of a request object with a `request_uri_mode`: 
-
-```
-{
-  "iss": "https://client.example.org",
-  "aud": "https://server.example.com",
-  "iat": 1541493724,
-  "exp": 1516247022,
-  "state": "af0ifjsldkj",
-  "nonce": "n-0S6_WzA2Mj",
-  "request_uri": "https://client.example.org/request",
-  "request_uri_method": "post"
-}
-```
-
-It is sent to the Wallet using the `request` parameter as defined in [@RFC9101] as shown in the following example.
+The following is a non-normative example with a `request_uri_mode` parameter (including the additional parameters `client_id_scheme` and `client_metadata` : 
 
 ```
   GET /authorize?
-    client_id=https://client.example.org
-    &request=... HTTP/1.1
+    client_id=client.example.org
+    &client_id_scheme=x509_san_dns
+    &client_metadata=...
+    &request_uri=https%3A%2F%2Fclient.example.org%2Frequest
+    &request_uri_mode=post HTTP/1.1
 ```
 
 ## `presentation_definition` Parameter {#request_presentation_definition}
@@ -490,36 +479,50 @@ Other specifications can define further values for the `client_id_scheme` parame
 
 ## Request URI Method POST {#request_uri_method_post}
 
-This request is offered at the Request URI endpoint by the Verifier. In case of success, the response is a Request Object that the Wallet MUST process in the same way as a Request Object as defined in [@RFC9101]. 
+This request is offered at the Request URI endpoint by the Verifier.  
 
 The request MUST use the HTTP POST method with the https scheme and the media type set to "application/oauth-authz-req+jwt".
 
 The following parameters are defined: 
 
-`state`:
-: OPTIONAL. A JSON String containing the value of the corresponding authorization Request's `state` parameter, if present.
-
-`issuer`:
-: OPTIONAL. A JSON containing an HTTPS URL designating the Issuer URL of the Wallet (acting as a OAuth 2.0 Authorization Server). The Verifier MAY obtain the Wallet's metadata by adding the well-know location `oauth-authorization-server` as specified in [@!RFC8414]. Metadata MAY also be provided by other means, for example in the `wallet_metadata`parameter`.
-
 `wallet_metadata`:
-: OPTIONAL. A JSON Object containing metadata parameters as defined in (#as_metadata_parameters).
+: OPTIONAL. A JSON Object containing metadata parameters as defined in (#as_metadata_parameters). 
 
-`issuer_nonce`:
+`wallet_nonce`:
 : OPTIONAL. A JSON String containing as fresh, cryptographically random number with sufficient entropy the Verifier MUST use when creating the signed presentation request object. 
 
-`w_ephm_key`:
-: OPTIONAL. A JWK object containing a key the Verifier MUST use to encrypt the request object. 
+If the Wallet wants the Verifier to encrypt the request object, it SHOULD use the `jwks` or `jwks_uri` claim within `wallet_metadata` to pass the public key for the input to the key agreement. Other mechanisms to pass the encryption key can be used as well. 
 
 ### Request URI Response
 
-The Request URI Response MUST be HTTPS POST response with the "application/oauth-authz-req+jwt" media type and contain a signed request object as defined in [@RFC9101]. It MUST fulfill the requirements as defined in (#vp_token_request).
+The Request URI Response MUST be a HTTPS POST response with the "application/oauth-authz-req+jwt" media type and contain a signed, optionally encrypted, request object as defined in [@RFC9101]. 
 
-The Wallet MUST extract the set of authorization request parameters from the Request Object returned from the Verifier's request URI. The Wallet MUST only use the parameters in this Request Object, even if the same parameter was provided in an authorization request query parameter or a request object passed in the authorization request through the `request` parameter. The Client ID value in the `client_id` authorization request parameter (or `request` object claim) and in the Request Object 'client_id' claim MUST be identical. The Wallet then validates the request, as specified in OAuth 2.0 [RFC6749].
+The following is a non-normative example of a request object:
+
+```json
+{
+   "client_id": "client.example.org",
+   "client_id_scheme": "x509_san_dns",
+   "response_uri": "https://client.example.org/post",
+   "response_type": "vp_token",
+   "response_mode": "direct_post",
+   "presentation_definition": {...},
+   "nonce": "n-0S6_WzA2Mj",
+   "state" : "eyJhb...6-sVA
+}
+```
+
+The Wallet MUST process the request process as defined in [@RFC9101]. Additionally, if the Wallet passed a `wallet_nonce` in the post request, the Wallet MUST validate whether the request object contains the respective nonce value in a `wallet_nonce`. If it does not, the Wallet MUST terminate request processing. 
+
+The request object MUST fulfill the requirements as defined in (#vp_token_request).
+
+The Wallet MUST extract the set of authorization request parameters from the Request Object. The Wallet MUST only use the parameters in this Request Object, even if the same parameter was provided in an authorization request query parameter. The Client ID value in the `client_id` authorization request parameter in the Request Object 'client_id' claim MUST be identical. If the Authorization Request contains a `client_id_scheme` parameter, the `client_id_scheme` authorization request parameter in the Request Object 'client_id_scheme' claim MUST be identical.
+
+The Wallet then validates the request, as specified in OAuth 2.0 [RFC6749].
 
 ### Request URI Error Response
 
-TBD
+If the Verifier responds with any HTTP error response, the Wallet MUST terminate the process.
 
 # Response {#response}
 
@@ -1149,6 +1152,12 @@ Implementations MUST follow [@!BCP195].
 
 Whenever TLS is used, a TLS server certificate check MUST be performed, per [@!RFC6125].
 
+# Privacy Considerations
+
+## Authorization Requests with Request URI
+
+The wallet MUST not sent personally identifiable information (PII) or any other data that could be used for fingerprinting to the Request URI in order to prevent user tracking. 
+
 {backmatter}
 
 <reference anchor="VC_DATA" target="https://www.w3.org/TR/2022/REC-vc-data-model-20220303/">
@@ -1735,6 +1744,10 @@ The technology described in this specification was made available from contribut
 # Document History
 
    [[ To be removed from the final specification ]]
+
+   -21
+
+   * added POST request mode for Request URI
 
    -20
 

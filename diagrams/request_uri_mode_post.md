@@ -19,18 +19,13 @@ end box
 u --> r : use
 activate r
 
-r --> u: authorization request\n(client_id, request{request_uri, request_uri_mode=POST, state})
+r --> u: authorization request\n(client_id, request_uri, request_uri_mode=POST)
 deactivate r
-u --> w: authorization request\n(client_id, request{request_uri, request_uri_mode=POST, state})
+u --> w: authorization request\n(client_id, request_uri, request_uri_mode=POST)
 activate w
-w --> w: check authorization request signature
-w --> w: check on trustworthiness of Verifier (approach on trust mechanism)
-w --> rp: POST **request_uri** (\n[OPTIONAL]state,\n[OPTIONAL]issuer, \n[OPTIONAL]wallet_metadata, \n[OPTIONAL]issuer_nonce, \n[OPTIONAL]w_ephm_key)
-rp --> wm: [OPTIONAL] get wallet metadata
-wm --> rp: [OPTIONAL] wallet metadata
-rp -> rp: create and sign (and optionally encrypt) presentation request object (client_id, issuer_nonce, nonce, response_uri, \npresentation_definition, state)
-rp --> w: **signed (optionally encrypted) request object** (client_id, issuer_nonce, nonce, response_uri, \npresentation_definition, state)
-note over u, w: do we want to allow unsigned presentation request objects, too?
+w --> rp: POST **request_uri** (\n[OPTIONAL]issuer_metadata, \n[OPTIONAL]wallet_nonce)
+rp -> rp: create and sign (and optionally encrypt) request object 
+rp --> w: **signed (optionally encrypted) request object** (client_id, client_id_scheme, issuer_nonce, nonce, \nresponse_uri, presentation_definition, state)
 w -> w: authenticate and\n authorize Verifier
 
 note over u, w: User authentication and Credential selection/confirmation
