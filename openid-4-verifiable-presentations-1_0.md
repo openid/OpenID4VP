@@ -265,7 +265,7 @@ A public key to be used by the Wallet as an input to the key agreement to encryp
 : OPTIONAL. A string determining the HTTP method to be used with the `request_uri` included in the same request. Two values are defined for `request_uri_method` in this specification: `get` and `post`. Please note that these values are case-insensitive. The GET method, as defined in [@RFC9101], involves the Wallet sending a GET request to retrieve a Request Object. The POST method, newly defined in this specification, involves the Wallet requesting the creation of a new Request Object as outlined in [@RFC9101] by sending an HTTP POST request to the request URI. This request using the HTTP POST is detailed in (#request_uri_method_post). 
 `request_uri_method` MUST only be present if the request contains a `request_uri` parameter. If the `request_uri_method` parameter is not present, the Wallet MUST process the `request_uri` as defined in [@RFC9101]. Wallets not supporting the new method `post` will send a GET request to the request URI (default behavior as defined in [@RFC9101]).  
 
-If the Verifier uses the `request_uri_method` `post`, it SHOULD add the `client_metadata` parameter to the authorization request and use it to pass its capabilities. This allows the Wallet to determine the intersection of capabilities between Verifier and Wallet and sent only these in the `wallet_metadata` request parameter of the Request URI POST request. If the Verifier will add a `client_id_scheme` to the Request Object, it MUST also add the same `client_id_scheme` to the Authorization Request.   
+If the Verifier uses the `request_uri_method` set to `post`, it SHOULD add the `client_metadata` parameter to the authorization request to pass its capabilities. This enables the Wallet to assess the Verifier's capabilities, allowing it to transmit only the relevant capabilities through the `wallet_metadata` request parameter in the Request URI POST request. If the Verifier uses the parameter `client_id_scheme` in the Request Object, it MUST also add the same `client_id_scheme` value in the Authorization Request.   
 
 The following additional considerations are given for pre-existing Authorization Request parameters:
 
@@ -289,7 +289,7 @@ The following is a non-normative example of an Authorization Request:
     &nonce=n-0S6_WzA2Mj HTTP/1.1
 ```
 
-The following is a non-normative example with a `request_uri_mode` parameter (including the additional parameters `client_id_scheme` and `client_metadata` : 
+The following is a non-normative example with a `request_uri_mode` parameter (including the additional parameters `client_id_scheme` and `client_metadata`): 
 
 ```
   GET /authorize?
@@ -1156,7 +1156,7 @@ Whenever TLS is used, a TLS server certificate check MUST be performed, per [@!R
 
 ## Authorization Requests with Request URI
 
-The wallet MUST not sent personally identifiable information (PII) or any other data that could be used for fingerprinting to the Request URI in order to prevent user tracking. 
+The Wallet MUST NOT sent personally identifiable information (PII) or any other data that could be used for fingerprinting to the Request URI in order to prevent user tracking. 
 
 {backmatter}
 
