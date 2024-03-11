@@ -1168,7 +1168,7 @@ Whenever TLS is used, a TLS server certificate check MUST be performed, per [@!R
 
 ## Authorization Requests with Request URI
 
-The Wallet MUST NOT sent personally identifiable information (PII) or any other data that could be used for fingerprinting to the Request URI in order to prevent user tracking. 
+The Wallet MUST NOT send personally identifiable information (PII) or any other data that could be used for fingerprinting to the Request URI in order to prevent user tracking. 
 
 {backmatter}
 
