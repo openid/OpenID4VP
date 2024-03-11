@@ -486,7 +486,7 @@ Other specifications can define further values for the `client_id_scheme` parame
 
 ## Request URI Method POST {#request_uri_method_post}
 
-This request is offered at the Request URI endpoint by the Verifier.  
+This request is handled by the Request URI endpoint of the Verifier.  
 
 The request MUST use the HTTP POST method with the https scheme and the media type set to "application/oauth-authz-req+jwt".
 
