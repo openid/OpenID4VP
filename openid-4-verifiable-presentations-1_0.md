@@ -296,7 +296,7 @@ The following is a non-normative example of an Authorization Request:
     &nonce=n-0S6_WzA2Mj HTTP/1.1
 ```
 
-The following is a non-normative example with a `request_uri_mode` parameter (including the additional parameters `client_id_scheme` and `client_metadata`): 
+The following is a non-normative example with a `request_uri_method` parameter (including the additional parameters `client_id_scheme` and `client_metadata`): 
 
 ```
   GET /authorize?
