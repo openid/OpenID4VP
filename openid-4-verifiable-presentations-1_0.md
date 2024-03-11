@@ -515,17 +515,17 @@ The following is a non-normative example of a request object:
    "response_mode": "direct_post",
    "presentation_definition": {...},
    "nonce": "n-0S6_WzA2Mj",
-   "state" : "eyJhb...6-sVA
+   "state" : "eyJhb...6-sVA"
 }
 ```
 
-The Wallet MUST process the request process as defined in [@RFC9101]. Additionally, if the Wallet passed a `wallet_nonce` in the post request, the Wallet MUST validate whether the request object contains the respective nonce value in a `wallet_nonce`. If it does not, the Wallet MUST terminate request processing. 
+The Wallet MUST process the request as defined in [@RFC9101]. Additionally, if the Wallet passed a `wallet_nonce` in the post request, the Wallet MUST validate whether the request object contains the respective nonce value in a `wallet_nonce`. If it does not, the Wallet MUST terminate request processing. 
 
 The request object MUST fulfill the requirements as defined in (#vp_token_request).
 
 The Wallet MUST extract the set of authorization request parameters from the Request Object. The Wallet MUST only use the parameters in this Request Object, even if the same parameter was provided in an authorization request query parameter. The Client ID value in the `client_id` authorization request parameter in the Request Object 'client_id' claim MUST be identical. If the Authorization Request contains a `client_id_scheme` parameter, the `client_id_scheme` authorization request parameter in the Request Object 'client_id_scheme' claim MUST be identical. If any of these conditions is not met, the Wallet MUST terminate request processing.
 
-The Wallet then validates the request, as specified in OAuth 2.0 [RFC6749].
+The Wallet then validates the request as specified in OAuth 2.0 [@RFC6749].
 
 ### Request URI Error Response
 
@@ -1168,7 +1168,7 @@ Whenever TLS is used, a TLS server certificate check MUST be performed, per [@!R
 
 ## Authorization Requests with Request URI
 
-The Wallet MUST NOT sent personally identifiable information (PII) or any other data that could be used for fingerprinting to the Request URI in order to prevent user tracking. 
+The Wallet MUST NOT send personally identifiable information (PII) or any other data that could be used for fingerprinting to the Request URI in order to prevent user tracking. 
 
 {backmatter}
 
