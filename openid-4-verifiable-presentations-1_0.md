@@ -516,7 +516,7 @@ The Wallet MUST process the request process as defined in [@RFC9101]. Additional
 
 The request object MUST fulfill the requirements as defined in (#vp_token_request).
 
-The Wallet MUST extract the set of authorization request parameters from the Request Object. The Wallet MUST only use the parameters in this Request Object, even if the same parameter was provided in an authorization request query parameter. The Client ID value in the `client_id` authorization request parameter in the Request Object 'client_id' claim MUST be identical. If the Authorization Request contains a `client_id_scheme` parameter, the `client_id_scheme` authorization request parameter in the Request Object 'client_id_scheme' claim MUST be identical.
+The Wallet MUST extract the set of authorization request parameters from the Request Object. The Wallet MUST only use the parameters in this Request Object, even if the same parameter was provided in an authorization request query parameter. The Client ID value in the `client_id` authorization request parameter in the Request Object 'client_id' claim MUST be identical. If the Authorization Request contains a `client_id_scheme` parameter, the `client_id_scheme` authorization request parameter in the Request Object 'client_id_scheme' claim MUST be identical. If any of these conditions is not met, the Wallet MUST terminate request processing.
 
 The Wallet then validates the request, as specified in OAuth 2.0 [RFC6749].
 
@@ -750,6 +750,11 @@ This document also defines the following additional error codes and error descri
 `invalid_presentation_definition_reference`:
 
 - The Presentation Definition URL can be reached, but the specified `presentation_definition` cannot be found at the URL.
+
+`invalid_request_uri_mode`:
+
+- The value of the `request_uri_mode` request parameter is neither `get` nor `post`.
+
 
 ## VP Token Validation
 
