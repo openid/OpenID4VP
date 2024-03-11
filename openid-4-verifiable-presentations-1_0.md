@@ -525,7 +525,7 @@ The request object MUST fulfill the requirements as defined in (#vp_token_reques
 
 The Wallet MUST extract the set of authorization request parameters from the Request Object. The Wallet MUST only use the parameters in this Request Object, even if the same parameter was provided in an authorization request query parameter. The Client ID value in the `client_id` authorization request parameter in the Request Object 'client_id' claim MUST be identical. If the Authorization Request contains a `client_id_scheme` parameter, the `client_id_scheme` authorization request parameter in the Request Object 'client_id_scheme' claim MUST be identical. If any of these conditions is not met, the Wallet MUST terminate request processing.
 
-The Wallet then validates the request, as specified in OAuth 2.0 [RFC6749].
+The Wallet then validates the request as specified in OAuth 2.0 [@RFC6749].
 
 ### Request URI Error Response
 
