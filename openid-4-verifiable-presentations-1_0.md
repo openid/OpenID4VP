@@ -515,7 +515,7 @@ The following is a non-normative example of a request object:
    "response_mode": "direct_post",
    "presentation_definition": {...},
    "nonce": "n-0S6_WzA2Mj",
-   "state" : "eyJhb...6-sVA
+   "state" : "eyJhb...6-sVA"
 }
 ```
 
