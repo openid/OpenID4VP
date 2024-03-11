@@ -19,13 +19,13 @@ end box
 u --> r : use
 activate r
 
-r --> u: authorization request\n(client_id, request_uri, request_uri_mode=POST, [client_id_scheme])
+r --> u: authorization request\n(client_id, request_uri, request_uri_method=POST, [client_id_scheme])
 deactivate r
-u --> w: authorization request\n(client_id, request_uri, request_uri_mode=POST, [client_id_scheme])
+u --> w: authorization request\n(client_id, request_uri, request_uri_method=POST, [client_id_scheme])
 activate w
 w --> rp: POST **request_uri** (\n[OPTIONAL]wallet_metadata, \n[OPTIONAL]wallet_nonce)
 rp -> rp: create and sign (and optionally encrypt) request object 
-rp --> w: **signed (optionally encrypted) request object** (client_id, client_id_scheme, issuer_nonce, nonce, \nresponse_uri, presentation_definition, state)
+rp --> w: **signed (optionally encrypted) request object** (client_id, client_id_scheme, wallet_nonce, nonce, \nresponse_uri, presentation_definition, state)
 w -> w: authenticate and\n authorize Verifier
 
 note over u, w: User authentication and Credential selection/confirmation
