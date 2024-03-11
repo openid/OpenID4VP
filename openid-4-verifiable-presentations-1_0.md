@@ -304,7 +304,7 @@ The following is a non-normative example with a `request_uri_method` parameter (
     &client_id_scheme=x509_san_dns
     &client_metadata=...
     &request_uri=https%3A%2F%2Fclient.example.org%2Frequest
-    &request_uri_mode=post HTTP/1.1
+    &request_uri_method=post HTTP/1.1
 ```
 
 ## `presentation_definition` Parameter {#request_presentation_definition}
