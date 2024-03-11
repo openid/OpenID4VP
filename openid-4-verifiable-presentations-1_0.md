@@ -519,7 +519,7 @@ The following is a non-normative example of a request object:
 }
 ```
 
-The Wallet MUST process the request process as defined in [@RFC9101]. Additionally, if the Wallet passed a `wallet_nonce` in the post request, the Wallet MUST validate whether the request object contains the respective nonce value in a `wallet_nonce`. If it does not, the Wallet MUST terminate request processing. 
+The Wallet MUST process the request as defined in [@RFC9101]. Additionally, if the Wallet passed a `wallet_nonce` in the post request, the Wallet MUST validate whether the request object contains the respective nonce value in a `wallet_nonce`. If it does not, the Wallet MUST terminate request processing. 
 
 The request object MUST fulfill the requirements as defined in (#vp_token_request).
 
