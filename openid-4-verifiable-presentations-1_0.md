@@ -488,15 +488,15 @@ Other specifications can define further values for the `client_id_scheme` parame
 
 This request is handled by the Request URI endpoint of the Verifier.  
 
-The request MUST use the HTTP POST method with the https scheme and the media type set to "application/oauth-authz-req+jwt".
+The request MUST use the HTTP POST method with the https scheme the content type "application/x-www-form-urlencoded" and the accept header set to "application/oauth-authz-req+jwt".
 
 The following parameters are defined: 
 
 `wallet_metadata`:
-: OPTIONAL. A JSON Object containing metadata parameters as defined in (#as_metadata_parameters). 
+: OPTIONAL. A String containing a value the Verifier MUST use in the `wallet_nonce` authorization parameter when creating the signed presentation request object. For example, a base64url encoded fresh, cryptographically random number with sufficient entropy. 
 
 `wallet_nonce`:
-: OPTIONAL. A JSON String containing as fresh, cryptographically random number with sufficient entropy the Verifier MUST use when creating the signed presentation request object. 
+: OPTIONAL. A String containing as fresh, cryptographically random number with sufficient entropy the Verifier MUST use when creating the signed presentation request object. 
 
 If the Wallet wants the Verifier to encrypt the request object, it SHOULD use the `jwks` or `jwks_uri` claim within `wallet_metadata` to pass the public key for the input to the key agreement. Other mechanisms to pass the encryption key can be used as well. 
 
