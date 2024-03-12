@@ -528,13 +528,14 @@ The following is a non-normative example of a request object:
    "response_mode": "direct_post",
    "presentation_definition": {...},
    "nonce": "n-0S6_WzA2Mj",
+   "wallet_nonce": "qPmxiNFCR3QTm19POc8u",
    "state" : "eyJhb...6-sVA"
 }
 ```
 
 The Wallet MUST process the request as defined in [@RFC9101]. Additionally, if the Wallet passed a `wallet_nonce` in the post request, the Wallet MUST validate whether the request object contains the respective nonce value in a `wallet_nonce` claim. If it does not, the Wallet MUST terminate request processing. 
 
-The Wallet MUST extract the set of authorization request parameters from the Request Object. The Wallet MUST only use the parameters in this Request Object, even if the same parameter was provided in an authorization request query parameter. The Client ID value in the `client_id` authorization request parameter in the Request Object 'client_id' claim MUST be identical. If the Authorization Request contains a `client_id_scheme` parameter, the `client_id_scheme` authorization request parameter in the Request Object `client_id_scheme` claim MUST be identical. If any of these conditions are not met, the Wallet MUST terminate request processing.
+The Wallet MUST extract the set of authorization request parameters from the Request Object. The Wallet MUST only use the parameters in this Request Object, even if the same parameter was provided in an Authorization Request query parameter. The Client Identifier value in the `client_id` Authorization Request parameter and the Request Object 'client_id' claim value MUST be identical. If the Authorization Request contains a `client_id_scheme` parameter, the `client_id_scheme` Authorization Request parameter and the Request Object `client_id_scheme` claim value MUST be identical. If any of these conditions are not met, the Wallet MUST terminate request processing.
 
 The Wallet then validates the request as specified in OAuth 2.0 [@RFC6749].
 
@@ -771,7 +772,7 @@ This document also defines the following additional error codes and error descri
 
 `invalid_request_uri_mode`:
 
-- The value of the `request_uri_mode` request parameter is neither `get` nor `post`.
+- The value of the `request_uri_method` request parameter is neither `get` nor `post`.
 
 
 ## VP Token Validation
