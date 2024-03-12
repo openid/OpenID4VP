@@ -498,7 +498,7 @@ The following parameters are defined:
 `wallet_nonce`:
 : OPTIONAL. A String containing a value the Verifier MUST use in the `wallet_nonce` authorization parameter when creating the signed presentation request object. For example, a base64url encoded fresh, cryptographically random number with sufficient entropy.  
 
-If the Wallet wants the Verifier to encrypt the request object, it SHOULD use the `jwks` or `jwks_uri` claim within `wallet_metadata` to pass the public key for the input to the key agreement. Other mechanisms to pass the encryption key can be used as well. 
+If the Wallet wants the Verifier to encrypt the request object, it SHOULD use the `jwks` or `jwks_uri` parameter within `wallet_metadata` to pass the public key for the input to the key agreement. Other mechanisms to pass the encryption key can be used as well. 
 
 ### Request URI Response
 
