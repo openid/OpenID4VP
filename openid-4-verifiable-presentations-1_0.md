@@ -488,7 +488,7 @@ Other specifications can define further values for the `client_id_scheme` parame
 
 This request is handled by the Request URI endpoint of the Verifier.  
 
-The request MUST use the HTTP POST method with the https scheme, and the content type "application/x-www-form-urlencoded" and the accept header set to "application/oauth-authz-req+jwt".
+The request MUST use the HTTP POST method with the https scheme, and the content type "application/x-www-form-urlencoded" and the accept header set to "application/oauth-authz-req+jwt". 
 
 The following parameters are defined: 
 
@@ -515,7 +515,7 @@ The following is a non-normative example of a request:
 
 ### Request URI Response
 
-The Request URI response MUST be an HTTP response with the content type "application/oauth-authz-req+jwt" and the body being a signed, optionally encrypted, request object as defined in [@RFC9101]. 
+The Request URI response MUST be an HTTP response with the content type "application/oauth-authz-req+jwt" and the body being a signed, optionally encrypted, request object as defined in [@RFC9101]. The request object MUST fulfill the requirements as defined in (#vp_token_request).
 
 The following is a non-normative example of a request object:
 
@@ -534,9 +534,7 @@ The following is a non-normative example of a request object:
 
 The Wallet MUST process the request as defined in [@RFC9101]. Additionally, if the Wallet passed a `wallet_nonce` in the post request, the Wallet MUST validate whether the request object contains the respective nonce value in a `wallet_nonce` claim. If it does not, the Wallet MUST terminate request processing. 
 
-The request object MUST fulfill the requirements as defined in (#vp_token_request).
-
-The Wallet MUST extract the set of authorization request parameters from the Request Object. The Wallet MUST only use the parameters in this Request Object, even if the same parameter was provided in an authorization request query parameter. The Client ID value in the `client_id` authorization request parameter in the Request Object 'client_id' claim MUST be identical. If the Authorization Request contains a `client_id_scheme` parameter, the `client_id_scheme` authorization request parameter in the Request Object `client_id_scheme` claim MUST be identical. If any of these conditions is not met, the Wallet MUST terminate request processing.
+The Wallet MUST extract the set of authorization request parameters from the Request Object. The Wallet MUST only use the parameters in this Request Object, even if the same parameter was provided in an authorization request query parameter. The Client ID value in the `client_id` authorization request parameter in the Request Object 'client_id' claim MUST be identical. If the Authorization Request contains a `client_id_scheme` parameter, the `client_id_scheme` authorization request parameter in the Request Object `client_id_scheme` claim MUST be identical. If any of these conditions are not met, the Wallet MUST terminate request processing.
 
 The Wallet then validates the request as specified in OAuth 2.0 [@RFC6749].
 
