@@ -515,7 +515,7 @@ The following is a non-normative example of a request:
 
 ### Request URI Response
 
-The Request URI Response MUST be a HTTPS POST response with the "application/oauth-authz-req+jwt" media type and contain a signed, optionally encrypted, request object as defined in [@RFC9101]. 
+The Request URI response MUST be an HTTP response with the content type "application/oauth-authz-req+jwt" and the body being a signed, optionally encrypted, request object as defined in [@RFC9101]. 
 
 The following is a non-normative example of a request object:
 
