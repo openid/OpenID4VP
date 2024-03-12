@@ -235,10 +235,10 @@ The Authorization Request follows the definition given in [@!RFC6749] taking int
 The Verifier MAY send an Authorization Request as a Request Object either by value or by reference, as defined in the JWT-Secured Authorization Request (JAR) [@RFC9101].
 
 The Wallet may want to provide to the Verifier details about its technical capabilities to
-allow the Verifier to generate a request that matches technical capabilities of that Wallet.
-To enable this, the first Authorization Request can contain `request_uri_method` parameter with the value `post`
-that signals to the Wallet that it can make an HTTP POST to the Verifier's `request_uri`
-endpoint with the information about its capabilities. The Wallet MAY continue with JAR
+allow the Verifier to generate a request that matches the technical capabilities of that Wallet.
+To enable this, the first Authorization Request can contain a `request_uri_method` parameter with the value `post`
+that signals to the Wallet that it can make an HTTP POST request to the Verifier's `request_uri`
+endpoint with information about its capabilities. The Wallet MAY continue with JAR
 when it receives `request_uri_method` parameter with the value `post` but does not support this new feature.
 
 The Verifier articulates requirements of the Credential(s) that are requested using `presentation_definition` and `presentation_definition_uri` parameters that contain a Presentation Definition JSON object as defined in Section 5 of [@!DIF.PresentationExchange]. Wallet implementations MUST process Presentation Definition JSON object and select candidate Verifiable Credential(s) using the evaluation process described in Section 8 of [@!DIF.PresentationExchange].
