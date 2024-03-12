@@ -239,7 +239,7 @@ allow the Verifier to generate a request that matches the technical capabilities
 To enable this, the first Authorization Request can contain a `request_uri_method` parameter with the value `post`
 that signals to the Wallet that it can make an HTTP POST request to the Verifier's `request_uri`
 endpoint with information about its capabilities. The Wallet MAY continue with JAR
-when it receives `request_uri_method` parameter with the value `post` but does not support this new feature.
+when it receives `request_uri_method` parameter with the value `post` but does not support this feature.
 
 The Verifier articulates requirements of the Credential(s) that are requested using `presentation_definition` and `presentation_definition_uri` parameters that contain a Presentation Definition JSON object as defined in Section 5 of [@!DIF.PresentationExchange]. Wallet implementations MUST process Presentation Definition JSON object and select candidate Verifiable Credential(s) using the evaluation process described in Section 8 of [@!DIF.PresentationExchange].
 
