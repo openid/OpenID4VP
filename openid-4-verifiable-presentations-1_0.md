@@ -500,6 +500,19 @@ The following parameters are defined:
 
 If the Wallet wants the Verifier to encrypt the request object, it SHOULD use the `jwks` or `jwks_uri` claim within `wallet_metadata` to pass the public key for the input to the key agreement. Other mechanisms to pass the encryption key can be used as well. 
 
+The following is a non-normative example of a request:
+
+```
+  POST /request HTTP/1.1
+    Host: client.example.org
+    Content-Type: application/x-www-form-urlencoded
+
+    wallet_metadata=%7B%22vp_formats_supported%22%3A%7B%22jwt_vc_json%22%3A%7B%22alg_values_supported
+    %22%3A%5B%22ES256K%22%2C%22ES384%22%5D%7D%2C%22jwt_vp_json%22%3A%7B%22alg_values_supported%22%3A%
+    5B%22ES256K%22%2C%22EdDSA%22%5D%7D%7D%7D&
+    wallet_nonce=qPmxiNFCR3QTm19POc8u
+```
+
 ### Request URI Response
 
 The Request URI Response MUST be a HTTPS POST response with the "application/oauth-authz-req+jwt" media type and contain a signed, optionally encrypted, request object as defined in [@RFC9101]. 
