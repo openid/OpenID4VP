@@ -773,7 +773,7 @@ This document also defines the following additional error codes and error descri
 
 - The Presentation Definition URL can be reached, but the specified `presentation_definition` cannot be found at the URL.
 
-`invalid_request_uri_mode`:
+`invalid_request_uri_method`:
 
 - The value of the `request_uri_method` request parameter is neither `get` nor `post` (case-sensitive).
 
