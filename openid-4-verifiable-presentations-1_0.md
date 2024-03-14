@@ -489,12 +489,12 @@ Other specifications can define further values for the `client_id_scheme` parame
 
 This request is handled by the Request URI endpoint of the Verifier.  
 
-The request MUST use the HTTP POST method with the https scheme, and the content type "application/x-www-form-urlencoded" and the accept header set to "application/oauth-authz-req+jwt". 
+The request MUST use the HTTP POST method with the https scheme, and the content type `application/x-www-form-urlencoded` and the accept header set to `application/oauth-authz-req+jwt`.
 
 The following parameters are defined: 
 
 `wallet_metadata`:
-: OPTIONAL. OPTIONAL. A String containing a JSON Object containing metadata parameters as defined in (#as_metadata_parameters). 
+: OPTIONAL. OPTIONAL. A String containing a JSON-encoded object containing metadata parameters as defined in (#as_metadata_parameters). 
 
 `wallet_nonce`:
 : OPTIONAL. A String containing a value the Verifier MUST use in the `wallet_nonce` authorization parameter when creating the signed presentation request object. For example, a base64url encoded fresh, cryptographically random number with sufficient entropy.  
