@@ -1772,7 +1772,7 @@ The technology described in this specification was made available from contribut
 
    -21
 
-   * added POST request mode for Request URI
+   * added POST request method for Request URI
 
    -20
 
