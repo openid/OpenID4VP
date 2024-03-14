@@ -499,7 +499,9 @@ The following parameters are defined:
 `wallet_nonce`:
 : OPTIONAL. A String containing a value the Verifier MUST use in the `wallet_nonce` authorization parameter when creating the signed presentation request object. For example, a base64url encoded fresh, cryptographically random number with sufficient entropy.  
 
-If the Wallet requires the Verifier to encrypt the Request Object, it SHOULD use the `jwks` or `jwks_uri` parameter within `wallet_metadata` to pass the public key for the input to the key agreement. Other mechanisms to pass the encryption key can be used as well. If the Wallet requires an encrypted Authorization Response, it SHOULD specify supported encryption algorithms using the `authorization_encryption_alg_values_supported` and `authorization_encryption_enc_values_supported` parameters. Additionally, if the `client_id_scheme` value permits JWS Request Objects, the Wallet SHOULD list supported cryptographic algorithms for securing the Request Object through the `request_object_signing_alg_values_supported` parameter. Conversely, the Wallet MUST NOT include this parameter if the `client_id_scheme` precludes JWS Request Objects.
+If the Wallet requires the Verifier to encrypt the Request Object, it SHOULD use the `jwks` or `jwks_uri` parameter within `wallet_metadata` to pass the public key for the input to the key agreement. Other mechanisms to pass the encryption key can be used as well. If the Wallet requires an encrypted Authorization Response, it SHOULD specify supported encryption algorithms using the `authorization_encryption_alg_values_supported` and `authorization_encryption_enc_values_supported` parameters. 
+
+Additionally, if the `client_id_scheme` value permits JWS Request Objects, the Wallet SHOULD list supported cryptographic algorithms for securing the Request Object through the `request_object_signing_alg_values_supported` parameter. Conversely, the Wallet MUST NOT include this parameter if the `client_id_scheme` precludes JWS Request Objects.
 
 The following is a non-normative example of a request:
 
