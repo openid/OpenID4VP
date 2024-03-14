@@ -16,7 +16,7 @@ r --> u: authorization request\n(client_id, request_uri, request_uri_method=post
 deactivate r
 u --> w: authorization request\n(client_id, request_uri, request_uri_method=post, [client_id_scheme])
 activate w
-w --> r: POST **request_uri** (\n[OPTIONAL]wallet_metadata, \n[OPTIONAL]wallet_nonce)
+w --> r: POST **request_uri** ([wallet_metadata][, wallet_nonce])
 r -> r: create and sign (and optionally encrypt) request object 
 r --> w: **signed (optionally encrypted) request object** (client_id, client_id_scheme, wallet_nonce, nonce, \nresponse_uri, presentation_definition, state)
 w -> w: authenticate and\n authorize Verifier
