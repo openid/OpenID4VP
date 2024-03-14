@@ -507,8 +507,8 @@ The following is a non-normative example of a request:
 
 ```
   POST /request HTTP/1.1
-    Host: client.example.org
-    Content-Type: application/x-www-form-urlencoded
+  Host: client.example.org
+  Content-Type: application/x-www-form-urlencoded
 
     wallet_metadata=%7B%22vp_formats_supported%22%3A%7B%22jwt_vc_json%22%3A%7B%22alg_values_supported
     %22%3A%5B%22ES256K%22%2C%22ES384%22%5D%7D%2C%22jwt_vp_json%22%3A%7B%22alg_values_supported%22%3A%
@@ -1183,11 +1183,11 @@ Whenever TLS is used, a TLS server certificate check MUST be performed, per [@!R
 
 ## Authorization Requests with Request URI
 
-If no user interaction is required before sending the request, it is easy to request on a large scale and in an automated fashion (e.g.) the wallet capabilities from all visitors of a website. Even without PII this can reveal some information about users, like their nationality (e.g., a Wallet with special capabilities only used in one EU member state).
+If no user interaction is required before sending the request, it is easy to request on a large scale and in an automated fashion (e.g.) the wallet capabilities from all visitors of a website. Even without personally identifiable information (PII) this can reveal some information about users, like their nationality (e.g., a Wallet with special capabilities only used in one EU member state).
 
 Mandatory user interaction before sending the request, like clicking a button, unlocking the wallet or even just showing a screen of the app, can make this less attractive/likely to being exploited.
 
-Requests from the Wallet to the Verifier should be sent with the minimal amount of information possible, and in particular, without any HTTP headers revealing libraries used or their versions. The Wallet MUST NOT send personally identifiable information (PII) or any other data that could be used for fingerprinting to the Request URI in order to prevent user tracking. 
+Requests from the Wallet to the Verifier SHOULD be sent with the minimal amount of information possible, and in particular, without any HTTP headers identifying the software used for the request (e.g., HTTP libraries or their versions). The Wallet MUST NOT send PII or any other data that could be used for fingerprinting to the Request URI in order to prevent user tracking. 
 
 {backmatter}
 
