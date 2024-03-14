@@ -494,7 +494,7 @@ The request MUST use the HTTP POST method with the https scheme, and the content
 The following parameters are defined: 
 
 `wallet_metadata`:
-: OPTIONAL. OPTIONAL. A String containing a JSON-encoded object containing metadata parameters as defined in (#as_metadata_parameters). 
+: OPTIONAL. A String containing a JSON-encoded object containing metadata parameters as defined in (#as_metadata_parameters). 
 
 `wallet_nonce`:
 : OPTIONAL. A String containing a value the Verifier MUST use in the `wallet_nonce` authorization parameter when creating the signed presentation request object. For example, a base64url encoded fresh, cryptographically random number with sufficient entropy.  
@@ -773,7 +773,7 @@ This document also defines the following additional error codes and error descri
 
 - The Presentation Definition URL can be reached, but the specified `presentation_definition` cannot be found at the URL.
 
-`invalid_request_uri_mode`:
+`invalid_request_uri_method`:
 
 - The value of the `request_uri_method` request parameter is neither `get` nor `post` (case-sensitive).
 
