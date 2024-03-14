@@ -236,7 +236,7 @@ The Verifier MAY send an Authorization Request as a Request Object either by val
 
 The Wallet may want to provide to the Verifier details about its technical capabilities to
 allow the Verifier to generate a request that matches the technical capabilities of that Wallet.
-To enable this, the first Authorization Request can contain a `request_uri_method` parameter with the value `post`
+To enable this, the Authorization Request can contain a `request_uri_method` parameter with the value `post`
 that signals to the Wallet that it can make an HTTP POST request to the Verifier's `request_uri`
 endpoint with information about its capabilities. The Wallet MAY continue with JAR
 when it receives `request_uri_method` parameter with the value `post` but does not support this feature.
@@ -1181,7 +1181,11 @@ Whenever TLS is used, a TLS server certificate check MUST be performed, per [@!R
 
 ## Authorization Requests with Request URI
 
-The Wallet MUST NOT send personally identifiable information (PII) or any other data that could be used for fingerprinting to the Request URI in order to prevent user tracking. 
+If no user interaction is required before sending the request, it is easy to request on a large scale and in an automated fashion (e.g.) the wallet capabilities from all visitors of a website. Even without PII this can reveal some information about users, like their nationality (e.g., a Wallet with special capabilities only used in one EU member state).
+
+Mandatory user interaction before sending the request, like clicking a button, unlocking the wallet or even just showing a screen of the app, can make this less attractive/likely to being exploited.
+
+Requests from the Wallet to the Verifier should be sent with the minimal amount of information possible, and in particular, without any HTTP headers revealing libraries used or their versions. The Wallet MUST NOT send personally identifiable information (PII) or any other data that could be used for fingerprinting to the Request URI in order to prevent user tracking. 
 
 {backmatter}
 
