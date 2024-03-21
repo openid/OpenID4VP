@@ -497,7 +497,7 @@ The following parameters are defined:
 : OPTIONAL. A String containing a JSON object containing metadata parameters as defined in (#as_metadata_parameters). 
 
 `wallet_nonce`:
-: OPTIONAL. A String containing a value the Verifier MUST use in the `wallet_nonce` authorization parameter when creating the signed presentation request object. For example, a base64url encoded fresh, cryptographically random number with sufficient entropy.  
+: OPTIONAL. A String value used to mitigate replay attacks of the Authorization Request. When received, the Verifier MUST use it as the `wallet_nonce` value in the signed authorization request object. Value can be a base64url encoded, fresh, cryptographically random number with sufficient entropy.  
 
 If the Wallet requires the Verifier to encrypt the Request Object, it SHOULD use the `jwks` or `jwks_uri` parameter within `wallet_metadata` to pass the public key for the input to the key agreement. Other mechanisms to pass the encryption key can be used as well. If the Wallet requires an encrypted Authorization Response, it SHOULD specify supported encryption algorithms using the `authorization_encryption_alg_values_supported` and `authorization_encryption_enc_values_supported` parameters. 
 
