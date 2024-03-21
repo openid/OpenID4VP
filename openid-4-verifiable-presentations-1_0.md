@@ -1633,7 +1633,7 @@ The following is a non-normative example of the `vp_token` parameter provided in
 
 In this example the `vp_token` contains only the disclosures for the claims specified in the `presentation_submission`, along with a Key Binding JWT.
 
-Note: The Key Binding JWT `nonce` claim contains the value of the `nonce` from the presentation request, and the `aud` claim contains the Client Identifier of the Verifier.
+Note: The Key Binding JWT `nonce` claim contains the value of the `nonce` from the authorization request, and the `aud` claim contains the Client Identifier of the Verifier.
 
 ## Combining this specification with SIOPv2
 
