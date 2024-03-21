@@ -1183,7 +1183,7 @@ Whenever TLS is used, a TLS server certificate check MUST be performed, per [@!R
 
 ## Authorization Requests with Request URI
 
-If no user interaction is required before sending the request, it is easy to request on a large scale and in an automated fashion (e.g.) the wallet capabilities from all visitors of a website. Even without personally identifiable information (PII) this can reveal some information about users, like their nationality (e.g., a Wallet with special capabilities only used in one EU member state).
+If no user interaction is required before sending the request, it is easy to request on a large scale and in an automated fashion the wallet capabilities from all visitors of a website. Even without personally identifiable information (PII) this can reveal some information about users, like their nationality (e.g., a Wallet with special capabilities only used in one EU member state).
 
 Mandatory user interaction before sending the request, like clicking a button, unlocking the wallet or even just showing a screen of the app, can make this less attractive/likely to being exploited.
 
