@@ -485,7 +485,7 @@ To use `client_id_scheme` values `entity_id`, `did`, `verifier_attestation`, `x5
 
 Other specifications can define further values for the `client_id_scheme` parameter. It is RECOMMENDED to use collision-resistant names for such values.
 
-## Request URI Method POST {#request_uri_method_post}
+## Request URI Method `post` {#request_uri_method_post}
 
 This request is handled by the Request URI endpoint of the Verifier.  
 
