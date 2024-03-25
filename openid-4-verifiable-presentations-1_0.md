@@ -1546,11 +1546,11 @@ The following is the content of the `presentation_definition` parameter:
 
 ## mdoc (ISO/IEC 18013 and ISO/IEC 23220)
 
-ISO/IEC 18013-5:2021 defines a mobile driving license (mDL) Credential in the mobile document (mdoc) format. Although ISO/IEC 18013-5:2021 is specific to mobile driving licenses (mDLs), the Credential format can be utilized with any type of Credential (or mdoc document types). The ISO/IEC 23220 series has extracted components from ISO/IEC 18013-5:2021 and ISO/IEC TS 18013-7 that are common across document types to facilitate the profiling of the specification for other document types. The core data structures are shared between ISO/IEC 18013-5:2021 and ISO/IEC 23220, which are encoded in CBOR and secured using COSE_Sign1.
+ISO/IEC 18013-5:2021 [@ISO.18013-5] defines a mobile driving license (mDL) Credential in the mobile document (mdoc) format. Although ISO/IEC 18013-5:2021 [@ISO.18013-5] is specific to mobile driving licenses (mDLs), the Credential format can be utilized with any type of Credential (or mdoc document types). The ISO/IEC 23220 series has extracted components from ISO/IEC 18013-5:2021 [@ISO.18013-5] and ISO/IEC TS 18013-7 [@ISO.18013-7] that are common across document types to facilitate the profiling of the specification for other document types. The core data structures are shared between ISO/IEC 18013-5:2021 [@ISO.18013-5], ISO/IEC 23220-2 [@ISO.23220-2], ISO/IEC 23220-4 [@ISO.23220-4] which are encoded in CBOR and secured using COSE_Sign1.
 
 The Credential format identifier for Credentials in the mdoc format is `mso_mdoc`.
 
-ISO/IEC TS 18013-7 Annex B and ISO/IEC 23220-4 Annex C define a profile of OID4VP for requesting and presenting Credentials in the mdoc format.
+ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 [@ISO.23220-4] Annex C define a profile of OID4VP for requesting and presenting Credentials in the mdoc format.
 
 The profile includes the following elements:
 
@@ -1559,17 +1559,17 @@ The profile includes the following elements:
 * Wallet invocation using the `mdoc-openid4vp://` custom URI scheme.
 * Rules for the `SessionTranscript` CBOR structure (i.e., the `OID4VPHandover` CBOR structure) and guidelines on using OID4VP Authorization Request and Request Object parameters with the `SessionTranscript` CBOR structure as specified in ISO/IEC TS 18013-7 and ISO/IEC 23220-4.
 * Required Wallet and Verifier Metadata parameters and their values.
-* Additional restrictions on Authorization Request and Authorization Response parameters to ensure compliance with ISO/IEC TS 18013-7 and ISO/IEC 23220-4. For instance, to comply with ISO/IEC TS 18013-7, only the same-device flow is supported, the `request_uri` Authorization Request parameter is required, and the Authorization Response has to be encrypted.
+* Additional restrictions on Authorization Request and Authorization Response parameters to ensure compliance with ISO/IEC TS 18013-7 [@ISO.18013-7] and ISO/IEC 23220-4 [@ISO.23220-4]. For instance, to comply with ISO/IEC TS 18013-7 [@ISO.18013-7], only the same-device flow is supported, the `request_uri` Authorization Request parameter is required, and the Authorization Response has to be encrypted.
 
 ### Presentation Request
 
-See ISO/IEC TS 18013-7 or ISO/IEC 23220-4 for the latest examples on how to use the `presentation_definition` parameter for requesting Credentials in the mdoc format.
+See ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 Annex C [@ISO.23220-4] for the latest examples on how to use the `presentation_definition` parameter for requesting Credentials in the mdoc format.
 
 ### Presentation Response
 
-The VP Token contains a `DeviceResponse` CBOR structure as defined in ISO/IEC 18013-5:2021 or ISO/IEC 23220-4. `DeviceResponse` is included in the resulting VP Token and signs over the `SessionTranscript` profile defined in ISO/IEC TS 18013-7 and ISO/IEC 23220-4.
+The VP Token contains a `DeviceResponse` CBOR structure as defined in ISO/IEC 18013-5:2021 or ISO/IEC 23220-4. `DeviceResponse` is included in the resulting VP Token and signs over the `SessionTranscript` profile defined in ISO/IEC TS 18013-7 [@ISO.18013-7] and ISO/IEC 23220-4 [@ISO.23220-4].
 
-See ISO/IEC TS 18013-7 or ISO/IEC 23220-4 for the latest examples on how to use the `presentation_submission` parameter for presenting Credentials in the mdoc format.
+See ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 Annex C [@ISO.23220-4] for the latest examples on how to use the `presentation_submission` parameter for presenting Credentials in the mdoc format.
 
 ## Combining this specification with SIOPv2
 
