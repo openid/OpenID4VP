@@ -1567,7 +1567,7 @@ See ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 Annex C [@ISO.
 
 ### Presentation Response
 
-The VP Token contains a `DeviceResponse` CBOR structure as defined in ISO/IEC 18013-5:2021 or ISO/IEC 23220-4. `DeviceResponse` is included in the resulting VP Token and signs over the `SessionTranscript` profile defined in ISO/IEC TS 18013-7 [@ISO.18013-7] and ISO/IEC 23220-4 [@ISO.23220-4].
+The VP Token contains the base64url encoded `DeviceResponse` CBOR structure as defined in ISO/IEC 18013-5:2021 or ISO/IEC 23220-4. `DeviceResponse` signs over the `SessionTranscript` profile defined in ISO/IEC TS 18013-7 [@ISO.18013-7] and ISO/IEC 23220-4 [@ISO.23220-4].
 
 See ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 Annex C [@ISO.23220-4] for the latest examples on how to use the `presentation_submission` parameter and how to generate the Authorizaton Response for presenting Credentials in the mdoc format.
 
