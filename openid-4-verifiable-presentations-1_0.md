@@ -1559,7 +1559,11 @@ The Credential format identifier is `vc+sd-jwt`.
 
 #### Example Credential
 
-The following is a non-normative example of the payload of an IETF SD-JWT VC that will be used throughout this section:
+The following is a non-normative example of the unsecured payload of an IETF SD-JWT VC that will be used throughout this section:
+
+<{{examples/credentials/sd_jwt_vc_unsecured.json}}
+
+The following is a non-normative example of an IETF SD-JWT VC using the unsecured payload above, containing claims that need to be selectively disclosable.
 
 <{{examples/credentials/sd_jwt_vc.json}}
 
@@ -1617,7 +1621,7 @@ The following is a non-normative example of the contents of a presentation_defin
 
 The presentation of a SD-JWT VC is requested by adding an object named `vc+sd-jwt` to the `format` object of an `input_descriptor`. The object is empty.
 
-Setting `limit_disclosure` property defined in [@!DIF.PresentationExchange] to `required` enables selective release by instructing the Wallet to submit only the disclosures for the claims specified in the fields array.
+Setting `limit_disclosure` property defined in [@!DIF.PresentationExchange] to `required` enables selective release by instructing the Wallet to submit only the disclosures for the matching claims specified in the fields array. The unsecured payload of a SD-JWT VC is used to perform the matching.
 
 ### Presentation Response
 
