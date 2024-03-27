@@ -1619,7 +1619,7 @@ The following is a non-normative example of the contents of a presentation_defin
 
 <{{examples/request/pd_sd_jwt_vc.json}}
 
-The presentation of a SD-JWT VC is requested by adding an object named `vc+sd-jwt` to the `format` object of an `input_descriptor`. The object is empty.
+The presentation of a SD-JWT VC is requested by adding an object named `vc+sd-jwt` to the `format` object of an `input_descriptor`.
 
 Setting `limit_disclosure` property defined in [@!DIF.PresentationExchange] to `required` enables selective release by instructing the Wallet to submit only the disclosures for the matching claims specified in the fields array. The unsecured payload of a SD-JWT VC is used to perform the matching.
 
