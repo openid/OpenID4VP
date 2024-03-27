@@ -1,0 +1,11 @@
+{
+  "definition_id": "example_sd_jwt_vc_request",
+  "id": "example_sd_jwt_vc_presentation_submission",
+  "descriptor_map": [
+    {
+      "id": "identity_credential",
+      "path": "$",
+      "format": "vc+sd-jwt"
+    }
+  ]
+}
