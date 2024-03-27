@@ -1600,12 +1600,12 @@ __Claim `birthdate`__:
 
 ### Verifier Metadata
 
-The Verifier SHOULD add a `vp_formats` element to its metadata (e.g. in the `client_metadata` authorization request parameter) to let the wallet know what protection algorithms it supports in conjunction with SD-JWT VCs. The format element MUST have the key `vc+sd-jwt`, the value is an object consisting of the following elements:
+The Verifier SHOULD add a `vp_formats` element to its metadata (e.g. in the `client_metadata` authorization request parameter) to let the wallet know what protection algorithms it supports in conjunction with IETF SD-JWT VCs. The format element MUST have the key `vc+sd-jwt`, the value is an object consisting of the following elements:
 
 * `sd-jwt_alg_values`: OPTIONAL. A JSON array containing identifiers of cryptographic algorithms the verifier supports for protection of a SD-JWT. If present, the `alg` JOSE header (as defined in [@!RFC7515]) of the presented SD-JWT MUST match one of the array values.
 * `kb-jwt_alg_values`: OPTIONAL. A JSON array containing identifiers of cryptographic algorithms the verifier supports for protection of a KB-JWT. If present, the `alg` JOSE header (as defined in [@!RFC7515]) of the presented KB-JWT MUST match one of the array values.
 
-The following is a non-normative example of `client_metadata` request parameter value in a request to present a SD-JWT VC.
+The following is a non-normative example of `client_metadata` request parameter value in a request to present an IETF SD-JWT VC.
 
 <{{examples/client_metadata/sd_jwt_vc_verifier_metadata.json}}
 
@@ -1619,9 +1619,9 @@ The following is a non-normative example of the contents of a presentation_defin
 
 <{{examples/request/pd_sd_jwt_vc.json}}
 
-The presentation of a SD-JWT VC is requested by adding an object named `vc+sd-jwt` to the `format` object of an `input_descriptor`.
+The presentation of an IETF SD-JWT VC is requested by adding an object named `vc+sd-jwt` to the `format` object of an `input_descriptor`.
 
-Setting `limit_disclosure` property defined in [@!DIF.PresentationExchange] to `required` enables selective release by instructing the Wallet to submit only the disclosures for the matching claims specified in the fields array. The unsecured payload of a SD-JWT VC is used to perform the matching.
+Setting `limit_disclosure` property defined in [@!DIF.PresentationExchange] to `required` enables selective release by instructing the Wallet to submit only the disclosures for the matching claims specified in the fields array. The unsecured payload of an IETF SD-JWT VC is used to perform the matching.
 
 ### Presentation Response
 
