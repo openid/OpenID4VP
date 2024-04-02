@@ -1551,7 +1551,7 @@ The example in this section is also applicable to the electronic identification 
 
 ## IETF SD-JWT VC
 
-This section defines how credentials complying with [@!I-D.ietf-oauth-sd-jwt-vc] can be presented to the Verifier using this specification.
+This section defines how Credentials complying with [@!I-D.ietf-oauth-sd-jwt-vc] can be presented to the Verifier using this specification.
 
 ### Format Identifier
 
