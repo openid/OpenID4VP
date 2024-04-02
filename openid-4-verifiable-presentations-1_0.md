@@ -441,7 +441,7 @@ This specification defines the following values for the `client_id_scheme` param
 
 * `pre-registered`: This value represents the [@!RFC6749] default behavior, i.e., the Client Identifier needs to be known to the Wallet in advance of the Authorization Request. The Verifier metadata is obtained using [@!RFC7591] or through out-of-band mechanisms.
 
-* `redirect_uri`: This value indicates that the Verifier's redirect URI (or Response URI when Response Mode `direct_post` is used) is also the value of the Client Identifier. The Authorization Request MUST NOT be signed. The Verifier MAY omit the `redirect_uri` Authorization Request parameter. All Verifier metadata parameters MUST be passed using the `client_metadata` or `client_metadata_uri` parameter defined in (#vp_token_request). 
+* `redirect_uri`: This value indicates that the Verifier's Redirect URI (or Response URI when Response Mode `direct_post` is used) is also the value of the Client Identifier. The Authorization Request MUST NOT be signed. The Verifier MAY omit the `redirect_uri` Authorization Request parameter. All Verifier metadata parameters MUST be passed using the `client_metadata` or `client_metadata_uri` parameter defined in (#vp_token_request). 
 
 The following is a non-normative example of a request when `client_id` equals `redirect_uri`.
 
@@ -629,7 +629,7 @@ The following new Authorization Request parameter is defined to be used in conju
 `response_uri`:
 : REQUIRED when the Response Mode `direct_post` is used. The Response URI to which the Wallet MUST send the Authorization Response using an HTTP POST request as defined by the Response Mode `direct_post`. The Response URI receives all Authorization Response parameters as defined by the respective Response Type. When the `response_uri` parameter is present, the `redirect_uri` Authorization Request parameter MUST NOT be present. If the `redirect_uri` Authorization Request parameter is present when the Response Mode is `direct_post`, the Wallet MUST return an `invalid_request` Authorization Response error. The `response_uri` value MUST be a value that the client would be permitted to use as `redirect_uri` when following the rules defined in (#client_metadata_management).
 
-Note: When the specification text refers to the usage of redirect URI in the Authorization Request, that part of the text also applies when Response URI is used in the Authorization Request with Response Mode `direct_post`.
+Note: When the specification text refers to the usage of Redirect URI in the Authorization Request, that part of the text also applies when Response URI is used in the Authorization Request with Response Mode `direct_post`.
 
 Note: The Verifier's component providing the user interface (Frontend) and the Verifier's component providing the Response URI (Response Endpoint) need to be able to map authorization requests to the respective authorization responses. The Verifier MAY use the `state` Authorization Request parameter to add appropriate data to the Authorization Response for that purpose, for details see (#implementation_considerations_direct_post). 
 
