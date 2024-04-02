@@ -1563,7 +1563,7 @@ The following is a non-normative example of the unsecured payload of an IETF SD-
 
 <{{examples/credentials/sd_jwt_vc_unsecured.json}}
 
-The following is a non-normative example of an IETF SD-JWT VC using the unsecured payload above, containing claims that need to be selectively disclosable.
+The following is a non-normative example of an IETF SD-JWT VC using the unsecured payload above, containing claims that are selectively disclosable.
 
 <{{examples/credentials/sd_jwt_vc.json}}
 
