@@ -78,7 +78,7 @@
     "presentation_submission": {
         "descriptor_map": [
             {
-                "format": "jwt_vp",
+                "format": "jwt_vp_json",
                 "id": "citizenship",
                 "path": "$",
                 "path_nested": {
