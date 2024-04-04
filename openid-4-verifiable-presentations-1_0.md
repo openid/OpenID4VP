@@ -1603,7 +1603,7 @@ __Claim `birthdate`__:
 The Verifier SHOULD add a `vp_formats` element to its metadata (e.g. in the `client_metadata` authorization request parameter) to let the wallet know what signing algorithms it supports in conjunction with IETF SD-JWT VCs. The format element MUST have the key `vc+sd-jwt`, the value is an object consisting of the following elements:
 
 * `sd-jwt_alg_values`: OPTIONAL. A JSON array containing identifiers of cryptographic algorithms the verifier supports for signing of a SD-JWT. If present, the `alg` JOSE header (as defined in [@!RFC7515]) of the presented SD-JWT MUST match one of the array values.
-* `kb-jwt_alg_values`: OPTIONAL. A JSON array containing identifiers of cryptographic algorithms the verifier supports for signing of a KB-JWT. If present, the `alg` JOSE header (as defined in [@!RFC7515]) of the presented KB-JWT MUST match one of the array values.
+* `kb-jwt_alg_values`: OPTIONAL. A JSON array containing identifiers of cryptographic algorithms the Verifier supports for signing of a KB-JWT. If present, the `alg` JOSE header (as defined in [@!RFC7515]) of the presented KB-JWT MUST match one of the array values.
 
 The following is a non-normative example of `client_metadata` request parameter value in a request to present an IETF SD-JWT VC.
 
