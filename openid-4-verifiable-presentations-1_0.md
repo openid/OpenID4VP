@@ -1615,7 +1615,7 @@ The following is a non-normative example of an Authorization Request:
 
 <{{examples/request/request.txt}}
 
-The following is a non-normative example of the contents of a presentation_definition parameter that contains the requirements regarding the Credential to be presented:
+The following is a non-normative example of the contents of a `presentation_definition` parameter that contains the requirements regarding the Credential to be presented:
 
 <{{examples/request/pd_sd_jwt_vc.json}}
 
