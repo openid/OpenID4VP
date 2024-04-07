@@ -1673,6 +1673,96 @@ The VP Token contains the base64url encoded `DeviceResponse` CBOR structure as d
 
 See ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 Annex C [@ISO.23220-4] for the latest examples on how to use the `presentation_submission` parameter and how to generate the Authorizaton Response for presenting Credentials in the mdoc format.
 
+## IETF SD-JWT VC
+
+This section defines how Credentials complying with [@!I-D.ietf-oauth-sd-jwt-vc] can be presented to the Verifier using this specification.
+
+### Format Identifier
+
+The Credential format identifier is `vc+sd-jwt`.
+
+#### Example Credential
+
+The following is a non-normative example of the unsecured payload of an IETF SD-JWT VC that will be used throughout this section:
+
+<{{examples/credentials/sd_jwt_vc_unsecured.json}}
+
+The following is a non-normative example of an IETF SD-JWT VC using the unsecured payload above, containing claims that are selectively disclosable.
+
+<{{examples/credentials/sd_jwt_vc.json}}
+
+The following are disclosures belonging to the claims from the example above.
+
+__Claim `given_name`__:
+
+ * SHA-256 Hash: `jsu9yVulwQQlhFlM_3JlzMaSFzglhQG0DpfayQwLUK4`
+ * Disclosure:\
+`WyIyR0xDNDJzS1F2ZUNmR2ZyeU5STjl3IiwgImdpdmVuX25hbWUiLCAiSm9o`\
+`biJd`
+ * Contents:
+`["2GLC42sKQveCfGfryNRN9w", "given_name", "John"]`
+
+
+__Claim `family_name`__:
+
+ * SHA-256 Hash: `TGf4oLbgwd5JQaHyKVQZU9UdGE0w5rtDsrZzfUaomLo`
+ * Disclosure:\
+`WyJlbHVWNU9nM2dTTklJOEVZbnN4QV9BIiwgImZhbWlseV9uYW1lIiwgIkRv`\
+`ZSJd`
+ * Contents:
+`["eluV5Og3gSNII8EYnsxA_A", "family_name", "Doe"]`
+
+
+__Claim `birthdate`__:
+
+ * SHA-256 Hash: `tiTngp9_jhC389UP8_k67MXqoSfiHq3iK6o9un4we_Y`
+ * Disclosure:\
+`WyI2SWo3dE0tYTVpVlBHYm9TNXRtdlZBIiwgImJpcnRoZGF0ZSIsICIxOTQw`\
+`LTAxLTAxIl0`
+ * Contents:
+`["6Ij7tM-a5iVPGboS5tmvVA", "birthdate", "1940-01-01"]`
+
+### Verifier Metadata
+
+The `format` value in the `vp_formats` parameter of the Verifier metadata MUST have the key `vc+sd-jwt`, and the value is an object consisting of the following name/value pairs:
+
+* `sd-jwt_alg_values`: OPTIONAL. A JSON array containing identifiers of cryptographic algorithms the Verifier supports for signing of an Issuer-signed JWT of an SD-JWT. If present, the `alg` JOSE header (as defined in [@!RFC7515]) of the Issuer-signed JWT of the presented SD-JWT MUST match one of the array values.
+* `kb-jwt_alg_values`: OPTIONAL. A JSON array containing identifiers of cryptographic algorithms the Verifier supports for signing of a Key Binding JWT (KB-JWT). If present, the `alg` JOSE header (as defined in [@!RFC7515]) of the presented KB-JWT MUST match one of the array values.
+
+The following is a non-normative example of `client_metadata` request parameter value in a request to present an IETF SD-JWT VC.
+
+<{{examples/client_metadata/sd_jwt_vc_verifier_metadata.json}}
+
+### Presentation Request
+
+The following is a non-normative example of an Authorization Request:
+
+<{{examples/request/request.txt}}
+
+The following is a non-normative example of the contents of a `presentation_definition` parameter that contains the requirements regarding the Credential to be presented:
+
+<{{examples/request/pd_sd_jwt_vc.json}}
+
+The presentation of an IETF SD-JWT VC is requested by adding an object named `vc+sd-jwt` to the `format` object of an `input_descriptor`. The `input_descriptor` value is applied to the unsecured payload of the IETF SD-JWT VC which correspond to the disclosures of the presented SD-JWT VC.
+
+Setting `limit_disclosure` property defined in [@!DIF.PresentationExchange] to `required` enables selective release by instructing the Wallet to submit only the disclosures for the matching claims specified in the fields array. The unsecured payload of an IETF SD-JWT VC is used to perform the matching.
+
+### Presentation Response
+
+A non-normative example of the Authorization Response would look the same as in the examples of other Credential formats in this Annex.
+
+The following is a non-normative example of the content of the `presentation_submission` parameter:
+
+<{{examples/response/ps_sd_jwt_vc.json}}
+
+The following is a non-normative example of the `vp_token` parameter provided in the same response and referred to by the `presentation_submission` above:
+
+<{{examples/response/token_response_vp_token_sd_jwt_vc.txt}}
+
+In this example the `vp_token` contains only the disclosures for the claims specified in the `presentation_submission`, along with a Key Binding JWT.
+
+Note: The Key Binding JWT `nonce` claim contains the value of the `nonce` from the authorization request, and the `aud` claim contains the Client Identifier of the Verifier.
+
 ## Combining this specification with SIOPv2
 
 This section shows how SIOP and OpenID for Verifiable Presentations can be combined to present Verifiable Credentials and pseudonymously authenticate an end-user using subject controlled key material.
