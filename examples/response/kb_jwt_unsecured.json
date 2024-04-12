@@ -1,6 +1,6 @@
 {
   "nonce": "n-0S6_WzA2Mj",
-  "aud": "https://client.example.org/cb",
-  "iat": 1709839446,
-  "sd_hash": "d-m8CkhGgx0KgSgNJvK5mR58GTR2hjhaHbBifUaPhKc"
+  "aud": "https://example.com/verifier",
+  "iat": 1709838604,
+  "sd_hash": "Dy-RYwZfaaoC3inJbLslgPvMp09bH-clYP_3qbRqtW4"
 }
