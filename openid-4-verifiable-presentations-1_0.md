@@ -1464,6 +1464,135 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </front>
 </reference>
 
+<reference anchor="w3c.digital_crrdentials_api" target="https://wicg.github.io/digital-identities/">
+        <front>
+          <title>Digital Credentials API</title>
+		  <author fullname="Author">
+            <organization>org</organization>
+          </author>
+          <author fullname="Author">
+            <organization>org</organization>
+          </author>
+           <author fullname="Author">
+            <organization>org</organization>
+          </author>
+        </front>
+</reference>
+
+# OID4VP profile for the W3C Digital Credentials API (#browser_api)
+
+This section defines a profile of OID4VP for use with the W3C Digital Credentials API [@!w3c.digital_crrdentials_api].
+
+The W3C Digital Credentials API defines a Browser API, which allows web sites acting as Verifiers to request the presentation of Verifiable Credentials. The API itself does not define a credential exchange protocol but can be used with different such protocols. The Browser in concert with other layers of the platform/operating system and based on the decision of the user will select the Wallet the request is sent to and provide this Wallet with the request data along with the web origin of the Verifier. 
+
+The design of this OIDVP profile utilizes the mechanisms of the W3C Digital Credentials API while also allowing to leverage advanced security features of OID4VP, if needed. 
+
+This is a non-normative example of a OID4VP request through the W3C Digital Credentials API, 
+
+```JavaScipt
+const credential = await navigator.identity.get({
+   digital: {
+       providers: [{
+           protocol: "urn:openid.net:oid4vp",
+           request:  JSON.stringify({
+            "client_id": "client.example.org",
+ 			      "client_id_scheme": "web-origin",
+ 			      "response_type": "vp_token",
+            "nonce": "n-0S6_WzA2Mj",
+            "client_metadata": {...},
+   			    "presentation_definition": {...}
+ 			    })
+       }]
+   }
+});
+```
+
+and here is an non-normative example of how a response is received:
+
+```JavaScipt
+const { data } = response;
+const response = new URLSearchParams(data);
+```
+
+There are a couple of benefits for OID4VP implementers (both Verifiers as well as Wallets) to adopt OID4VP with the Digital Credentials API. To start with, the API is a privacy-preserving alternative to the invocation of Wallets through URLs, especially custom schemes. The browser will ensure the invocation of a Wallet is only performed if confirmed by the user based on contextual information of the request and the sender. It also allows to select Wallets based on the credential types being requested and supported, respectively. As request and responses are sent and received through the API, the user will always return to the browser tab where she had started, which results in an improved user experience. And the security of OID4VP implenentations can also be enhanced signficantly. Cross-device requests benefit from the use of proximity checks through a combined use of BLE and a QR Code (like in Pass Keys). Furthermore, the Wallet is provided with information about the Verifier's URL as authenticated by the browser to the request as an additional signal, which can be used for phishing detection.  
+
+## Protocol
+
+The value of the `protocol` parameter of the W3C Digital Credentials API MUST be set to `urn:openid.net:oid4vp' for this profile.
+
+## Request
+
+The `request` parameter of the W3C Digital Credentials API MUST contain a valid OID4VP Authorization Request, where every Authorization Request parameters is represented as top-level JSON claim as shown in the following non-normative example:
+
+```json
+{
+    "client_id": "client.example.org",
+    ...
+    "response_type": "vp_token",
+    "nonce": "n-0S6_WzA2Mj",
+    "presentation_definition": {...}
+}
+```
+
+Any Authorization Requests as defined in OID4VP can be used except `redirect_uri`. If present, `redirect_uri` MUST be ignored. 
+
+NOTE: Implementations MAY use the `request_uri` request parameter as well as the response mode `direct_post` if deeemd necessary. If the `request_uri` parameter is used, the `request` value MUST nevertheless contain the `presentation_definition` parameter in order to enable wallet selection. The signed request object, fetched from the `request_uri` MUST contain a `presentation_definition` that is compatible with the `presentation_definition` in the `request` parameter of the W3C Digital Credentials API. 
+
+### Client ID Scheme web-origin
+
+This profile defines the new Client ID Scheme `web-origin`. If this scheme is used, the Client Identifier is the origin of the Verifier web site as asserted by the browser towards the Wallet. 
+
+## Response
+
+Every OID4VP request MUST result in a response being provided through the W3C Digital Credentials API. In all cases, except if the response mode `direct_post` is used, the response MUST be follow the rules specified for OID4VP Authorization Responses. If the response model `direct_post` is used, the Wallet will return the URL the Direct Post Endpoint of the Verifier has returned. 
+
+The following is an example of an OID4VP Authorization Response through the API: 
+
+```json
+{
+    "presentation_submission": "...",
+    "vp_token": "..."
+}
+```
+
+Note: All mechanisms for cryptographically protecting the OID4VP response MAY be utilized with the W3C Digital Credentials API, too. 
+
+## Example Flows
+
+As OID4VP is pretty flexible, this section shall shed some light on what flows the authors deem especially useful.  
+
+### Default Flow
+
+In the Default flow, the Verifier sends all the OID4VP request data in the `request` parameter and reveices the result in the `result` parameter. In this case, the Wallet will use the Verifier origin as asserted by the Browser as the Verifers's Client Identifier.  
+
+### Request URI Flow
+
+In this flow, the Verifier sends a `request` with enough data to select the Wallet but the full OID4VP Authorization Request is fetched by the Wallet from an endpoint hosted by the Verifier. This allows the Verifier to sign and optionally encrypt the request data. 
+
+The Verifier should use the `request_uri` parameter in conjunction with the `request_uri_method` parameter with a value of `post`. This will cause the Wallet to send a HTTPS POST request to the endpoint determined by `request_uri`. The request should also contain the `client_metadata` parameter with the Verifier's capabilities in order to allow the Wallet to only offer the capabilities common between both parties to the Verifier. 
+
+This is a example of such a request:
+
+```JavaScript
+const credential = await navigator.identity.get({
+   digital: {
+       providers: [{
+           protocol: "urn:openid.net:oid4vp",
+           request: JSON.stringify({
+  			   "client_id":"https//client.example.org",
+   			   "client_id_scheme":"entity_id",
+   			   "presentation_definition":"...",
+   			   "request_uri":"https://client.example.org/request",
+   			   "request_uri_method":"post"})
+       }]
+   }
+});
+```
+
+The wallet should add a fresh `wallet_nonce` parameter to this request and check whether the resulting signed request object contains this value.  
+
+This flows allows the Wallet to authenticate the Verifier using a trust management other than the Web PKI utilized by the browser. An example of such a trust management is the Verifier (RP) management infrastructure set up in the context of the eIDAS regulation in the European Union. The signature over the wallet-provided nonce is a counter-measure against replay as the Wallet can no longer only rely on the web origin of the Verifier. This web origin MAY still be used to further strengthen the security of the flow. The external trust management could, for example, map the Client Identifier to registered web origins. 
+
 # Examples with Credentials in Various Formats {#alternative_credential_formats}
 
 OpenID for Verifiable Presentations is Credential format agnostic, i.e., it is designed to allow applications to request and receive Verifiable Presentations and Verifiable Credentials in any format, not limited to the formats defined in [@!VC_DATA]. This section aims to illustrate this with examples utilizing different Credential formats. Customization of OpenID for Verifiable Presentation for Credential formats other than those defined in [@!VC_DATA] uses extension points of Presentation Exchange [@!DIF.PresentationExchange].
