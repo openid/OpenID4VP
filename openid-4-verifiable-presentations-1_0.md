@@ -1464,24 +1464,21 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </front>
 </reference>
 
-<reference anchor="w3c.digital_crrdentials_api" target="https://wicg.github.io/digital-identities/">
+<reference anchor="w3c.digital_credentials_api" target="https://wicg.github.io/digital-identities/">
         <front>
           <title>Digital Credentials API</title>
-		  <author fullname="Author">
-            <organization>org</organization>
+		  <author fullname="Marcos Caceres">
+            <organization>Apple Inc.</organization>
           </author>
-          <author fullname="Author">
-            <organization>org</organization>
-          </author>
-           <author fullname="Author">
-            <organization>org</organization>
+          <author fullname="Sam Goto">
+            <organization>Google</organization>
           </author>
         </front>
 </reference>
 
-# OID4VP profile for the W3C Digital Credentials API (#browser_api)
+# OID4VP profile for the W3C Digital Credentials API
 
-This section defines a profile of OID4VP for use with the W3C Digital Credentials API [@!w3c.digital_crrdentials_api].
+This section defines a profile of OID4VP for use with the W3C Digital Credentials API [@!w3c.digital_credentials_api].
 
 The W3C Digital Credentials API defines a Browser API, which allows web sites acting as Verifiers to request the presentation of Verifiable Credentials. The API itself does not define a credential exchange protocol but can be used with different such protocols. The Browser in concert with other layers of the platform/operating system and based on the decision of the user will select the Wallet the request is sent to and provide this Wallet with the request data along with the web origin of the Verifier. 
 
@@ -1491,19 +1488,19 @@ This is a non-normative example of a OID4VP request through the W3C Digital Cred
 
 ```JavaScipt
 const credential = await navigator.identity.get({
-   digital: {
-       providers: [{
-           protocol: "urn:openid.net:oid4vp",
-           request:  JSON.stringify({
-            "client_id": "client.example.org",
- 			      "client_id_scheme": "web-origin",
- 			      "response_type": "vp_token",
-            "nonce": "n-0S6_WzA2Mj",
-            "client_metadata": {...},
-   			    "presentation_definition": {...}
- 			    })
-       }]
-   }
+  digital: {
+    providers: [{
+      protocol: "urn:openid.net:oid4vp",
+      request:  JSON.stringify({
+        "client_id": "client.example.org",
+        "client_id_scheme": "web-origin",
+        "response_type": "vp_token",
+        "nonce": "n-0S6_WzA2Mj",
+        "client_metadata": {...},
+        "presentation_definition": {...}
+      })
+     }]
+  }
 });
 ```
 
@@ -1526,11 +1523,11 @@ The `request` parameter of the W3C Digital Credentials API MUST contain a valid 
 
 ```json
 {
-    "client_id": "client.example.org",
-    ...
-    "response_type": "vp_token",
-    "nonce": "n-0S6_WzA2Mj",
-    "presentation_definition": {...}
+  "client_id": "client.example.org",
+  ...
+  "response_type": "vp_token",
+  "nonce": "n-0S6_WzA2Mj",
+  "presentation_definition": {...}
 }
 ```
 
@@ -1550,8 +1547,8 @@ The following is an example of an OID4VP Authorization Response through the API:
 
 ```json
 {
-    "presentation_submission": "...",
-    "vp_token": "..."
+  "presentation_submission": "...",
+  "vp_token": "..."
 }
 ```
 
@@ -1575,17 +1572,17 @@ This is a example of such a request:
 
 ```JavaScript
 const credential = await navigator.identity.get({
-   digital: {
-       providers: [{
-           protocol: "urn:openid.net:oid4vp",
-           request: JSON.stringify({
-  			   "client_id":"https//client.example.org",
-   			   "client_id_scheme":"entity_id",
-   			   "presentation_definition":"...",
-   			   "request_uri":"https://client.example.org/request",
-   			   "request_uri_method":"post"})
-       }]
-   }
+  digital: {
+    providers: [{
+      protocol: "urn:openid.net:oid4vp",
+      request: JSON.stringify({
+        "client_id":"https//client.example.org",
+        "client_id_scheme":"entity_id",
+        "presentation_definition":"...",
+        "request_uri":"https://client.example.org/request",
+        "request_uri_method":"post"})
+    }]
+  }
 });
 ```
 
