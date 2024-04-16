@@ -7,7 +7,7 @@
             {
                 "id": "id_credential",
                 "path": "$",
-                "format": "jwt_vp",
+                "format": "jwt_vp_json",
                 "path_nested": {
                     "path": "$.vp.verifiableCredential[0]",
                     "format": "jwt_vc"
