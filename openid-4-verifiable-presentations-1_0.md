@@ -1482,9 +1482,9 @@ This section defines a profile of OID4VP for use with the W3C Digital Credential
 
 The W3C Digital Credentials API defines a Browser API, which allows web sites acting as Verifiers to request the presentation of Verifiable Credentials. The API itself does not define a credential exchange protocol but can be used with different such protocols. The Browser in concert with other layers of the platform/operating system and based on the decision of the user will select the Wallet the request is sent to and provide this Wallet with the request data along with the web origin of the Verifier. 
 
-The design of this OIDVP profile utilizes the mechanisms of the W3C Digital Credentials API while also allowing to leverage advanced security features of OID4VP, if needed. 
+The design of this OIDVP profile utilizes the mechanisms of the W3C Digital Credentials API while also allowing to leverage advanced security features of OID4VP, if needed. It also defines the OID4VP request and response parameters that MAY be used with the W3C Digital Credentials API.
 
-This is a non-normative example of a OID4VP request through the W3C Digital Credentials API, 
+This is a non-normative example of a request, 
 
 ```JavaScipt
 const credential = await navigator.identity.get({
@@ -1492,8 +1492,6 @@ const credential = await navigator.identity.get({
     providers: [{
       protocol: "urn:openid.net:oid4vp",
       request:  {
-        "client_id": "client.example.org",
-        "client_id_scheme": "web-origin",
         "response_type": "vp_token",
         "nonce": "n-0S6_WzA2Mj",
         "client_metadata": {...},
@@ -1504,7 +1502,7 @@ const credential = await navigator.identity.get({
 });
 ```
 
-and here is an non-normative example of how a response is received:
+and this is a non-normative example of how the corresponding response:
 
 ```JavaScipt
 const { data } = response;
@@ -1531,17 +1529,25 @@ The `request` parameter of the W3C Digital Credentials API MUST contain a valid 
 }
 ```
 
-Any Authorization Requests as defined in OID4VP can be used except `redirect_uri`. If present, `redirect_uri` MUST be ignored. 
+The following Authorization Request parameters are supported with this profile: 
 
-NOTE: Implementations MAY use the `request_uri` request parameter as well as the response mode `direct_post` if deeemd necessary. If the `request_uri` parameter is used, the `request` value MUST nevertheless contain the `presentation_definition` parameter in order to enable wallet selection. The signed request object, fetched from the `request_uri` MUST contain a `presentation_definition` that is compatible with the `presentation_definition` in the `request` parameter of the W3C Digital Credentials API. 
+* `client_id`
+* `client_id_scheme`
+* `response_type`
+* `nonce`
+* `presentation_definition`
+* `client_metadata`
+* `request`
 
-### Client ID Scheme web-origin
+The `client_id` and `client_id_scheme` MUST be omitted in unsigned requests. The wallet determines the Client Identifier from the origin as asserted by the Browser. 
 
-This profile defines the new Client ID Scheme `web-origin`. If this scheme is used, the Client Identifier is the origin of the Verifier web site as asserted by the browser towards the Wallet. 
+This profile introduces a new parameter `expected_origins`.
+
+* `expected_origins`: An array of strings, each of the strings representing an origin of the Verifier making the request. This parameter MUST only be used with signed requests. It relates the logical Client Identifier to the physical endpoints that are legit origins for requests on behalf of this Client Identifier and is used to detect request replay.
 
 ## Response
 
-Every OID4VP request MUST result in a response being provided through the W3C Digital Credentials API. In all cases, except if the response mode `direct_post` is used, the response MUST be follow the rules specified for OID4VP Authorization Responses. If the response model `direct_post` is used, the Wallet will return the URL the Direct Post Endpoint of the Verifier has returned. 
+Every OID4VP request MUST result in a response being provided through the W3C Digital Credentials API. The response MUST follow the rules specified for OID4VP Authorization Responses.
 
 The following is an example of an OID4VP Authorization Response through the API: 
 
@@ -1558,15 +1564,15 @@ Note: All mechanisms for cryptographically protecting the OID4VP response MAY be
 
 As OID4VP is pretty flexible, this section shall shed some light on what flows the authors deem especially useful.  
 
-### Default Flow
+### Unsigned Request
 
-In the Default flow, the Verifier sends all the OID4VP request data in the `request` parameter and reveices the result in the `result` parameter. In this case, the Wallet will use the Verifier origin as asserted by the Browser as the Verifers's Client Identifier.  
+The Verifier MAY send all the OID4VP request data as JSON elements in the `request` API parameter and reveices the result in the API's `result` parameter. In this case, the Wallet will use the Verifier origin as asserted by the Browser as the Verifers's Client Identifier.  
 
-### Request URI Flow
+### Signed Request
 
-In this flow, the Verifier sends a `request` with enough data to select the Wallet but the full OID4VP Authorization Request is fetched by the Wallet from an endpoint hosted by the Verifier. This allows the Verifier to sign and optionally encrypt the request data. 
+The Verifier MAY send a signed request.
 
-The Verifier should use the `request_uri` parameter in conjunction with the `request_uri_method` parameter with a value of `post`. This will cause the Wallet to send a HTTPS POST request to the endpoint determined by `request_uri`. The request should also contain the `client_metadata` parameter with the Verifier's capabilities in order to allow the Wallet to only offer the capabilities common between both parties to the Verifier. 
+The signed request object MAY contain all the parameters listed above except `request`. The signed request object MUST contain an `expected_origins` parameter. 
 
 This is a example of such a request:
 
@@ -1576,19 +1582,57 @@ const credential = await navigator.identity.get({
     providers: [{
       protocol: "urn:openid.net:oid4vp",
       request: {
-        "client_id":"https//client.example.org",
-        "client_id_scheme":"entity_id",
-        "presentation_definition":"...",
-        "request_uri":"https://client.example.org/request",
-        "request_uri_method":"post"}
+       "client_id": "client.example.org",
+       "client_id_scheme": "entity_id",
+       "request": "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJ..."
+     }
     }]
   }
 });
 ```
 
-The wallet should add a fresh `wallet_nonce` parameter to this request and check whether the resulting signed request object contains this value.  
+This is an example signed request payload:
 
-This flows allows the Wallet to authenticate the Verifier using a trust management other than the Web PKI utilized by the browser. An example of such a trust management is the Verifier (RP) management infrastructure set up in the context of the eIDAS regulation in the European Union. The signature over the wallet-provided nonce is a counter-measure against replay as the Wallet can no longer only rely on the web origin of the Verifier. This web origin MAY still be used to further strengthen the security of the flow. The external trust management could, for example, map the Client Identifier to registered web origins. 
+```JSON
+{
+    "client_id": "client.example.org",
+    "client_id_scheme": "entity_id",
+    "expected_origins": [
+        "https://origin1.example.com",
+        "https://origin2.example.com"
+    ],
+    "response_type": "vp_token",
+    "nonce": "n-0S6_WzA2Mj",
+    "client_metadata": {
+        "vp_formats": {
+            "vc+sd-jwt": {
+                "sd-jwt_alg_values": [
+                    "PS256"
+                ],
+                "kb-jwt_alg_values": [
+                    "PS256"
+                ]
+            }
+        },
+        "jwks": {
+            "keys": [
+                {
+                    "kty": "EC",
+                    "crv": "P-256",
+                    "x": "MKBCTNIcKUSDii11ySs3526iDZ8AiTo7Tu6KPAqv7D4",
+                    "y": "4Etl6SRW2YiLUrN5vfvVHuhp7x8PxltmWWlbbM4IFyM",
+                    "use": "enc",
+                    "kid": "1"
+                }
+            ]
+        }
+    },
+    "presentation_definition": {...
+    }
+}
+```
+
+The signed request allows the Wallet to authenticate the Verifier using a trust management other than the Web PKI utilized by the browser. An example of such a trust management is the Verifier (RP) management infrastructure set up in the context of the eIDAS regulation in the European Union. The signature over the wallet-provided nonce is a counter-measure against replay as the Wallet can no longer only rely on the web origin of the Verifier. This web origin MAY still be used to further strengthen the security of the flow. The external trust management could, for example, map the Client Identifier to registered web origins. 
 
 # Examples with Credentials in Various Formats {#alternative_credential_formats}
 
