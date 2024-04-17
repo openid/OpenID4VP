@@ -1487,26 +1487,30 @@ The design of this OIDVP profile utilizes the mechanisms of the W3C Digital Cred
 This is a non-normative example of a request, 
 
 ```JavaScipt
-const credential = await navigator.identity.get({
-  digital: {
-    providers: [{
-      protocol: "urn:openid.net:oid4vp",
-      request:  {
-        "response_type": "vp_token",
-        "nonce": "n-0S6_WzA2Mj",
-        "client_metadata": {...},
-        "presentation_definition": {...}
-      }
-     }]
-  }
-});
+if ('DigitalCredential' in window) {
+  const credential = await navigator.identity.get({
+    digital: {
+      providers: [{
+        protocol: "urn:openid.net:oid4vp",
+        request:  {
+          "response_type": "vp_token",
+          "nonce": "n-0S6_WzA2Mj",
+          "client_metadata": {...},
+          "presentation_definition": {...}
+        }
+      }]
+    }
+  });
+} else {
+// fallback to other invocation mechanisms
+}
 ```
 
 and this is a non-normative example of how the corresponding response:
 
 ```JavaScipt
 const { data } = response;
-const response = new URLSearchParams(data);
+// data is a byte array that contains the JSON or JWE which needs to be parsed
 ```
 
 There are a couple of benefits for OID4VP implementers (both Verifiers as well as Wallets) to adopt OID4VP with the Digital Credentials API. To start with, the API is a privacy-preserving alternative to the invocation of Wallets through URLs, especially custom schemes. The browser will ensure the invocation of a Wallet is only performed if confirmed by the user based on contextual information of the request and the sender. It also allows to select Wallets based on the credential types being requested and supported, respectively. As request and responses are sent and received through the API, the user will always return to the browser tab where she had started, which results in an improved user experience. And the security of OID4VP implenentations can also be enhanced signficantly. Cross-device requests benefit from the use of proximity checks through a combined use of BLE and a QR Code (similar to Passkeys). Furthermore, the Wallet is provided with information about the Verifier's URL as authenticated by the browser to the request as an additional signal, which can be used for phishing detection.  
@@ -1547,7 +1551,7 @@ This profile introduces a new parameter `expected_origins`.
 
 ## Response
 
-Every OID4VP request MUST result in a response being provided through the W3C Digital Credentials API. The response MUST follow the rules specified for OID4VP Authorization Responses.
+Every OID4VP Authorization Request MUST result in a response being provided through the W3C Digital Credentials API. The Authorization Response is a JSON object, where the response parameters as defined for the Response Type are encoded as top-level claims in this JSON object. 
 
 The following is an example of an OID4VP Authorization Response through the API: 
 
