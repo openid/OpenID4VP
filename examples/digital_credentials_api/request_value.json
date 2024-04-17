@@ -1,6 +1,4 @@
 {
-    "client_id": "client.example.org",
-    "client_id_scheme": "web-origin",
     "response_type": "vp_token",
     "nonce": "n-0S6_WzA2Mj",
     "client_metadata": {...
