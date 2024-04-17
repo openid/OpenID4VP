@@ -1491,14 +1491,14 @@ const credential = await navigator.identity.get({
   digital: {
     providers: [{
       protocol: "urn:openid.net:oid4vp",
-      request:  JSON.stringify({
+      request:  {
         "client_id": "client.example.org",
         "client_id_scheme": "web-origin",
         "response_type": "vp_token",
         "nonce": "n-0S6_WzA2Mj",
         "client_metadata": {...},
         "presentation_definition": {...}
-      })
+      }
      }]
   }
 });
@@ -1575,12 +1575,12 @@ const credential = await navigator.identity.get({
   digital: {
     providers: [{
       protocol: "urn:openid.net:oid4vp",
-      request: JSON.stringify({
+      request: {
         "client_id":"https//client.example.org",
         "client_id_scheme":"entity_id",
         "presentation_definition":"...",
         "request_uri":"https://client.example.org/request",
-        "request_uri_method":"post"})
+        "request_uri_method":"post"}
     }]
   }
 });
