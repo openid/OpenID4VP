@@ -1521,7 +1521,7 @@ The value of the `protocol` parameter of the W3C Digital Credentials API MUST be
 
 ## Request
 
-The `request` parameter of the W3C Digital Credentials API MUST contain a valid OID4VP Authorization Request, where every Authorization Request parameters is represented as top-level JSON claim as shown in the following non-normative example:
+The `request` parameter of the W3C Digital Credentials API MUST contain a valid OID4VP Authorization Request, where every Authorization Request parameter is represented as a top-level JSON member as shown in the following non-normative example:
 
 ```json
 {
