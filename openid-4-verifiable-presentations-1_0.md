@@ -81,7 +81,7 @@ Presentation:
 :  Data that is presented to a specific Verifier, derived from one or more Verifiable Credentials that can be from the same or different Credential Issuers.
 
 Verifiable Presentation (VP):
-:  A Holder-signed Credential whose authenticity can be cryptographically verified to provide Cryptographic Holder Binding. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] (mdoc), [@!I-D.ietf-oauth-sd-jwt-vc] (SD-JWT VC), and [@Hyperledger.Indy] (AnonCreds).
+:  A Holder-signed Credential whose authenticity can be cryptographically verified to provide Cryptographic Holder Binding. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA] (VCDM), [@ISO.18013-5] (mdoc), [@!I-D.ietf-oauth-sd-jwt-vc] (SD-JWT VC), and [@Hyperledger.Indy] (AnonCreds).
 
 W3C Verifiable Presentation:
 :  A Verifiable Presentations compliant to the [@VC_DATA] specification.
@@ -122,7 +122,7 @@ This specification defines a mechanism on top of OAuth 2.0 to request and presen
 
 As the primary extension, OpenID for Verifiable Presentations introduces the VP Token as a container to enable End-Users to present Verifiable Presentations to Verifiers using the Wallet. A VP Token contains one or more Verifiable Presentations in the same or different Credential formats.
 
-This specification supports any Credential format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA], [@ISO.18013-5] (mdoc), [@!I-D.ietf-oauth-sd-jwt-vc] (SD-JWT VC), and [@Hyperledger.Indy] (AnonCreds). Credentials of multiple formats can be presented in the same transaction. The examples given in the main part of this specification use W3C Verifiable Credentials, while examples in other Credential formats are given in (#alternative_credential_formats). 
+This specification supports any Credential format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA] (VCDM), [@ISO.18013-5] (mdoc), [@!I-D.ietf-oauth-sd-jwt-vc] (SD-JWT VC), and [@Hyperledger.Indy] (AnonCreds). Credentials of multiple formats can be presented in the same transaction. The examples given in the main part of this specification use W3C Verifiable Credentials, while examples in other Credential formats are given in (#alternative_credential_formats). 
 
 Implementations can use any pre-existing OAuth 2.0 Grant Type and Response Type in conjunction with this specification to support different deployment architectures.
 
