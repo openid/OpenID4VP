@@ -266,6 +266,8 @@ This specification defines the following new parameters:
 `client_metadata_uri`: 
 : OPTIONAL. A string containing an HTTPS URL pointing to a resource where a JSON object with the Verifier metadata can be retrieved. The scheme used in the `client_metadata_uri` value MUST be `https`. The `client_metadata_uri` value MUST be reachable by the Wallet. It MUST NOT be present if `client_metadata` parameter is present.
 
+`client-metadata` and `client_metadata_uri` parameters MUST NOT be used when the Wallet knows Client Identifier and corresponding Client metadata prior to the transaction (i.e., Client Identifier scheme is absent or has value `pre-registered`).
+
 A public key to be used by the Wallet as an input to the key agreement to encrypt Authorization Response (see (#jarm)). It MAY be passed by the Verifier using the `jwks` or the `jwks_uri` claim within the `client_metadata` or `client_metadata_uri` request parameter.
 
 `request_uri_method`: 
@@ -766,8 +768,6 @@ The error response follows the rules as defined in [@!RFC6749], with the followi
 
 - `client_metadata` or `client_metadata_uri` parameter defined in (#vp_token_request) is present, but the Wallet recognizes Client Identifier and knows metadata associated with it.
 - Verifier's pre-registered metadata has been found based on the Client Identifier, but `client_metadata` parameter is also present.
-
-Usage of `client_metadata` or `client_metadata_uri` parameters with `client_id` that the Wallet might be seeing for the first time is mutually exclusive with the registration mechanism where Self-Issued OP assigns `client_id` to the Verifier after receiving Verifier metadata.
 
 `access_denied`:
 
