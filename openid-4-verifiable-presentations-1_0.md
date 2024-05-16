@@ -1841,67 +1841,67 @@ This flow allows the server to make an informed decision about requesting creden
 
 !---
 ~~~ ascii-art
-+------+                        +----------+                               +--------+
-| User |                        | Verifier |                               | Wallet |
-+------+                        +----------+                               +--------+
-   |                                 |                                          |
-   | 1. Initiate Authentication      |                                          |
-   |-------------------------------->|                                          |
-   |                                 |                                          |
-   |                                 | 2. Start SIOPv2 Flow                     |
-   |                                 |    (Authentication Request)              |
-   |                                 |----------------------------------------->|
-   |                                 |                                          |
-   |                                 |                                          | 3. Perform User
-   |                                 |                                          |    Authentication
-   |                                 |                                          |    (SIOPv2 Mechanism)
-   |                                 |                                          |-------+
-   |                                 |                                          |       |
-   |                                 |                                          |<------+
-   |                                 |                                          |
-   |                                 | 4. Send Authentication Response          |
-   |                                 |    (id_token)                            |
-   |                                 |<-----------------------------------------|
-   |       5. Validate id_token and  |                                          |
-   |       identify user             |                                          |
-   |                         +-------|                                          |
-   |                         |       |                                          |
-   |                         +------>|                                          |
-   |                                 |                                          |
-   |      6. Determine if additional |                                          |
-   |      credentials are required   |                                          |
-   |                         +-------|                                          |
-   |                         |       |                                          |
-   |                         +------>|                                          |
-   |                                 |                                          |
-   |                                 | 6a. If no additional credentials needed, |
-   |                                 |     issue access token                   |
-   |                                 |----------------------------------------->|
-   |                                 |                                          |
-   |                                 |                                          |
-   |                                 | 6b. If additional credentials required,  |
-   |                                 |     send Authorization Request           |
-   |                                 |     (presentation_definition or          |
-   |                                 |      presentation_definition_uri)        |
-   |                                 |----------------------------------------->|
-   |                                 |                                          |
-   |                                 |                                          | 7. Process Authorization
-   |                                 |                                          |    Request and request
-   |                                 |                                          |    presentation from user
-   |                                 |                                          |-------+
-   |                                 |                                          |       |
-   |<---------------------------------------------------------------------------|-------+
-   |                                 |                                          |
-   |                                 | 7. Send Authorization Response           |
-   |                                 |    (VP Token)                            |
-   |                                 |<-----------------------------------------|
-   |                                 |                                          |
-   |      8. Validate presentation   |                                          |
-   |      and issue access token     |                                          |
-   |                         +-------|                                          |
-   |                         |       |                                          |
-   |                         +-------|----------------------------------------->|
-   |                                 |                                          |
++------+                      +----------+                            +--------+
+| User |                      | Verifier |                            | Wallet |
++------+                      +----------+                            +--------+
+   |                               |                                      |
+   | 1. Initiate Authentication    |                                      |
+   |------------------------------>|                                      |
+   |                               |                                      |
+   |                               | 2. Start SIOPv2 Flow                 |
+   |                               | (Authentication Request)             |
+   |                               |------------------------------------->|
+   |                               |                                      |
+   |                               |                                      | 3. Perform User
+   |                               |                                      | Authentication
+   |                               |                                      | (SIOPv2 Mechanism)
+   |                               |                                      |-------+
+   |                               |                                      |       |
+   |                               |                                      |<------+
+   |                               |                                      |
+   |                               | 4. Send Authentication Response      |
+   |                               | (id_token)                           |
+   |                               |<-------------------------------------|
+   |     5. Validate id_token and  |                                      |
+   |     identify user             |                                      |
+   |                       +-------|                                      |
+   |                       |       |                                      |
+   |                       +------>|                                      |
+   |                               |                                      |
+   |    6. Determine if additional |                                      |
+   |    credentials are required   |                                      |
+   |                       +-------|                                      |
+   |                       |       |                                      |
+   |                       +------>|                                      |
+   |                               |                                      |
+   |                               | 6a. If no additional credentials     |
+   |                               | needed, issue access token           |
+   |                               |------------------------------------->|
+   |                               |                                      |
+   |                               |                                      |
+   |                               | 6b. If additional credentials        |
+   |                               | required, send Authorization Request |
+   |                               | (presentation_definition or          |
+   |                               |  presentation_definition_uri)        |
+   |                               |------------------------------------->|
+   |                               |                                      |
+   |                               |                                      | 7. Process Authorization
+   |                               |                                      |    Request and request
+   |                               |                                      |    presentation from user
+   |                               |                                      |-------+
+   |                               |                                      |       |
+   |<---------------------------------------------------------------------|-------+
+   |                               |                                      |
+   |                               | 7. Send Authorization Response       |
+   |                               |    (VP Token)                        |
+   |                               |<-------------------------------------|
+   |                               |                                      |
+   |      8. Validate presentation |                                      |
+   |      and issue access token   |                                      |
+   |                       +-------|                                      |
+   |                       |       |                                      |
+   |                       +-------|------------------------------------->|
+   |                               |                                      |
 ~~~
 !---
 Figure: Reference Design for SIOPv2 Conditional Credential Request Flow
