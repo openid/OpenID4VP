@@ -1824,20 +1824,20 @@ Note: The `nonce` and `aud` are set to the `nonce` of the request and the Client
 
 ### Conditional Credential Request Flow
 
-When combining OpenID for Verifiable Presentations with [@!SIOPv2], the server has the flexibility to determine whether to request credentials based on the authenticated user's context. The aforementioned flow can be modified as follows:
+When combining OpenID for Verifiable Presentations with [@!SIOPv2], the Verifier has the flexibility to determine whether to request credentials based on the authenticated user's context. The aforementioned flow can be modified as follows:
 
-1. The user initiates the authentication process with the server.
-2. The server starts the [@!SIOPv2] flow and sends an Authentication Request to the user's Wallet, omitting the `presentation_definition` and `presentation_definition_uri` parameters.
+1. The user initiates the authentication process with the Verifier.
+2. The Verifier starts the [@!SIOPv2] flow and sends an Authentication Request to the user's Wallet, omitting the `presentation_definition` and `presentation_definition_uri` parameters.
 3. The Wallet processes the Authentication Request and performs user authentication using the [@!SIOPv2] mechanism.
-4. Upon successful authentication, the Wallet sends the Authentication Response back to the server, including the `id_token`.
-5. The server validates the `id_token` and extracts the necessary information to identify the user.
-6. Based on the user's identity and the server's context, the server determines whether additional credentials are required.
-   - If no additional credentials are needed, the server proceeds with issuing the authentication token to the user.
-   - If additional credentials are required, the server initiates the OpenID for Verifiable Presentations flow by sending a new Authorization Request with the `presentation_definition` or `presentation_definition_uri` parameter.
-7. The Wallet processes the Authorization Request, requests the necessary presentation from the user, and sends the Authorization Response back to the server.
-8. The server validates the presentation and issues the authentication token to the user.
+4. Upon successful authentication, the Wallet sends the Authentication Response back to the Verifier, including the `id_token`.
+5. The Verifier validates the `id_token` and extracts the necessary information to identify the user.
+6. Based on the user's identity and the Verifier's context, the Verifier determines whether additional credentials are required.
+   - If no additional credentials are needed, the Verifier proceeds with issuing the authentication token to the user.
+   - If additional credentials are required, the Verifier initiates the OpenID for Verifiable Presentations flow by sending a new Authorization Request with the `presentation_definition` or `presentation_definition_uri` parameter.
+7. The Wallet processes the Authorization Request, requests the necessary presentation from the user, and sends the Authorization Response back to the Verifier.
+8. The Verifier validates the presentation and issues the authentication token to the user.
 
-This flow allows the server to make an informed decision about requesting credentials based on the authenticated user's context.
+This flow allows the Verifier to make an informed decision about requesting credentials based on the authenticated user's context.
 
 !---
 ~~~ ascii-art
