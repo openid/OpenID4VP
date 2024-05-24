@@ -266,8 +266,6 @@ This specification defines the following new parameters:
 `client_metadata_uri`: 
 : OPTIONAL. A string containing an HTTPS URL pointing to a resource where a JSON object with the Verifier metadata can be retrieved. The scheme used in the `client_metadata_uri` value MUST be `https`. The `client_metadata_uri` value MUST be reachable by the Wallet. It MUST NOT be present if `client_metadata` parameter is present.
 
-`client-metadata` and `client_metadata_uri` parameters MUST NOT be used when the Wallet knows Client Identifier and corresponding Client metadata prior to the transaction (i.e., Client Identifier scheme is absent or has value `pre-registered`).
-
 A public key to be used by the Wallet as an input to the key agreement to encrypt Authorization Response (see (#jarm)). It MAY be passed by the Verifier using the `jwks` or the `jwks_uri` claim within the `client_metadata` or `client_metadata_uri` request parameter.
 
 `request_uri_method`: 
