@@ -22,7 +22,7 @@ organization="Mattr"
 initials="T."
 surname="Lodderstedt"
 fullname="Torsten Lodderstedt"
-organization="sprind.org"
+organization="German Federal Agency for Disruptive Innovation (SPRIND)"
     [author.address]
     email = "torsten@lodderstedt.net"
 
@@ -30,9 +30,9 @@ organization="sprind.org"
 initials="K."
 surname="Yasuda"
 fullname="Kristina Yasuda"
-organization="Microsoft"
+organization="German Federal Agency for Disruptive Innovation (SPRIND)"
     [author.address]
-    email = "kristina.yasuda@microsoft.com"
+    email = "kristina.yasuda@sprind.org"
 
 [[author]]
 initials="T."
@@ -1238,13 +1238,13 @@ Requests from the Wallet to the Verifier SHOULD be sent with the minimal amount 
   <front>
     <title>Self-Issued OpenID Provider V2</title>
     <author fullname="Kristina Yasuda">
-      <organization>Microsoft</organization>
+      <organization>German Federal Agency for Disruptive Innovation (SPRIND)</organization>
     </author>
     <author fullname="Michael B. Jones">
-      <organization>Microsoft</organization>
+      <organization>Self-Issued Consulting</organization>
     </author>
     <author initials="T." surname="Lodderstedt" fullname="Torsten Lodderstedt">
-      <organization>yes.com</organization>
+      <organization>German Federal Agency for Disruptive Innovation (SPRIND)</organization>
     </author>
    <date day="1" month="January" year="2023"/>
   </front>
@@ -1457,10 +1457,10 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         <front>
           <title>OpenID for Verifiable Credential Issuance</title>
           <author initials="T." surname="Lodderstedt" fullname="Torsten Lodderstedt">
-            <organization>yes.com</organization>
+            <organization>German Federal Agency for Disruptive Innovation (SPRIND)</organization>
           </author>
           <author initials="K." surname="Yasuda" fullname="Kristina Yasuda">
-            <organization>Microsoft</organization>
+            <organization>German Federal Agency for Disruptive Innovation (SPRIND)</organization>
           </author>
           <author initials="T." surname="Looker" fullname="Tobias Looker">
             <organization>Mattr</organization>
