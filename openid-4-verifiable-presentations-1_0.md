@@ -1642,7 +1642,7 @@ The following is a non-normative example of the content of the `presentation_sub
 
 The `descriptor_map` refers to the `input_descriptor` element with an identifier `id_credential` and tells the Verifier that there is a proof of AnonCred Credential (`format` is `ac_vp`) directly in the vp_token (path is the root designated by `$`). Furthermore, it indicates using `path_nested` parameter that the user claims can be found embedded in the proof underneath `requested_proof.revealed_attr_groups.id_card_credential`.
 
-The following is the content of the `presentation_definition` parameter:
+The following is the content of the `vp_token` parameter:
 
 <{{examples/response/ac_vp_sd.json}}
 
