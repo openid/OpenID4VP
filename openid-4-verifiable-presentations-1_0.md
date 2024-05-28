@@ -288,23 +288,23 @@ The following additional considerations are given for pre-existing Authorization
 The following is a non-normative example of an Authorization Request: 
 
 ```
-  GET /authorize?
-    response_type=vp_token
-    &client_id=https%3A%2F%2Fclient.example.org%2Fcb
-    &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
-    &presentation_definition=...
-    &nonce=n-0S6_WzA2Mj HTTP/1.1
+GET /authorize?
+  response_type=vp_token
+  &client_id=https%3A%2F%2Fclient.example.org%2Fcb
+  &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
+  &presentation_definition=...
+  &nonce=n-0S6_WzA2Mj HTTP/1.1
 ```
 
 The following is a non-normative example of an Authorization Request with a `request_uri_method` parameter (including the additional `client_id_scheme` and `client_metadata` parameters): 
 
 ```
-  GET /authorize?
-    client_id=client.example.org
-    &client_id_scheme=x509_san_dns
-    &client_metadata=...
-    &request_uri=https%3A%2F%2Fclient.example.org%2Frequest%2Fvapof4ql2i7m41m68uep
-    &request_uri_method=post HTTP/1.1
+GET /authorize?
+  client_id=client.example.org
+  &client_id_scheme=x509_san_dns
+  &client_metadata=...
+  &request_uri=https%3A%2F%2Fclient.example.org%2Frequest%2Fvapof4ql2i7m41m68uep
+  &request_uri_method=post HTTP/1.1
 ```
 
 ## `presentation_definition` Parameter {#request_presentation_definition}
@@ -338,8 +338,8 @@ The protocol for the `presentation_definition_uri` MUST be HTTPS.
 The following is a non-normative example of an HTTP GET request sent after the Wallet received `presentation_definition_uri` parameter with the value `https://server.example.com/presentationdefs?ref=idcard_presentation_request`:
 
 ```
-  GET /presentationdefs?ref=idcard_presentation_request HTTP/1.1
-  Host: server.example.com
+GET /presentationdefs?ref=idcard_presentation_request HTTP/1.1
+Host: server.example.com
 ```
 
 The following is a non-normative example of an HTTP GET response sent by the Verifier in response to the above HTTP GET request:
@@ -401,12 +401,12 @@ The following is a non-normative example of an Authorization Request using the s
 which is an alias for the first Presentation Definition example given in (#request_presentation_definition):
 
 ```
-  GET /authorize?
-    response_type=vp_token
-    &client_id=https%3A%2F%2Fclient.example.org%2Fcb
-    &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
-    &scope=com.example.healthCardCredential_presentation
-    &nonce=n-0S6_WzA2Mj HTTP/1.1
+GET /authorize?
+  response_type=vp_token
+  &client_id=https%3A%2F%2Fclient.example.org%2Fcb
+  &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
+  &scope=com.example.healthCardCredential_presentation
+  &nonce=n-0S6_WzA2Mj HTTP/1.1
 ```
 
 ## Response Type `vp_token` {#response_type_vp_token}
@@ -446,18 +446,18 @@ This specification defines the following values for the `client_id_scheme` param
 The following is a non-normative example of a request when `client_id` equals `redirect_uri`.
 
 ```
-  HTTP/1.1 302 Found
-  Location: https://client.example.org/universal-link?
-    response_type=vp_token
-    &client_id=https%3A%2F%2Fclient.example.org%2Fcb
-    &client_id_scheme=redirect_uri
-    &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
-    &presentation_definition=...
-    &nonce=n-0S6_WzA2Mj
-    &client_metadata=%7B%22vp_formats%22:%7B%22jwt_vp_json%22:%
-    7B%22alg%22:%5B%22EdDSA%22,%22ES256K%22%5D%7D,%22ldp
-    _vp%22:%7B%22proof_type%22:%5B%22Ed25519Signature201
-    8%22%5D%7D%7D%7D
+HTTP/1.1 302 Found
+Location: https://client.example.org/universal-link?
+  response_type=vp_token
+  &client_id=https%3A%2F%2Fclient.example.org%2Fcb
+  &client_id_scheme=redirect_uri
+  &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
+  &presentation_definition=...
+  &nonce=n-0S6_WzA2Mj
+  &client_metadata=%7B%22vp_formats%22:%7B%22jwt_vp_json%22:%
+  7B%22alg%22:%5B%22EdDSA%22,%22ES256K%22%5D%7D,%22ldp
+  _vp%22:%7B%22proof_type%22:%5B%22Ed25519Signature201
+  8%22%5D%7D%7D%7D
 ```
 
 * `entity_id`: This value indicates that the Client Identifier is an Entity Identifier defined in OpenID Federation [@!OpenID.Federation]. Processing rules given in [@!OpenID.Federation] MUST be followed. Automatic Registration as defined in [@!OpenID.Federation] MUST be used. The Authorization Request MAY also contain a `trust_chain` parameter. The final Verifier metadata is obtained from the Trust Chain after applying the policies, according to [@!OpenID.Federation]. The `client_metadata` or `client_metadata_uri` parameter, if present in the Authorization Request, MUST be ignored when this Client Identifier scheme is used.
@@ -505,14 +505,14 @@ Additionally, if the `client_id_scheme` value permits signed Request Objects, th
 The following is a non-normative example of a request:
 
 ```
-  POST /request HTTP/1.1
-  Host: client.example.org
-  Content-Type: application/x-www-form-urlencoded
+POST /request HTTP/1.1
+Host: client.example.org
+Content-Type: application/x-www-form-urlencoded
 
-    wallet_metadata=%7B%22vp_formats_supported%22%3A%7B%22jwt_vc_json%22%3A%7B%22alg_values_supported
-    %22%3A%5B%22ES256K%22%2C%22ES384%22%5D%7D%2C%22jwt_vp_json%22%3A%7B%22alg_values_supported%22%3A%
-    5B%22ES256K%22%2C%22EdDSA%22%5D%7D%7D%7D&
-    wallet_nonce=qPmxiNFCR3QTm19POc8u
+  wallet_metadata=%7B%22vp_formats_supported%22%3A%7B%22jwt_vc_json%22%3A%7B%22alg_values_supported
+  %22%3A%5B%22ES256K%22%2C%22ES384%22%5D%7D%2C%22jwt_vp_json%22%3A%7B%22alg_values_supported%22%3A%
+  5B%22ES256K%22%2C%22EdDSA%22%5D%7D%7D%7D&
+  wallet_nonce=qPmxiNFCR3QTm19POc8u
 ```
 
 ### Request URI Response
@@ -586,10 +586,10 @@ Including the `presentation_submission` parameter as a separate response paramet
 The following is a non-normative example of an Authorization Response when the Response Type value in the Authorization Request was `vp_token`: 
 
 ```
-  HTTP/1.1 302 Found
-  Location: https://client.example.org/cb#
-    presentation_submission=...
-    &vp_token=...
+HTTP/1.1 302 Found
+Location: https://client.example.org/cb#
+  presentation_submission=...
+  &vp_token=...
 ```
 
 The following is a non-normative example of a VP Token containing a single Verifiable Presentation:
@@ -642,7 +642,7 @@ The following is a non-normative example of the payload of a Request Object with
    "response_mode": "direct_post",
    "presentation_definition": {...},
    "nonce": "n-0S6_WzA2Mj",
-   "state" : "eyJhb...6-sVA
+   "state" : "eyJhb...6-sVA"
 }
 ```
 
@@ -650,32 +650,32 @@ The following non-normative example of an Authorization Request refers to the Au
 
 ```
 https://wallet.example.com?
-    client_id=https%3A%2F%2Fclient.example.org%2Fcb
-    &request_uri=https%3A%2F%2Fclient.example.org%2F567545564
+  client_id=https%3A%2F%2Fclient.example.org%2Fcb
+  &request_uri=https%3A%2F%2Fclient.example.org%2F567545564
 ```
 
 The following is a non-normative example of the Authorization Response that is sent via an HTTP POST request to the Verifier's Response Endpoint:
 
 ```
-  POST /post HTTP/1.1
-  Host: client.example.org
-  Content-Type: application/x-www-form-urlencoded
+POST /post HTTP/1.1
+Host: client.example.org
+Content-Type: application/x-www-form-urlencoded
 
-    presentation_submission=...&
-    vp_token=...&
-    state=eyJhb...6-sVA
+  presentation_submission=...&
+  vp_token=...&
+  state=eyJhb...6-sVA
 ```
 
 The following is a non-normative example of an Authorization Error Response that is sent as an HTTP POST request to the Verifier's Response Endpoint:
 
 ```
-  POST /post HTTP/1.1
-  Host: client.example.org
-  Content-Type: application/x-www-form-urlencoded
+POST /post HTTP/1.1
+Host: client.example.org
+Content-Type: application/x-www-form-urlencoded
 
-    error=invalid_request&
-    error_description=unsupported%20client_id_scheme&
-    state=eyJhb...6-sVA
+  error=invalid_request&
+  error_description=unsupported%20client_id_scheme&
+  state=eyJhb...6-sVA
 ```
 
 If the Response Endpoint has successfully processed the Authorization Response or Authorization Error Response, it MUST respond with HTTP status code 200.
@@ -692,13 +692,13 @@ The value of the redirect URI is an absolute URI as defined by [@!RFC3986] Secti
 The following is a non-normative example of the response from the Verifier to the Wallet upon receiving the Authorization Response at the Response Endpoint (using a `response_code` parameter from (#implementation_considerations_direct_post)):
 
 ```
-  HTTP/1.1 200 OK
-  Content-Type: application/json
-  Cache-Control: no-store
+HTTP/1.1 200 OK
+Content-Type: application/json
+Cache-Control: no-store
 
-  {
-    "redirect_uri":"https://client.example.org/cb#response_code=091535f699ea575c7937fa5f0f454aee" 
-  }
+{
+  "redirect_uri":"https://client.example.org/cb#response_code=091535f699ea575c7937fa5f0f454aee" 
+}
 ```
 
 If the response does not contain the `redirect_uri` parameter, the Wallet is not required to perform any further steps.
@@ -1776,15 +1776,15 @@ This section shows how SIOP and OpenID for Verifiable Presentations can be combi
 The following is a non-normative example of a request that combines this specification and [@!SIOPv2].
 
 ```
-  GET /authorize?
-    response_type=vp_token%20id_token
-    &scope=openid
-    &id_token_type=subject_signed
-    &client_id=https%3A%2F%2Fclient.example.org%2Fcb
-    &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
-    &presentation_definition=...
-    &nonce=n-0S6_WzA2Mj HTTP/1.1
-  Host: wallet.example.com
+GET /authorize?
+  response_type=vp_token%20id_token
+  &scope=openid
+  &id_token_type=subject_signed
+  &client_id=https%3A%2F%2Fclient.example.org%2Fcb
+  &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
+  &presentation_definition=...
+  &nonce=n-0S6_WzA2Mj HTTP/1.1
+Host: wallet.example.com
 ```
 
 The differences to the example requests in the previous sections are:
@@ -1797,11 +1797,11 @@ The differences to the example requests in the previous sections are:
 The following is a non-normative example of a response sent upon receiving a request provided in (#siop_request):
 
 ```
-  HTTP/1.1 302 Found
-  Location: https://client.example.org/cb#
-    id_token=
-    &presentation_submission=...
-    &vp_token=...
+HTTP/1.1 302 Found
+Location: https://client.example.org/cb#
+  id_token=
+  &presentation_submission=...
+  &vp_token=...
 ```
 
 In addition to the `presentation_submission` and `vp_token`, it also contains an `id_token`.
