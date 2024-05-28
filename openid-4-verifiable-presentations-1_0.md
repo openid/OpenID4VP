@@ -1510,11 +1510,13 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
 
 This section defines a profile of OID4VP for use with the W3C Digital Credentials API [@!w3c.digital_credentials_api].
 
-The W3C Digital Credentials API defines a Browser API, which allows web sites acting as Verifiers to request the presentation of Verifiable Credentials. The API itself does not define a credential exchange protocol but can be used with different such protocols. The Browser in concert with other layers of the platform/operating system and based on the decision of the user will select the Wallet the request is sent to and provide this Wallet with the request data along with the web origin of the Verifier. 
+The W3C Digital Credentials API defines a Web Platform API which allows web sites acting as Verifiers
+to request the presentation of verifiable credentials. The API itself does not define a credential exchange protocol
+but can be used with multiple protocols. The user agent working together with other layers of the platform/operating system and based on the permission of the End-User will send to the Wallet of the End-User's choice the request data along with the web origin of the Verifier.
 
 The design of this OIDVP profile utilizes the mechanisms of the W3C Digital Credentials API while also allowing to leverage advanced security features of OID4VP, if needed. It also defines the OID4VP request and response parameters that MAY be used with the W3C Digital Credentials API.
 
-This is a non-normative example of a request, 
+The following is a non-normative example of an unsigned request when advanced security features of OID4VP are not used:
 
 ```js
 if ('DigitalCredential' in window) {
@@ -1536,14 +1538,21 @@ if ('DigitalCredential' in window) {
 }
 ```
 
-and this is a non-normative example of the corresponding response:
+The following is a non-normative example of a response corresponding to a previous request:
 
 ```js
 const { data } = response;
-// data is a byte array that contains the JSON or JWE which needs to be parsed
 ```
 
-There are a couple of benefits for OID4VP implementers (both Verifiers as well as Wallets) to adopt OID4VP with the Digital Credentials API. To start with, the API is a privacy-preserving alternative to the invocation of Wallets through URLs, especially custom schemes. The browser will ensure the invocation of a Wallet is only performed if confirmed by the user based on contextual information of the request and the sender. It also allows to select Wallets based on the credential types being requested and supported, respectively. As request and responses are sent and received through the API, the user will always return to the browser tab where she had started, which results in an improved user experience. And the security of OID4VP implenentations can also be enhanced signficantly. Cross-device requests benefit from the use of proximity checks through a combined use of BLE and a QR Code (similar to Passkeys). Furthermore, the Wallet is provided with information about the Verifier's URL as authenticated by the browser to the request as an additional signal, which can be used for phishing detection.  
+The Digital Credentials API offers several advantages for implementers of both Verifiers and Wallets. 
+
+Firstly, the API serves as a privacy-preserving alternative to invoking Wallets via URLs, particularly custom schemes. The user agent and app platform will only invoke a Wallet if the user confirms the request based on contextual information about the credential request and the requestor (verifier). 
+
+Secondly, the user will always be returned to the initial context, typically a browser tab, when the request has been fulfilled (or aborted), which results in an improved user experience.
+
+Thirdly, cross-device requests benefit from the use of secure transports with proximity checks, which are handled by the OS platform using FIDO CTAP 2.2 with hybrid transports.
+
+And lastly, as part of the request, the Wallet is provided with information about the Verifier's origin as authenticated by the user agent, which is important for phishing resistance.  
 
 ## Protocol
 
@@ -1563,7 +1572,7 @@ The `request` parameter of the W3C Digital Credentials API MUST contain a valid 
 }
 ```
 
-The following Authorization Request parameters are supported with this profile: 
+Out of the Authorization Request parameters defined in [@!RFC6749] and (#vp_token_request), the following are supported with this profile: 
 
 * `client_id`
 * `client_id_scheme`
@@ -1573,9 +1582,9 @@ The following Authorization Request parameters are supported with this profile:
 * `client_metadata`
 * `request`
 
-The `client_id` and `client_id_scheme` MUST be omitted in unsigned requests. The wallet determines the Client Identifier from the origin as asserted by the Browser. 
+The `client_id` and `client_id_scheme` MUST be omitted in unsigned requests. The Wallet determines the Client Identifier from the origin as asserted by the Browser. How the Wallet receives the origin from is up to the user agent and app platform and is out of scope of this profile.
 
-This profile introduces a new parameter `expected_origins`.
+In addition to the above-mentioned parameters, this profile introduces a following new parameter:
 
 * `expected_origins`: An array of strings, each of the strings representing an origin of the Verifier making the request. This parameter MUST only be used with signed requests. It relates the logical Client Identifier to the physical endpoints that are legit origins for requests on behalf of this Client Identifier and is used to detect request replay.
 
@@ -1606,7 +1615,7 @@ The Verifier MAY send all the OID4VP request data as JSON elements in the `reque
 
 The Verifier MAY send a signed request.
 
-The signed request object MAY contain all the parameters listed above except `request`. The signed request object MUST contain an `expected_origins` parameter. 
+The signed Request Object MAY contain all the parameters listed above except `request`. The signed Request Object MUST contain an `expected_origins` parameter. 
 
 This is an example of such a request:
 
