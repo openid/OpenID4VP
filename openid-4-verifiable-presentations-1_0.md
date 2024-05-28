@@ -1542,7 +1542,7 @@ The `request` parameter of the W3C Digital Credentials API MUST contain a valid 
 }
 ```
 
-The following Authorization Request parameters are supported with this profile: 
+Out of the Authorization Request parameters defined in [@!RFC6749] and (#vp_token_request), the following are supported with this profile: 
 
 * `client_id`
 * `client_id_scheme`
@@ -1554,7 +1554,7 @@ The following Authorization Request parameters are supported with this profile:
 
 The `client_id` and `client_id_scheme` MUST be omitted in unsigned requests. The Wallet determines the Client Identifier from the origin as asserted by the Browser. How the Wallet receives the origin from is up to the user agent and app platform and is out of scope of this profile.
 
-This profile introduces a new parameter `expected_origins`.
+In addition to the above-mentioned parameters, this profile introduces a following new parameter:
 
 * `expected_origins`: An array of strings, each of the strings representing an origin of the Verifier making the request. This parameter MUST only be used with signed requests. It relates the logical Client Identifier to the physical endpoints that are legit origins for requests on behalf of this Client Identifier and is used to detect request replay.
 
