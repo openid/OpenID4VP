@@ -1552,7 +1552,7 @@ The following Authorization Request parameters are supported with this profile:
 * `client_metadata`
 * `request`
 
-The `client_id` and `client_id_scheme` MUST be omitted in unsigned requests. The wallet determines the Client Identifier from the origin as asserted by the Browser. 
+The `client_id` and `client_id_scheme` MUST be omitted in unsigned requests. The Wallet determines the Client Identifier from the origin as asserted by the Browser. How the Wallet receives the origin from is up to the user agent and app platform and is out of scope of this profile.
 
 This profile introduces a new parameter `expected_origins`.
 
