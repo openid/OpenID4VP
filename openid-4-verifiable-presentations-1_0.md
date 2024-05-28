@@ -1512,7 +1512,6 @@ The following is a non-normative example of a response corresponding to a previo
 
 ```js
 const { data } = response;
-// data is a byte array that contains the JSON or JWE which needs to be parsed
 ```
 
 The Digital Credentials API offers several advantages for implementers of both Verifiers and Wallets. 
