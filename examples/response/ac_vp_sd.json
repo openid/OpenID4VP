@@ -1,30 +1,30 @@
 {
-    "proof": {...},
-    "requested_proof": {
-        "revealed_attrs": {},
-        "revealed_attr_groups": {
-            "id_card_credential": {
-                "sub_proof_index": 0,
-                "values": {
-                    "family_name": {
-                        "raw": "Wonderland",
-                        "encoded": "167908493…94017654562035"
-                    },
-                    "given_name": {
-                        "raw": "Alice",
-                        "encoded": "270346400…99344178781507"
-                    }
-                }
-            }
-        },
-       …
-    },
-    "identifiers": [
-        {
-            "schema_id": "3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0.1",
-            "cred_def_id": "CsiDLAiFkQb9N4NDJKUagd:3:CL:4687:awesome_cred",
-            "rev_reg_id": null,
-            "timestamp": null
+  "proof": {...},
+  "requested_proof": {
+    "revealed_attrs": {},
+    "revealed_attr_groups": {
+      "id_card_credential": {
+        "sub_proof_index": 0,
+        "values": {
+          "family_name": {
+            "raw": "Wonderland",
+            "encoded": "167908493…94017654562035"
+          },
+          "given_name": {
+            "raw": "Alice",
+            "encoded": "270346400…99344178781507"
+          }
         }
-    ]
+      }
+    },
+    …
+  },
+  "identifiers": [
+    {
+      "schema_id": "3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0.1",
+      "cred_def_id": "CsiDLAiFkQb9N4NDJKUagd:3:CL:4687:awesome_cred",
+      "rev_reg_id": null,
+      "timestamp": null
+    }
+  ]
 }

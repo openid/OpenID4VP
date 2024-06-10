@@ -1,21 +1,21 @@
 {
-    "iss": "did:example:ebfeb1f712ebc6f1c276e12ec21",
-    "aud": "https://client.example.org/cb",
-    "exp": 1573029723,
-    "vp_token": "eyJhb...YMetA",
-    "presentation_submission": {
-        "definition_id": "example_jwt_vc",
-        "id": "example_jwt_vc_presentation_submission",
-        "descriptor_map": [
-            {
-                "id": "id_credential",
-                "path": "$",
-                "format": "jwt_vp_json",
-                "path_nested": {
-                    "path": "$.vp.verifiableCredential[0]",
-                    "format": "jwt_vc"
-                }
-            }
-        ]
-    }
+  "iss": "did:example:ebfeb1f712ebc6f1c276e12ec21",
+  "aud": "https://client.example.org/cb",
+  "exp": 1573029723,
+  "vp_token": "eyJhb...YMetA",
+  "presentation_submission": {
+    "definition_id": "example_jwt_vc",
+    "id": "example_jwt_vc_presentation_submission",
+    "descriptor_map": [
+      {
+        "id": "id_credential",
+        "path": "$",
+        "format": "jwt_vp_json",
+        "path_nested": {
+          "path": "$.vp.verifiableCredential[0]",
+          "format": "jwt_vc"
+        }
+      }
+    ]
+  }
 }

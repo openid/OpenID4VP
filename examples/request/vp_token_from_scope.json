@@ -1,21 +1,21 @@
 {
-    "id": "scope_IDCardCredential",
-    "input_descriptors": [
-        {
-            "id": "scope_IDCardCredential",
-            "constraints": {
-                "fields": [
-                    {
-                        "path": [
-                            "$.type"
-                        ],
-                        "filter": {
-                            "type": "string",
-                            "pattern": "IDCardCredential"
-                        }
-                    }
-                ]
+  "id": "scope_IDCardCredential",
+  "input_descriptors": [
+    {
+      "id": "scope_IDCardCredential",
+      "constraints": {
+        "fields": [
+          {
+            "path": [
+              "$.type"
+            ],
+            "filter": {
+              "type": "string",
+              "pattern": "IDCardCredential"
             }
-        }
-    ]
+          }
+        ]
+      }
+    }
+  ]
 }

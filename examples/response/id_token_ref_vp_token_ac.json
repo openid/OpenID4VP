@@ -1,32 +1,32 @@
 {
-    "aud": "https://5779-2a02-8070-27ba-5100-8158-e3bc-da6c-6529.ngrok.io/index.php/apps/oidc_login/oidc/callback",
-    "sub": "9wgU5CR6PdgGmvBfgz_CqAtBxJ33ckMEwvij-gC6Bcw",
-    "auth_time": 1638483344,
-    "iss": "https://self-issued.me/v2",
-    "sub_jwk": {
-      "x": "cQ5fu5VmGmPmYzG3QVSYYZPXExjFLozZuqo5Of9hC45kdA_5lTMGcoyQE78RrqQ6",
-      "kty": "EC",
-      "y": "XHpi27YMAdYjbYGMdMdckF4k38qeRa3BPYQ_CCEeVuWBCTrnF_-f_ASULPTmUmTS",
-      "crv": "P-384"
-    },
-    "exp": 1638483944,
-    "iat": 1638483344,
-    "nonce": "22456608037449564223",
-    "_vp_token": {
-      "presentation_submission": {
-        "descriptor_map": [
-          {
-            "path": "$",
-            "format": "ac_vp",
-            "path_nested": {
-              "path": "$.requested_proof.revealed_attr_groups.ref2",
-              "format": "ac_vc"
-            },
-            "id": "ref2"
-          }
-        ],
-        "definition_id": "vp token example",
-        "id": "NexcloudCredentialPresentationSubmission"
-      }
+  "aud": "https://5779-2a02-8070-27ba-5100-8158-e3bc-da6c-6529.ngrok.io/index.php/apps/oidc_login/oidc/callback",
+  "sub": "9wgU5CR6PdgGmvBfgz_CqAtBxJ33ckMEwvij-gC6Bcw",
+  "auth_time": 1638483344,
+  "iss": "https://self-issued.me/v2",
+  "sub_jwk": {
+    "x": "cQ5fu5VmGmPmYzG3QVSYYZPXExjFLozZuqo5Of9hC45kdA_5lTMGcoyQE78RrqQ6",
+    "kty": "EC",
+    "y": "XHpi27YMAdYjbYGMdMdckF4k38qeRa3BPYQ_CCEeVuWBCTrnF_-f_ASULPTmUmTS",
+    "crv": "P-384"
+  },
+  "exp": 1638483944,
+  "iat": 1638483344,
+  "nonce": "22456608037449564223",
+  "_vp_token": {
+    "presentation_submission": {
+      "descriptor_map": [
+        {
+          "path": "$",
+          "format": "ac_vp",
+          "path_nested": {
+            "path": "$.requested_proof.revealed_attr_groups.ref2",
+            "format": "ac_vc"
+          },
+          "id": "ref2"
+        }
+      ],
+      "definition_id": "vp token example",
+      "id": "NexcloudCredentialPresentationSubmission"
     }
   }
+}
