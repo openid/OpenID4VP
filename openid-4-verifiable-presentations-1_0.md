@@ -642,7 +642,7 @@ The following is a non-normative example of the payload of a Request Object with
    "response_mode": "direct_post",
    "presentation_definition": {...},
    "nonce": "n-0S6_WzA2Mj",
-   "state" : "eyJhb...6-sVA"
+   "state": "eyJhb...6-sVA"
 }
 ```
 
@@ -697,7 +697,7 @@ Content-Type: application/json
 Cache-Control: no-store
 
 {
-  "redirect_uri":"https://client.example.org/cb#response_code=091535f699ea575c7937fa5f0f454aee" 
+  "redirect_uri": "https://client.example.org/cb#response_code=091535f699ea575c7937fa5f0f454aee" 
 }
 ```
 
