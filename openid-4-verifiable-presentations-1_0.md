@@ -1827,9 +1827,9 @@ Note: The `nonce` and `aud` are set to the `nonce` of the request and the Client
 When combining OpenID for Verifiable Presentations with [@!SIOPv2], the Verifier has the flexibility to determine whether to request credentials based on the authenticated user's context. The aforementioned flow can be modified as follows:
 
 1. The user initiates the authentication process with the Verifier.
-2. The Verifier starts the [@!SIOPv2] flow and sends an Authentication Request to the user's Wallet, omitting the `presentation_definition` and `presentation_definition_uri` parameters.
-3. The Wallet processes the Authentication Request and performs user authentication using the [@!SIOPv2] mechanism.
-4. Upon successful authentication, the Wallet sends the Authentication Response back to the Verifier, including the `id_token`.
+2. The Verifier starts the [@!SIOPv2] flow and sends an Authorization Request to the user's Wallet, omitting the `presentation_definition` and `presentation_definition_uri` parameters.
+3. The Wallet processes the Authorization Request and performs user authentication using the [@!SIOPv2] mechanism.
+4. Upon successful authentication, the Wallet sends the Authorization Response back to the Verifier, including the `id_token`.
 5. The Verifier validates the `id_token` and extracts the necessary information to identify the user.
 6. Based on the user's identity and the Verifier's context, the Verifier determines whether additional credentials are required.
    - If no additional credentials are needed, the Verifier proceeds with issuing the authentication token to the user.
