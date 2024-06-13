@@ -350,32 +350,32 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-    "id": "vp token example",
-    "input_descriptors": [
-        {
-            "id": "id card credential",
-            "format": {
-                "ldp_vc": {
-                    "proof_type": [
-                        "Ed25519Signature2018"
-                    ]
-                }
-            },
-            "constraints": {
-                "fields": [
-                    {
-                        "path": [
-                            "$.type"
-                        ],
-                        "filter": {
-                            "type": "string",
-                            "pattern": "IDCardCredential"
-                        }
-                    }
-                ]
-            }
+  "id": "vp token example",
+  "input_descriptors": [
+    {
+      "id": "id card credential",
+      "format": {
+        "ldp_vc": {
+          "proof_type": [
+            "Ed25519Signature2018"
+          ]
         }
-    ]
+      },
+      "constraints": {
+        "fields": [
+          {
+            "path": [
+              "$.type"
+            ],
+            "filter": {
+              "type": "string",
+              "pattern": "IDCardCredential"
+            }
+          }
+        ]
+      }
+    }
+  ]
 }
 ```
 
@@ -523,15 +523,15 @@ The following is a non-normative example of a request object:
 
 ```json
 {
-   "client_id": "client.example.org",
-   "client_id_scheme": "x509_san_dns",
-   "response_uri": "https://client.example.org/post",
-   "response_type": "vp_token",
-   "response_mode": "direct_post",
-   "presentation_definition": {...},
-   "nonce": "n-0S6_WzA2Mj",
-   "wallet_nonce": "qPmxiNFCR3QTm19POc8u",
-   "state" : "eyJhb...6-sVA"
+  "client_id": "client.example.org",
+  "client_id_scheme": "x509_san_dns",
+  "response_uri": "https://client.example.org/post",
+  "response_type": "vp_token",
+  "response_mode": "direct_post",
+  "presentation_definition": {...},
+  "nonce": "n-0S6_WzA2Mj",
+  "wallet_nonce": "qPmxiNFCR3QTm19POc8u",
+  "state" : "eyJhb...6-sVA"
 }
 ```
 
@@ -635,14 +635,14 @@ The following is a non-normative example of the payload of a Request Object with
 
 ```json
 {
-   "client_id": "https://client.example.org/post",
-   "client_id_scheme": "redirect_uri",
-   "response_uri": "https://client.example.org/post",
-   "response_type": "vp_token",
-   "response_mode": "direct_post",
-   "presentation_definition": {...},
-   "nonce": "n-0S6_WzA2Mj",
-   "state": "eyJhb...6-sVA"
+  "client_id": "https://client.example.org/post",
+  "client_id_scheme": "redirect_uri",
+  "response_uri": "https://client.example.org/post",
+  "response_type": "vp_token",
+  "response_mode": "direct_post",
+  "presentation_definition": {...},
+  "nonce": "n-0S6_WzA2Mj",
+  "state": "eyJhb...6-sVA"
 }
 ```
 
@@ -946,14 +946,14 @@ The following is a non-normative example of the terms of use that may be defined
 
 ```json
 {
-   "termsOfUse":[
-      {
-         "type":"<uri that identifies this type of terms of use>",
-         "federations":[
-            "<list of federations/trust schemes the Credential Issuer asserts it is a member of>"
-         ]
-      }
-   ]
+  "termsOfUse": [
+    {
+      "type": "<uri that identifies this type of terms of use>",
+      "federations": [
+        "<list of federations/trust schemes the Credential Issuer asserts it is a member of>"
+      ]
+    }
+  ]
 }
 ```
 
@@ -1896,6 +1896,7 @@ The technology described in this specification was made available from contribut
 
    -21
 
+   * fix indentation of examples
    * added references to ISO/IEC 23220 and 18013 documents 
    * added `post` request method for Request URI
    * Added IETF SD-JWT VC profile

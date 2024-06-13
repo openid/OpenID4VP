@@ -1,24 +1,24 @@
 {
-    "id": "Presentation example 2",
-    "definition_id": "Example with multiple VPs",
-    "descriptor_map": [
-        {
-            "id": "ID Card with constraints",
-            "format": "ldp_vp",
-            "path": "$[0]",
-            "path_nested": {
-                "format": "ldp_vc",
-                "path": "$[0].verifiableCredential[0]"
-            }
-        },
-        {
-            "id": "Ontario Health Insurance Plan",
-            "format": "jwt_vp_json",
-            "path": "$[1]",
-            "path_nested": {
-                "format": "jwt_vc_json",
-                "path": "$[1].vp.verifiableCredential[0]"
-            }
-        }
-    ]
+  "id": "Presentation example 2",
+  "definition_id": "Example with multiple VPs",
+  "descriptor_map": [
+    {
+      "id": "ID Card with constraints",
+      "format": "ldp_vp",
+      "path": "$[0]",
+      "path_nested": {
+        "format": "ldp_vc",
+        "path": "$[0].verifiableCredential[0]"
+      }
+    },
+    {
+      "id": "Ontario Health Insurance Plan",
+      "format": "jwt_vp_json",
+      "path": "$[1]",
+      "path_nested": {
+        "format": "jwt_vc_json",
+        "path": "$[1].vp.verifiableCredential[0]"
+      }
+    }
+  ]
 }
