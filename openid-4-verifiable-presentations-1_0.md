@@ -1834,7 +1834,7 @@ When combining OpenID for Verifiable Presentations with [@!SIOPv2], the Verifier
 6. Based on the user's identity and the Verifier's context, the Verifier determines whether additional credentials are required.
    - If no additional credentials are needed, the Verifier proceeds with issuing the authentication token to the user.
    - If additional credentials are required, the Verifier initiates the OpenID for Verifiable Presentations flow by sending a new Authorization Request with the `presentation_definition` or `presentation_definition_uri` parameter.
-7. The Wallet processes the Authorization Request, requests the necessary presentation from the user, and sends the Authorization Response back to the Verifier.
+7. The Wallet processes the Authorization Request, obtains the necessary consent from the user, and sends the Authorization Response back to the Verifier.
 8. The Verifier validates the presentation and issues the authentication token to the user.
 
 This flow allows the Verifier to make an informed decision about requesting credentials based on the authenticated user's context.
