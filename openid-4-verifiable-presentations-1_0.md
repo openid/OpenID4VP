@@ -705,7 +705,7 @@ If the response does not contain the `redirect_uri` parameter, the Wallet is not
 
 Note: In the Response Mode `direct_post` or `direct_post.jwt`, the Wallet can change the UI based on the Verifier's callback to the Wallet following the submission of the Authorization Response.
 
-## Signed and Encrypted Responses {#jarm}
+## Signed and/or Encrypted Responses {#jarm}
 
 This section defines how Authorization Response containing a VP Token can be signed and/or encrypted at the application level when the Response Type value is `vp_token` or `vp_token id_token`. Encrypting the Authorization Response can prevent personal data in the Authorization Response from leaking, when the Authorization Response is returned through the front channel (e.g., the browser).
 
@@ -1558,7 +1558,7 @@ And lastly, as part of the request, the Wallet is provided with information abou
 
 The value of the `protocol` parameter of the W3C Digital Credentials API MUST be set to `urn:openid.net:oid4vp` for this profile.
 
-## Request
+## Request {#browser_api_request}
 
 The `request` parameter of the W3C Digital Credentials API MUST contain a valid OID4VP Authorization Request, where every Authorization Request parameter is represented as a top-level JSON member. The following is the non-normative example of such a request:
 
@@ -1582,41 +1582,29 @@ Out of the Authorization Request parameters defined in [@!RFC6749] and (#vp_toke
 * `presentation_definition`
 * `client_metadata`
 * `request`
+* `response_mode`
 
-The `client_id` and `client_id_scheme` MUST be omitted in unsigned requests. The Wallet determines the Client Identifier from the origin as asserted by the Browser. How the Wallet receives the origin from is up to the user agent and app platform and is out of scope of this profile.
+The `client_id` and `client_id_scheme` MUST be omitted in unsigned requests defined in (#unsigned_request). The Wallet determines the Client Identifier from the origin as asserted by the Browser. How the Wallet receives the origin from is up to the user agent and app platform and is out of scope of this profile.
+
+The value of `response_mode` parameter MUST be `w3c_dc_api` when the response is not signed and/or encrypted and `w3c_dc_api.jwt` when the response is signed and/or encrypted as defined in (#jarm).
 
 In addition to the above-mentioned parameters, this profile introduces a following new parameter:
 
-* `expected_origins`: An array of strings, each of the strings representing an origin of the Verifier making the request. This parameter MUST only be used with signed requests. It relates the logical Client Identifier to the physical endpoints that are legit origins for requests on behalf of this Client Identifier and is used to detect request replay.
+* `expected_origins`: An array of strings, each of the string representing an origin of the Verifier making the request. This parameter MUST only be used with signed requests defined in (#signed_request). It relates the logical Client Identifier to the physical endpoints that are legit origins for requests on behalf of this Client Identifier and is used to detect request replay.
 
-## Response
+## Signed and Unsigned Requests
 
-Every OID4VP Authorization Request MUST result in a response being provided through the W3C Digital Credentials API. The Authorization Response is a JSON object, where the response parameters as defined for the Response Type are encoded as top-level members in this JSON object. 
+Any OpenID4VP request compliant to this specification can be sent over the W3C Digital Credentials API. Depending on the mechanism used to identify and authenticate the Verifier, the request can be signed or unsigned. This section defines signed and unsigned OpenID4VP requests over the W3C Digital Credentials API.
 
-The following is an example of an OID4VP Authorization Response through the API: 
+### Unsigned Request {#unsigned_request}
 
-```json
-{
-  "presentation_submission": "...",
-  "vp_token": "..."
-}
-```
+The Verifier MAY send all the OID4VP request data as JSON elements in the `request` API parameter and receives the result in the API's `result` parameter. In this case, the Wallet will use the Verifier origin as asserted by the Browser as the Verifer's Client Identifier.
 
-Note: All mechanisms for cryptographically protecting the OID4VP response MAY be utilized with the W3C Digital Credentials API, too. 
+### Signed Request {#signed_request}
 
-## Example Flows
+The Verifier MAY send a signed request, for example, when identification and authentication of the Verifier is required.
 
-As OID4VP is pretty flexible, this section shall shed some light on what flows the authors deem especially useful.  
-
-### Unsigned Request
-
-The Verifier MAY send all the OID4VP request data as JSON elements in the `request` API parameter and receives the result in the API's `result` parameter. In this case, the Wallet will use the Verifier origin as asserted by the Browser as the Verifer's Client Identifier.  
-
-### Signed Request
-
-The Verifier MAY send a signed request.
-
-The signed Request Object MAY contain all the parameters listed above except `request`. The signed Request Object MUST contain an `expected_origins` parameter. 
+The signed Request Object MAY contain all the parameters listed in (#browser_api_request), except `request`. The signed Request Object MUST contain an `expected_origins` parameter. 
 
 Below is a non-normative example of such a request:
 
@@ -1639,7 +1627,22 @@ This is an example signed request payload:
 
 <{{examples/digital_credentials_api/signed_request_payload.json}}
 
-The signed request allows the Wallet to authenticate the Verifier using a trust framework other than the Web PKI utilized by the browser. An example of such a trust framework is the Verifier (RP) management infrastructure set up in the context of the eIDAS regulation in the European Union. The signature over the wallet-provided nonce is a counter-measure against replay as the Wallet can no longer only rely on the web origin of the Verifier. This web origin MAY still be used to further strengthen the security of the flow. The external trust framework could, for example, map the Client Identifier to registered web origins. 
+The signed request allows the Wallet to authenticate the Verifier using a trust framework other than the Web PKI utilized by the browser. An example of such a trust framework is the Verifier (RP) management infrastructure set up in the context of the eIDAS regulation in the European Union. The signature over the wallet-provided nonce is a counter-measure against replay as the Wallet can no longer only rely on the web origin of the Verifier. This web origin MAY still be used to further strengthen the security of the flow. The external trust framework could, for example, map the Client Identifier to registered web origins.
+
+## Response
+
+Every OID4VP Authorization Request MUST result in a response being provided through the W3C Digital Credentials API. The Authorization Response is a JSON object, where the response parameters as defined for the Response Type are encoded as top-level members in this JSON object. 
+
+The following is an example of an OID4VP Authorization Response through the API: 
+
+```json
+{
+  "presentation_submission": "...",
+  "vp_token": "..."
+}
+```
+
+Note: All mechanisms for cryptographically protecting the OID4VP response MAY be utilized with the W3C Digital Credentials API, too.
 
 # Examples with Credentials in Various Formats {#alternative_credential_formats}
 
