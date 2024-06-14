@@ -1560,7 +1560,7 @@ The value of the `protocol` parameter of the W3C Digital Credentials API MUST be
 
 ## Request
 
-The `request` parameter of the W3C Digital Credentials API MUST contain a valid OID4VP Authorization Request, where every Authorization Request parameter is represented as a top-level JSON member as shown in the following non-normative example:
+The `request` parameter of the W3C Digital Credentials API MUST contain a valid OID4VP Authorization Request, where every Authorization Request parameter is represented as a top-level JSON member. The following is the non-normative example of such a request:
 
 ```json
 {
@@ -1568,6 +1568,7 @@ The `request` parameter of the W3C Digital Credentials API MUST contain a valid 
   ...
   "response_type": "vp_token",
   "nonce": "n-0S6_WzA2Mj",
+  "client_metadata": {...},
   "presentation_definition": {...}
 }
 ```
@@ -1617,7 +1618,7 @@ The Verifier MAY send a signed request.
 
 The signed Request Object MAY contain all the parameters listed above except `request`. The signed Request Object MUST contain an `expected_origins` parameter. 
 
-This is an example of such a request:
+Below is a non-normative example of such a request:
 
 ```js
 const credential = await navigator.identity.get({
