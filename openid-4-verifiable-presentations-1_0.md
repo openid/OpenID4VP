@@ -1636,44 +1636,7 @@ const credential = await navigator.identity.get({
 
 This is an example signed request payload:
 
-```JSON
-{
-    "client_id": "client.example.org",
-    "client_id_scheme": "entity_id",
-    "expected_origins": [
-        "https://origin1.example.com",
-        "https://origin2.example.com"
-    ],
-    "response_type": "vp_token",
-    "nonce": "n-0S6_WzA2Mj",
-    "client_metadata": {
-        "vp_formats": {
-            "vc+sd-jwt": {
-                "sd-jwt_alg_values": [
-                    "PS256"
-                ],
-                "kb-jwt_alg_values": [
-                    "PS256"
-                ]
-            }
-        },
-        "jwks": {
-            "keys": [
-                {
-                    "kty": "EC",
-                    "crv": "P-256",
-                    "x": "MKBCTNIcKUSDii11ySs3526iDZ8AiTo7Tu6KPAqv7D4",
-                    "y": "4Etl6SRW2YiLUrN5vfvVHuhp7x8PxltmWWlbbM4IFyM",
-                    "use": "enc",
-                    "kid": "1"
-                }
-            ]
-        }
-    },
-    "presentation_definition": {...
-    }
-}
-```
+<{{examples/digital_credentials_api/signed_request_payload.json}}
 
 The signed request allows the Wallet to authenticate the Verifier using a trust framework other than the Web PKI utilized by the browser. An example of such a trust framework is the Verifier (RP) management infrastructure set up in the context of the eIDAS regulation in the European Union. The signature over the wallet-provided nonce is a counter-measure against replay as the Wallet can no longer only rely on the web origin of the Verifier. This web origin MAY still be used to further strengthen the security of the flow. The external trust framework could, for example, map the Client Identifier to registered web origins. 
 
