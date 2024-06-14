@@ -767,8 +767,6 @@ The error response follows the rules as defined in [@!RFC6749], with the followi
 - `client_metadata` or `client_metadata_uri` parameter defined in (#vp_token_request) is present, but the Wallet recognizes Client Identifier and knows metadata associated with it.
 - Verifier's pre-registered metadata has been found based on the Client Identifier, but `client_metadata` parameter is also present.
 
-Usage of `client_metadata` or `client_metadata_uri` parameters with `client_id` that the Wallet might be seeing for the first time is mutually exclusive with the registration mechanism where Self-Issued OP assigns `client_id` to the Verifier after receiving Verifier metadata.
-
 `access_denied`:
 
 - The Wallet did not have the requested Credentials to satisfy the Authorization Request.
