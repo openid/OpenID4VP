@@ -275,7 +275,7 @@ If the Verifier set the `request_uri_method` parameter value to `post` and there
 This enables the Wallet to assess the Verifier's capabilities, allowing it to transmit only the relevant capabilities through the `wallet_metadata` parameter in the Request URI POST request. If the Verifier uses the `client_id_scheme` parameter in the Request Object, it MUST also add the same `client_id_scheme` value in the Authorization Request. 
 
 `transaction_data`: 
-: OPTIONAL. Array of strings, where each string is a Base64url encoded object that contains a typed parameter set with details about the transaction that the Verifier is requesting the End-User to authorize. See (#transaction_data) for details. Each object consists of the following parameters:
+: OPTIONAL. Array of strings, where each string is a Base64url encoded object that contains a typed parameter set with details about the transaction that the Verifier is requesting the End-User to authorize. See (#transaction_data) for details. The Wallet MUST refuse to process any unknown transaction data type or transaction data not conforming to the respective type definition. Each object consists of the following parameters:
 
 * `type`: REQUIRED. String that is the Identifier of the transaction data type and determines the allowable contents of the object that contains it. The specific values are out of scope of this specification.
 * `input_descriptor_ids`: REQUIRED. Array of strings each pointing to an Input Descriptor that identifies a request for a Credential that the Verifier is requesting transaction data in a particular object to be bound to.
@@ -760,7 +760,7 @@ The Wallet that received `transaction_data` parameter in the request, MUST inclu
 
 * `transaction_data`: Array of hashes, where each hash is calculated using a hash function over the strings received in the `transaction_data` request parameter. Each hash value ensures the integrity of, and maps to, the respective transaction data object. Where in the response this parameter is included is defined by each Credential Format Profile, but it has to be included in the  mechanism used for the proof of possession of the Credential that is signed using the user-controlled key.
 
-## Error Response
+## Error Response {#error_response}
 
 The error response follows the rules as defined in [@!RFC6749], with the following additional clarifications:
 
@@ -805,6 +805,14 @@ This document also defines the following additional error codes and error descri
 
 - The value of the `request_uri_method` request parameter is neither `get` nor `post` (case-sensitive).
 
+`invalid_transaction_data`:
+
+- any of the following are true of the objects in the transaction_data structure:
+  - contains an unknown transaction data type value,
+  - is an object of known type but containing unknown fields,
+  - contains fields of the wrong type for the transaction data type,
+  - contains fields with invalid values for the transaction data type, or
+  - is missing required fields for the transaction data type.
 
 ## VP Token Validation
 
