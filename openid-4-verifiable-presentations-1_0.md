@@ -272,7 +272,13 @@ A public key to be used by the Wallet as an input to the key agreement to encryp
 : OPTIONAL. A string determining the HTTP method to be used when the `request_uri` parameter is included in the same request. Two case-sensitive valid values are defined in this specification: `get` and `post`. If `request_uri_method` value is `get`, the Wallet MUST send the request to retrieve the Request Object using the HTTP GET method, i.e., as defined in [@RFC9101]. If `request_uri_method` value is `post`, a supporting Wallet MUST send the request using the HTTP POST method as detailed in (#request_uri_method_post). If the `request_uri_method` parameter is not present, the Wallet MUST process the `request_uri` parameter as defined in [@RFC9101]. Wallets not supporting the `post` method will send a GET request to the request URI (default behavior as defined in [@RFC9101]). `request_uri_method` parameter MUST NOT be present if a `request_uri` parameter is not present.
 
 If the Verifier set the `request_uri_method` parameter value to `post` and there is no other means to convey its capabilities to the Wallet, it SHOULD add the `client_metadata` parameter to the Authorization Request. 
-This enables the Wallet to assess the Verifier's capabilities, allowing it to transmit only the relevant capabilities through the `wallet_metadata` parameter in the Request URI POST request. If the Verifier uses the `client_id_scheme` parameter in the Request Object, it MUST also add the same `client_id_scheme` value in the Authorization Request.   
+This enables the Wallet to assess the Verifier's capabilities, allowing it to transmit only the relevant capabilities through the `wallet_metadata` parameter in the Request URI POST request. If the Verifier uses the `client_id_scheme` parameter in the Request Object, it MUST also add the same `client_id_scheme` value in the Authorization Request. 
+
+`transaction_data`: 
+: OPTIONAL. Array of strings, where each string is a Base64url encoded object that contains a typed parameter set with details about the transaction that the Verifier is requesting the End-User to authorize. See (#transaction_data) for details. Each object consists of the following parameters:
+
+* `type`: REQUIRED. String that is the Identifier of the transaction data type and determines the allowable contents of the object that contains it. The specific values are out of scope of this specification.
+* `input_descriptor_ids`: REQUIRED. Array of strings each pointing to an Input Descriptor that identifies a request for a Credential that the Verifier is requesting transaction data in a particular object to be bound to.
 
 The following additional considerations are given for pre-existing Authorization Request parameters:
 
@@ -433,7 +439,7 @@ When the Verifier is sending a Request Object as defined in [@!RFC9101], the `au
 
 Note: "https://self-issued.me/v2" is a symbolic string and can be used as an `aud` Claim value even when this specification is used standalone, without SIOPv2. 
 
-## Verifier Metadata Management {#client_metadata_management}
+## Verifier Metadata Management (Client Identifier schemes) {#client_metadata_management}
 
 The `client_id_scheme` enables deployments of this specification to use different mechanisms to obtain and validate metadata of the Verifier beyond the scope of [@!RFC6749]. The term `client_id_scheme` is used since the Verifier is acting as an OAuth 2.0 Client.
 
@@ -745,6 +751,14 @@ The following is a non-normative example of a response using the `presentation_s
 The following is a non-normative example of the payload of the JWT used in the example above before base64url encoding and signing:
 
 <{{examples/response/jarm_jwt_vc_json_body.json}}
+
+## Transaction Data {#transaction_data}
+
+Transaction data mechanism enables binding between the user identification/authentication and user’s authorization, for example to complete a payment transaction, or to sign specific document(s) using QES (Qualified Electronic Signatures). This is achieved by signing the transaction data used for user authorization with the user-controlled key used for proof of possession of the Credential being presented as a means for user identification/authentication.
+
+The Wallet that received `transaction_data` parameter in the request, MUST include in the response a `transaction_data` parameter defined below: 
+
+* `transaction_data`: Array of hashes, where each hash is calculated using a hash function over the strings received in the `transaction_data` request parameter. Each hash value ensures the integrity of, and maps to, the respective transaction data object. Where in the response this parameter is included is defined by each Credential Format Profile, but it has to be included in the  mechanism used for the proof of possession of the Credential that is signed using the user-controlled key.
 
 ## Error Response
 
@@ -1748,6 +1762,8 @@ Setting `limit_disclosure` property defined in [@!DIF.PresentationExchange] to `
 ### Presentation Response
 
 A non-normative example of the Authorization Response would look the same as in the examples of other Credential formats in this Annex.
+
+`transaction_data` response parameter defined in (#transaction-data) MUST be included in the Key Binding JWT as a top level parameter.
 
 The following is a non-normative example of the content of the `presentation_submission` parameter:
 
