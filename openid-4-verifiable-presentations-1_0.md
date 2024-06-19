@@ -1494,7 +1494,7 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </front>
 </reference>
 
-<reference anchor="w3c.digital_credentials_api" target="https://wicg.github.io/digital-identities/">
+<reference anchor="w3c.digital_credentials_api" target="https://wicg.github.io/digital-credentials/">
         <front>
           <title>Digital Credentials API</title>
 		  <author fullname="Marcos Caceres">
@@ -1541,7 +1541,7 @@ if ('DigitalCredential' in window) {
 The following is a non-normative example of a response corresponding to a previous request:
 
 ```js
-const { data } = response;
+const { data } = credential;
 ```
 
 The Digital Credentials API offers several advantages for implementers of both Verifiers and Wallets. 
