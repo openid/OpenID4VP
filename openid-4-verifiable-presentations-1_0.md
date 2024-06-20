@@ -2044,6 +2044,7 @@ The technology described in this specification was made available from contribut
 
    -21
 
+   * add how OpenID4VP request/response can be used over the browser API
    * fix indentation of examples
    * added references to ISO/IEC 23220 and 18013 documents 
    * added `post` request method for Request URI
