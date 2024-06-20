@@ -1504,17 +1504,17 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </front>
 </reference>
 
-# OID4VP profile for the W3C Digital Credentials API
+# OpenID4VP profile for the W3C Digital Credentials API
 
-This section defines a profile of OID4VP for use with the W3C Digital Credentials API [@!w3c.digital_credentials_api].
+This section defines a profile of OpenID4VP for use with the W3C Digital Credentials API [@!w3c.digital_credentials_api].
 
 The W3C Digital Credentials API defines a Web Platform API which allows web sites acting as Verifiers
 to request the presentation of verifiable credentials. The API itself does not define a credential exchange protocol
 but can be used with multiple protocols. The user agent working together with other layers of the platform/operating system and based on the permission of the End-User will send to the Wallet of the End-User's choice the request data along with the web origin of the Verifier.
 
-The design of this OIDVP profile utilizes the mechanisms of the W3C Digital Credentials API while also allowing to leverage advanced security features of OID4VP, if needed. It also defines the OID4VP request and response parameters that MAY be used with the W3C Digital Credentials API.
+The design of this OIDVP profile utilizes the mechanisms of the W3C Digital Credentials API while also allowing to leverage advanced security features of OpenID4VP, if needed. It also defines the OpenID4VP request and response parameters that MAY be used with the W3C Digital Credentials API.
 
-The following is a non-normative example of an unsigned request when advanced security features of OID4VP are not used:
+The following is a non-normative example of an unsigned request when advanced security features of OpenID4VP are not used:
 
 ```js
 if ('DigitalCredential' in window) {
@@ -1558,7 +1558,9 @@ The value of the `protocol` parameter of the W3C Digital Credentials API MUST be
 
 ## Request {#browser_api_request}
 
-The `request` parameter of the W3C Digital Credentials API MUST contain a valid OID4VP Authorization Request, where every Authorization Request parameter is represented as a top-level JSON member. The following is the non-normative example of such a request:
+The `request` member of the W3C Digital Credentials API [@!w3c.digital_credentials_api] MUST contain a valid OpenID4VP Authorization Request, where every OpenID4VP Authorization Request parameter is represented as a top-level JSON member.
+
+The following is the non-normative example of an OpenID4VP Authorization Request that can be included in a `request` member of the W3C Digital Credentials API:
 
 ```json
 {
@@ -1596,7 +1598,7 @@ Any OpenID4VP request compliant to this specification can be sent over the W3C D
 
 ### Unsigned Request {#unsigned_request}
 
-The Verifier MAY send all the OID4VP request data as JSON elements in the `request` API parameter and receives the result in the API's `result` parameter. In this case, the Wallet will use the Verifier origin as asserted by the Browser as the Verifer's Client Identifier.
+The Verifier MAY send all the OpenID4VP request data as JSON elements in the `request` API parameter and receives the result in the API's `result` parameter. In this case, the Wallet will use the Verifier origin as asserted by the Browser as the Verifer's Client Identifier.
 
 ### Signed Request {#signed_request}
 
@@ -1629,9 +1631,9 @@ The signed request allows the Wallet to authenticate the Verifier using a trust 
 
 ## Response
 
-Every OID4VP Authorization Request MUST result in a response being provided through the W3C Digital Credentials API. The Authorization Response is a JSON object, where the response parameters as defined for the Response Type are encoded as top-level members in this JSON object. 
+Every OpenID4VP Authorization Request MUST result in a response being provided through the W3C Digital Credentials API. The Authorization Response is a JSON object, where the response parameters as defined for the Response Type are encoded as top-level members in this JSON object. 
 
-The following is an example of an OID4VP Authorization Response through the API: 
+The following is an example of an OpenID4VP Authorization Response through the API: 
 
 ```json
 {
@@ -1640,7 +1642,7 @@ The following is an example of an OID4VP Authorization Response through the API:
 }
 ```
 
-Note: All mechanisms for cryptographically protecting the OID4VP response MAY be utilized with the W3C Digital Credentials API, too.
+Note: All mechanisms for cryptographically protecting the OpenID4VP response MAY be utilized with the W3C Digital Credentials API, too.
 
 # Examples with Credentials in Various Formats {#alternative_credential_formats}
 
@@ -1800,14 +1802,14 @@ ISO/IEC 18013-5:2021 [@ISO.18013-5] defines a mobile driving license (mDL) Crede
 
 The Credential format identifier for Credentials in the mdoc format is `mso_mdoc`.
 
-ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 [@ISO.23220-4] Annex C define a profile of OID4VP for requesting and presenting Credentials in the mdoc format.
+ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 [@ISO.23220-4] Annex C define a profile of OpenID4VP for requesting and presenting Credentials in the mdoc format.
 
 The profile includes the following elements:
 
 * Rules for the `presentation_definition` Authorization Request parameter.
 * Rules for the `presentation_submission` Authorization Response parameter.
 * Wallet invocation using the `mdoc-openid4vp://` custom URI scheme.
-* Defines the OID4VP-specific `Handover` CBOR structure and how OID4VP Authorization Request and Request Object parameters apply to the `SessionTranscript` CBOR structure and `DeviceResponse` CBOR structure as specified in ISO/IEC 18013-5 [@ISO.18013-5] and ISO/IEC 23220-4 [@ISO.23220-4].
+* Defines the OpenID4VP-specific `Handover` CBOR structure and how OpenID4VP Authorization Request and Request Object parameters apply to the `SessionTranscript` CBOR structure and `DeviceResponse` CBOR structure as specified in ISO/IEC 18013-5 [@ISO.18013-5] and ISO/IEC 23220-4 [@ISO.23220-4].
 * Required Wallet and Verifier Metadata parameters and their values.
 * Additional restrictions on Authorization Request and Authorization Response parameters to ensure compliance with ISO/IEC TS 18013-7 [@ISO.18013-7] and ISO/IEC 23220-4 [@ISO.23220-4]. For instance, to comply with ISO/IEC TS 18013-7 [@ISO.18013-7], only the same-device flow is supported, the `request_uri` Authorization Request parameter is required, and the Authorization Response has to be encrypted.
 
@@ -1817,7 +1819,7 @@ See ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 Annex C [@ISO.
 
 ### Presentation Response
 
-The VP Token contains the base64url encoded `DeviceResponse` CBOR structure as defined in ISO/IEC 18013-5 [@ISO.18013-5] or ISO/IEC 23220-4 [@ISO.23220-4]. Essentially, the `DeviceResponse` CBOR structure contains a signature or MAC over the `SessionTranscript` CBOR structure including the OID4VP-specific `Handover` CBOR structure.
+The VP Token contains the base64url encoded `DeviceResponse` CBOR structure as defined in ISO/IEC 18013-5 [@ISO.18013-5] or ISO/IEC 23220-4 [@ISO.23220-4]. Essentially, the `DeviceResponse` CBOR structure contains a signature or MAC over the `SessionTranscript` CBOR structure including the OpenID4VP-specific `Handover` CBOR structure.
 
 See ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 Annex C [@ISO.23220-4] for the latest examples on how to use the `presentation_submission` parameter and how to generate the Authorizaton Response for presenting Credentials in the mdoc format.
 
@@ -2044,7 +2046,7 @@ The technology described in this specification was made available from contribut
 
    -21
 
-   * add how OpenID4VP request/response can be used over the browser API
+   * added how OpenID4VP request/response can be used over the browser API
    * fix indentation of examples
    * added references to ISO/IEC 23220 and 18013 documents 
    * added `post` request method for Request URI
