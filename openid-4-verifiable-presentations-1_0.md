@@ -22,7 +22,7 @@ organization="Mattr"
 initials="T."
 surname="Lodderstedt"
 fullname="Torsten Lodderstedt"
-organization="sprind.org"
+organization="German Federal Agency for Disruptive Innovation (SPRIND)"
     [author.address]
     email = "torsten@lodderstedt.net"
 
@@ -30,9 +30,9 @@ organization="sprind.org"
 initials="K."
 surname="Yasuda"
 fullname="Kristina Yasuda"
-organization="Microsoft"
+organization="German Federal Agency for Disruptive Innovation (SPRIND)"
     [author.address]
-    email = "kristina.yasuda@microsoft.com"
+    email = "kristina.yasuda@sprind.org"
 
 [[author]]
 initials="T."
@@ -104,8 +104,8 @@ Holder Binding:
 Cryptographic Holder Binding:
 :  Ability of the Holder to prove legitimate possession of a Verifiable Credential by proving control over the same private key during the issuance and presentation. Mechanism might depend on the Credential Format. For example, in `jwt_vc_json` Credential Format, a Verifiable Credential with Cryptographic Holder Binding contains a public key or a reference to a public key that matches to the private key controlled by the Holder. 
 
-Claim-based Holder Binding:
-:  Ability of the Holder to prove legitimate possession of a Verifiable Credential by proofing certain claims, e.g., name and date of birth, for example by presenting another Verifiable Credential. Claim-based Holder Binding allows long term, cross device use of a Credential as it does not depend on cryptographic key material stored on a certain device. One example of such a Verifiable Credential could be a Diploma.
+Claims-based Holder Binding:
+:  Ability of the Holder to prove legitimate possession of a Verifiable Credential by proofing certain claims, e.g., name and date of birth, for example by presenting another Verifiable Credential. Claims-based Holder Binding allows long term, cross device use of a Credential as it does not depend on cryptographic key material stored on a certain device. One example of such a Verifiable Credential could be a Diploma.
 
 Biometrics-based Holder Binding:
 :  Ability of the Holder to prove legitimate possession of a Verifiable Credential by demonstrating a certain biometric trait, such as finger print or face. One example of a Verifiable Credential with biometric Holder Binding is a mobile driving license [@ISO.18013-5], which contains a portrait of the Holder.
@@ -288,23 +288,23 @@ The following additional considerations are given for pre-existing Authorization
 The following is a non-normative example of an Authorization Request: 
 
 ```
-  GET /authorize?
-    response_type=vp_token
-    &client_id=https%3A%2F%2Fclient.example.org%2Fcb
-    &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
-    &presentation_definition=...
-    &nonce=n-0S6_WzA2Mj HTTP/1.1
+GET /authorize?
+  response_type=vp_token
+  &client_id=https%3A%2F%2Fclient.example.org%2Fcb
+  &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
+  &presentation_definition=...
+  &nonce=n-0S6_WzA2Mj HTTP/1.1
 ```
 
 The following is a non-normative example of an Authorization Request with a `request_uri_method` parameter (including the additional `client_id_scheme` and `client_metadata` parameters): 
 
 ```
-  GET /authorize?
-    client_id=client.example.org
-    &client_id_scheme=x509_san_dns
-    &client_metadata=...
-    &request_uri=https%3A%2F%2Fclient.example.org%2Frequest%2Fvapof4ql2i7m41m68uep
-    &request_uri_method=post HTTP/1.1
+GET /authorize?
+  client_id=client.example.org
+  &client_id_scheme=x509_san_dns
+  &client_metadata=...
+  &request_uri=https%3A%2F%2Fclient.example.org%2Frequest%2Fvapof4ql2i7m41m68uep
+  &request_uri_method=post HTTP/1.1
 ```
 
 ## `presentation_definition` Parameter {#request_presentation_definition}
@@ -338,8 +338,8 @@ The protocol for the `presentation_definition_uri` MUST be HTTPS.
 The following is a non-normative example of an HTTP GET request sent after the Wallet received `presentation_definition_uri` parameter with the value `https://server.example.com/presentationdefs?ref=idcard_presentation_request`:
 
 ```
-  GET /presentationdefs?ref=idcard_presentation_request HTTP/1.1
-  Host: server.example.com
+GET /presentationdefs?ref=idcard_presentation_request HTTP/1.1
+Host: server.example.com
 ```
 
 The following is a non-normative example of an HTTP GET response sent by the Verifier in response to the above HTTP GET request:
@@ -350,32 +350,32 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-    "id": "vp token example",
-    "input_descriptors": [
-        {
-            "id": "id card credential",
-            "format": {
-                "ldp_vc": {
-                    "proof_type": [
-                        "Ed25519Signature2018"
-                    ]
-                }
-            },
-            "constraints": {
-                "fields": [
-                    {
-                        "path": [
-                            "$.type"
-                        ],
-                        "filter": {
-                            "type": "string",
-                            "pattern": "IDCardCredential"
-                        }
-                    }
-                ]
-            }
+  "id": "vp token example",
+  "input_descriptors": [
+    {
+      "id": "id card credential",
+      "format": {
+        "ldp_vc": {
+          "proof_type": [
+            "Ed25519Signature2018"
+          ]
         }
-    ]
+      },
+      "constraints": {
+        "fields": [
+          {
+            "path": [
+              "$.type"
+            ],
+            "filter": {
+              "type": "string",
+              "pattern": "IDCardCredential"
+            }
+          }
+        ]
+      }
+    }
+  ]
 }
 ```
 
@@ -401,12 +401,12 @@ The following is a non-normative example of an Authorization Request using the s
 which is an alias for the first Presentation Definition example given in (#request_presentation_definition):
 
 ```
-  GET /authorize?
-    response_type=vp_token
-    &client_id=https%3A%2F%2Fclient.example.org%2Fcb
-    &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
-    &scope=com.example.healthCardCredential_presentation
-    &nonce=n-0S6_WzA2Mj HTTP/1.1
+GET /authorize?
+  response_type=vp_token
+  &client_id=https%3A%2F%2Fclient.example.org%2Fcb
+  &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
+  &scope=com.example.healthCardCredential_presentation
+  &nonce=n-0S6_WzA2Mj HTTP/1.1
 ```
 
 ## Response Type `vp_token` {#response_type_vp_token}
@@ -446,18 +446,18 @@ This specification defines the following values for the `client_id_scheme` param
 The following is a non-normative example of a request when `client_id` equals `redirect_uri`.
 
 ```
-  HTTP/1.1 302 Found
-  Location: https://client.example.org/universal-link?
-    response_type=vp_token
-    &client_id=https%3A%2F%2Fclient.example.org%2Fcb
-    &client_id_scheme=redirect_uri
-    &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
-    &presentation_definition=...
-    &nonce=n-0S6_WzA2Mj
-    &client_metadata=%7B%22vp_formats%22:%7B%22jwt_vp_json%22:%
-    7B%22alg%22:%5B%22EdDSA%22,%22ES256K%22%5D%7D,%22ldp
-    _vp%22:%7B%22proof_type%22:%5B%22Ed25519Signature201
-    8%22%5D%7D%7D%7D
+HTTP/1.1 302 Found
+Location: https://client.example.org/universal-link?
+  response_type=vp_token
+  &client_id=https%3A%2F%2Fclient.example.org%2Fcb
+  &client_id_scheme=redirect_uri
+  &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
+  &presentation_definition=...
+  &nonce=n-0S6_WzA2Mj
+  &client_metadata=%7B%22vp_formats%22:%7B%22jwt_vp_json%22:%
+  7B%22alg%22:%5B%22EdDSA%22,%22ES256K%22%5D%7D,%22ldp
+  _vp%22:%7B%22proof_type%22:%5B%22Ed25519Signature201
+  8%22%5D%7D%7D%7D
 ```
 
 * `entity_id`: This value indicates that the Client Identifier is an Entity Identifier defined in OpenID Federation [@!OpenID.Federation]. Processing rules given in [@!OpenID.Federation] MUST be followed. Automatic Registration as defined in [@!OpenID.Federation] MUST be used. The Authorization Request MAY also contain a `trust_chain` parameter. The final Verifier metadata is obtained from the Trust Chain after applying the policies, according to [@!OpenID.Federation]. The `client_metadata` or `client_metadata_uri` parameter, if present in the Authorization Request, MUST be ignored when this Client Identifier scheme is used.
@@ -505,14 +505,14 @@ Additionally, if the `client_id_scheme` value permits signed Request Objects, th
 The following is a non-normative example of a request:
 
 ```
-  POST /request HTTP/1.1
-  Host: client.example.org
-  Content-Type: application/x-www-form-urlencoded
+POST /request HTTP/1.1
+Host: client.example.org
+Content-Type: application/x-www-form-urlencoded
 
-    wallet_metadata=%7B%22vp_formats_supported%22%3A%7B%22jwt_vc_json%22%3A%7B%22alg_values_supported
-    %22%3A%5B%22ES256K%22%2C%22ES384%22%5D%7D%2C%22jwt_vp_json%22%3A%7B%22alg_values_supported%22%3A%
-    5B%22ES256K%22%2C%22EdDSA%22%5D%7D%7D%7D&
-    wallet_nonce=qPmxiNFCR3QTm19POc8u
+  wallet_metadata=%7B%22vp_formats_supported%22%3A%7B%22jwt_vc_json%22%3A%7B%22alg_values_supported
+  %22%3A%5B%22ES256K%22%2C%22ES384%22%5D%7D%2C%22jwt_vp_json%22%3A%7B%22alg_values_supported%22%3A%
+  5B%22ES256K%22%2C%22EdDSA%22%5D%7D%7D%7D&
+  wallet_nonce=qPmxiNFCR3QTm19POc8u
 ```
 
 ### Request URI Response
@@ -523,15 +523,15 @@ The following is a non-normative example of a request object:
 
 ```json
 {
-   "client_id": "client.example.org",
-   "client_id_scheme": "x509_san_dns",
-   "response_uri": "https://client.example.org/post",
-   "response_type": "vp_token",
-   "response_mode": "direct_post",
-   "presentation_definition": {...},
-   "nonce": "n-0S6_WzA2Mj",
-   "wallet_nonce": "qPmxiNFCR3QTm19POc8u",
-   "state" : "eyJhb...6-sVA"
+  "client_id": "client.example.org",
+  "client_id_scheme": "x509_san_dns",
+  "response_uri": "https://client.example.org/post",
+  "response_type": "vp_token",
+  "response_mode": "direct_post",
+  "presentation_definition": {...},
+  "nonce": "n-0S6_WzA2Mj",
+  "wallet_nonce": "qPmxiNFCR3QTm19POc8u",
+  "state" : "eyJhb...6-sVA"
 }
 ```
 
@@ -586,10 +586,10 @@ Including the `presentation_submission` parameter as a separate response paramet
 The following is a non-normative example of an Authorization Response when the Response Type value in the Authorization Request was `vp_token`: 
 
 ```
-  HTTP/1.1 302 Found
-  Location: https://client.example.org/cb#
-    presentation_submission=...
-    &vp_token=...
+HTTP/1.1 302 Found
+Location: https://client.example.org/cb#
+  presentation_submission=...
+  &vp_token=...
 ```
 
 The following is a non-normative example of a VP Token containing a single Verifiable Presentation:
@@ -635,14 +635,14 @@ The following is a non-normative example of the payload of a Request Object with
 
 ```json
 {
-   "client_id": "https://client.example.org/post",
-   "client_id_scheme": "redirect_uri",
-   "response_uri": "https://client.example.org/post",
-   "response_type": "vp_token",
-   "response_mode": "direct_post",
-   "presentation_definition": {...},
-   "nonce": "n-0S6_WzA2Mj",
-   "state" : "eyJhb...6-sVA
+  "client_id": "https://client.example.org/post",
+  "client_id_scheme": "redirect_uri",
+  "response_uri": "https://client.example.org/post",
+  "response_type": "vp_token",
+  "response_mode": "direct_post",
+  "presentation_definition": {...},
+  "nonce": "n-0S6_WzA2Mj",
+  "state": "eyJhb...6-sVA"
 }
 ```
 
@@ -650,32 +650,32 @@ The following non-normative example of an Authorization Request refers to the Au
 
 ```
 https://wallet.example.com?
-    client_id=https%3A%2F%2Fclient.example.org%2Fcb
-    &request_uri=https%3A%2F%2Fclient.example.org%2F567545564
+  client_id=https%3A%2F%2Fclient.example.org%2Fcb
+  &request_uri=https%3A%2F%2Fclient.example.org%2F567545564
 ```
 
 The following is a non-normative example of the Authorization Response that is sent via an HTTP POST request to the Verifier's Response Endpoint:
 
 ```
-  POST /post HTTP/1.1
-  Host: client.example.org
-  Content-Type: application/x-www-form-urlencoded
+POST /post HTTP/1.1
+Host: client.example.org
+Content-Type: application/x-www-form-urlencoded
 
-    presentation_submission=...&
-    vp_token=...&
-    state=eyJhb...6-sVA
+  presentation_submission=...&
+  vp_token=...&
+  state=eyJhb...6-sVA
 ```
 
 The following is a non-normative example of an Authorization Error Response that is sent as an HTTP POST request to the Verifier's Response Endpoint:
 
 ```
-  POST /post HTTP/1.1
-  Host: client.example.org
-  Content-Type: application/x-www-form-urlencoded
+POST /post HTTP/1.1
+Host: client.example.org
+Content-Type: application/x-www-form-urlencoded
 
-    error=invalid_request&
-    error_description=unsupported%20client_id_scheme&
-    state=eyJhb...6-sVA
+  error=invalid_request&
+  error_description=unsupported%20client_id_scheme&
+  state=eyJhb...6-sVA
 ```
 
 If the Response Endpoint has successfully processed the Authorization Response or Authorization Error Response, it MUST respond with HTTP status code 200.
@@ -692,13 +692,13 @@ The value of the redirect URI is an absolute URI as defined by [@!RFC3986] Secti
 The following is a non-normative example of the response from the Verifier to the Wallet upon receiving the Authorization Response at the Response Endpoint (using a `response_code` parameter from (#implementation_considerations_direct_post)):
 
 ```
-  HTTP/1.1 200 OK
-  Content-Type: application/json
-  Cache-Control: no-store
+HTTP/1.1 200 OK
+Content-Type: application/json
+Cache-Control: no-store
 
-  {
-    "redirect_uri":"https://client.example.org/cb#response_code=091535f699ea575c7937fa5f0f454aee" 
-  }
+{
+  "redirect_uri": "https://client.example.org/cb#response_code=091535f699ea575c7937fa5f0f454aee" 
+}
 ```
 
 If the response does not contain the `redirect_uri` parameter, the Wallet is not required to perform any further steps.
@@ -766,8 +766,6 @@ The error response follows the rules as defined in [@!RFC6749], with the followi
 
 - `client_metadata` or `client_metadata_uri` parameter defined in (#vp_token_request) is present, but the Wallet recognizes Client Identifier and knows metadata associated with it.
 - Verifier's pre-registered metadata has been found based on the Client Identifier, but `client_metadata` parameter is also present.
-
-Usage of `client_metadata` or `client_metadata_uri` parameters with `client_id` that the Wallet might be seeing for the first time is mutually exclusive with the registration mechanism where Self-Issued OP assigns `client_id` to the Verifier after receiving Verifier metadata.
 
 `access_denied`:
 
@@ -946,14 +944,14 @@ The following is a non-normative example of the terms of use that may be defined
 
 ```json
 {
-   "termsOfUse":[
-      {
-         "type":"<uri that identifies this type of terms of use>",
-         "federations":[
-            "<list of federations/trust schemes the Credential Issuer asserts it is a member of>"
-         ]
-      }
-   ]
+  "termsOfUse": [
+    {
+      "type": "<uri that identifies this type of terms of use>",
+      "federations": [
+        "<list of federations/trust schemes the Credential Issuer asserts it is a member of>"
+      ]
+    }
+  ]
 }
 ```
 
@@ -1238,13 +1236,13 @@ Requests from the Wallet to the Verifier SHOULD be sent with the minimal amount 
   <front>
     <title>Self-Issued OpenID Provider V2</title>
     <author fullname="Kristina Yasuda">
-      <organization>Microsoft</organization>
+      <organization>German Federal Agency for Disruptive Innovation (SPRIND)</organization>
     </author>
     <author fullname="Michael B. Jones">
-      <organization>Microsoft</organization>
+      <organization>Self-Issued Consulting</organization>
     </author>
     <author initials="T." surname="Lodderstedt" fullname="Torsten Lodderstedt">
-      <organization>yes.com</organization>
+      <organization>German Federal Agency for Disruptive Innovation (SPRIND)</organization>
     </author>
    <date day="1" month="January" year="2023"/>
   </front>
@@ -1457,10 +1455,10 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         <front>
           <title>OpenID for Verifiable Credential Issuance</title>
           <author initials="T." surname="Lodderstedt" fullname="Torsten Lodderstedt">
-            <organization>yes.com</organization>
+            <organization>German Federal Agency for Disruptive Innovation (SPRIND)</organization>
           </author>
           <author initials="K." surname="Yasuda" fullname="Kristina Yasuda">
-            <organization>Microsoft</organization>
+            <organization>German Federal Agency for Disruptive Innovation (SPRIND)</organization>
           </author>
           <author initials="T." surname="Looker" fullname="Tobias Looker">
             <organization>Mattr</organization>
@@ -1926,15 +1924,15 @@ This section shows how SIOP and OpenID for Verifiable Presentations can be combi
 The following is a non-normative example of a request that combines this specification and [@!SIOPv2].
 
 ```
-  GET /authorize?
-    response_type=vp_token%20id_token
-    &scope=openid
-    &id_token_type=subject_signed
-    &client_id=https%3A%2F%2Fclient.example.org%2Fcb
-    &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
-    &presentation_definition=...
-    &nonce=n-0S6_WzA2Mj HTTP/1.1
-  Host: wallet.example.com
+GET /authorize?
+  response_type=vp_token%20id_token
+  &scope=openid
+  &id_token_type=subject_signed
+  &client_id=https%3A%2F%2Fclient.example.org%2Fcb
+  &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
+  &presentation_definition=...
+  &nonce=n-0S6_WzA2Mj HTTP/1.1
+Host: wallet.example.com
 ```
 
 The differences to the example requests in the previous sections are:
@@ -1947,11 +1945,11 @@ The differences to the example requests in the previous sections are:
 The following is a non-normative example of a response sent upon receiving a request provided in (#siop_request):
 
 ```
-  HTTP/1.1 302 Found
-  Location: https://client.example.org/cb#
-    id_token=
-    &presentation_submission=...
-    &vp_token=...
+HTTP/1.1 302 Found
+Location: https://client.example.org/cb#
+  id_token=
+  &presentation_submission=...
+  &vp_token=...
 ```
 
 In addition to the `presentation_submission` and `vp_token`, it also contains an `id_token`.
@@ -2030,7 +2028,7 @@ This specification registers the following JWS header name in the IANA "JSON Web
 
 # Acknowledgements {#Acknowledgements}
 
-We would like to thank Richard Barnes, Paul Bastian, Vittorio Bertocci, Christian Bormann, John Bradley, Brian Campbell, Gabe Cohen, David Chadwick, Andrii Deinega, Giuseppe De Marco, Mark Dobrinic, Daniel Fett, Pedro Felix, George Fletcher, Timo Glasta, Mark Haine, Fabian Hauck, Roland Hedberg, Joseph Heenan, Alen Horvat, Andrew Hughes, Jacob Ideskog, Edmund Jay, Michael B. Jones, Tom Jones, Judith Kahrer, Takahiko Kawasaki, Gaurav Khot, Niels Klomp, Ronald Koenig, Markus Kreusch, Adam Lemmon, Daniel McGrogan, Jeremie Miller, Kenichi Nakamura, Rolson Quadras, Nat Sakimura, Arjen van Veen, David Waite, Jacob Ward for their valuable feedback and contributions to this specification.
+We would like to thank Richard Barnes, Paul Bastian, Vittorio Bertocci, Christian Bormann, John Bradley, Brian Campbell, Gabe Cohen, David Chadwick, Andrii Deinega, Giuseppe De Marco, Mark Dobrinic, Daniel Fett, Pedro Felix, George Fletcher, Timo Glasta, Mark Haine, Fabian Hauck, Roland Hedberg, Joseph Heenan, Alen Horvat, Andrew Hughes, Jacob Ideskog, Edmund Jay, Michael B. Jones, Tom Jones, Judith Kahrer, Takahiko Kawasaki, Gaurav Khot, Niels Klomp, Ronald Koenig, Markus Kreusch, Adam Lemmon, Daniel McGrogan, Jeremie Miller, Kenichi Nakamura, Rolson Quadras, Nat Sakimura, Arjen van Veen, Jan Vereecken, David Waite, Jacob Ward for their valuable feedback and contributions to this specification.
 
 # Notices
 
@@ -2046,6 +2044,7 @@ The technology described in this specification was made available from contribut
 
    -21
 
+   * fix indentation of examples
    * added references to ISO/IEC 23220 and 18013 documents 
    * added `post` request method for Request URI
    * Added IETF SD-JWT VC profile

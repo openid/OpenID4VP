@@ -1,51 +1,51 @@
 {
-    "id_token": {
-        "email": null
-    },
-    "vp_token": {
-        "presentation_definition": {
-            "id": "vp token example",
-            "input_descriptors": [
-                {
-                    "id": "id card credential with constraints",
-                    "format": {
-                        "ac_vc": {
-                            "proof_type": [
-                                "CLSignature2019"
-                            ]
-                        }
-                    },
-                    "constraints": {
-                        "limit_disclosure": "required",
-                        "fields": [
-                            {
-                                "path": [
-                                    "$.schema_id"
-                                ],
-                                "filter": {
-                                    "type": "string",
-                                    "pattern": "did:indy:idu:test:3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0\\.1"
-                                }
-                            },
-                            {
-                                "path": [
-                                    "$.values.given_name"
-                                ]
-                            },
-                            {
-                                "path": [
-                                    "$.values.family_name"
-                                ]
-                            },
-                            {
-                                "path": [
-                                    "$.values.birthdate"
-                                ]
-                            }
-                        ]
-                    }
+  "id_token": {
+    "email": null
+  },
+  "vp_token": {
+    "presentation_definition": {
+      "id": "vp token example",
+      "input_descriptors": [
+        {
+          "id": "id card credential with constraints",
+          "format": {
+            "ac_vc": {
+              "proof_type": [
+                "CLSignature2019"
+              ]
+            }
+          },
+          "constraints": {
+            "limit_disclosure": "required",
+            "fields": [
+              {
+                "path": [
+                  "$.schema_id"
+                ],
+                "filter": {
+                  "type": "string",
+                  "pattern": "did:indy:idu:test:3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0\\.1"
                 }
+              },
+              {
+                "path": [
+                  "$.values.given_name"
+                ]
+              },
+              {
+                "path": [
+                  "$.values.family_name"
+                ]
+              },
+              {
+                "path": [
+                  "$.values.birthdate"
+                ]
+              }
             ]
+          }
         }
+      ]
     }
+  }
 }

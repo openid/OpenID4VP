@@ -1,15 +1,15 @@
 {
-    "id": "Presentation example 1",
-    "definition_id": "Example with selective disclosure",
-    "descriptor_map": [
-        {
-            "id": "ID card with constraints",
-            "format": "ldp_vp",
-            "path": "$",
-            "path_nested": {
-                "format": "ldp_vc",
-                "path": "$.verifiableCredential[0]"
-            }
-        }
-    ]
+  "id": "Presentation example 1",
+  "definition_id": "Example with selective disclosure",
+  "descriptor_map": [
+    {
+      "id": "ID card with constraints",
+      "format": "ldp_vp",
+      "path": "$",
+      "path_nested": {
+        "format": "ldp_vc",
+        "path": "$.verifiableCredential[0]"
+      }
+    }
+  ]
 }
