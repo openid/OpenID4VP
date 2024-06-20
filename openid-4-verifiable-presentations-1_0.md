@@ -1512,9 +1512,9 @@ The W3C Digital Credentials API defines a Web Platform API which allows web site
 to request the presentation of verifiable credentials. The API itself does not define a credential exchange protocol
 but can be used with multiple protocols. The user agent working together with other layers of the platform/operating system and based on the permission of the End-User will send to the Wallet of the End-User's choice the request data along with the web origin of the Verifier.
 
-The design of this OIDVP profile utilizes the mechanisms of the W3C Digital Credentials API while also allowing to leverage advanced security features of OpenID4VP, if needed. It also defines the OpenID4VP request and response parameters that MAY be used with the W3C Digital Credentials API.
+The design of this OpenID4VP profile utilizes the mechanisms of the W3C Digital Credentials API while also allowing to leverage advanced security features of OpenID4VP, if needed. It also defines the OpenID4VP request parameter that MAY be used with the W3C Digital Credentials API.
 
-The following is a non-normative example of an unsigned request when advanced security features of OpenID4VP are not used:
+The following is a non-normative example of how the W3C Digital Credentials API can be used with an unsigned OpenID4VP request when advanced security features of OpenID4VP are not used:
 
 ```js
 if ('DigitalCredential' in window) {
@@ -1536,11 +1536,13 @@ if ('DigitalCredential' in window) {
 }
 ```
 
-The following is a non-normative example of a response corresponding to a previous request:
-
+The following is a non-normative example of an OpenID4VP response that can be sent over the W3C Digital Credentials API:
+	
 ```js
-const { data } = credential;
-```
+{
+  vp_token: "...",
+  presentation_submission: {...}
+}
 
 The Digital Credentials API offers several advantages for implementers of both Verifiers and Wallets. 
 
