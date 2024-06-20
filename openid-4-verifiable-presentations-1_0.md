@@ -1558,18 +1558,17 @@ The value of the `protocol` parameter of the W3C Digital Credentials API MUST be
 
 ## Request {#browser_api_request}
 
-The `request` member of the W3C Digital Credentials API [@!w3c.digital_credentials_api] MUST contain a valid OpenID4VP Authorization Request, where every OpenID4VP Authorization Request parameter is represented as a top-level JSON member.
+The `request` member of the W3C Digital Credentials API [@!w3c.digital_credentials_api] MUST contain a valid OpenID4VP Authorization Request, where every OpenID4VP Authorization Request parameter is represented as a top-level JavaScript object member.
 
 The following is the non-normative example of an OpenID4VP Authorization Request that can be included in a `request` member of the W3C Digital Credentials API:
 
-```json
-{
-  "client_id": "client.example.org",
-  ...
-  "response_type": "vp_token",
-  "nonce": "n-0S6_WzA2Mj",
-  "client_metadata": {...},
-  "presentation_definition": {...}
+```js
+request: {
+  client_id: "client.example.org",
+  response_type: "vp_token",
+  nonce: "n-0S6_WzA2Mj",
+  client_metadata: {...},
+  presentation_definition: {...}
 }
 ```
 
@@ -1614,9 +1613,9 @@ const credential = await navigator.identity.get({
     providers: [{
       protocol: "urn:openid.net:oid4vp",
       request: {
-       client_id: "client.example.org",
-       client_id_scheme: "entity_id",
-       request: "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJ..."
+        client_id: "client.example.org",
+        client_id_scheme: "entity_id",
+        request: "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJ..."
      }
     }]
   }
