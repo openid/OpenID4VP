@@ -1597,9 +1597,9 @@ const credential = await navigator.identity.get({
     providers: [{
       protocol: "urn:openid.net:oid4vp",
       request: {
-        client_id: "client.example.org",
+        client_id: "https://client.example.org/",
         client_id_scheme: "entity_id",
-        request: "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJ..."
+        request: "eyJhbGciOiJF..."
      }
     }]
   }
