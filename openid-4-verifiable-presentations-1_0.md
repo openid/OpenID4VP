@@ -1514,6 +1514,24 @@ but can be used with multiple protocols. The user agent working together with ot
 
 The design of this OpenID4VP profile utilizes the mechanisms of the W3C Digital Credentials API while also allowing to leverage advanced security features of OpenID4VP, if needed. It also defines the OpenID4VP request parameter that MAY be used with the W3C Digital Credentials API.
 
+The Digital Credentials API offers several advantages for implementers of both Verifiers and Wallets. 
+
+Firstly, the API serves as a privacy-preserving alternative to invoking Wallets via URLs, particularly custom schemes. The user agent and app platform will only invoke a Wallet if the user confirms the request based on contextual information about the credential request and the requestor (verifier). 
+
+Secondly, the user will always be returned to the initial context, typically a browser tab, when the request has been fulfilled (or aborted), which results in an improved user experience.
+
+Thirdly, cross-device requests benefit from the use of secure transports with proximity checks, which are handled by the OS platform using FIDO CTAP 2.2 with hybrid transports.
+
+And lastly, as part of the request, the Wallet is provided with information about the Verifier's origin as authenticated by the user agent, which is important for phishing resistance.  
+
+## Protocol
+
+The value of the `protocol` parameter of the W3C Digital Credentials API MUST be set to `urn:openid.net:oid4vp` for this profile.
+
+## Request {#browser_api_request}
+
+The `request` member of the W3C Digital Credentials API [@!w3c.digital_credentials_api] MUST contain a valid OpenID4VP Authorization Request, where every OpenID4VP Authorization Request parameter is represented as a top-level JavaScript object member.
+
 The following is a non-normative example of how the W3C Digital Credentials API can be used with an unsigned OpenID4VP request when advanced security features of OpenID4VP are not used:
 
 ```js
@@ -1533,44 +1551,6 @@ if ('DigitalCredential' in window) {
   });
 } else {
 // fallback to other invocation mechanisms
-}
-```
-
-The following is a non-normative example of an OpenID4VP response that can be sent over the W3C Digital Credentials API:
-	
-```js
-{
-  vp_token: "...",
-  presentation_submission: {...}
-}
-
-The Digital Credentials API offers several advantages for implementers of both Verifiers and Wallets. 
-
-Firstly, the API serves as a privacy-preserving alternative to invoking Wallets via URLs, particularly custom schemes. The user agent and app platform will only invoke a Wallet if the user confirms the request based on contextual information about the credential request and the requestor (verifier). 
-
-Secondly, the user will always be returned to the initial context, typically a browser tab, when the request has been fulfilled (or aborted), which results in an improved user experience.
-
-Thirdly, cross-device requests benefit from the use of secure transports with proximity checks, which are handled by the OS platform using FIDO CTAP 2.2 with hybrid transports.
-
-And lastly, as part of the request, the Wallet is provided with information about the Verifier's origin as authenticated by the user agent, which is important for phishing resistance.  
-
-## Protocol
-
-The value of the `protocol` parameter of the W3C Digital Credentials API MUST be set to `urn:openid.net:oid4vp` for this profile.
-
-## Request {#browser_api_request}
-
-The `request` member of the W3C Digital Credentials API [@!w3c.digital_credentials_api] MUST contain a valid OpenID4VP Authorization Request, where every OpenID4VP Authorization Request parameter is represented as a top-level JavaScript object member.
-
-The following is the non-normative example of an OpenID4VP Authorization Request that can be included in a `request` member of the W3C Digital Credentials API:
-
-```js
-request: {
-  client_id: "client.example.org",
-  response_type: "vp_token",
-  nonce: "n-0S6_WzA2Mj",
-  client_metadata: {...},
-  presentation_definition: {...}
 }
 ```
 
@@ -1600,6 +1580,8 @@ Any OpenID4VP request compliant to this specification can be sent over the W3C D
 ### Unsigned Request {#unsigned_request}
 
 The Verifier MAY send all the OpenID4VP request data as JSON elements in the `request` API parameter and receives the result in the API's `result` parameter. In this case, the Wallet will use the Verifier origin as asserted by the Browser as the Verifer's Client Identifier.
+
+The signed Request Object MUST NOT contain `client_id` and `client_id_scheme` parameters.
 
 ### Signed Request {#signed_request}
 
@@ -1634,12 +1616,12 @@ The signed request allows the Wallet to authenticate the Verifier using a trust 
 
 Every OpenID4VP Authorization Request MUST result in a response being provided through the W3C Digital Credentials API. The Authorization Response is a JSON object, where the response parameters as defined for the Response Type are encoded as top-level members in this JSON object. 
 
-The following is an example of an OpenID4VP Authorization Response through the API: 
-
-```json
+The following is a non-normative example of an OpenID4VP response that can be sent over the W3C Digital Credentials API:
+	
+```js
 {
-  "presentation_submission": "...",
-  "vp_token": "..."
+  vp_token: "...",
+  presentation_submission: {...}
 }
 ```
 
