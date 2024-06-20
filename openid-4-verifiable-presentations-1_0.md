@@ -1583,11 +1583,11 @@ Out of the Authorization Request parameters defined in [@!RFC6749] and (#vp_toke
 * `request`
 * `response_mode`
 
-The `client_id` and `client_id_scheme` MUST be omitted in unsigned requests defined in (#unsigned_request). The Wallet determines the Client Identifier from the origin as asserted by the Browser. How the Wallet receives the origin from is up to the user agent and app platform and is out of scope of this profile.
+The `client_id` and `client_id_scheme` MUST be omitted in unsigned requests defined in (#unsigned_request). The Wallet determines the Client Identifier from the origin as asserted by the Browser. How the Wallet receives the origin from the Browser is up to the user agent and app platform and is out of scope of this profile.
 
-The value of `response_mode` parameter MUST be `w3c_dc_api` when the response is not signed and/or encrypted and `w3c_dc_api.jwt` when the response is signed and/or encrypted as defined in (#jarm).
+The value of `response_mode` parameter MUST be `w3c_dc_api` when the response is neither signed nor encrypted and `w3c_dc_api.jwt` when the response is signed and/or encrypted as defined in (#jarm).
 
-In addition to the above-mentioned parameters, this profile introduces a following new parameter:
+In addition to the above-mentioned parameters, this profile introduces a new parameter:
 
 * `expected_origins`: An array of strings, each of the string representing an origin of the Verifier making the request. This parameter MUST only be used with signed requests defined in (#signed_request). It relates the logical Client Identifier to the physical endpoints that are legit origins for requests on behalf of this Client Identifier and is used to detect request replay.
 
@@ -1626,7 +1626,7 @@ This is an example signed request payload:
 
 <{{examples/digital_credentials_api/signed_request_payload.json}}
 
-The signed request allows the Wallet to authenticate the Verifier using a trust framework other than the Web PKI utilized by the browser. An example of such a trust framework is the Verifier (RP) management infrastructure set up in the context of the eIDAS regulation in the European Union. The signature over the wallet-provided nonce is a counter-measure against replay as the Wallet can no longer only rely on the web origin of the Verifier. This web origin MAY still be used to further strengthen the security of the flow. The external trust framework could, for example, map the Client Identifier to registered web origins.
+The signed request allows the Wallet to authenticate the Verifier using a trust framework other than the Web PKI utilized by the browser. An example of such a trust framework is the Verifier (RP) management infrastructure set up in the context of the eIDAS regulation in the European Union, in which case, the Wallet can no longer rely only on the web origin of the Verifier. This web origin MAY still be used to further strengthen the security of the flow. The external trust framework could, for example, map the Client Identifier to registered web origins.
 
 ## Response
 
