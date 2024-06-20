@@ -1613,7 +1613,7 @@ The signed request allows the Wallet to authenticate the Verifier using a trust 
 
 Every OpenID4VP Authorization Request MUST result in a response being provided through the W3C Digital Credentials API. The Authorization Response is a JavaScript object, where the response parameters as defined for the Response Type are encoded as top-level members in this JavaScript object. 
 
-The following is a non-normative example of an OpenID4VP response that can be sent over the W3C Digital Credentials API:
+The following is a non-normative example of an OpenID4VP response that could be received from the W3C Digital Credentials API:
 	
 ```js
 {
