@@ -1571,11 +1571,11 @@ The value of `response_mode` parameter MUST be `w3c_dc_api` when the response is
 
 In addition to the above-mentioned parameters, this profile introduces a new parameter:
 
-* `expected_origins`: An array of strings, each of the string representing an origin of the Verifier making the request. This parameter MUST only be used with signed requests defined in (#signed_request). It relates the logical Client Identifier to the physical endpoints that are legit origins for requests on behalf of this Client Identifier and is used to detect request replay.
+* `expected_origins`: REQUIRED when signed requests defined in (#signed_request) are send over the W3C Digital Credentials API [@!w3c.digital_credentials_api]. An array of strings, each of the string representing an origin of the Verifier that is making the request. The Wallet can detect replay of the request by comparing values in this parameter to the origin asserted by the user agent.
 
 ## Signed and Unsigned Requests
 
-Any OpenID4VP request compliant to this specification can be sent over the W3C Digital Credentials API. Depending on the mechanism used to identify and authenticate the Verifier, the request can be signed or unsigned. This section defines signed and unsigned OpenID4VP requests over the W3C Digital Credentials API.
+Any OpenID4VP request compliant to this section of this specification can be sent over the W3C Digital Credentials API. Depending on the mechanism used to identify and authenticate the Verifier, the request can be signed or unsigned. This section defines signed and unsigned OpenID4VP requests over the W3C Digital Credentials API.
 
 ### Unsigned Request {#unsigned_request}
 
