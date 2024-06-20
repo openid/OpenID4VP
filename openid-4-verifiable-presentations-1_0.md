@@ -1597,14 +1597,11 @@ const credential = await navigator.identity.get({
     providers: [{
       protocol: "urn:openid.net:oid4vp",
       request: {
-        client_id: "https://client.example.org/",
-        client_id_scheme: "entity_id",
         request: "eyJhbGciOiJF..."
      }
     }]
   }
 });
-```
 
 This is an example signed request payload:
 
