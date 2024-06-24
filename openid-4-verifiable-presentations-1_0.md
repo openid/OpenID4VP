@@ -1509,7 +1509,7 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
 This section defines a profile of OpenID4VP for use with the W3C Digital Credentials API [@!w3c.digital_credentials_api].
 
 The W3C Digital Credentials API defines a Web Platform API which allows web sites acting as Verifiers
-to request the presentation of verifiable credentials. The API itself does not define a credential exchange protocol
+to request the presentation of Verifiable Credentials. The API itself does not define a credential exchange protocol
 but can be used with multiple protocols. The user agent working together with other layers of the platform/operating system and based on the permission of the End-User will send to the Wallet of the End-User's choice the request data along with the web origin of the Verifier.
 
 The design of this OpenID4VP profile utilizes the mechanisms of the W3C Digital Credentials API while also allowing to leverage advanced security features of OpenID4VP, if needed. It also defines the OpenID4VP request parameter that MAY be used with the W3C Digital Credentials API.
@@ -1581,7 +1581,7 @@ Any OpenID4VP request compliant to this section of this specification can be sen
 
 The Verifier MAY send all the OpenID4VP request data as JSON elements in the `request` API parameter and receives the result in the API's `result` parameter. In this case, the Wallet will use the Verifier origin as asserted by the Browser as the Verifer's Client Identifier.
 
-The signed Request Object MUST NOT contain `client_id` and `client_id_scheme` parameters.
+The unsigned Request Object MUST NOT contain `client_id` and `client_id_scheme` parameters.
 
 ### Signed Request {#signed_request}
 
