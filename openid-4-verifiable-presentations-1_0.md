@@ -791,6 +791,10 @@ This document also defines the following additional error codes and error descri
 
 - The value of the `request_uri_method` request parameter is neither `get` nor `post` (case-sensitive).
 
+`wallet_unavailable`:
+
+- The Wallet could not respond to the request.
+
 
 ## VP Token Validation
 
