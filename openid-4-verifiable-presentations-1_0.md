@@ -793,7 +793,7 @@ This document also defines the following additional error codes and error descri
 
 `wallet_unavailable`:
 
-- The Wallet appears to be unavailable and therefore unable to respond to the request. This can be useful in situations where the user agent cannot invoke the Wallet, but the User wishes to continue the journey on the Verifier website. For example, this applies when using claimed HTTPS URIs that are handled by a component different from the Wallet because the platform cannot or does not translate the URI into a platform intent to invoke the Wallet.
+- The Wallet appears to be unavailable and therefore unable to respond to the request. This can be useful in situations where the user agent cannot invoke the Wallet and another component receives the request while the user still controls the user experience and wishes to continue the journey on the Verifier website. For example, this applies when using claimed HTTPS URIs handled by the Wallet provider in case the platform cannot or does not translate the URI into a platform intent to invoke the Wallet.
 
 
 ## VP Token Validation
@@ -1208,6 +1208,10 @@ If no user interaction is required before sending the request, it is easy to req
 Mandatory user interaction before sending the request, like clicking a button, unlocking the wallet or even just showing a screen of the app, can make this less attractive/likely to being exploited.
 
 Requests from the Wallet to the Verifier SHOULD be sent with the minimal amount of information possible, and in particular, without any HTTP headers identifying the software used for the request (e.g., HTTP libraries or their versions). The Wallet MUST NOT send PII or any other data that could be used for fingerprinting to the Request URI in order to prevent user tracking. 
+
+## Authorization Error Response with Wallet unavailable error code
+
+In the event that another component is invoked instead of the Wallet while the user still controls the user experience, the user MUST be informed and give consent before returning the `wallet_unavailable` Authorization Error Response to the Verifier.
 
 {backmatter}
 
