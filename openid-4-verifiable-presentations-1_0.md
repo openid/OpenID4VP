@@ -793,7 +793,7 @@ This document also defines the following additional error codes and error descri
 
 `wallet_unavailable`:
 
-- The Wallet appears to be unavailable and therefore unable to respond to the request.
+- The Wallet appears to be unavailable and therefore unable to respond to the request. This can be useful in situations where the user agent cannot invoke the Wallet, but the User wishes to continue the journey on the Verifier website. For example, this applies when using claimed HTTPS URIs that are handled by a component different from the Wallet because the platform cannot or does not translate the URI into a platform intent to invoke the Wallet.
 
 
 ## VP Token Validation
