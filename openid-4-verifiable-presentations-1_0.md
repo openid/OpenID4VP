@@ -821,6 +821,7 @@ This specification defines how the Verifier can determine Credential formats, pr
 This specification defines new metadata parameters according to [@!RFC8414].
 
 * `presentation_definition_uri_supported`: OPTIONAL. Boolean value specifying whether the Wallet supports the transfer of `presentation_definition` by reference, with true indicating support. If omitted, the default value is true.
+* `conditional_credential_request_supported`: OPTIONAL. Boolean value specifying whether the Wallet supports the conditional credential request flow when combined with SIOPv2. If omitted, the default value is `false`.
 * `vp_formats_supported`: REQUIRED. An object containing a list of name/value pairs, where the name is a string identifying a Credential format supported by the Wallet. Valid Credential format identifier values are defined in Appendix A of [@!OpenID.VCI]. Other values may be used when defined in the profiles of this specification. The value is an object containing a parameter defined below:
     * `alg_values_supported`: OPTIONAL. An object where the value is an array of case sensitive strings that identify the cryptographic suites that are supported. Parties will need to agree upon the meanings of the values used, which may be context-specific. For specific values that can be used depending on the Credential format, see (#alternative_credential_formats). If `alg_values_supported` is omitted, it is unknown what cryptographic suites the wallet supports.
 
@@ -1769,7 +1770,7 @@ Note: The Key Binding JWT `nonce` claim contains the value of the `nonce` from t
 
 ## Combining this specification with SIOPv2
 
-This section shows how SIOP and OpenID for Verifiable Presentations can be combined to present Verifiable Credentials and pseudonymously authenticate an end-user using subject controlled key material.
+This section shows how [@!SIOPv2] and OpenID for Verifiable Presentations can be combined to present Verifiable Credentials and pseudonymously authenticate an end-user using subject controlled key material.
 
 ### Request {#siop_request}
 
@@ -1820,6 +1821,90 @@ The following is a non-normative example of the payload of a Self-Issued ID Toke
 ```
 
 Note: The `nonce` and `aud` are set to the `nonce` of the request and the Client Identifier of the Verifier, respectively, in the same way as for the Verifier, Verifiable Presentations to prevent replay.
+
+### Conditional Credential Request Flow
+
+When combining OpenID for Verifiable Presentations with [@!SIOPv2], the Verifier has the flexibility to determine whether to request credentials based on the authenticated user's context. The aforementioned flow can be modified as follows:
+
+1. The user initiates the authentication process with the Verifier.
+2. The Verifier starts the [@!SIOPv2] flow and sends an Authorization Request to the user's Wallet, omitting the `presentation_definition` and `presentation_definition_uri` parameters.
+3. The Wallet processes the Authorization Request and performs user authentication using the [@!SIOPv2] mechanism.
+4. Upon successful authentication, the Wallet sends the Authorization Response back to the Verifier, including the `id_token`.
+5. The Verifier validates the `id_token` and extracts the necessary information to identify the user.
+6. Based on the user's identity and the Verifier's context, the Verifier determines whether additional credentials are required.
+   - If no additional credentials are needed, the Verifier proceeds with issuing the authentication token to the user.
+   - If additional credentials are required, the Verifier initiates the OpenID for Verifiable Presentations flow by sending a new Authorization Request with the `presentation_definition` or `presentation_definition_uri` parameter.
+7. The Wallet processes the Authorization Request, obtains the necessary consent from the user, and sends the Authorization Response back to the Verifier.
+8. The Verifier validates the presentation and issues the authentication token to the user.
+
+This flow allows the Verifier to make an informed decision about requesting credentials based on the authenticated user's context.
+
+!---
+~~~ ascii-art
++------+                      +----------+                            +--------+
+| User |                      | Verifier |                            | Wallet |
++------+                      +----------+                            +--------+
+   |                               |                                      |
+   | 1. Initiate Authentication    |                                      |
+   |------------------------------>|                                      |
+   |                               |                                      |
+   |                               | 2. Start SIOPv2 Flow                 |
+   |                               | (Authentication Request)             |
+   |                               |------------------------------------->|
+   |                               |                                      |
+   |                               |                                      | 3. Perform User
+   |                               |                                      | Authentication
+   |                               |                                      | (SIOPv2 Mechanism)
+   |                               |                                      |-------+
+   |                               |                                      |       |
+   |                               |                                      |<------+
+   |                               |                                      |
+   |                               | 4. Send Authentication Response      |
+   |                               | (id_token)                           |
+   |                               |<-------------------------------------|
+   |     5. Validate id_token and  |                                      |
+   |     identify user             |                                      |
+   |                       +-------|                                      |
+   |                       |       |                                      |
+   |                       +------>|                                      |
+   |                               |                                      |
+   |    6. Determine if additional |                                      |
+   |    credentials are required   |                                      |
+   |                       +-------|                                      |
+   |                       |       |                                      |
+   |                       +------>|                                      |
+   |                               |                                      |
+   |                               | 6a. If no additional credentials     |
+   |                               | needed, issue access token           |
+   |                               |------------------------------------->|
+   |                               |                                      |
+   |                               |                                      |
+   |                               | 6b. If additional credentials        |
+   |                               | required, send Authorization Request |
+   |                               | (presentation_definition or          |
+   |                               |  presentation_definition_uri)        |
+   |                               |------------------------------------->|
+   |                               |                                      |
+   |                               |                                      | 7. Process Authorization
+   |                               |                                      |    Request and request
+   |                               |                                      |    presentation from user
+   |                               |                                      |-------+
+   |                               |                                      |       |
+   |<---------------------------------------------------------------------|-------+
+   |                               |                                      |
+   |                               | 7. Send Authorization Response       |
+   |                               |    (VP Token)                        |
+   |                               |<-------------------------------------|
+   |                               |                                      |
+   |      8. Validate presentation |                                      |
+   |      and issue access token   |                                      |
+   |                       +-------|                                      |
+   |                       |       |                                      |
+   |                       +-------|------------------------------------->|
+   |                               |                                      |
+~~~
+!---
+Figure: Reference Design for SIOPv2 Conditional Credential Request Flow
 
 # IANA Considerations
 
@@ -1893,6 +1978,10 @@ The technology described in this specification was made available from contribut
 # Document History
 
    [[ To be removed from the final specification ]]
+
+   -22
+
+   * added conditional credential request flow when using SIOPv2
 
    -21
 
