@@ -793,7 +793,7 @@ This document also defines the following additional error codes and error descri
 
 `wallet_unavailable`:
 
-- The Wallet could not respond to the request.
+- The Wallet appears to be unavailable and therefore unable to respond to the request.
 
 
 ## VP Token Validation
