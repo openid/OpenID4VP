@@ -1586,7 +1586,7 @@ The Verifier MAY send all the OpenID4VP request data as JSON elements in the `re
 
 The Verifier MAY send a signed request, for example, when identification and authentication of the Verifier is required.
 
-The signed Request Object MAY contain all the parameters listed in (#browser_api_request), except `request`. The signed Request Object MUST contain an `expected_origins` parameter. 
+The signed Request Object MAY contain all the parameters listed in (#browser_api_request), except `request`.
 
 Below is a non-normative example of such a request:
 
