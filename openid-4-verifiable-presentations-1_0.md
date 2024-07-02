@@ -1512,11 +1512,11 @@ The W3C Digital Credentials API defines a Web Platform API which allows web site
 to request the presentation of Verifiable Credentials. The API itself does not define a Credential exchange protocol
 but can be used with multiple protocols. The Web Platform, working in conjunction with other layers, such as the app platform/operating system, and based on the permission of the End-User, will send the request data along with the web origin of the Verifier to the End-User's chosen Wallet.
 
-The design of this OpenID4VP profile utilizes the mechanisms of the W3C Digital Credentials API while also allowing to leverage advanced security features of OpenID4VP, if needed. It also defines the OpenID4VP request parameter that MAY be used with the W3C Digital Credentials API.
+This OpenID4VP profile utilizes the mechanisms of the W3C Digital Credentials API while also allowing to leverage advanced security features of OpenID4VP, if needed. It also defines the OpenID4VP request parameters that MAY be used with the W3C Digital Credentials API.
 
 The Digital Credentials API offers several advantages for implementers of both Verifiers and Wallets. 
 
-Firstly, the API serves as a privacy-preserving alternative to invoking Wallets via URLs, particularly custom schemes. The user agent and app platform will only invoke a Wallet if the user confirms the request based on contextual information about the credential request and the requestor (verifier). 
+Firstly, the API serves as a privacy-preserving alternative to invoking Wallets via URLs, particularly custom URL schemes. The underlying app platform will only invoke a Wallet if the user confirms the request based on contextual information about the credential request and the requestor (Verifier). 
 
 Secondly, the user will always be returned to the initial context, typically a browser tab, when the request has been fulfilled (or aborted), which results in an improved user experience.
 
@@ -1571,7 +1571,7 @@ The value of `response_mode` parameter MUST be `w3c_dc_api` when the response is
 
 In addition to the above-mentioned parameters, this profile introduces a new parameter:
 
-* `expected_origins`: REQUIRED when signed requests defined in (#signed_request) are send over the W3C Digital Credentials API [@!w3c.digital_credentials_api]. An array of strings, each of the string representing an origin of the Verifier that is making the request. The Wallet can detect replay of the request by comparing values in this parameter to the origin asserted by the user agent.
+* `expected_origins`: REQUIRED when signed requests defined in (#signed_request) are used with the W3C Digital Credentials API [@!w3c.digital_credentials_api]. An array of strings, each string representing an origin of the Verifier that is making the request. The Wallet can detect replay of the request from a malicious Verifier by comparing values in this parameter to the origin asserted by the Web Platform.
 
 ## Signed and Unsigned Requests
 
@@ -1602,7 +1602,7 @@ const credential = await navigator.identity.get({
   }
 });
 
-This is an example signed request payload:
+This is an example of the payload of a signed OpenID4VP request used with the W3C Digital Credentials API:
 
 <{{examples/digital_credentials_api/signed_request_payload.json}}
 
