@@ -1509,8 +1509,8 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
 This section defines a profile of OpenID4VP for use with the W3C Digital Credentials API [@!w3c.digital_credentials_api].
 
 The W3C Digital Credentials API defines a Web Platform API which allows web sites acting as Verifiers
-to request the presentation of Verifiable Credentials. The API itself does not define a credential exchange protocol
-but can be used with multiple protocols. The user agent working together with other layers of the platform/operating system and based on the permission of the End-User will send to the Wallet of the End-User's choice the request data along with the web origin of the Verifier.
+to request the presentation of Verifiable Credentials. The API itself does not define a Credential exchange protocol
+but can be used with multiple protocols. The Web Platform, working in conjunction with other layers, such as the app platform/operating system, and based on the permission of the End-User, will send the request data along with the web origin of the Verifier to the End-User's chosen Wallet.
 
 The design of this OpenID4VP profile utilizes the mechanisms of the W3C Digital Credentials API while also allowing to leverage advanced security features of OpenID4VP, if needed. It also defines the OpenID4VP request parameter that MAY be used with the W3C Digital Credentials API.
 
@@ -1520,7 +1520,7 @@ Firstly, the API serves as a privacy-preserving alternative to invoking Wallets 
 
 Secondly, the user will always be returned to the initial context, typically a browser tab, when the request has been fulfilled (or aborted), which results in an improved user experience.
 
-Thirdly, cross-device requests benefit from the use of secure transports with proximity checks, which are handled by the OS platform using FIDO CTAP 2.2 with hybrid transports.
+Thirdly, cross-device requests benefit from the use of secure transports with proximity checks, which are handled by the OS platform, e.g., using FIDO CTAP 2.2 with hybrid transports.
 
 And lastly, as part of the request, the Wallet is provided with information about the Verifier's origin as authenticated by the user agent, which is important for phishing resistance.  
 
@@ -1559,13 +1559,13 @@ Out of the Authorization Request parameters defined in [@!RFC6749] and (#vp_toke
 * `client_id`
 * `client_id_scheme`
 * `response_type`
+* `response_mode`
 * `nonce`
 * `presentation_definition`
 * `client_metadata`
 * `request`
-* `response_mode`
 
-The `client_id` and `client_id_scheme` MUST be omitted in unsigned requests defined in (#unsigned_request). The Wallet determines the Client Identifier from the origin as asserted by the Browser. How the Wallet receives the origin from the Browser is up to the user agent and app platform and is out of scope of this profile.
+The `client_id` and `client_id_scheme` MUST be omitted in unsigned requests defined in (#unsigned_request). The Wallet determines the Client Identifier from the origin as asserted by the Web Platform and/or app platform. The transport of the request and origin from the Web Platform and/or app platform to the Wallet is platform-specific and is out of scope of this profile.
 
 The value of `response_mode` parameter MUST be `w3c_dc_api` when the response is neither signed nor encrypted and `w3c_dc_api.jwt` when the response is signed and/or encrypted as defined in (#jarm).
 
@@ -1575,13 +1575,12 @@ In addition to the above-mentioned parameters, this profile introduces a new par
 
 ## Signed and Unsigned Requests
 
-Any OpenID4VP request compliant to this section of this specification can be sent over the W3C Digital Credentials API. Depending on the mechanism used to identify and authenticate the Verifier, the request can be signed or unsigned. This section defines signed and unsigned OpenID4VP requests over the W3C Digital Credentials API.
+Any OpenID4VP request compliant to this section of this specification can be used with the W3C Digital Credentials API [@!w3c.digital_credentials_api]. Depending on the mechanism used to identify and authenticate the Verifier, the request can be signed or unsigned. This section defines signed and unsigned OpenID4VP requests for use with the W3C Digital Credentials API.
 
 ### Unsigned Request {#unsigned_request}
 
 The Verifier MAY send all the OpenID4VP request data as JSON elements in the `request` API parameter and receives the result in the API's `result` parameter. In this case, the Wallet will use the Verifier origin as asserted by the Browser as the Verifer's Client Identifier.
 
-The unsigned Request Object MUST NOT contain `client_id` and `client_id_scheme` parameters.
 
 ### Signed Request {#signed_request}
 
@@ -1626,7 +1625,7 @@ Note: All mechanisms for cryptographically protecting the OpenID4VP response MAY
 
 # Examples with Credentials in Various Formats {#alternative_credential_formats}
 
-OpenID for Verifiable Presentations is Credential format agnostic, i.e., it is designed to allow applications to request and receive Verifiable Presentations and Verifiable Credentials in any Credential format. This section defines Credential Format Profiles for some of the known Credential formats. Other specifications or deployments can define their own Credential Format Profiles.
+OpenID for Verifiable Presentations is Credential Format agnostic, i.e., it is designed to allow applications to request and receive Verifiable Presentations and Verifiable Credentials in any Credential Format. This section defines Credential Format Profiles for some of the known Credential Formats. Other specifications or deployments can define their own Credential Format Profiles.
 
 ## W3C Verifiable Credentials
 
