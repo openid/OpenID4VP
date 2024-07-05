@@ -793,7 +793,7 @@ This document also defines the following additional error codes and error descri
 
 `wallet_unavailable`:
 
-- The Wallet appears to be unavailable and therefore unable to respond to the request. This can be useful in situations where the user agent cannot invoke the Wallet and another component receives the request while the user still controls the user experience and wishes to continue the journey on the Verifier website. For example, this applies when using claimed HTTPS URIs handled by the Wallet provider in case the platform cannot or does not translate the URI into a platform intent to invoke the Wallet.
+- The Wallet appears to be unavailable and therefore unable to respond to the request. This can be useful in situations where the user agent cannot invoke the Wallet and another component receives the request while and the user wishes to continue the journey on the Verifier website. For example, this applies when using claimed HTTPS URIs handled by the Wallet provider in case the platform cannot or does not translate the URI into a platform intent to invoke the Wallet.
 
 
 ## VP Token Validation
@@ -1211,7 +1211,7 @@ Requests from the Wallet to the Verifier SHOULD be sent with the minimal amount 
 
 ## Authorization Error Response with Wallet unavailable error code
 
-In the event that another component is invoked instead of the Wallet while the user still controls the user experience, the user MUST be informed and give consent before returning the `wallet_unavailable` Authorization Error Response to the Verifier.
+In the event that another component is invoked instead of the Wallet, the user MUST be informed and give consent before returning the `wallet_unavailable` Authorization Error Response to the Verifier.
 
 {backmatter}
 
