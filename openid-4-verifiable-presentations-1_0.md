@@ -1526,7 +1526,7 @@ And lastly, as part of the request, the Wallet is provided with information abou
 
 ## Protocol
 
-The value of the `protocol` parameter of the W3C Digital Credentials API MUST be set to `urn:openid.net:oid4vp` for this profile.
+The value of the `protocol` parameter of the W3C Digital Credentials API MUST be set to `openid4vp` for this profile.
 
 ## Request {#browser_api_request}
 
@@ -1539,7 +1539,7 @@ if ('DigitalCredential' in window) {
   const credential = await navigator.identity.get({
     digital: {
       providers: [{
-        protocol: "urn:openid.net:oid4vp",
+        protocol: "openid4vp",
         request:  {
           response_type: "vp_token",
           nonce: "n-0S6_WzA2Mj",
@@ -1594,7 +1594,7 @@ Below is a non-normative example of such a request:
 const credential = await navigator.identity.get({
   digital: {
     providers: [{
-      protocol: "urn:openid.net:oid4vp",
+      protocol: "openid4vp",
       request: {
         request: "eyJhbGciOiJF..."
      }
