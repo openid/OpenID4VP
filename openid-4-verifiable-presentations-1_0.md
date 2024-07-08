@@ -1535,7 +1535,7 @@ The `request` member of the W3C Digital Credentials API [@!w3c.digital_credentia
 The following is a non-normative example of how the W3C Digital Credentials API can be used with an unsigned OpenID4VP request when advanced security features of OpenID4VP are not used:
 
 ```js
-if ('DigitalCredential' in window) {
+try {
   const credential = await navigator.identity.get({
     digital: {
       providers: [{
@@ -1549,8 +1549,8 @@ if ('DigitalCredential' in window) {
       }]
     }
   });
-} else {
-// fallback to other invocation mechanisms
+} catch (err) {
+  // Handle errors and/or fallback to other invocation mechanisms
 }
 ```
 
