@@ -1518,7 +1518,7 @@ The Digital Credentials API offers several advantages for implementers of both V
 
 Firstly, the API serves as a privacy-preserving alternative to invoking Wallets via URLs, particularly custom URL schemes. The underlying app platform will only invoke a Wallet if the user confirms the request based on contextual information about the credential request and the requestor (Verifier). 
 
-Secondly, the user will always be returned to the initial context, typically a browser tab, when the request has been fulfilled (or aborted), which results in an improved user experience.
+Secondly, the session with the user will always continue in the initial context, typically a browser tab, when the request has been fulfilled (or aborted), which results in an improved user experience.
 
 Thirdly, cross-device requests benefit from the use of secure transports with proximity checks, which are handled by the OS platform, e.g., using FIDO CTAP 2.2 with hybrid transports.
 
