@@ -1567,7 +1567,7 @@ Out of the Authorization Request parameters defined in [@!RFC6749] and (#vp_toke
 
 The `client_id` and `client_id_scheme` MUST be omitted in unsigned requests defined in (#unsigned_request). The Wallet determines the Client Identifier from the origin as asserted by the Web Platform and/or app platform. The transport of the request and origin from the Web Platform and/or app platform to the Wallet is platform-specific and is out of scope of this profile.
 
-The value of `response_mode` parameter MUST be `w3c_dc_api` when the response is neither signed nor encrypted and `w3c_dc_api.jwt` when the response is signed and/or encrypted as defined in (#jarm).
+The value of the `response_mode` parameter MUST be `w3c_dc_api` when the response is neither signed nor encrypted and `w3c_dc_api.jwt` when the response is signed and/or encrypted as defined in (#jarm).
 
 In addition to the above-mentioned parameters, this profile introduces a new parameter:
 
@@ -1579,7 +1579,7 @@ Any OpenID4VP request compliant to this section of this specification can be use
 
 ### Unsigned Request {#unsigned_request}
 
-The Verifier MAY send all the OpenID4VP request data as JSON elements in the `request` API parameter and receives the result in the API's `result` parameter. In this case, the Wallet will use the Verifier origin as asserted by the Browser as the Verifer's Client Identifier.
+The Verifier MAY send all the OpenID4VP request parameters as members in the `request` member passed to the API. In this case, the Wallet will use the Verifier's origin as asserted by the Browser as the Verifer's Client Identifier.
 
 
 ### Signed Request {#signed_request}
@@ -1621,7 +1621,6 @@ The following is a non-normative example of an OpenID4VP response that could be 
 }
 ```
 
-Note: All mechanisms for cryptographically protecting the OpenID4VP response MAY be utilized with the W3C Digital Credentials API, too.
 
 # Examples with Credentials in Various Formats {#alternative_credential_formats}
 
