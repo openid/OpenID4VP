@@ -1530,7 +1530,7 @@ The value of the `protocol` parameter of the W3C Digital Credentials API MUST be
 
 ## Request {#browser_api_request}
 
-The `request` member of the W3C Digital Credentials API [@!w3c.digital_credentials_api] MUST contain a valid OpenID4VP Authorization Request, where every OpenID4VP Authorization Request parameter is represented as a top-level JavaScript object member.
+The `request` member of the W3C Digital Credentials API [@!w3c.digital_credentials_api] contains an OpenID4VP Authorization Request, where every OpenID4VP Authorization Request parameter is represented as a top-level JavaScript object member.
 
 The following is a non-normative example of how the W3C Digital Credentials API can be used with an unsigned OpenID4VP request when advanced security features of OpenID4VP are not used:
 
