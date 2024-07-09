@@ -1,0 +1,54 @@
+```plantuml
+@startuml
+
+autonumber
+
+participant "User" as u
+
+participant "Verifier Site" as r
+
+participant "Web Platform" as wp
+
+participant "App Platform" as ap
+
+participant "Wallet" as w
+
+u --> r : use
+activate r
+
+note over r,wp
+    Note that the signed request object contains the Verifier's origin.
+end note
+r -> wp: navigator.identity.get(\nprotocol="openid4vp",\nrequest="client_id,[client_id_scheme,] request")
+
+deactivate r
+activate wp
+
+wp -> ap: forward request (\norigin="example.verifier.com",\nprotocol="openid4vp",\nrequest="client_id,[client_id_scheme,] request")
+deactivate wp
+activate ap
+
+ap -> ap: match wallet
+ap -> u: use this wallet?
+u -> ap: confirmation
+
+ap -> w: forward request (\norigin="example.verifier.com",\nprotocol="openid4vp",\nrequest="client_id,[client_id_scheme,] request")
+deactivate ap
+
+activate w
+w -> w: authenticate Verifier by validating request signature (including trust chain)
+w -> w: compare origin to origin in signed request
+
+note over u, w: User authentication and Credential selection/confirmation
+
+w -> w: create and encrypt credential presentation(s) \nassociated with nonce
+w --> ap: send response \n(vp_token(credential presentation(s)),\n presentation_submission, state)
+ap -> wp: send response \n(vp_token(credential presentation(s)),\n presentation_submission, state)
+wp -> r: send response \n(vp_token(credential presentation(s)),\n presentation_submission, state)
+r -> r: decrypt response
+r -> r: check state
+activate r
+r -> r: validate presentation \n(incl. nonce binding)
+r -> r: use presented credential 
+@enduml
+```
