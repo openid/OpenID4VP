@@ -1601,6 +1601,7 @@ const credential = await navigator.identity.get({
     }]
   }
 });
+```
 
 This is an example of the payload of a signed OpenID4VP request used with the W3C Digital Credentials API:
 
