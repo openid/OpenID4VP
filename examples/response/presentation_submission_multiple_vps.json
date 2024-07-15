@@ -8,7 +8,7 @@
       "path": "$[0]",
       "path_nested": {
         "format": "ldp_vc",
-        "path": "$[0].verifiableCredential[0]"
+        "path": "$.verifiableCredential[0]"
       }
     },
     {
