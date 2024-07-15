@@ -1209,7 +1209,7 @@ Mandatory user interaction before sending the request, like clicking a button, u
 
 Requests from the Wallet to the Verifier SHOULD be sent with the minimal amount of information possible, and in particular, without any HTTP headers identifying the software used for the request (e.g., HTTP libraries or their versions). The Wallet MUST NOT send PII or any other data that could be used for fingerprinting to the Request URI in order to prevent user tracking. 
 
-## Authorization Error Response with Wallet unavailable error code
+## Authorization Error Response with the `wallet_unavailable` error code
 
 In the event that another component is invoked instead of the Wallet, the user MUST be informed and give consent before returning the `wallet_unavailable` Authorization Error Response to the Verifier.
 
