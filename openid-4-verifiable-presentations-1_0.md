@@ -1613,27 +1613,25 @@ The signed request allows the Wallet to authenticate the Verifier using a trust 
 
 Every OpenID4VP Authorization Request MUST result in a response being provided through the W3C Digital Credentials API. This response is a JavaScript object as defined in [@!w3c.digital_credentials_api], where the OpenID4VP Authorization Response parameters as defined for the Response Type are encoded as members within the `data` member of this JavaScript object.
 
-The following is a non-normative example of an unsigned OpenID4VP response that could be received from the W3C Digital Credentials API:
+The following is a non-normative example of processing an unsigned OpenID4VP response that could be received from the W3C Digital Credentials API:
 
 ```js
-{
-  protocol: "openid4vp",
-  data: {
-    vp_token: "...",
-    presentation_submission: {...}
-  }
-}
+const credential = await navigator.identity.get(request);
+if (credential.protocol == "openid4vp") {
+  // Extract relevant data members
+  const { vp_token, presentation_submission } =  credential.data;
+  // presentation_submission is a javascript object
+  // vp_token is a string or javascript object depending on the credential type
 ```
 
-The following is a non-normative example of an encrypted OpenID4VP response that could be received from the W3C Digital Credentials API:
+The following is a non-normative example of processing an encrypted OpenID4VP response that could be received from the W3C Digital Credentials API:
 
 ```js
-{
-  protocol: "openid4vp",
-  data: {
-    response: "eyJhbGciOiJ..."
-  }
-}
+const credential = await navigator.identity.get(request);
+if (credential.protocol == "openid4vp") {
+  // Extract encrypted response
+  const { response } =  credential.data;
+  // response is a string containing a JWE, now decrypt it
 ```
 
 # Examples with Credentials in Various Formats {#alternative_credential_formats}
