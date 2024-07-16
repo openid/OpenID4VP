@@ -1909,6 +1909,7 @@ The technology described in this specification was made available from contribut
    * added references to ISO/IEC 23220 and 18013 documents 
    * added `post` request method for Request URI
    * Added IETF SD-JWT VC profile
+   * Added `wallet_unavailable` error
 
    -20
 
