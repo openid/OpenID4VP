@@ -1611,7 +1611,7 @@ The signed request allows the Wallet to authenticate the Verifier using a trust 
 
 ## Response
 
-Every OpenID4VP Authorization Request MUST result in a response being provided through the W3C Digital Credentials API. This response is a JavaScript object as defined in [@!w3c.digital_credentials_api], where the OpenID4VP Authorization Response parameters as defined for the Response Type are encoded as members within the `data` member of this JavaScript object.
+Every OpenID4VP Authorization Request results in a response being provided through the W3C Digital Credentials API. The response is an instance of a `DigitalCredential` credential interface, as defined in [@!w3c.digital_credentials_api], and the OpenID4VP Authorization Response parameters as defined for the Response Type are represented as an object within the `data` attribute.
 
 The following is a non-normative example of processing an unsigned OpenID4VP response that could be received from the W3C Digital Credentials API:
 
