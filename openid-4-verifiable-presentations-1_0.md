@@ -232,8 +232,6 @@ Presentation of Verifiable Credentials using OpenID for Verifiable Presentations
 
 The Authorization Request follows the definition given in [@!RFC6749] taking into account the recommendations given in [@!I-D.ietf-oauth-security-topics].
 
-The Verifier MAY send an Authorization Request as a Request Object either by value or by reference, as defined in the JWT-Secured Authorization Request (JAR) [@RFC9101].
-
 This specification defines a new mechanism for the cases when the Wallet wants to provide to the Verifier details about its technical capabilities to
 allow the Verifier to generate a request that matches the technical capabilities of that Wallet.
 To enable this, the Authorization Request can contain a `request_uri_method` parameter with the value `post`
@@ -283,10 +281,15 @@ The following additional considerations are given for pre-existing Authorization
 : OPTIONAL. Defined in [@!RFC6749]. The Wallet MAY allow Verifiers to request presentation of Verifiable Credentials by utilizing a pre-defined scope value. See (#request_scope) for more details.
 
 `response_mode`:
-: OPTIONAL. Defined in [@!OAuth.Responses]. This parameter is used (through the new Response Mode `direct_post`) to ask the Wallet to send the response to the Verifier via an HTTPS connection (see (#response_mode_post) for more details). It is also used to request signing and encrypting (see (#jarm) for more details). If the parameter is not present, the default value is `fragment`. 
+: OPTIONAL. Defined in [@!OAuth.Responses]. This parameter is used (through the new Response Mode `direct_post`) to ask the Wallet to send the response to the Verifier via an HTTPS connection (see (#response_mode_post) for more details). It is also used to request signing and encrypting (see (#jarm) for more details). If the parameter is not present, the default value is `fragment`.
 
-The following is a non-normative example of an Authorization Request: 
+The Verifier MAY send an Authorization Request using either of these 3 options:
+1. Passing as URL with encoded parameters
+2. Passing a request object as value
+3. Passing a request object by reference
+As defined in the JWT-Secured Authorization Request (JAR) [@RFC9101].
 
+The following is a non-normative example of Authorization Request with URL encoded parameters:
 ```
 GET /authorize?
   response_type=vp_token
@@ -296,15 +299,91 @@ GET /authorize?
   &nonce=n-0S6_WzA2Mj HTTP/1.1
 ```
 
-The following is a non-normative example of an Authorization Request with a `request_uri_method` parameter (including the additional `client_id_scheme` and `client_metadata` parameters): 
-
+The following is a non-normative example of Authorization Request with request object as value:
 ```
 GET /authorize?
-  client_id=client.example.org
+    response_type=vp_token
+    &client_id=https%3A%2F%2Fclient.example.org%2Fcb
+    &request=eyJhbGciOiJSUzI1NiIsImtpZCI6ImsyYmRjIn0.eyJpc3MiOiJzNkJoZFJrcXQzIiwiYXVkIjoiaHR0cHM6Ly9zZWxmLWlzc3VlZC5tZS92MiIsInJlc3BvbnNlX3R5cGUiOiJ2cF90b2tlbiIsImNsaWVudF9pZCI6InM2QmhkUmtxdDMiLCJyZWRpcmVjdF91cmkiOiJodHRwcy8vY2xpZW50LmV4YW1wbGUub3JnL2NiIiwic2NvcGUiOiJvcGVuaWQiLCJwcmVzZW50YXRpb25fZGVmaW5pdGlvbiI6eyJpZCI6ImV4YW1wbGVfand0X3ZjIiwiaW5wdXRfZGVzY3JpcHRvcnMiOlt7ImlkIjoiaWRfY3JlZGVudGlhbCIsImZvcm1hdCI6eyJqd3RfdmNfanNvbiI6eyJwcm9vZl90eXBlIjpbIkpzb25XZWJTaWduYXR1cmUyMDIwIl19fSwiY29uc3RyYWludHMiOnsiZmllbGRzIjpbeyJwYXRoIjpbIiQudmMudHlwZSJdLCJmaWx0ZXIiOnsidHlwZSI6ImFycmF5IiwiY29udGFpbnMiOnsiY29uc3QiOiJJRENyZWRlbnRpYWwifX19XX19XX0sIm5vbmNlIjoibi0wUzZfV3pBMk1qIn0.m1KYXT4r5Pj7Jh8gUlngpvjUoEZnOcbL8lXuDxbLbQyhLG9mro9EpT3I4YOm25tnxFx2mrKb42dFPxXOwLO5NbBmoYmY8wxH85H98RtpPGaTwCD6duxbp4eZm6LO-fdxpSvjzCAKoU3kzloh1Q1ijkP_ZQgwmS-uQba9qpu61hMjF6KIIjz59sJHpZOI0cEz4LqrLwXXIht0hyZXdE_vJIBEwfafoLZgggF9adNGUQnE3dXLi_is6XrDk7BS0VZds6IaNTVlIlS5NfHg6Lp1IpbiFta_6CWrFxtC1QoCIrhIzbJgnF4GRboy0SfYRXD8Vt8qbPzLIeUvE-LyObGN5g
+```
+Where the contents of `request` consist of base64url-encoding and signing (in the example with RS256 algo)
+this json:
+```
+{
+  "iss": "s6BhdRkqt3",
+  "aud": "https://self-issued.me/v2",
+  "response_type": "vp_token",
+  "client_id": "s6BhdRkqt3",
+  "redirect_uri": "https//client.example.org/cb",
+  "scope": "openid",
+  "presentation_definition": {
+    "id": "example_jwt_vc",
+    "input_descriptors": [
+      {
+        "id": "id_credential",
+        "format": {
+          "jwt_vc_json": {
+            "proof_type": [
+              "JsonWebSignature2020"
+            ]
+          }
+        },
+        "constraints": {
+          "fields": [
+            {
+              "path": [
+                "$.vc.type"
+              ],
+              "filter": {
+                "type": "array",
+                "contains": {
+                  "const": "IDCredential"
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "nonce": "n-0S6_WzA2Mj"
+}
+```
+With these keys:
+```
+{
+  "kty":"RSA",
+  "kid":"k2bdc",
+  "n":"y9Lqv4fCp6Ei-u2-ZCKq83YvbFEk6JMs_pSj76eMkddWRuWX2aBKGHAtKlE5P
+      7_vn__PCKZWePt3vGkB6ePgzAFu08NmKemwE5bQI0e6kIChtt_6KzT5OaaXDF
+      I6qCLJmk51Cc4VYFaxgqevMncYrzaW_50mZ1yGSFIQzLYP8bijAHGVjdEFgZa
+      ZEN9lsn_GdWLaJpHrB3ROlS50E45wxrlg9xMncVb8qDPuXZarvghLL0HzOuYR
+      adBJVoWZowDNTpKpk2RklZ7QaBO7XDv3uR7s_sf2g-bAjSYxYUGsqkNA9b3xV
+      W53am_UZZ3tZbFTIh557JICWKHlWj5uzeJXaw",
+  "e":"AQAB"
+}
+```
+
+The following is a non-normative example of Authorization Request with request object as reference:
+```
+GET /authorize?
+  response_type=vp_token
+  &client_id=https%3A%2F%2Fclient.example.org%2Fcb
   &client_id_scheme=x509_san_dns
   &client_metadata=...
   &request_uri=https%3A%2F%2Fclient.example.org%2Frequest%2Fvapof4ql2i7m41m68uep
   &request_uri_method=post HTTP/1.1
+```
+And, later use the `request_uri` for the below request:
+```
+POST /request HTTP/1.1
+Host: client.example.org
+Content-Type: application/x-www-form-urlencoded
+
+wallet_metadata=%7B%22vp_formats_supported%22%3A%7B%22jwt_vc_json%22%3A%7B%22alg_values_supported
+%22%3A%5B%22ES256K%22%2C%22ES384%22%5D%7D%2C%22jwt_vp_json%22%3A%7B%22alg_values_supported%22%3A%
+5B%22ES256K%22%2C%22EdDSA%22%5D%7D%7D%7D&
+wallet_nonce=qPmxiNFCR3QTm19POc8u
 ```
 
 ## `presentation_definition` Parameter {#request_presentation_definition}
