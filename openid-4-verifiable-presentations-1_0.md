@@ -1622,6 +1622,7 @@ if (credential.protocol == "openid4vp") {
   const { vp_token, presentation_submission } =  credential.data;
   // presentation_submission is a javascript object
   // vp_token is a string or javascript object depending on the credential type
+}
 ```
 
 The following is a non-normative example of processing an encrypted OpenID4VP response that could be received from the W3C Digital Credentials API:
@@ -1632,6 +1633,7 @@ if (credential.protocol == "openid4vp") {
   // Extract encrypted response
   const { response } =  credential.data;
   // response is a string containing a JWE, now decrypt it
+}
 ```
 
 # Examples with Credentials in Various Formats {#alternative_credential_formats}
