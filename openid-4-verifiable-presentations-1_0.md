@@ -287,7 +287,7 @@ The Verifier MAY send an Authorization Request using either of these 3 options:
 1. Passing as URL with encoded parameters
 2. Passing a request object as value
 3. Passing a request object by reference
-As defined in the JWT-Secured Authorization Request (JAR) [@RFC9101].
+2 and 3 are defined in the JWT-Secured Authorization Request (JAR) [@RFC9101].
 
 The following is a non-normative example of Authorization Request with URL encoded parameters:
 ```
