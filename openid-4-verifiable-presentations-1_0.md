@@ -284,9 +284,11 @@ The following additional considerations are given for pre-existing Authorization
 : OPTIONAL. Defined in [@!OAuth.Responses]. This parameter is used (through the new Response Mode `direct_post`) to ask the Wallet to send the response to the Verifier via an HTTPS connection (see (#response_mode_post) for more details). It is also used to request signing and encrypting (see (#jarm) for more details). If the parameter is not present, the default value is `fragment`.
 
 The Verifier MAY send an Authorization Request using either of these 3 options:
+
 1. Passing as URL with encoded parameters
 2. Passing a request object as value
 3. Passing a request object by reference
+
 2 and 3 are defined in the JWT-Secured Authorization Request (JAR) [@RFC9101].
 
 The following is a non-normative example of Authorization Request with URL encoded parameters:
