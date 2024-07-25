@@ -656,7 +656,7 @@ properties are defined:
 
 `path`:
 : REQUIRED. A claims path pointer that specifies the path to the claim
-within the Verifiable Credential, as defined in (#claims_path_query).
+within the Verifiable Credential, as defined in (#claims_path_pointer).
 
 ### ISO 18013-5 Credentials {#iso_18013-5}
 
@@ -670,7 +670,7 @@ within the Verifiable Credential, e.g., `org.iso.18013.5.1`.
 : REQUIRED. A string that specifies the name of the claim within
 the Verifiable Credential, e.g., `first_name`.
 
-### Claims Path Pointer
+### Claims Path Pointer {#claims_path_pointer}
 
 A claims path pointer is a pointer into the JSON structure of the Verifiable
 Credential, identifying one or more claims. A claims path pointer MUST be a
@@ -1405,12 +1405,9 @@ Such an attack is impossible against flows implemented with the Response Mode `f
 However, the Response Mode `direct_post` is susceptible to such an attack as the result is sent from the Wallet out-of-band to the Verifier's Response Endpoint.
 
 This kind of attack can be detected if the Response Mode `direct_post` is used in conjunction with the redirect URI, which causes the Wallet to redirect the flow to the Verifier's frontend at the device where the transaction was concluded. The Verifier's Response Endpoint MUST include a fresh secret (Response Code) into the redirect URI returned to the Wallet and the Verifier's Response Endpoint MUST require the frontend to pass the respective Response Code when fetching the Authorization Response. That stops session fixation attacks as long as the attacker is unable to get access to the Response Code.
-<<<<<<< HEAD
-=======
 
 Note that this protection technique is not applicable to cross-device scenarios because the browser used by the wallet will not have the original session.
 It is also not applicable in same-device scenarios if the wallet uses a browser different from the one used on the presentation request (e.g. device with multiple installed browsers), because the original session will also not be available there.
->>>>>>> main
 
 See (#implementation_considerations_direct_post) for more implementation considerations.
 
@@ -1777,6 +1774,17 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
           </author>
         </front>
 </reference>
+
+<reference anchor="BCP47" target="https://www.rfc-editor.org/info/bcp47">
+        <front>
+          <title>BCP47</title>
+          <author>
+            <organization>IETF</organization>
+          </author>
+          <date year="2009"/>
+        </front>
+</reference>
+
 
 # OpenID4VP profile for the W3C Digital Credentials API
 
