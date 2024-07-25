@@ -46,7 +46,7 @@ organization="Mattr"
 
 .# Abstract
 
-This specification defines a protocol for requesting and presenting Verifiable Credentials. 
+This specification defines a protocol for requesting and presenting Verifiable Credentials.
 
 {mainmatter}
 
@@ -54,7 +54,7 @@ This specification defines a protocol for requesting and presenting Verifiable C
 
 This specification defines a mechanism on top of OAuth 2.0 [@!RFC6749] that enables presentation of Verifiable Credentials as Verifiable Presentations. Verifiable Credentials and Verifiable Presentations can be of any format, including, but not limited to W3C Verifiable Credentials Data Model [@VC_DATA], ISO mdoc [@ISO.18013-5], IETF SD-JWT VC [@!I-D.ietf-oauth-sd-jwt-vc], and AnonCreds [@Hyperledger.Indy].
 
-OAuth 2.0 [@!RFC6749] is used as a base protocol as it provides the required rails to build a simple, secure, and developer-friendly Credential presentation layer on top of it. Moreover, implementers can, in a single interface, support Credential presentation and the issuance of Access Tokens for access to APIs based on Verifiable Credentials in the Wallet. OpenID Connect [@!OpenID.Core] deployments can also extend their implementations using this specification with the ability to transport Verifiable Presentations. 
+OAuth 2.0 [@!RFC6749] is used as a base protocol as it provides the required rails to build a simple, secure, and developer-friendly Credential presentation layer on top of it. Moreover, implementers can, in a single interface, support Credential presentation and the issuance of Access Tokens for access to APIs based on Verifiable Credentials in the Wallet. OpenID Connect [@!OpenID.Core] deployments can also extend their implementations using this specification with the ability to transport Verifiable Presentations.
 
 This specification can also be combined with [@!SIOPv2], if implementers require OpenID Connect features, such as the issuance of Self-Issued ID Tokens [@!SIOPv2].
 
@@ -98,11 +98,11 @@ Verifier:
 Issuer-Holder-Verifier Model:
 :  A model for exchanging claims, where claims are issued in the form of Verifiable Credentials independent of the process of presenting them as Verifiable Presentation to the Verifiers. An issued Verifiable Credential can (but must not necessarily) be used multiple times.
 
-Holder Binding: 
-: Ability of the Holder to prove legitimate possession of a Verifiable Credential. 
+Holder Binding:
+: Ability of the Holder to prove legitimate possession of a Verifiable Credential.
 
 Cryptographic Holder Binding:
-:  Ability of the Holder to prove legitimate possession of a Verifiable Credential by proving control over the same private key during the issuance and presentation. Mechanism might depend on the Credential Format. For example, in `jwt_vc_json` Credential Format, a Verifiable Credential with Cryptographic Holder Binding contains a public key or a reference to a public key that matches to the private key controlled by the Holder. 
+:  Ability of the Holder to prove legitimate possession of a Verifiable Credential by proving control over the same private key during the issuance and presentation. Mechanism might depend on the Credential Format. For example, in `jwt_vc_json` Credential Format, a Verifiable Credential with Cryptographic Holder Binding contains a public key or a reference to a public key that matches to the private key controlled by the Holder.
 
 Claims-based Holder Binding:
 :  Ability of the Holder to prove legitimate possession of a Verifiable Credential by proofing certain claims, e.g., name and date of birth, for example by presenting another Verifiable Credential. Claims-based Holder Binding allows long term, cross device use of a Credential as it does not depend on cryptographic key material stored on a certain device. One example of such a Verifiable Credential could be a Diploma.
@@ -116,13 +116,13 @@ VP Token:
 Wallet:
 :  An entity used by the Holder to receive, store, present, and manage Verifiable Credentials and key material. There is no single deployment model of a Wallet: Verifiable Credentials and keys can both be stored/managed locally, or by using a remote self-hosted service, or a remote third-party service. In the context of this specification, the Wallet acts as an OAuth 2.0 Authorization Server (see [@!RFC6749]) towards the Credential Verifier which acts as the OAuth 2.0 Client.
 
-# Overview 
+# Overview
 
 This specification defines a mechanism on top of OAuth 2.0 to request and present Verifiable Credentials as Verifiable Presentations.
 
 As the primary extension, OpenID for Verifiable Presentations introduces the VP Token as a container to enable End-Users to present Verifiable Presentations to Verifiers using the Wallet. A VP Token contains one or more Verifiable Presentations in the same or different Credential formats.
 
-This specification supports any Credential format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA] (VCDM), [@ISO.18013-5] (mdoc), [@!I-D.ietf-oauth-sd-jwt-vc] (SD-JWT VC), and [@Hyperledger.Indy] (AnonCreds). Credentials of multiple formats can be presented in the same transaction. The examples given in the main part of this specification use W3C Verifiable Credentials, while examples in other Credential formats are given in (#alternative_credential_formats). 
+This specification supports any Credential format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA] (VCDM), [@ISO.18013-5] (mdoc), [@!I-D.ietf-oauth-sd-jwt-vc] (SD-JWT VC), and [@Hyperledger.Indy] (AnonCreds). Credentials of multiple formats can be presented in the same transaction. The examples given in the main part of this specification use W3C Verifiable Credentials, while examples in other Credential formats are given in (#alternative_credential_formats).
 
 Implementations can use any pre-existing OAuth 2.0 Grant Type and Response Type in conjunction with this specification to support different deployment architectures.
 
@@ -138,7 +138,7 @@ Any of the OAuth 2.0 related specifications, such as [@RFC9126] and [@RFC9101], 
 
 Below is a diagram of a flow where the End-User presents a Credential to a Verifier interacting with the End-User on the same device that the device the Wallet resides on.
 
-The flow utilizes simple redirects to pass Authorization Request and Response between the Verifier and the Wallet. The Verifiable Presentations are returned to the Verifier in the fragment part of the redirect URI, when Response Mode is `fragment`. 
+The flow utilizes simple redirects to pass Authorization Request and Response between the Verifier and the Wallet. The Verifiable Presentations are returned to the Verifier in the fragment part of the redirect URI, when Response Mode is `fragment`.
 
 Note: The diagram does not illustrate all the optional features of this specification.
 
@@ -146,7 +146,7 @@ Note: The diagram does not illustrate all the optional features of this specific
 ~~~ ascii-art
 +--------------+   +--------------+                                    +--------------+
 |     User     |   |   Verifier   |                                    |    Wallet    |
-+--------------+   +--------------+                                    +--------------+  
++--------------+   +--------------+                                    +--------------+
         |                 |                                                   |
         |    Interacts    |                                                   |
         |---------------->|                                                   |
@@ -164,7 +164,7 @@ Note: The diagram does not illustrate all the optional features of this specific
 !---
 Figure: Same Device Flow
 
-(1) The Verifier sends an Authorization Request to the Wallet. It contains a Presentation Definition as defined in [@!DIF.PresentationExchange] that describes the requirements of the Credential(s) that the Verifier is requesting to be presented. Such requirements could include what type of Credential(s), in what format(s), which individual Claims within those Credential(s) (Selective Disclosure), etc. The Wallet processes the Authorization Request and determines what Credentials are available matching the Verifier's request. The Wallet also authenticates the End-User and gathers consent to present the requested Credentials. 
+(1) The Verifier sends an Authorization Request to the Wallet. It contains a Presentation Definition as defined in [@!DIF.PresentationExchange] that describes the requirements of the Credential(s) that the Verifier is requesting to be presented. Such requirements could include what type of Credential(s), in what format(s), which individual Claims within those Credential(s) (Selective Disclosure), etc. The Wallet processes the Authorization Request and determines what Credentials are available matching the Verifier's request. The Wallet also authenticates the End-User and gathers consent to present the requested Credentials.
 
 (2) The Wallet prepares the Verifiable Presentation(s) of the Verifiable Credential(s) that the End-User has consented to. It then sends to the Verifier an Authorization Response where the Verifiable Presentation(s) are contained in the `vp_token` parameter.
 
@@ -207,11 +207,11 @@ Note: The usage of the Request URI as defined in [@!RFC9101] does not depend on 
 !---
 Figure: Cross Device Flow
 
-(1) The Verifier sends to the Wallet an Authorization Request that contains a Request URI from where to obtain the Request Object containing Authorization Request parameters. 
+(1) The Verifier sends to the Wallet an Authorization Request that contains a Request URI from where to obtain the Request Object containing Authorization Request parameters.
 
 (2) The Wallet sends an HTTP GET request to the Request URI to retrieve the Request Object.
 
-(2.5) The HTTP GET response returns the Request Object containing Authorization Request parameters. It especially contains a Presentation Definition as defined in [@!DIF.PresentationExchange] that describes the requirements of the Credential(s) that the Verifier is requesting to be presented. Such requirements could include what type of Credential(s), in what format(s), which individual Claims within those Credential(s) (Selective Disclosure), etc. The Wallet processes the Request Object and determines what Credentials are available matching the Verifier's request. The Wallet also authenticates the End-User and gathers her consent to present the requested Credentials. 
+(2.5) The HTTP GET response returns the Request Object containing Authorization Request parameters. It especially contains a Presentation Definition as defined in [@!DIF.PresentationExchange] that describes the requirements of the Credential(s) that the Verifier is requesting to be presented. Such requirements could include what type of Credential(s), in what format(s), which individual Claims within those Credential(s) (Selective Disclosure), etc. The Wallet processes the Request Object and determines what Credentials are available matching the Verifier's request. The Wallet also authenticates the End-User and gathers her consent to present the requested Credentials.
 
 (3) The Wallet prepares the Verifiable Presentation(s) of the Verifiable Credential(s) that the End-User has consented to. It then sends to the Verifier an Authorization Response where the Verifiable Presentation(s) are contained in the `vp_token` parameter.
 
@@ -219,8 +219,8 @@ Figure: Cross Device Flow
 
 OpenID for Verifiable Presentations extends existing OAuth 2.0 mechanisms as following:
 
-* A new `presentation_definition` Authorization Request parameter that uses the [@!DIF.PresentationExchange] syntax is defined to request presentation of Verifiable Credentials in arbitrary formats. See (#vp_token_request) for more details. 
-* A new `vp_token` response parameter is defined to return Verifiable Presentations to the Verifier in either Authorization or Token Response depending on the Response Type. See (#response) for more details. 
+* A new `presentation_definition` Authorization Request parameter that uses the [@!DIF.PresentationExchange] syntax is defined to request presentation of Verifiable Credentials in arbitrary formats. See (#vp_token_request) for more details.
+* A new `vp_token` response parameter is defined to return Verifiable Presentations to the Verifier in either Authorization or Token Response depending on the Response Type. See (#response) for more details.
 * New Response Types `vp_token` and `vp_token id_token` are defined to request Verifiable Credentials to be returned in the Authorization Response (standalone or along with a Self-Issued ID Token [@!SIOPv2]). See (#response) for more details.
 * A new OAuth 2.0 Response Mode `direct_post` is defined to support sending the response across devices, or when the size of the response exceeds the redirect URL character size limitation. See (#response_mode_post) for more details.
 * The [@!DIF.PresentationExchange] `format` parameter is used throughout the protocol in order to enable customization according to the specific needs of a particular Credential format. Examples in (#alternative_credential_formats) are given for Credential formats as specified in [@VC_DATA], [@ISO.18013-5], [@!I-D.ietf-oauth-sd-jwt-vc], and [@Hyperledger.Indy].
@@ -252,12 +252,15 @@ This specification enables the Verifier to send both Presentation Definition JSO
 This specification defines the following new parameters:
 
 `presentation_definition`:
-: A string containing a Presentation Definition JSON object. See (#request_presentation_definition) for more details. This parameter MUST be present when `presentation_definition_uri` parameter, or a `scope` value representing a Presentation Definition is not present.
+: A string containing a Presentation Definition JSON object. See (#request_presentation_definition) for more details. Exactly one of `vp_query` or `presentation_definition` or `presentation_definition_uri` MUST be present in the Authorization Request.
 
 `presentation_definition_uri`:
-: A string containing an HTTPS URL pointing to a resource where a Presentation Definition JSON object can be retrieved. This parameter MUST be present when `presentation_definition` parameter, or a `scope` value representing a Presentation Definition is not present. See (#request_presentation_definition_uri) for more details.
+: A string containing an HTTPS URL pointing to a resource where a Presentation Definition JSON object can be retrieved. See (#request_presentation_definition_uri) for more details. Exactly one of `vp_query` or `presentation_definition` or `presentation_definition_uri` MUST be present in the Authorization Request.
 
-`client_id_scheme`: 
+`vp_query`:
+: A string containing a JSON-encoded VP Query as defined in (#vp_query). This parameter is OPTIONAL. Exactly one of `vp_query` or `presentation_definition` or `presentation_definition_uri` MUST be present in the Authorization Request.
+
+`client_id_scheme`:
 : OPTIONAL. A string identifying the scheme of the value in the `client_id` Authorization Request parameter (Client Identifier scheme). The `client_id_scheme` parameter namespaces the respective Client Identifier. If an Authorization Request uses the `client_id_scheme` parameter, the Wallet MUST interpret the Client Identifier of the Verifier in the context of the Client Identifier scheme. If the parameter is not present, the Wallet MUST behave as specified in [@!RFC6749]. See (#client_metadata_management) for the values defined by this specification. If the same Client Identifier is used with different Client Identifier schemes, those occurrences MUST be treated as different Verifiers. Note that the Verifier needs to determine which Client Identifier schemes the Wallet supports prior to sending the Authorization Request in order to choose a supported scheme.
 
 `client_metadata`:
@@ -265,11 +268,11 @@ This specification defines the following new parameters:
 
 A public key to be used by the Wallet as an input to the key agreement to encrypt Authorization Response (see (#jarm)). It MAY be passed by the Verifier using the `jwks` or the `jwks_uri` claim within the `client_metadata` request parameter.
 
-`request_uri_method`: 
+`request_uri_method`:
 : OPTIONAL. A string determining the HTTP method to be used when the `request_uri` parameter is included in the same request. Two case-sensitive valid values are defined in this specification: `get` and `post`. If `request_uri_method` value is `get`, the Wallet MUST send the request to retrieve the Request Object using the HTTP GET method, i.e., as defined in [@RFC9101]. If `request_uri_method` value is `post`, a supporting Wallet MUST send the request using the HTTP POST method as detailed in (#request_uri_method_post). If the `request_uri_method` parameter is not present, the Wallet MUST process the `request_uri` parameter as defined in [@RFC9101]. Wallets not supporting the `post` method will send a GET request to the request URI (default behavior as defined in [@RFC9101]). `request_uri_method` parameter MUST NOT be present if a `request_uri` parameter is not present.
 
-If the Verifier set the `request_uri_method` parameter value to `post` and there is no other means to convey its capabilities to the Wallet, it SHOULD add the `client_metadata` parameter to the Authorization Request. 
-This enables the Wallet to assess the Verifier's capabilities, allowing it to transmit only the relevant capabilities through the `wallet_metadata` parameter in the Request URI POST request. If the Verifier uses the `client_id_scheme` parameter in the Request Object, it MUST also add the same `client_id_scheme` value in the Authorization Request.   
+If the Verifier set the `request_uri_method` parameter value to `post` and there is no other means to convey its capabilities to the Wallet, it SHOULD add the `client_metadata` parameter to the Authorization Request.
+This enables the Wallet to assess the Verifier's capabilities, allowing it to transmit only the relevant capabilities through the `wallet_metadata` parameter in the Request URI POST request. If the Verifier uses the `client_id_scheme` parameter in the Request Object, it MUST also add the same `client_id_scheme` value in the Authorization Request.
 
 The following additional considerations are given for pre-existing Authorization Request parameters:
 
@@ -280,9 +283,9 @@ The following additional considerations are given for pre-existing Authorization
 : OPTIONAL. Defined in [@!RFC6749]. The Wallet MAY allow Verifiers to request presentation of Verifiable Credentials by utilizing a pre-defined scope value. See (#request_scope) for more details.
 
 `response_mode`:
-: OPTIONAL. Defined in [@!OAuth.Responses]. This parameter is used (through the new Response Mode `direct_post`) to ask the Wallet to send the response to the Verifier via an HTTPS connection (see (#response_mode_post) for more details). It is also used to request signing and encrypting (see (#jarm) for more details). If the parameter is not present, the default value is `fragment`. 
+: OPTIONAL. Defined in [@!OAuth.Responses]. This parameter is used (through the new Response Mode `direct_post`) to ask the Wallet to send the response to the Verifier via an HTTPS connection (see (#response_mode_post) for more details). It is also used to request signing and encrypting (see (#jarm) for more details). If the parameter is not present, the default value is `fragment`.
 
-The following is a non-normative example of an Authorization Request: 
+The following is a non-normative example of an Authorization Request:
 
 ```
 GET /authorize?
@@ -293,7 +296,7 @@ GET /authorize?
   &nonce=n-0S6_WzA2Mj HTTP/1.1
 ```
 
-The following is a non-normative example of an Authorization Request with a `request_uri_method` parameter (including the additional `client_id_scheme` and `client_metadata` parameters): 
+The following is a non-normative example of an Authorization Request with a `request_uri_method` parameter (including the additional `client_id_scheme` and `client_metadata` parameters):
 
 ```
 GET /authorize?
@@ -320,7 +323,7 @@ The following non-normative example shows how the Verifiers can also ask for alt
 
 <{{examples/request/vp_token_alternative_credentials.json}}
 
-The Verifiable Credential and Verifiable Presentation formats supported by the Wallet should be published in its metadata using the metadata parameter `vp_formats_supported` (see (#as_metadata_parameters)). 
+The Verifiable Credential and Verifiable Presentation formats supported by the Wallet should be published in its metadata using the metadata parameter `vp_formats_supported` (see (#as_metadata_parameters)).
 
 The formats supported by a Verifier may be set up using the metadata parameter `vp_formats` (see (#client_metadata_parameters)). The Wallet MUST ignore any `format` property inside a `presentation_definition` object if that `format` was not included in the `vp_formats` property of the metadata.
 
@@ -328,7 +331,7 @@ Note: When a Verifier is requesting the presentation of a Verifiable Presentatio
 
 ## `presentation_definition_uri` Parameter {#request_presentation_definition_uri}
 
-`presentation_definition_uri` is used to retrieve the Presentation Definition from the resource at the specified URL, rather than being passed by value. The Wallet MUST send an HTTP GET request without additional parameters. The resource MUST be exposed without further need to authenticate or authorize. 
+`presentation_definition_uri` is used to retrieve the Presentation Definition from the resource at the specified URL, rather than being passed by value. The Wallet MUST send an HTTP GET request without additional parameters. The resource MUST be exposed without further need to authenticate or authorize.
 
 The protocol for the `presentation_definition_uri` MUST be HTTPS.
 
@@ -380,21 +383,21 @@ Content-Type: application/json
 
 Wallets MAY support requesting presentation of Verifiable Credentials using OAuth 2.0 scope values.
 
-Such a scope value MUST be an alias for a well-defined Presentation Definition that will be 
-referred to in the `presentation_submission` response parameter. 
+Such a scope value MUST be an alias for a well-defined Presentation Definition that will be
+referred to in the `presentation_submission` response parameter.
 
-The specific scope values, and the mapping between a certain scope value and the respective 
-Presentation Definition is out of scope of this specification. 
+The specific scope values, and the mapping between a certain scope value and the respective
+Presentation Definition is out of scope of this specification.
 
 Possible options include normative text in a separate specification defining scope values along with a description of their
-semantics or machine readable definitions in the Wallet's server metadata, mapping a scope value to an equivalent 
-Presentation Definition JSON object. 
+semantics or machine readable definitions in the Wallet's server metadata, mapping a scope value to an equivalent
+Presentation Definition JSON object.
 
-Such definition of a scope value MUST allow the Verifier to determine the identifiers of the Presentation Definition and Input Descriptor(s) in the `presentation_submission` response parameter (`definition_id` and `descriptor_map.id` respectively) as well as the Credential formats and types in the `vp_token` response parameter defined in (#response-parameters).  
+Such definition of a scope value MUST allow the Verifier to determine the identifiers of the Presentation Definition and Input Descriptor(s) in the `presentation_submission` response parameter (`definition_id` and `descriptor_map.id` respectively) as well as the Credential formats and types in the `vp_token` response parameter defined in (#response-parameters).
 
 It is RECOMMENDED to use collision-resistant scopes values.
 
-The following is a non-normative example of an Authorization Request using the scope value `com.example.IDCardCredential_presentation`, 
+The following is a non-normative example of an Authorization Request using the scope value `com.example.IDCardCredential_presentation`,
 which is an alias for the first Presentation Definition example given in (#request_presentation_definition):
 
 ```
@@ -417,7 +420,7 @@ See (#response) on how the `response_type` value determines the response used to
 
 ## Passing Authorization Request Across Devices
 
-There are use-cases when the Authorization Request is being displayed on a device different from a device on which the requested Credential is stored. In those cases, an Authorization Request can be passed across devices by being rendered as a QR Code. 
+There are use-cases when the Authorization Request is being displayed on a device different from a device on which the requested Credential is stored. In those cases, an Authorization Request can be passed across devices by being rendered as a QR Code.
 
 The usage of the Response Mode `direct_post` (see (#response_mode_post)) in conjunction with `request_uri` is RECOMMENDED, since Authorization Request size might be large and might not fit in a QR code.
 
@@ -428,13 +431,13 @@ When the Verifier is sending a Request Object as defined in [@!RFC9101], the `au
 - the `aud` Claim MUST equal to the `issuer` Claim value, when Dynamic Discovery is performed.
 - the `aud` Claim MUST be "https://self-issued.me/v2", when Static Discovery metadata is used.
 
-Note: "https://self-issued.me/v2" is a symbolic string and can be used as an `aud` Claim value even when this specification is used standalone, without SIOPv2. 
+Note: "https://self-issued.me/v2" is a symbolic string and can be used as an `aud` Claim value even when this specification is used standalone, without SIOPv2.
 
 ## Verifier Metadata Management {#client_metadata_management}
 
 The `client_id_scheme` enables deployments of this specification to use different mechanisms to obtain and validate metadata of the Verifier beyond the scope of [@!RFC6749]. The term `client_id_scheme` is used since the Verifier is acting as an OAuth 2.0 Client.
 
-This specification defines the following values for the `client_id_scheme` parameter, followed by the examples where applicable: 
+This specification defines the following values for the `client_id_scheme` parameter, followed by the examples where applicable:
 
 * `pre-registered`: This value represents the [@!RFC6749] default behavior, i.e., the Client Identifier needs to be known to the Wallet in advance of the Authorization Request. The Verifier metadata is obtained using [@!RFC7591] or through out-of-band mechanisms.
 
@@ -483,19 +486,19 @@ Other specifications can define further values for the `client_id_scheme` parame
 
 ## Request URI Method `post` {#request_uri_method_post}
 
-This request is handled by the Request URI endpoint of the Verifier.  
+This request is handled by the Request URI endpoint of the Verifier.
 
 The request MUST use the HTTP POST method with the `https` scheme, and the content type `application/x-www-form-urlencoded` and the accept header set to `application/oauth-authz-req+jwt`.
 
-The following parameters are defined: 
+The following parameters are defined:
 
 `wallet_metadata`:
-: OPTIONAL. A String containing a JSON object containing metadata parameters as defined in (#as_metadata_parameters). 
+: OPTIONAL. A String containing a JSON object containing metadata parameters as defined in (#as_metadata_parameters).
 
 `wallet_nonce`:
-: OPTIONAL. A String value used to mitigate replay attacks of the Authorization Request. When received, the Verifier MUST use it as the `wallet_nonce` value in the signed authorization request object. Value can be a base64url encoded, fresh, cryptographically random number with sufficient entropy.  
+: OPTIONAL. A String value used to mitigate replay attacks of the Authorization Request. When received, the Verifier MUST use it as the `wallet_nonce` value in the signed authorization request object. Value can be a base64url encoded, fresh, cryptographically random number with sufficient entropy.
 
-If the Wallet requires the Verifier to encrypt the Request Object, it SHOULD use the `jwks` or `jwks_uri` parameter within the `wallet_metadata` parameter to pass the public key for the input to the key agreement. Other mechanisms to pass the encryption key can be used as well. If the Wallet requires an encrypted Authorization Response, it SHOULD specify supported encryption algorithms using the `authorization_encryption_alg_values_supported` and `authorization_encryption_enc_values_supported` parameters. 
+If the Wallet requires the Verifier to encrypt the Request Object, it SHOULD use the `jwks` or `jwks_uri` parameter within the `wallet_metadata` parameter to pass the public key for the input to the key agreement. Other mechanisms to pass the encryption key can be used as well. If the Wallet requires an encrypted Authorization Response, it SHOULD specify supported encryption algorithms using the `authorization_encryption_alg_values_supported` and `authorization_encryption_enc_values_supported` parameters.
 
 Additionally, if the `client_id_scheme` value permits signed Request Objects, the Wallet SHOULD list supported cryptographic algorithms for securing the Request Object through the `request_object_signing_alg_values_supported` parameter. Conversely, the Wallet MUST NOT include this parameter if the `client_id_scheme` precludes signed Request Objects.
 
@@ -532,7 +535,7 @@ The following is a non-normative example of a request object:
 }
 ```
 
-The Wallet MUST process the request as defined in [@RFC9101]. Additionally, if the Wallet passed a `wallet_nonce` in the POST request, the Wallet MUST validate whether the request object contains the respective nonce value in a `wallet_nonce` claim. If it does not, the Wallet MUST terminate request processing. 
+The Wallet MUST process the request as defined in [@RFC9101]. Additionally, if the Wallet passed a `wallet_nonce` in the POST request, the Wallet MUST validate whether the request object contains the respective nonce value in a `wallet_nonce` claim. If it does not, the Wallet MUST terminate request processing.
 
 The Wallet MUST extract the set of Authorization Request parameters from the Request Object. The Wallet MUST only use the parameters in this Request Object, even if the same parameter was provided in an Authorization Request query parameter. The Client Identifier value in the `client_id` Authorization Request parameter and the Request Object `client_id` claim value MUST be identical. If the Authorization Request contains a `client_id_scheme` parameter, the `client_id_scheme` Authorization Request parameter and the Request Object `client_id_scheme` claim value MUST be identical. If any of these conditions are not met, the Wallet MUST terminate request processing.
 
@@ -541,6 +544,266 @@ The Wallet then validates the request as specified in OAuth 2.0 [@RFC6749].
 ### Request URI Error Response
 
 If the Verifier responds with any HTTP error response, the Wallet MUST terminate the process.
+
+# Verifiable Presentation Query Language {#vp_query}
+
+The Verifiable Presentation Query Language (VP Query) is a JSON-encoded query
+language that allows the Verifier to request the Wallet to present Verifiable
+Credentials that match the query. The query consists of a set of constraints
+that the requested Verifiable Credentials must satisfy. The Wallet evaluates the
+query against the Verifiable Credentials it holds and returns the Verifiable
+Presentations that match the query.
+
+A valid VP Query is defined as a JSON-encoded object with the following
+properties:
+
+`credentials`:
+: REQUIRED. An object. Each key in the object represents one
+Credential Query as defined in (#credential_query). The key is a string that
+uniquely identifies the Credential Query within the VP Query.
+
+`rules`:
+: OPTIONAL. An object defining rules that specify which combinations of
+credentials MAY be returned by the Wallet, as defined in (#credential_rules). If
+omitted, all credentials listed in `credentials` are requested for presentation.
+
+## Credential Query {#credential_query}
+
+A Credential Query is an object representing a request for one specific
+credential. It contains the following properties:
+
+`format`:
+: REQUIRED. A string that specifies the format of the requested
+Verifiable Credential. Valid Credential format identifier values are defined in
+Appendix A of [@!OpenID.VCI]. The value of this property MUST be one of the
+supported Credential formats as defined in the Wallet's metadata.
+
+Format-specific properties (using the format value as a key):
+: OPTIONAL.
+Additional properties requested by the Verifier that are specific to the
+Credential format, as defined in (#format_specific_properties). If omitted,
+no format-specific restrictions are placed on the requested Credential.
+
+`purpose`:
+: OPTIONAL. A purpose description array as defined in
+(#purpose_description).
+
+`claims`:
+: OPTIONAL. An array that specifies the claims that the requested
+Verifiable Credential must contain. Each entry in the array corresponds to at
+least one claim that MUST be returned by the Wallet to fulfill the credential
+request (unless specified otherwise by extensions to this specification). Each
+entry MUST be one of the following objects:
+
+- Claim query: An object describing a single claim that is to be returned, as
+  specified in (#claim_query).
+- An optionality rule: An object containing the following properties:
+  - `required` (REQUIRED): defines a number of claims that must be returned from
+    the `from` set of claims, as specified next.
+  - `from` (REQUIRED): An array; each entry is either a claim query or another
+    optionality rule. The entries are listed in order of preference, with the
+    first entry being the most preferred.
+
+More than two nested levels of optionality rules MUST NOT be used by a Verifier
+or allowed by a Wallet.
+
+## Format-specific Properties {#format_specific_properties}
+
+The following format-specific properties are defined:
+
+### Format `vc+sd-jwt` {#format_vc+sd-jwt}
+
+`vct_values`:
+: OPTIONAL. An array of strings that specifies allowed values for
+the type of the requested Verifiable Credential. All elements in the array MUST
+be valid type identifiers as defined in [@!I-D.ietf-oauth-sd-jwt-vc]. The Wallet
+MAY return credentials that inherit from any of the specified types, following
+the inheritance logic defined in [@!I-D.ietf-oauth-sd-jwt-vc].
+
+`credential_signing_alg_values`:
+: OPTIONAL. An array of strings that specifies
+the allowed algorithms for signing the SD-JWT (i.e., only the issuer-signed part).
+
+`kbjwt_signing_alg_values`:
+: OPTIONAL. An array of strings that specifies the
+allowed algorithms for signing the Key-Binding JWT (KB-JWT) (i.e., the part signed
+by the holder).
+
+`sd_alg_values`:
+: OPTIONAL. An array of strings that specifies the allowed hash algorithms for
+digests in the SD-JWT and KB-JWT.
+
+### Format `mso_mdoc` {#format_mso_mdoc}
+
+TBD
+
+### Format `jwt_vp*`
+
+TBD
+
+## Claim Query {#claim_query}
+
+A claim query is an object that describes one or more claims that are to be
+returned. Depending on the format of the requested Verifiable Credential, the
+claim query can contain different properties.
+
+
+
+### JSON-based Claims Structures {#json_based_claims}
+
+For credentials containing JSON-based claims structures, the following
+properties are defined:
+
+`path`:
+: REQUIRED. A claims path pointer that specifies the path to the claim
+within the Verifiable Credential, as defined in (#claims_path_query).
+
+### ISO 18013-5 Credentials {#iso_18013-5}
+
+For ISO 18013-5 Credentials, the following properties are defined:
+
+`namespace`:
+: REQUIRED. A string that specifies the namespace of the claim
+within the Verifiable Credential, e.g., `org.iso.18013.5.1`.
+
+`claim_name`:
+: REQUIRED. A string that specifies the name of the claim within
+the Verifiable Credential, e.g., `first_name`.
+
+### Claims Path Pointer
+
+A claims path pointer is a pointer into the JSON structure of the Verifiable
+Credential, identifying one or more claims. A claims path pointer MUST be a
+non-empty array of strings and non-negative integers. A string indicates that
+the respective key is to be selected, a `*` value indicates that all elements of
+the currently selected array(s) are to be selected, and a non-negative integer
+indicates that the respective index in an array is to be selected. The path is
+formed as follows:
+
+  - Start with an empty array.
+  - To address a particular claim within an object, append the key (claim name)
+    to the array.
+  - To address an element within an array, append the index to the array (as a
+    non-negative, 0-based integer).
+  - To address all elements within an array, append the string `*` to the array.
+
+Verifiers MUST NOT point to the same claim more than once in a single query.
+Wallets SHOULD ignore such duplicate claim queries.
+
+#### Example
+
+The following shows a non-normative, simplified example of a Credential:
+
+```json
+{
+  "name": "Arthur Dent",
+  "address": {
+    "street_address": "42 Market Street",
+    "city": "Milliways",
+    "postal_code": "12345"
+  },
+  "degrees": [
+    {
+      "type": "Bachelor of Science",
+      "university": "University of Betelgeuse"
+    },
+    {
+      "type": "Master of Science",
+      "university": "University of Betelgeuse"
+    }
+  ],
+  "nationalities": ["British", "Betelgeusian"]
+}
+```
+
+The following shows examples of claims path queries and the respective selected
+claims:
+
+- `["name"]`: The claim `name` with the value `Arthur Dent` is selected.
+- `["address"]`: The claim `address` with its sub-claims as the value is
+  selected.
+- `["address", "street_address"]`: The claim `street_address` with the value `42
+  Market Street` is selected.
+- `["degrees", "*", "type"]`: All `type` claims in the `degrees` array are
+  selected.
+- `["nationalities", 1]`: The second nationality is selected.
+- `[]` (empty array): The entire Credential is selected.
+
+#### Processing
+
+In detail, the array is processed by the Wallet from left to right as follows:
+
+ 1. Select the root element of the credential, i.e., the top-level JSON object.
+ 2. Process the query components from left to right:
+    1. If the query component is a string, select the element in the respective
+       key in the currently selected element(s). If any of the currently
+       selected element(s) is not an object, abort processing and return an
+       error. If the key does not exist in any element currently selected,
+       remove that element from the selection.
+    2. If the query component is `*`, select all elements of the currently
+       selected array(s). If any of the currently selected element(s) is not an
+       array, abort processing and return an error.
+    3. If the query component is a non-negative integer, select the element at
+       the respective index in the currently selected array(s). If any of the
+       currently selected element(s) is not an array, abort processing and
+       return an error. If the index does not exist in a selected array, remove
+       that array from the selection.
+  3. If the set of elements currently selected is empty, abort processing and
+     return an error.
+
+The result of the processing is the set of elements which is requested for
+presentation.
+
+
+## Purpose Description {#purpose_description}
+
+A purpose description array is an object that describes the purpose for which
+the Verifier is requesting the Verifiable Credential. It can contain multiple
+objects, each describing the purpose in a specific language. Each object
+contains the following properties:
+
+`lang:`
+: REQUIRED. A string that specifies the language of the purpose
+description. The value of this property MUST be a valid language tag as defined
+in [@!BCP47].
+
+`text`:
+: REQUIRED. A string that contains the purpose description in the
+language specified by the `lang` property.
+
+## Credential Rules {#credential_rules}
+
+Just as for claims, the Verifier can define rules that specify which
+combinations of credentials MAY be returned by the Wallet. The rules are defined
+in the top-level property `rules`. The values is a credential rule object,
+defined as having the following properties:
+
+- `required`: An integer specifying the number of credentials that MUST be
+  returned from the `from` set of credentials.
+- `from`: An array of objects, each being either
+  - a nested credential rule, or
+  - a credential query reference, i.e., an object with a single key `ref` that
+    references a credential query defined in the `credentials` object.
+
+Within `from`, the credentials are listed in order of preference, with the first
+entry being the most preferred.
+
+## Examples {#vp_query_examples}
+
+The following is a non-normative example of a VP Query that requests a Verifiable
+Credential of the format `vc+sd-jwt` with a type value of
+`https://credentials.example.com/identity_credential` and the claims `last_name`,
+`first_name`, and `address.street_address`:
+
+<{{examples/query_lang/simple.json}}
+
+Additional examples can be found in (#vp_query_examples).
+
+## Additional Request Properties {#additional_request_properties}
+
+`intend_to_retain`: TBD
+
+`if_present`: TBD
 
 # Response {#response}
 
@@ -580,7 +843,7 @@ The `presentation_submission` element MUST be included as a separate response pa
 
 Including the `presentation_submission` parameter as a separate response parameter allows the Wallet to provide the Verifier with additional information about the format and structure in advance of the processing of the VP Token, and can be used even with the Credential formats that do not allow for the direct inclusion of `presentation_submission` parameters inside a Credential itself.
 
-The following is a non-normative example of an Authorization Response when the Response Type value in the Authorization Request was `vp_token`: 
+The following is a non-normative example of an Authorization Response when the Response Type value in the Authorization Request was `vp_token`:
 
 ```
 HTTP/1.1 302 Found
@@ -597,7 +860,7 @@ The following is a non-normative example of a `presentation_submission` paramete
 
 <{{examples/response/presentation_submission.json}}
 
-A `descriptor_map` element MUST contain a `path_nested` parameter referring to the actual Credential carried in the respective Verifiable Presentation. 
+A `descriptor_map` element MUST contain a `path_nested` parameter referring to the actual Credential carried in the respective Verifiable Presentation.
 
 The following is a non-normative example of a VP Token containing multiple Verifiable Presentations:
 
@@ -609,9 +872,9 @@ The following is a non-normative example of a `presentation_submission` paramete
 
 ## Response Mode "direct_post" {#response_mode_post}
 
-The Response Mode `direct_post` allows the Wallet to send the Authorization Response to an endpoint controlled by the Verifier via an HTTP POST request. 
+The Response Mode `direct_post` allows the Wallet to send the Authorization Response to an endpoint controlled by the Verifier via an HTTP POST request.
 
-It has been defined to address the following use cases: 
+It has been defined to address the following use cases:
 
 * Verifier and Wallet are located on different devices; thus, the Wallet cannot send the Authorization Response to the Verifier using a redirect.
 * The Authorization Response size exceeds the URL length limits of user agents, so flows relying only on redirects (such as Response Mode `fragment`) cannot be used. In those cases, the Response Mode `direct_post` is the way to convey the Verifiable Presentations to the Verifier without the need for the Wallet to have a backend.
@@ -621,12 +884,12 @@ The Response Mode is defined in accordance with [@!OAuth.Responses] as follows:
 `direct_post`:
 : In this mode, the Authorization Response is sent to the Verifier using an HTTP POST request to an endpoint controlled by the Verifier. The Authorization Response parameters are encoded in the body using the `application/x-www-form-urlencoded` content type. The flow can end with an HTTP POST request from the Wallet to the Verifier, or it can end with a redirect that follows the HTTP POST request, if the Verifier responds with a redirect URI to the Wallet.
 
-The following new Authorization Request parameter is defined to be used in conjunction with Response Mode `direct_post`: 
+The following new Authorization Request parameter is defined to be used in conjunction with Response Mode `direct_post`:
 
 `response_uri`:
 : REQUIRED when the Response Mode `direct_post` is used. The Response URI to which the Wallet MUST send the Authorization Response using an HTTP POST request as defined by the Response Mode `direct_post`. The Response URI receives all Authorization Response parameters as defined by the respective Response Type. When the `response_uri` parameter is present, the `redirect_uri` Authorization Request parameter MUST NOT be present. If the `redirect_uri` Authorization Request parameter is present when the Response Mode is `direct_post`, the Wallet MUST return an `invalid_request` Authorization Response error. The `response_uri` value MUST be a value that the client would be permitted to use as `redirect_uri` when following the rules defined in (#client_metadata_management).
 
-Note: The Verifier's component providing the user interface (Frontend) and the Verifier's component providing the Response URI (Response Endpoint) need to be able to map authorization requests to the respective authorization responses. The Verifier MAY use the `state` Authorization Request parameter to add appropriate data to the Authorization Response for that purpose, for details see (#implementation_considerations_direct_post). 
+Note: The Verifier's component providing the user interface (Frontend) and the Verifier's component providing the Response URI (Response Endpoint) need to be able to map authorization requests to the respective authorization responses. The Verifier MAY use the `state` Authorization Request parameter to add appropriate data to the Authorization Response for that purpose, for details see (#implementation_considerations_direct_post).
 
 The following is a non-normative example of the payload of a Request Object with Response Mode `direct_post`:
 
@@ -694,7 +957,7 @@ Content-Type: application/json
 Cache-Control: no-store
 
 {
-  "redirect_uri": "https://client.example.org/cb#response_code=091535f699ea575c7937fa5f0f454aee" 
+  "redirect_uri": "https://client.example.org/cb#response_code=091535f699ea575c7937fa5f0f454aee"
 }
 ```
 
@@ -723,7 +986,7 @@ The following is a non-normative example of the payload of a JWT used in an Auth
 
 The JWT response document MUST include `vp_token` and `presentation_submission` parameters as defined in (#response-parameters).
 
-The key material used for encryption and signing SHOULD be determined using existing metadata mechanisms. 
+The key material used for encryption and signing SHOULD be determined using existing metadata mechanisms.
 
 To obtain Verifier's public key for the input to the key agreement to encrypt the Authorization Response, the Wallet MUST use `jwks` or `jwks_uri` claim within the `client_metadata` request parameter, or within the metadata defined in the Entity Configuration when [@!OpenID.Federation] is used, or other mechanisms.
 
@@ -747,7 +1010,7 @@ The following is a non-normative example of the payload of the JWT used in the e
 
 The error response follows the rules as defined in [@!RFC6749], with the following additional clarifications:
 
-`invalid_scope`: 
+`invalid_scope`:
 
 - Requested scope value is invalid, unknown, or malformed.
 
@@ -852,7 +1115,7 @@ Verifier utilizing this specification has multiple options to obtain Wallet's me
 
 # Verifier Metadata (Client Metadata) {#client_metadata}
 
-To convey Verifier metadata, Client metadata defined in Section 2 of [@!RFC7591] is used. 
+To convey Verifier metadata, Client metadata defined in Section 2 of [@!RFC7591] is used.
 
 This specification defines how the Wallet can determine Credential formats, proof types and algorithms supported by the Verifier to be used in a protocol exchange.
 
@@ -870,12 +1133,12 @@ The Verifier Attestation JWT is a JWT especially designed to allow a Wallet to a
 
 A Verifier Attestation JWT MUST contain the following claims:
 
-* `iss`: REQUIRED. This claim identifies the issuer of the Verifier Attestation JWT. The `iss` value MAY be used to retrieve the issuer's public key. How the trust is established between Wallet and Issuer and how the public key is obtained for validating the attestation's signature is out of scope of this specification. 
+* `iss`: REQUIRED. This claim identifies the issuer of the Verifier Attestation JWT. The `iss` value MAY be used to retrieve the issuer's public key. How the trust is established between Wallet and Issuer and how the public key is obtained for validating the attestation's signature is out of scope of this specification.
 * `sub`: REQUIRED. The value of this claim MUST be the `client_id` of the client making the credential request.
 * `iat`: OPTIONAL. (number). The value of this claim MUST be the time at which the Verifier Attestation JWT was issued using the syntax defined in [RFC7519].
 * `exp`: REQUIRED. (number). The value of this claim MUST be the time at which the Verifier Attestation JWT expires using the syntax defined in [RFC7519]. The Wallet MUST reject any Verifier Attestation JWT with an expiration time that has passed, subject to allowable clock skew between systems.
 * `nbf`: OPTIONAL. The Verifier Attestation JWT MAY contain an "nbf" (not before) claim that identifies the time before which the token MUST NOT be accepted for processing.
-* `cnf`: REQUIRED. This claim contains the confirmation method as defined in [@!RFC7800]. It MUST contain a JWK as defined in Section 3.2 of [RFC7800]. This claim determines the public key for which's corresponding private key the Verifier MUST proof possession of when presenting the Verifier Attestation JWT. This additional security measure allows the Verifier to obtain a Verifier Attestion JWT from a trusted issuer and use it for a long time independent of that issuer without the risk of an advisary impersonating the Verifier by replaying a captured attestation. 
+* `cnf`: REQUIRED. This claim contains the confirmation method as defined in [@!RFC7800]. It MUST contain a JWK as defined in Section 3.2 of [RFC7800]. This claim determines the public key for which's corresponding private key the Verifier MUST proof possession of when presenting the Verifier Attestation JWT. This additional security measure allows the Verifier to obtain a Verifier Attestion JWT from a trusted issuer and use it for a long time independent of that issuer without the risk of an advisary impersonating the Verifier by replaying a captured attestation.
 
 The Verifier Attestation JWT MAY use any claim registered in the "JSON Web Token Claims" registry as defined in [@!RFC7519].
 
@@ -883,11 +1146,11 @@ Verifier Attestation JWTs compliant with this specification MUST use the media t
 
 A Verifier Attestation JWT MUST set the `typ` JOSE header to `verifier-attestation+jwt`.
 
-The Verifier Attestation JWT MAY be conveyed in the header of a JWS signed object (JOSE header). 
+The Verifier Attestation JWT MAY be conveyed in the header of a JWS signed object (JOSE header).
 
-This specification introduces a JOSE header, which can be used to add a JWT to such a header as follows: 
+This specification introduces a JOSE header, which can be used to add a JWT to such a header as follows:
 
-* `jwt`: This JOSE header MUST contain a JWT. 
+* `jwt`: This JOSE header MUST contain a JWT.
 
 In the context of this specification, such a JWT MUST set the `typ` JOSE header to `verifier-attestation+jwt`.
 
@@ -976,9 +1239,9 @@ When using Response Mode `direct_post`, also see (#security_considerations_direc
 
 ## Response Mode `direct_post` {#implementation_considerations_direct_post}
 
-The design of the interactions between the different components of the Verifier (especially Frontend and Response Endpoint) when using Response Mode `direct_post` is at the discretion of the Verifier since it does not affect the interface between the Verifier and the Wallet. 
+The design of the interactions between the different components of the Verifier (especially Frontend and Response Endpoint) when using Response Mode `direct_post` is at the discretion of the Verifier since it does not affect the interface between the Verifier and the Wallet.
 
-In order to support implementers, this section outlines a possible design that fulfills the Security Considerations given in (#security_considerations). 
+In order to support implementers, this section outlines a possible design that fulfills the Security Considerations given in (#security_considerations).
 
 The design is illustrated in the following sequence diagram:
 
@@ -987,7 +1250,7 @@ The design is illustrated in the following sequence diagram:
 +-------+   +------------+           +---------------------+                 +----------+
 | User  |   |  Verifier  |           |  Verifier           |                 |  Wallet  |
 |       |   |            |           |  Response Endpoint  |                 |          |
-+-------+   +------------+           +---------------------+                 +----------+  
++-------+   +------------+           +---------------------+                 +----------+
     |              |                            |                                  |
     |   interacts  |                            |                                  |
     |------------->|                            |                                  |
@@ -1038,44 +1301,44 @@ Figure: Reference Design for Response Mode `direct_post`
 
 (1) The Verifier produces a `nonce` value by generating at least 16 fresh, cryptographically random bytes with sufficient entropy, associates it with the session and base64url encodes it.
 
-(2) The Verifier initiates a new transaction at its Response Endpoint. 
+(2) The Verifier initiates a new transaction at its Response Endpoint.
 
 (3) The Response Endpoint will set up the transaction and respond with two fresh, cryptographically random numbers with sufficient entropy designated as `transaction-id` and `request-id`. Those values are used in the process to identify the authorization response (`request-id`) and to ensure only the Verifier can obtain the Authorization Response data (`transaction-id`).
 
 (4) The Verifier then sends the Authorization Request with the `request-id` as `state` and the `nonce` value created in step (1) to the Wallet.
 
-(5) After authenticating the End-User and getting her consent to share the request Credentials, the Wallet sends the Authorization Response with the parameters `vp_token`, `presentation_submission` and `state` to the `response_uri` of the Verifier.  
+(5) After authenticating the End-User and getting her consent to share the request Credentials, the Wallet sends the Authorization Response with the parameters `vp_token`, `presentation_submission` and `state` to the `response_uri` of the Verifier.
 
-(6) The Verifier's Response Endpoint checks whether the `state` value is a valid `request-id`. If so, it stores the Authorization Response data linked to the respective `transaction-id`. It then creates a `response_code` as fresh, cryptographically random number with sufficient entropy that it also links with the respective Authorization Response data. It then returns the `redirect_uri`, which includes the `response_code` to the Wallet. 
+(6) The Verifier's Response Endpoint checks whether the `state` value is a valid `request-id`. If so, it stores the Authorization Response data linked to the respective `transaction-id`. It then creates a `response_code` as fresh, cryptographically random number with sufficient entropy that it also links with the respective Authorization Response data. It then returns the `redirect_uri`, which includes the `response_code` to the Wallet.
 
-Note: If the Verifier's Response Endpoint does not return a `redirect_uri`, processing at the Wallet stops at that step. The Verifier is supposed to fetch the Authorization Response without waiting for a redirect (see step 8).  
+Note: If the Verifier's Response Endpoint does not return a `redirect_uri`, processing at the Wallet stops at that step. The Verifier is supposed to fetch the Authorization Response without waiting for a redirect (see step 8).
 
 (7) The Wallet sends the user agent to the Verifier (`redirect_uri`). The Verifier receives the Request and extracts the `response_code` parameter.
 
-(8) The Verifier sends the `response_code` and the `transaction-id` from its session to the Response Endpoint. 
+(8) The Verifier sends the `response_code` and the `transaction-id` from its session to the Response Endpoint.
 
-* The Response Endpoint uses the `transaction-id` to look the matching Authorization Response data up, which implicitly validates the `transaction-id` associated with the Verifier's session. 
+* The Response Endpoint uses the `transaction-id` to look the matching Authorization Response data up, which implicitly validates the `transaction-id` associated with the Verifier's session.
 * If an Authorization Response is found, the Response Endpoint checks whether the `response_code` was associated with this Authorization Response in step (6).
 
-Note: If the Verifier's Response Endpoint did not return a `redirect_uri` in step (6), the Verifier will periodically query the Response Endpoint with the `transaction-id` to obtain the Authorization Response once it becomes available. 
+Note: If the Verifier's Response Endpoint did not return a `redirect_uri` in step (6), the Verifier will periodically query the Response Endpoint with the `transaction-id` to obtain the Authorization Response once it becomes available.
 
-(9) The Response Endpoint returns the VP Token and Presentation Submission for further processing to the Verifier. 
+(9) The Response Endpoint returns the VP Token and Presentation Submission for further processing to the Verifier.
 
 (10) The Verifier checks whether the `nonce` received in the Credential(s) in the VP Token in step (9) corresponds to the `nonce` value from the session. The Verifier then consumes the VP Token and invalidates the `transaction-id`, `request-id` and `nonce` in the session.
 
 # Security Considerations {#security_considerations}
 
-## Preventing Replay of the VP Token {#preventing-replay} 
+## Preventing Replay of the VP Token {#preventing-replay}
 
 An attacker could try to inject a VP Token (or an individual Verifiable Presentation), that was obtained from a previous Authorization Response, into another Authorization Response thus impersonating the End-User that originally presented that VP Token or the respective Verifiable Presentation.
 
-Implementers of this specification MUST implement the controls as defined in this section to detect such an attack. 
+Implementers of this specification MUST implement the controls as defined in this section to detect such an attack.
 
-This specification assumes that a Verifiable Credential is always presented with a cryptographic proof of possession which can be a Verifiable Presentation. This cryptographic proof of possession MUST be bound by the Wallet to the intended audience (the Client Identifier of the Verifier) and the respective transaction (identified by the `nonce` parameter in the Authorization Request). The Verifier MUST verify this binding. 
+This specification assumes that a Verifiable Credential is always presented with a cryptographic proof of possession which can be a Verifiable Presentation. This cryptographic proof of possession MUST be bound by the Wallet to the intended audience (the Client Identifier of the Verifier) and the respective transaction (identified by the `nonce` parameter in the Authorization Request). The Verifier MUST verify this binding.
 
-The Verifier MUST create a fresh, cryptographically random number with sufficient entropy for every Authorization Request, store it with its current session, and pass it in the `nonce` Authorization Request Parameter to the Wallet.  
+The Verifier MUST create a fresh, cryptographically random number with sufficient entropy for every Authorization Request, store it with its current session, and pass it in the `nonce` Authorization Request Parameter to the Wallet.
 
-The Wallet MUST link every Verifiable Presentation returned to the Verifier in the VP Token to the `client_id` and the `nonce` values of the respective Authentication Request. 
+The Wallet MUST link every Verifiable Presentation returned to the Verifier in the VP Token to the `client_id` and the `nonce` values of the respective Authentication Request.
 
 The Verifier MUST validate every individual Verifiable Presentation in an Authorization Response and ensure that it is linked to the values of the `client_id` and the `nonce` parameter it had used for the respective Authorization Request. If the response contains multiple Verifiable Presentations which do not contain the same nonce value, the response is rejected.
 
@@ -1119,7 +1382,7 @@ The following is a non-normative example of a Verifiable Presentation of a forma
     "type": "RsaSignature2018",
     "created": "2018-09-14T21:19:10Z",
     "proofPurpose": "authentication",
-    "verificationMethod": "did:example:ebfeb1f712ebc6f1c276e12ec21#keys-1",    
+    "verificationMethod": "did:example:ebfeb1f712ebc6f1c276e12ec21#keys-1",
     "challenge": "343s$FSFDa-",
     "domain": "s6BhdRkqt3",
     "jws": "eyJhb...nKb78"
@@ -1131,13 +1394,13 @@ In the example above, the requested `nonce` value is included as the `challenge`
 
 ## Session Fixation {#session_fixation}
 
-To perform a Session Fixation attack, an attacker would start the process using a Verifier executed on a device under his control, capture the Authorization Request and relay it to the device of a victim. The attacker would then periodically try to conclude the process in his Verifier, which would cause the Verifier on his device to try to fetch and verify the Authorization Response. 
+To perform a Session Fixation attack, an attacker would start the process using a Verifier executed on a device under his control, capture the Authorization Request and relay it to the device of a victim. The attacker would then periodically try to conclude the process in his Verifier, which would cause the Verifier on his device to try to fetch and verify the Authorization Response.
 
-Such an attack is impossible against flows implemented with the Response Mode `fragment` as the Wallet will always send the VP Token to the redirect endpoint on the same device where it resides. This means an attacker could extract a valid Authorization Request from a Verifier on his device and trick a Victim into performing the same Authorization Request on her device. But there is technically no way for an attacker to get hold of the resulting VP Token. 
+Such an attack is impossible against flows implemented with the Response Mode `fragment` as the Wallet will always send the VP Token to the redirect endpoint on the same device where it resides. This means an attacker could extract a valid Authorization Request from a Verifier on his device and trick a Victim into performing the same Authorization Request on her device. But there is technically no way for an attacker to get hold of the resulting VP Token.
 
-However, the Response Mode `direct_post` is susceptible to such an attack as the result is sent from the Wallet out-of-band to the Verifier's Response Endpoint. 
+However, the Response Mode `direct_post` is susceptible to such an attack as the result is sent from the Wallet out-of-band to the Verifier's Response Endpoint.
 
-This kind of attack can be detected if the Response Mode `direct_post` is used in conjunction with the redirect URI, which causes the Wallet to redirect the flow to the Verifier's frontend at the device where the transaction was concluded. The Verifier's Response Endpoint MUST include a fresh secret (Response Code) into the redirect URI returned to the Wallet and the Verifier's Response Endpoint MUST require the frontend to pass the respective Response Code when fetching the Authorization Response. That stops session fixation attacks as long as the attacker is unable to get access to the Response Code. 
+This kind of attack can be detected if the Response Mode `direct_post` is used in conjunction with the redirect URI, which causes the Wallet to redirect the flow to the Verifier's frontend at the device where the transaction was concluded. The Verifier's Response Endpoint MUST include a fresh secret (Response Code) into the redirect URI returned to the Wallet and the Verifier's Response Endpoint MUST require the frontend to pass the respective Response Code when fetching the Authorization Response. That stops session fixation attacks as long as the attacker is unable to get access to the Response Code.
 
 See (#implementation_considerations_direct_post) for more implementation considerations.
 
@@ -1151,13 +1414,13 @@ The Wallet MUST ensure the data in the Authorization Response cannot leak throug
 
 ### Protection of the Response URI
 
-The Verifier SHOULD protect its Response URI from inadvertent requests by checking that the value of the received `state` parameter corresponds to a recent Authorization Request. It MAY also use JARM [@!JARM] to authenticate the originator of the request. 
+The Verifier SHOULD protect its Response URI from inadvertent requests by checking that the value of the received `state` parameter corresponds to a recent Authorization Request. It MAY also use JARM [@!JARM] to authenticate the originator of the request.
 
 ### Protection of the Authorization Response Data
 
-This specification assumes that the Verifier's Response Endpoint offers an internal interface to other components of the Verifier to obtain (and subsequently process) Authorization Response data. An attacker could try to obtain Authorization Response Data from a Verifier's Response Endpoint by looking up this data through the internal interface. This could lead to leakage valid Verifiable Presentations containing PII. 
+This specification assumes that the Verifier's Response Endpoint offers an internal interface to other components of the Verifier to obtain (and subsequently process) Authorization Response data. An attacker could try to obtain Authorization Response Data from a Verifier's Response Endpoint by looking up this data through the internal interface. This could lead to leakage valid Verifiable Presentations containing PII.
 
-Implementations of this specification MUST have security mechanisms in place to prevent inadvertent requests against this internal interface. Implementation options to fulfill this requirement include: 
+Implementations of this specification MUST have security mechanisms in place to prevent inadvertent requests against this internal interface. Implementation options to fulfill this requirement include:
 
 * Authentication between the different parts within the Verifier
 * Two cryptographically random numbers.  The first being used to manage state between the Wallet and Verifier. The second being used to ensure that only a legitimate component of the Verifier can obtain the Authorization Response data.
@@ -1176,7 +1439,7 @@ If an encrypted Authorization Response has no additional integrity protection, a
 
 In many instances the referenced server will be operated by a known federation or other trusted operator, and the URL's domain name will already be widely known. Wallets using this URI can mitigate request forgeries by having a pre-configured set of trusted domain names and only fetching Presentation Definition from these sources. In addition, the Presentation Definitions could be signed by a trusted authority, such as the federation operator.
 
-### JSONPath and Arbitrary Scripting 
+### JSONPath and Arbitrary Scripting
 
 Implementers MUST make sure that JSONPath used as part of `presentation_definition` and `presentation_submission` parameters cannot be used to execute arbitrary scripts on a server. This can be achieved, for example, by implementing the entire syntax of the query without relying on the parsers of programming language engine. For details, see Section 4 of [@I-D.ietf-jsonpath-base].
 
@@ -1200,7 +1463,7 @@ If no user interaction is required before sending the request, it is easy to req
 
 Mandatory user interaction before sending the request, like clicking a button, unlocking the wallet or even just showing a screen of the app, can make this less attractive/likely to being exploited.
 
-Requests from the Wallet to the Verifier SHOULD be sent with the minimal amount of information possible, and in particular, without any HTTP headers identifying the software used for the request (e.g., HTTP libraries or their versions). The Wallet MUST NOT send PII or any other data that could be used for fingerprinting to the Request URI in order to prevent user tracking. 
+Requests from the Wallet to the Verifier SHOULD be sent with the minimal amount of information possible, and in particular, without any HTTP headers identifying the software used for the request (e.g., HTTP libraries or their versions). The Wallet MUST NOT send PII or any other data that could be used for fingerprinting to the Request URI in order to prevent user tracking.
 
 {backmatter}
 
@@ -1307,7 +1570,7 @@ Requests from the Wallet to the Verifier SHOULD be sent with the minimal amount 
 <reference anchor="TRAIN" target="https://oid2022.compute.dtu.dk/index.html">
         <front>
           <title>A novel approach to establish trust in Verifiable Credential
-issuers in Self-Sovereign Identity ecosystems using TRAIN</title>	  
+issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
            <author fullname="Isaac Henderson Johnson Jeyakumar">
             <organization>University of Stuttgart</organization>
           </author>
@@ -1437,7 +1700,7 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </author>
         <author initials="M." surname="Scurtescu" fullname="M. Scurtescu">
             <organization>Google</organization>
-        </author>        
+        </author>
         <author initials="P." surname="Tarjan" fullname="Facebook">
             <organization>Evernym</organization>
         </author>
@@ -1511,15 +1774,15 @@ but can be used with multiple protocols. The Web Platform, working in conjunctio
 
 This OpenID4VP profile utilizes the mechanisms of the W3C Digital Credentials API while also allowing to leverage advanced security features of OpenID4VP, if needed. It also defines the OpenID4VP request parameters that MAY be used with the W3C Digital Credentials API.
 
-The Digital Credentials API offers several advantages for implementers of both Verifiers and Wallets. 
+The Digital Credentials API offers several advantages for implementers of both Verifiers and Wallets.
 
-Firstly, the API serves as a privacy-preserving alternative to invoking Wallets via URLs, particularly custom URL schemes. The underlying app platform will only invoke a Wallet if the user confirms the request based on contextual information about the credential request and the requestor (Verifier). 
+Firstly, the API serves as a privacy-preserving alternative to invoking Wallets via URLs, particularly custom URL schemes. The underlying app platform will only invoke a Wallet if the user confirms the request based on contextual information about the credential request and the requestor (Verifier).
 
 Secondly, the session with the user will always continue in the initial context, typically a browser tab, when the request has been fulfilled (or aborted), which results in an improved user experience.
 
 Thirdly, cross-device requests benefit from the use of secure transports with proximity checks, which are handled by the OS platform, e.g., using FIDO CTAP 2.2 with hybrid transports.
 
-And lastly, as part of the request, the Wallet is provided with information about the Verifier's origin as authenticated by the user agent, which is important for phishing resistance.  
+And lastly, as part of the request, the Wallet is provided with information about the Verifier's origin as authenticated by the user agent, which is important for phishing resistance.
 
 ## Protocol
 
@@ -1551,7 +1814,7 @@ try {
 }
 ```
 
-Out of the Authorization Request parameters defined in [@!RFC6749] and (#vp_token_request), the following are supported with this profile: 
+Out of the Authorization Request parameters defined in [@!RFC6749] and (#vp_token_request), the following are supported with this profile:
 
 * `client_id`
 * `client_id_scheme`
@@ -1661,13 +1924,13 @@ The following is a non-normative example of an Authorization Request:
 
 <{{examples/request/request.txt}}
 
-The requirements regarding the Credential to be presented are conveyed in the `presentation_definition` parameter. 
+The requirements regarding the Credential to be presented are conveyed in the `presentation_definition` parameter.
 
 The following is a non-normative example of the contents of a `presentation_definition` parameter:
 
 <{{examples/request/pd_jwt_vc.json}}
 
-This `presentation_definition` parameter contains a single `input_descriptor` element, which sets the desired format to JWT VC and defines a constraint over the `vc.type` parameter to select Verifiable Credentials of type `IDCredential`. 
+This `presentation_definition` parameter contains a single `input_descriptor` element, which sets the desired format to JWT VC and defines a constraint over the `vc.type` parameter to select Verifiable Credentials of type `IDCredential`.
 
 #### Presentation Response
 
@@ -1675,7 +1938,7 @@ The following is a non-normative example of an Authorization Response:
 
 <{{examples/response/response.txt}}
 
-The following is a non-normative example of the content of the `presentation_submission` parameter: 
+The following is a non-normative example of the content of the `presentation_submission` parameter:
 
 <{{examples/response/ps_jwt_vc.json}}
 
@@ -1725,7 +1988,7 @@ The following is a non-normative example of the Verifiable Presentation in the `
 
 <{{examples/response/ldp_vp.json}}
 
-Note: The VP's `challenge` claim contains the value of the `nonce` of the presentation request and the `domain` claims contains the Client Identifier of the Verifier. This allows the Verifier to detect replay of a presentation as recommended in (#preventing-replay). 
+Note: The VP's `challenge` claim contains the value of the `nonce` of the presentation request and the `domain` claims contains the Client Identifier of the Verifier. This allows the Verifier to detect replay of a presentation as recommended in (#preventing-replay).
 
 ## AnonCreds
 
@@ -1739,13 +2002,13 @@ Identifier for a CL-signature crypto scheme used in the examples in this section
 
 ### Example Credential
 
-The following is a non-normative example of an AnonCred Credential that will be used throughout this section. 
+The following is a non-normative example of an AnonCred Credential that will be used throughout this section.
 
 <{{examples/credentials/ac_vc.json}}
 
-The most important parts for the purpose of this section are `scheme_id` parameter and `values` parameter that contains the actual End-User claims. 
+The most important parts for the purpose of this section are `scheme_id` parameter and `values` parameter that contains the actual End-User claims.
 
-### Presentation Request 
+### Presentation Request
 
 #### Request Example {#anoncreds_request}
 
@@ -1759,19 +2022,19 @@ The following is a non-normative example of the content of the `presentation_def
 
 The `format` object in the `input_descrioptor` element uses the format identifier `ac_vc` as defined above and sets the `proof_type` to `CLSignature2019` to denote this descriptor requires a Credential in AnonCreds format signed with a CL signature (Camenisch-Lysyanskaya signature). The rest of the expressions operate on the AnonCreds JSON structure.
 
-The `constraints` object requires the selected Credential to conform with the schema definition `did:indy:idu:test:3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0\\.1`, which is denoted as a constraint over the AnonCred's `schema_id` parameter. 
+The `constraints` object requires the selected Credential to conform with the schema definition `did:indy:idu:test:3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0\\.1`, which is denoted as a constraint over the AnonCred's `schema_id` parameter.
 
 #### Request Example with Selective Release of Claims
 
 The next example leverages the AnonCreds' capabilities for selective release by requesting a subset of the claims in the Credential to be disclosed to the Verifier.
 
-A non-normative example of an Authorization Request would look the same as in (#anoncreds_request). 
+A non-normative example of an Authorization Request would look the same as in (#anoncreds_request).
 
 The following is a non-normative example of the difference is in the `presentation_definition` parameter:
 
 <{{examples/request/pd_ac_vc_sd.json}}
 
-This example is identic to the previous one with the following exceptions: It sets the element `limit_disclosure` of the constraint to `require` and adds two more constraints for the individual claims `given_name` and `family_name`. Since such claims are stored underneath a `values` container in an AnonCred, `values` is part of the path to identify the respective claims. 
+This example is identic to the previous one with the following exceptions: It sets the element `limit_disclosure` of the constraint to `require` and adds two more constraints for the individual claims `given_name` and `family_name`. Since such claims are stored underneath a `values` container in an AnonCred, `values` is part of the path to identify the respective claims.
 
 ### Presentation Response
 
@@ -1962,6 +2225,33 @@ The following is a non-normative example of the payload of a Self-Issued ID Toke
 
 Note: The `nonce` and `aud` are set to the `nonce` of the request and the Client Identifier of the Verifier, respectively, in the same way as for the Verifier, Verifiable Presentations to prevent replay.
 
+# Examples for VP Queries {#vp_query_examples}
+
+The following is a non-normative example of a VP Query that requests a Verifiable
+Credential in the format `mso_mdoc` with the claims `vehicle_holder` and
+`first_name`:
+
+<{{examples/query_lang/simple_mdoc.json}}
+
+The following is a non-normative example of a VP Query that shows the usage of
+the `purpose` property, and requests the claim `last_name` and
+
+- either the claim `zip_code`, or
+- the claims `city` and `state`:
+
+<{{examples/query_lang/nested_claims_queries.json}}
+
+The following is a non-normative example of a VP Query that requests multiple
+Verifiable Credentials; all of them must be returned:
+
+<{{examples/query_lang/multi_credentials.json}}
+
+Finally, the following shows a complex query where the Wallet can either deliver
+the first credential (containing all data the Verifier needs) or present two
+credentials that together contain all the data the Verifier needs:
+
+<{{examples/query_lang/credentials_alternatives.json}}
+
 # IANA Considerations
 
 ## Response Types
@@ -2014,7 +2304,7 @@ Interoperability considerations: : n/a
 This specification registers the following JWS header name in the IANA "JSON Web Signature and Encryption Header Parameters" registry established by [@!RFC7515].
 
 * Header Parameter Name: `jwt`
-* Header Parameter Description: This header contains a JWT. Processing rules MAY depend on the `typ` header value of the respective JWT. 
+* Header Parameter Description: This header contains a JWT. Processing rules MAY depend on the `typ` header value of the respective JWT.
 * Header Parameter Usage Location: JWS
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
 * Specification Document(s): (#verifier_attestation_jwt)
@@ -2035,20 +2325,22 @@ The technology described in this specification was made available from contribut
 
    [[ To be removed from the final specification ]]
 
+   * Introduced VP Query Language
+
    -21
 
    * removed `client_metadata_uri` authorization parameter
    * added how OpenID4VP request/response can be used over the browser API
    * remove path_nested description from Response Parameters section and move it into W3C VC Annex
    * fix indentation of examples
-   * added references to ISO/IEC 23220 and 18013 documents 
+   * added references to ISO/IEC 23220 and 18013 documents
    * added `post` request method for Request URI
    * Added IETF SD-JWT VC profile
 
    -20
 
    * added "verifier_attestation" client id scheme value
- 
+
    -19
 
    * added "x509_san_uri" and "x509_san_dns" client id scheme value
@@ -2059,7 +2351,7 @@ The technology described in this specification was made available from contribut
 
    -17
 
-   * direct_post response mode uses state to identify response 
+   * direct_post response mode uses state to identify response
    * Added sequence diagrams for same and cross device flows to overview section
 
    -16
@@ -2069,7 +2361,7 @@ The technology described in this specification was made available from contribut
 
    -15
 
-   * Added definition of VP Token 
+   * Added definition of VP Token
    * Editorial improvements for better readability (restructured request and response section, consistent terminology, and casing)
 
    -14
@@ -2091,7 +2383,7 @@ The technology described in this specification was made available from contribut
 
    * changed base protocol to OAuth 2.0
    * consolidated the examples
-  
+
    -10
 
    * Added AnonCreds example
@@ -2141,6 +2433,6 @@ The technology described in this specification was made available from contribut
    * adopted DIF Presentation Exchange request syntax
    * added security considerations regarding replay detection for Verifiable Credentials
 
-   -00 
+   -00
 
    *  initial revision

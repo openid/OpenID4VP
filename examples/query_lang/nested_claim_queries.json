@@ -1,0 +1,41 @@
+{
+  "credentials": {
+    "my_cred_1": {
+      "format": "vc+sd-jwt",
+      "vc+sd-jwt": {
+        "vct_values": [ "https://credentials.example.com/identity_credential" ],
+        "alg_values": [ "ES256", "ES384" ],
+        "sd_alg_values": [ "SHA-256" ]
+      },
+      "purpose": [{
+          "lang": "en-US",
+          "text": "To prove the identity of the holder"
+        },
+        {
+          "lang": "no-NO",
+          "text": "For å bevise innehaverens identitet"
+        },
+        {
+          "lang": "jp-JP",
+          "text": "保持者の身元を証明するため"
+        }
+      ],
+      "claims": [
+        { "path": [ "last_name" ] },
+        {
+          "required": 1,
+          "from": [
+            { "path": [ "zip_code" ] },
+            {
+              "required": 2,
+              "from": [
+                { "path": [ "city" ] },
+                { "path": [ "state" ] }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

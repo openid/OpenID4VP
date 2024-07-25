@@ -1,0 +1,17 @@
+{
+  "credentials": {
+    "my_cred_1": {
+      "format": "vc+sd-jwt",
+      "vc+sd-jwt": {
+        "vct_values": [ "https://credentials.example.com/identity_credential" ],
+        "alg_values": ["ES256", "ES384"],
+        "sd_alg_values": ["SHA-256"]
+      },
+      "claims":[
+        { "path": ["last_name"] },
+        { "path": ["first_name"] },
+        { "path": ["address", "street_address"] }
+      ]
+    }
+  }
+}
