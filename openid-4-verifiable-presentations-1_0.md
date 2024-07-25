@@ -1051,6 +1051,10 @@ This document also defines the following additional error codes and error descri
 
 - The value of the `request_uri_method` request parameter is neither `get` nor `post` (case-sensitive).
 
+`wallet_unavailable`:
+
+- The Wallet appears to be unavailable and therefore unable to respond to the request. It can be useful in situations where the User Agent cannot invoke the Wallet and another component receives the request while the End-User wishes to continue the journey on the Verifier website. For example, this applies when using claimed HTTPS URIs handled by the Wallet provider in case the platform cannot or does not translate the URI into a platform intent to invoke the Wallet. In this case, the Wallet provider would return the Authorization Error Response to the Verifier and might redirect the User Agent back to the Verifier website.
+
 
 ## VP Token Validation
 
@@ -1401,6 +1405,12 @@ Such an attack is impossible against flows implemented with the Response Mode `f
 However, the Response Mode `direct_post` is susceptible to such an attack as the result is sent from the Wallet out-of-band to the Verifier's Response Endpoint.
 
 This kind of attack can be detected if the Response Mode `direct_post` is used in conjunction with the redirect URI, which causes the Wallet to redirect the flow to the Verifier's frontend at the device where the transaction was concluded. The Verifier's Response Endpoint MUST include a fresh secret (Response Code) into the redirect URI returned to the Wallet and the Verifier's Response Endpoint MUST require the frontend to pass the respective Response Code when fetching the Authorization Response. That stops session fixation attacks as long as the attacker is unable to get access to the Response Code.
+<<<<<<< HEAD
+=======
+
+Note that this protection technique is not applicable to cross-device scenarios because the browser used by the wallet will not have the original session.
+It is also not applicable in same-device scenarios if the wallet uses a browser different from the one used on the presentation request (e.g. device with multiple installed browsers), because the original session will also not be available there.
+>>>>>>> main
 
 See (#implementation_considerations_direct_post) for more implementation considerations.
 
@@ -1464,6 +1474,10 @@ If no user interaction is required before sending the request, it is easy to req
 Mandatory user interaction before sending the request, like clicking a button, unlocking the wallet or even just showing a screen of the app, can make this less attractive/likely to being exploited.
 
 Requests from the Wallet to the Verifier SHOULD be sent with the minimal amount of information possible, and in particular, without any HTTP headers identifying the software used for the request (e.g., HTTP libraries or their versions). The Wallet MUST NOT send PII or any other data that could be used for fingerprinting to the Request URI in order to prevent user tracking.
+
+## Authorization Error Response with the `wallet_unavailable` error code
+
+In the event that another component is invoked instead of the Wallet, the user MUST be informed and give consent before the invoked component returns the `wallet_unavailable` Authorization Error Response to the Verifier.
 
 {backmatter}
 
@@ -2336,6 +2350,7 @@ The technology described in this specification was made available from contribut
    * added references to ISO/IEC 23220 and 18013 documents
    * added `post` request method for Request URI
    * Added IETF SD-JWT VC profile
+   * Added `wallet_unavailable` error
 
    -20
 
