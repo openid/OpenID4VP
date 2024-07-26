@@ -1,18 +1,18 @@
 {
-    "vp_token": "eyJhb...YMetA",
-    "presentation_submission": {
-        "definition_id": "example_jwt_vc",
-        "id": "example_jwt_vc_presentation_submission",
-        "descriptor_map": [
-            {
-                "id": "id_credential",
-                "path": "$",
-                "format": "jwt_vp",
-                "path_nested": {
-                    "path": "$.vp.verifiableCredential[0]",
-                    "format": "jwt_vc"
-                }
-            }
-        ]
-    }
+  "vp_token": "eyJhb...YMetA",
+  "presentation_submission": {
+    "definition_id": "example_jwt_vc",
+    "id": "example_jwt_vc_presentation_submission",
+    "descriptor_map": [
+      {
+        "id": "id_credential",
+        "path": "$",
+        "format": "jwt_vp_json",
+        "path_nested": {
+          "path": "$.vp.verifiableCredential[0]",
+          "format": "jwt_vc"
+        }
+      }
+    ]
+  }
 }

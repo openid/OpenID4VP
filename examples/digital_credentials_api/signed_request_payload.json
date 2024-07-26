@@ -1,0 +1,32 @@
+{
+  "client_id": "client.example.org",
+  "client_id_scheme": "entity_id",
+  "expected_origins": [
+    "https://origin1.example.com",
+    "https://origin2.example.com"
+  ],
+  "response_type": "vp_token",
+  "response_mode": "w3c_dc_api.jwt",
+  "nonce": "n-0S6_WzA2Mj",
+  "client_metadata": {
+    "vp_formats": {
+      "vc+sd-jwt": {
+        "sd-jwt_alg_values": [ "PS256" ],
+        "kb-jwt_alg_values": [ "PS256" ]
+      }
+    },
+    "jwks": {
+      "keys": [
+        {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "MKBCTNIcKUSDii11ySs3526iDZ8AiTo7Tu6KPAqv7D4",
+          "y": "4Etl6SRW2YiLUrN5vfvVHuhp7x8PxltmWWlbbM4IFyM",
+          "use": "enc",
+          "kid": "1"
+        }
+      ]
+    }
+  },
+  "presentation_definition": {...}
+}

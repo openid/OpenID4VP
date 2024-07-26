@@ -1,55 +1,55 @@
 {
-   "access_token": "SlAV32hkKG",
-   "token_type": "Bearer",
-   "refresh_token": "8xLOxBtZp8",
-   "expires_in": 3600,
-   "id_token": "eyJ0 ... NiJ9.eyJ1c ... I6IjIifX0.DeWt4Qu ... ZXso",
-   "vp_token": {
-      "@context": [
-         "https://www.w3.org/2018/credentials/v1"
-      ],
-      "type": [
-         "VerifiablePresentation"
-      ],
-      "verifiableCredential": [
-         {
-            "@context": [
-               "https://www.w3.org/2018/credentials/v1",
-               "https://www.w3.org/2018/credentials/examples/v1"
-            ],
-            "id": "https://example.com/credentials/1872",
-            "type": [
-               "VerifiableCredential",
-               "IDCardCredential"
-            ],
-            "issuer": {
-               "id": "did:example:issuer"
-            },
-            "issuanceDate": "2010-01-01T19:23:24Z",
-            "credentialSubject": {
-               "given_name": "Fredrik",
-               "family_name": "Strömberg",
-               "birthdate": "1949-01-22"
-            },
-            "proof": {
-               "type": "Ed25519Signature2018",
-               "created": "2021-03-19T15:30:15Z",
-               "jws": "eyJhb...JQdBw",
-               "proofPurpose": "assertionMethod",
-               "verificationMethod": "did:example:issuer#keys-1"
-            }
-         }
-      ],
-      "id": "ebc6f1c2",
-      "holder": "did:example:holder",
-      "proof": {
-         "type": "Ed25519Signature2018",
-         "created": "2021-03-19T15:30:15Z",
-         "challenge": "n-0S6_WzA2Mj",
-         "domain": "s6BhdRkqt3",
-         "jws": "eyJhb...IAoDA",
-         "proofPurpose": "authentication",
-         "verificationMethod": "did:example:holder#key-1"
+  "access_token": "SlAV32hkKG",
+  "token_type": "Bearer",
+  "refresh_token": "8xLOxBtZp8",
+  "expires_in": 3600,
+  "id_token": "eyJ0 ... NiJ9.eyJ1c ... I6IjIifX0.DeWt4Qu ... ZXso",
+  "vp_token": {
+    "@context": [
+      "https://www.w3.org/2018/credentials/v1"
+    ],
+    "type": [
+      "VerifiablePresentation"
+    ],
+    "verifiableCredential": [
+      {
+        "@context": [
+          "https://www.w3.org/2018/credentials/v1",
+          "https://www.w3.org/2018/credentials/examples/v1"
+        ],
+        "id": "https://example.com/credentials/1872",
+        "type": [
+          "VerifiableCredential",
+          "IDCardCredential"
+        ],
+        "issuer": {
+          "id": "did:example:issuer"
+        },
+        "issuanceDate": "2010-01-01T19:23:24Z",
+        "credentialSubject": {
+          "given_name": "Fredrik",
+          "family_name": "Strömberg",
+          "birthdate": "1949-01-22"
+        },
+        "proof": {
+          "type": "Ed25519Signature2018",
+          "created": "2021-03-19T15:30:15Z",
+          "jws": "eyJhb...JQdBw",
+          "proofPurpose": "assertionMethod",
+          "verificationMethod": "did:example:issuer#keys-1"
+        }
       }
-   }
+    ],
+    "id": "ebc6f1c2",
+    "holder": "did:example:holder",
+    "proof": {
+      "type": "Ed25519Signature2018",
+      "created": "2021-03-19T15:30:15Z",
+      "challenge": "n-0S6_WzA2Mj",
+      "domain": "s6BhdRkqt3",
+      "jws": "eyJhb...IAoDA",
+      "proofPurpose": "authentication",
+      "verificationMethod": "did:example:holder#key-1"
+    }
+  }
 }

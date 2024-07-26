@@ -1,58 +1,58 @@
 {
-    "id_token": {
-        "email": null
-    },
-    "vp_token": {
-        "presentation_definition": {
-            "id": "vp token example",
-            "input_descriptors": [
-                {
-                    "id": "id card credential",
-                    "format": {
-                        "ldp_vc": {
-                            "proof_type": [
-                                "Ed25519Signature2018"
-                            ]
-                        }
-                    },
-                    "constraints": {
-                        "fields": [
-                            {
-                                "path": [
-                                    "$.type"
-                                ],
-                                "filter": {
-                                    "type": "string",
-                                    "pattern": "IDCardCredential"
-                                }
-                            }
-                        ]
-                    }
-                },
-                {
-                    "id": "next cloud test credential",
-                    "format": {
-                        "ac_vc": {
-                            "proof_type": [
-                                "CLSignature2019"
-                            ]
-                        }
-                    },
-                    "constraints": {
-                        "fields": [
-                            {
-                                "path": [
-                                    "$.schema_id"
-                                ],
-                                "filter": {
-                                    "type": "string",
-                                    "pattern": "did:indy:idu:test:3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0\\.1"
-                                }
-                            }
-                        ]
-                    }
+  "id_token": {
+    "email": null
+  },
+  "vp_token": {
+    "presentation_definition": {
+      "id": "vp token example",
+      "input_descriptors": [
+        {
+          "id": "id card credential",
+          "format": {
+            "ldp_vc": {
+              "proof_type": [
+                "Ed25519Signature2018"
+              ]
+            }
+          },
+          "constraints": {
+            "fields": [
+              {
+                "path": [
+                  "$.type"
+                ],
+                "filter": {
+                  "type": "string",
+                  "pattern": "IDCardCredential"
                 }
+              }
             ]
+          }
+        },
+        {
+          "id": "next cloud test credential",
+          "format": {
+            "ac_vc": {
+              "proof_type": [
+                "CLSignature2019"
+              ]
+            }
+          },
+          "constraints": {
+            "fields": [
+              {
+                "path": [
+                  "$.schema_id"
+                ],
+                "filter": {
+                  "type": "string",
+                  "pattern": "did:indy:idu:test:3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0\\.1"
+                }
+              }
+            ]
+          }
         }
+      ]
     }
+  }
 }
