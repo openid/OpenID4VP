@@ -307,18 +307,18 @@ The following is a non-normative example of Authorization Request with request o
 GET /authorize?
   response_type=vp_token
   &client_id=https%3A%2F%2Fclient.example.org%2Fcb
-  &request=eyJhbGciOiJSUzI1NiIsImtpZCI6ImsyYmRjIn0.eyJpc3MiOiJzNkJoZFJrcXQzIiwiYXVkIjoia
-  HR0cHM6Ly9zZWxmLWlzc3VlZC5tZS92MiIsInJlc3BvbnNlX3R5cGUiOiJ2cF90b2tlbiIsImNsaWVudF9pZCI
-  6InM2QmhkUmtxdDMiLCJyZWRpcmVjdF91cmkiOiJodHRwcy8vY2xpZW50LmV4YW1wbGUub3JnL2NiIiwic2Nvc
-  GUiOiJvcGVuaWQiLCJwcmVzZW50YXRpb25fZGVmaW5pdGlvbiI6eyJpZCI6ImV4YW1wbGVfand0X3ZjIiwiaW5
-  wdXRfZGVzY3JpcHRvcnMiOlt7ImlkIjoiaWRfY3JlZGVudGlhbCIsImZvcm1hdCI6eyJqd3RfdmNfanNvbiI6e
-  yJwcm9vZl90eXBlIjpbIkpzb25XZWJTaWduYXR1cmUyMDIwIl19fSwiY29uc3RyYWludHMiOnsiZmllbGRzIjp
-  beyJwYXRoIjpbIiQudmMudHlwZSJdLCJmaWx0ZXIiOnsidHlwZSI6ImFycmF5IiwiY29udGFpbnMiOnsiY29uc
-  3QiOiJJRENyZWRlbnRpYWwifX19XX19XX0sIm5vbmNlIjoibi0wUzZfV3pBMk1qIn0.m1KYXT4r5Pj7Jh8gUln
-  gpvjUoEZnOcbL8lXuDxbLbQyhLG9mro9EpT3I4YOm25tnxFx2mrKb42dFPxXOwLO5NbBmoYmY8wxH85H98RtpP
-  GaTwCD6duxbp4eZm6LO-fdxpSvjzCAKoU3kzloh1Q1ijkP_ZQgwmS-uQba9qpu61hMjF6KIIjz59sJHpZOI0cE
-  z4LqrLwXXIht0hyZXdE_vJIBEwfafoLZgggF9adNGUQnE3dXLi_is6XrDk7BS0VZds6IaNTVlIlS5NfHg6Lp1I
-  pbiFta_6CWrFxtC1QoCIrhIzbJgnF4GRboy0SfYRXD8Vt8qbPzLIeUvE-LyObGN5g
+  &request=eyJrdHkiOiJFQyIsImNydiI6IlAtMjU2IiwieCI6Ik1LQkNUTkljS1VTRGlpMTF5U3MzNTI2aURaOEFpVG83VHU2S1BBcXY3R
+  DQiLCJ5IjoiNEV0bDZTUlcyWWlMVXJONXZmdlZIdWhwN3g4UHhsdG1XV2xiYk00SUZ5TSIsInVzZSI6ImVuYyIsImtpZCI6IjEiLCJhbGc
+  iOiJQUzI1NiJ9.eyJpc3MiOiJzNkJoZFJrcXQzIiwiYXVkIjoiaHR0cHM6Ly9zZWxmLWlzc3VlZC5tZS92MiIsInJlc3BvbnNlX3R5cGU
+  iOiJ2cF90b2tlbiIsImNsaWVudF9pZCI6InM2QmhkUmtxdDMiLCJyZWRpcmVjdF91cmkiOiJodHRwcy8vY2xpZW50LmV4YW1wbGUub3JnL
+  2NiIiwic2NvcGUiOiJvcGVuaWQiLCJwcmVzZW50YXRpb25fZGVmaW5pdGlvbiI6eyJpZCI6ImV4YW1wbGVfand0X3ZjIiwiaW5wdXRfZGV
+  zY3JpcHRvcnMiOlt7ImlkIjoiaWRfY3JlZGVudGlhbCIsImZvcm1hdCI6eyJqd3RfdmNfanNvbiI6eyJwcm9vZl90eXBlIjpbIkpzb25XZ
+  WJTaWduYXR1cmUyMDIwIl19fSwiY29uc3RyYWludHMiOnsiZmllbGRzIjpbeyJwYXRoIjpbIiQudmMudHlwZSJdLCJmaWx0ZXIiOnsidHl
+  wZSI6ImFycmF5IiwiY29udGFpbnMiOnsiY29uc3QiOiJJRENyZWRlbnRpYWwifX19XX19XX0sIm5vbmNlIjoibi0wUzZfV3pBMk1qIn0.
+  QcQkoxVRdGtVBtqmO4pFdDqgiLVvgPo1nah0enAxXDrMd-q3lA8NXLASG8xb9VT_iY4iyD23ULx5YW4ENUUx-v4kpKAQZnPVH8U7mbjulk
+  7bV8yph_RFt8SwvfSRWWWgPduTxJFAscmph-r2t77kBGbxI0Le58eYwMbXgB7yUQx-4TarIqr9E2lSD44ru8GVfC1zWUIjZPXD98xOcH-V
+  IPJamxpWKZ2GJOKhUbxc-GTgUp6knTfc_oIkcdr7kIUUaZwqYGOsQARA1R75y9DVXCGYTrRm0Ssl54MMKD5Fze9hb8Oj3AqdYG6RWviR1e
+  Jf3EzMstmkx92yHYdrNTux1Q
 ```
 Where the contents of `request` consist of base64url-encoding and signing (in the example with RS256 algo)
 this json:
@@ -366,15 +366,13 @@ this json:
 The example request object above is signed with this key:
 ```
 {
-  "kty":"RSA",
-  "kid":"k2bdc",
-  "n":"y9Lqv4fCp6Ei-u2-ZCKq83YvbFEk6JMs_pSj76eMkddWRuWX2aBKGHAtKlE5P
-      7_vn__PCKZWePt3vGkB6ePgzAFu08NmKemwE5bQI0e6kIChtt_6KzT5OaaXDF
-      I6qCLJmk51Cc4VYFaxgqevMncYrzaW_50mZ1yGSFIQzLYP8bijAHGVjdEFgZa
-      ZEN9lsn_GdWLaJpHrB3ROlS50E45wxrlg9xMncVb8qDPuXZarvghLL0HzOuYR
-      adBJVoWZowDNTpKpk2RklZ7QaBO7XDv3uR7s_sf2g-bAjSYxYUGsqkNA9b3xV
-      W53am_UZZ3tZbFTIh557JICWKHlWj5uzeJXaw",
-  "e":"AQAB"
+  "kty": "EC",
+  "crv": "P-256",
+  "x": "MKBCTNIcKUSDii11ySs3526iDZ8AiTo7Tu6KPAqv7D4",
+  "y": "4Etl6SRW2YiLUrN5vfvVHuhp7x8PxltmWWlbbM4IFyM",
+  "use": "enc",
+  "kid": "1",
+  "alg": "PS256"
 }
 ```
 
