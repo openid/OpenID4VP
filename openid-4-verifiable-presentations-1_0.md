@@ -252,13 +252,13 @@ This specification enables the Verifier to send both Presentation Definition JSO
 This specification defines the following new parameters:
 
 `presentation_definition`:
-: A string containing a Presentation Definition JSON object. See (#request_presentation_definition) for more details. Exactly one of `vp_query` or `presentation_definition` or `presentation_definition_uri` MUST be present in the Authorization Request.
+: A string containing a Presentation Definition JSON object. See (#request_presentation_definition) for more details. Exactly one of `vp_query`, `presentation_definition`, or `presentation_definition_uri` MUST be present in the Authorization Request.
 
 `presentation_definition_uri`:
-: A string containing an HTTPS URL pointing to a resource where a Presentation Definition JSON object can be retrieved. See (#request_presentation_definition_uri) for more details. Exactly one of `vp_query` or `presentation_definition` or `presentation_definition_uri` MUST be present in the Authorization Request.
+: A string containing an HTTPS URL pointing to a resource where a Presentation Definition JSON object can be retrieved. See (#request_presentation_definition_uri) for more details. Exactly one of `vp_query`, `presentation_definition`, or `presentation_definition_uri` MUST be present in the Authorization Request.
 
 `vp_query`:
-: A string containing a JSON-encoded VP Query as defined in (#vp_query). This parameter is OPTIONAL. Exactly one of `vp_query` or `presentation_definition` or `presentation_definition_uri` MUST be present in the Authorization Request.
+: A string containing a JSON-encoded VP Query as defined in (#vp_query). Exactly one of `vp_query`, `presentation_definition`, `presentation_definition_uri` MUST be present in the Authorization Request.
 
 `client_id_scheme`:
 : OPTIONAL. A string identifying the scheme of the value in the `client_id` Authorization Request parameter (Client Identifier scheme). The `client_id_scheme` parameter namespaces the respective Client Identifier. If an Authorization Request uses the `client_id_scheme` parameter, the Wallet MUST interpret the Client Identifier of the Verifier in the context of the Client Identifier scheme. If the parameter is not present, the Wallet MUST behave as specified in [@!RFC6749]. See (#client_metadata_management) for the values defined by this specification. If the same Client Identifier is used with different Client Identifier schemes, those occurrences MUST be treated as different Verifiers. Note that the Verifier needs to determine which Client Identifier schemes the Wallet supports prior to sending the Authorization Request in order to choose a supported scheme.
@@ -667,18 +667,18 @@ For ISO 18013-5 Credentials, the following properties are defined:
 within the Verifiable Credential, e.g., `org.iso.18013.5.1`.
 
 `claim_name`:
-: REQUIRED. A string that specifies the name of the claim within
-the Verifiable Credential, e.g., `first_name`.
+: REQUIRED. A string that specifies the name of the claim within the provided namespace
+in the Verifiable Credential, e.g., `first_name`.
 
 ### Claims Path Pointer {#claims_path_pointer}
 
 A claims path pointer is a pointer into the JSON structure of the Verifiable
 Credential, identifying one or more claims. A claims path pointer MUST be a
-non-empty array of strings and non-negative integers. A string indicates that
-the respective key is to be selected, a `*` value indicates that all elements of
-the currently selected array(s) are to be selected, and a non-negative integer
-indicates that the respective index in an array is to be selected. The path is
-formed as follows:
+non-empty array of strings and non-negative integers. A `*` string value indicates
+that all elements of the currently selected array(s) are to be selected; any other
+string indicates that the respective key is to be selected; and a non-negative
+integer indicates that the respective index in an array is to be selected. The path
+is formed as follows:
 
   - Start with an empty array.
   - To address a particular claim within an object, append the key (claim name)
@@ -2261,7 +2261,7 @@ the `purpose` property, and requests the claim `last_name` and
 - either the claim `zip_code`, or
 - the claims `city` and `state`:
 
-<{{examples/query_lang/nested_claims_queries.json}}
+<{{examples/query_lang/nested_claim_queries.json}}
 
 The following is a non-normative example of a VP Query that requests multiple
 Verifiable Credentials; all of them must be returned:
