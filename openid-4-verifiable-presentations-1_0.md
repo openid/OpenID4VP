@@ -608,7 +608,7 @@ or allowed by a Wallet.
 
 The following format-specific properties are defined:
 
-### Format `vc+sd-jwt` {#format_vc+sd-jwt}
+### Format `vc+sd-jwt` {#format_vc_sd_jwt}
 
 `vct_values`:
 : OPTIONAL. An array of strings that specifies allowed values for
