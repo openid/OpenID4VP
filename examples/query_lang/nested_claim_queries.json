@@ -25,12 +25,12 @@
         {
           "required": 1,
           "from": [
-            { "path": [ "zip_code" ] },
+            { "path": [ "postal_code" ] },
             {
               "required": 2,
               "from": [
-                { "path": [ "city" ] },
-                { "path": [ "state" ] }
+                { "path": [ "locality" ] },
+                { "path": [ "region" ] }
               ]
             }
           ]

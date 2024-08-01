@@ -696,7 +696,7 @@ The following shows a non-normative, simplified example of a Credential:
   "name": "Arthur Dent",
   "address": {
     "street_address": "42 Market Street",
-    "city": "Milliways",
+    "locality": "Milliways",
     "postal_code": "12345"
   },
   "degrees": [
@@ -2255,8 +2255,8 @@ Credential in the format `mso_mdoc` with the claims `vehicle_holder` and
 The following is a non-normative example of a VP Query that shows the usage of
 the `purpose` property, and requests the claim `last_name` and
 
-- either the claim `zip_code`, or
-- the claims `city` and `state`:
+- either the claim `postal_code`, or
+- the claims `locality` and `region`:
 
 <{{examples/query_lang/nested_claim_queries.json}}
 

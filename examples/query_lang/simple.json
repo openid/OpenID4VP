@@ -8,8 +8,8 @@
         "sd_alg_values": ["SHA-256"]
       },
       "claims":[
-        { "path": ["last_name"] },
-        { "path": ["first_name"] },
+        { "path": ["family_name"] },
+        { "path": ["given_name"] },
         { "path": ["address", "street_address"] }
       ]
     }
