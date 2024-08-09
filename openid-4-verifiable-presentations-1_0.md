@@ -7,7 +7,7 @@ keyword = ["security", "openid", "ssi"]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "openid-4-verifiable-presentations-1_0-20"
+value = "openid-4-verifiable-presentations-1_0-21"
 status = "standard"
 
 [[author]]
@@ -22,7 +22,7 @@ organization="Mattr"
 initials="T."
 surname="Lodderstedt"
 fullname="Torsten Lodderstedt"
-organization="German Federal Agency for Disruptive Innovation (SPRIND)"
+organization="SPRIND"
     [author.address]
     email = "torsten@lodderstedt.net"
 
@@ -30,7 +30,7 @@ organization="German Federal Agency for Disruptive Innovation (SPRIND)"
 initials="K."
 surname="Yasuda"
 fullname="Kristina Yasuda"
-organization="German Federal Agency for Disruptive Innovation (SPRIND)"
+organization="SPRIND"
     [author.address]
     email = "kristina.yasuda@sprind.org"
 
