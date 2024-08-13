@@ -756,9 +756,9 @@ The following is a non-normative example of the payload of the JWT used in the e
 
 Transaction data mechanism enables binding between the user identification/authentication and user’s authorization, for example to complete a payment transaction, or to sign specific document(s) using QES (Qualified Electronic Signatures). This is achieved by signing the transaction data used for user authorization with the user-controlled key used for proof of possession of the Credential being presented as a means for user identification/authentication.
 
-The Wallet that received `transaction_data` parameter in the request, MUST include in the response a `transaction_data` parameter defined below: 
+The Wallet that received `transaction_data` parameter in the request, MUST include in the response a `tx_data_hashes` parameter defined below: 
 
-* `transaction_data`: Array of hashes, where each hash is calculated using a hash function over the strings received in the `transaction_data` request parameter. Each hash value ensures the integrity of, and maps to, the respective transaction data object. Where in the response this parameter is included is defined by each Credential Format Profile, but it has to be included in the  mechanism used for the proof of possession of the Credential that is signed using the user-controlled key.
+* `tx_data_hashes`: Array of hashes, where each hash is calculated using a hash function over the strings received in the `transaction_data` request parameter. Each hash value ensures the integrity of, and maps to, the respective transaction data object. Where in the response this parameter is included is defined by each Credential Format Profile, but it has to be included in the  mechanism used for the proof of possession of the Credential that is signed using the user-controlled key.
 
 ## Error Response {#error_response}
 
