@@ -587,10 +587,6 @@ Additional properties requested by the Verifier that are specific to the
 Credential format, as defined in (#format_specific_properties). If omitted,
 no format-specific restrictions are placed on the requested Credential.
 
-`purpose`:
-: OPTIONAL. A purpose description array as defined in
-(#purpose_description).
-
 `claims`:
 : OPTIONAL. An array that specifies the claims that the requested
 Verifiable Credential must contain. Each entry in the array corresponds to at
