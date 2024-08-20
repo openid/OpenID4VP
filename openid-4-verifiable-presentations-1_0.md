@@ -798,7 +798,7 @@ Additional examples can be found in (#vp_query_examples).
 
 ## Additional Request Properties {#additional_request_properties}
 
-`intend_to_retain`: TBD
+`intent_to_retain`: TBD
 
 `if_present`: TBD
 
