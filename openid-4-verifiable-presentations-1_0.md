@@ -220,6 +220,8 @@ Figure: Cross Device Flow
 OpenID for Verifiable Presentations extends existing OAuth 2.0 mechanisms as following:
 
 * A new `presentation_definition` Authorization Request parameter that uses the [@!DIF.PresentationExchange] syntax is defined to request presentation of Verifiable Credentials in arbitrary formats. See (#vp_token_request) for more details. 
+* A new query language is defined to enable requesting Verifiable Credentials in a more flexible way. See (#vp_query) for more details.
+* A new `vp_query` Authorization Request parameter is defined to request presentation of Verifiable Credentials in the JSON-encoded VP Query format. See (#vp_token_request) for more details.
 * A new `vp_token` response parameter is defined to return Verifiable Presentations to the Verifier in either Authorization or Token Response depending on the Response Type. See (#response) for more details. 
 * New Response Types `vp_token` and `vp_token id_token` are defined to request Verifiable Credentials to be returned in the Authorization Response (standalone or along with a Self-Issued ID Token [@!SIOPv2]). See (#response) for more details.
 * A new OAuth 2.0 Response Mode `direct_post` is defined to support sending the response across devices, or when the size of the response exceeds the redirect URL character size limitation. See (#response_mode_post) for more details.
@@ -252,10 +254,14 @@ This specification enables the Verifier to send both Presentation Definition JSO
 This specification defines the following new parameters:
 
 `presentation_definition`:
-: A string containing a Presentation Definition JSON object. See (#request_presentation_definition) for more details. This parameter MUST be present when `presentation_definition_uri` parameter, or a `scope` value representing a Presentation Definition is not present.
+: A string containing a Presentation Definition JSON object. See (#request_presentation_definition) for more details. Exactly one of `vp_query` or `presentation_definition` or `presentation_definition_uri` MUST be present in the Authorization Request.
 
 `presentation_definition_uri`:
-: A string containing an HTTPS URL pointing to a resource where a Presentation Definition JSON object can be retrieved. This parameter MUST be present when `presentation_definition` parameter, or a `scope` value representing a Presentation Definition is not present. See (#request_presentation_definition_uri) for more details.
+: A string containing an HTTPS URL pointing to a resource where a Presentation Definition JSON object can be retrieved. See (#request_presentation_definition_uri) for more details. Exactly one of `vp_query` or `presentation_definition` or `presentation_definition_uri` MUST be present in the Authorizat
+ion Request.
+
+`vp_query`:
+: A string containing a JSON-encoded VP Query as defined in (#vp_query). This parameter is OPTIONAL. Exactly one of `vp_query` or `presentation_definition` or `presentation_definition_uri` MUST be present in the Authorization Request.
 
 `client_id_scheme`: 
 : OPTIONAL. A string identifying the scheme of the value in the `client_id` Authorization Request parameter (Client Identifier scheme). The `client_id_scheme` parameter namespaces the respective Client Identifier. If an Authorization Request uses the `client_id_scheme` parameter, the Wallet MUST interpret the Client Identifier of the Verifier in the context of the Client Identifier scheme. If the parameter is not present, the Wallet MUST behave as specified in [@!RFC6749]. See (#client_metadata_management) for the values defined by this specification. If the same Client Identifier is used with different Client Identifier schemes, those occurrences MUST be treated as different Verifiers. Note that the Verifier needs to determine which Client Identifier schemes the Wallet supports prior to sending the Authorization Request in order to choose a supported scheme.
