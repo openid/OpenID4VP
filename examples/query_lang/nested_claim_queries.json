@@ -7,19 +7,6 @@
         "alg_values": [ "ES256", "ES384" ],
         "sd_alg_values": [ "SHA-256" ]
       },
-      "purpose": [{
-          "lang": "en-US",
-          "text": "To prove the identity of the holder"
-        },
-        {
-          "lang": "no-NO",
-          "text": "For å bevise innehaverens identitet"
-        },
-        {
-          "lang": "jp-JP",
-          "text": "保持者の身元を証明するため"
-        }
-      ],
       "claims": [
         { "path": [ "last_name" ] },
         {

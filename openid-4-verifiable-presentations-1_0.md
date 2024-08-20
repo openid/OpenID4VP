@@ -751,23 +751,6 @@ In detail, the array is processed by the Wallet from left to right as follows:
 The result of the processing is the set of elements which is requested for
 presentation.
 
-
-## Purpose Description {#purpose_description}
-
-A purpose description array is an object that describes the purpose for which
-the Verifier is requesting the Verifiable Credential. It can contain multiple
-objects, each describing the purpose in a specific language. Each object
-contains the following properties:
-
-`lang:`
-: REQUIRED. A string that specifies the language of the purpose
-description. The value of this property MUST be a valid language tag as defined
-in [@!BCP47].
-
-`text`:
-: REQUIRED. A string that contains the purpose description in the
-language specified by the `lang` property.
-
 ## Credential Rules {#credential_rules}
 
 Just as for claims, the Verifier can define rules that specify which
@@ -2254,8 +2237,7 @@ Credential in the format `mso_mdoc` with the claims `vehicle_holder` and
 
 <{{examples/query_lang/simple_mdoc.json}}
 
-The following is a non-normative example of a VP Query that shows the usage of
-the `purpose` property, and requests the claim `last_name` and
+The following is a non-normative example of a VP Query that requests the claim `last_name` and
 
 - either the claim `postal_code`, or
 - the claims `locality` and `region`:
