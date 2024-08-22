@@ -278,7 +278,7 @@ This enables the Wallet to assess the Verifier's capabilities, allowing it to tr
 : OPTIONAL. Array of strings, where each string is a Base64url encoded object that contains a typed parameter set with details about the transaction that the Verifier is requesting the End-User to authorize. See (#transaction_data) for details. The Wallet MUST refuse to process any unknown transaction data type or transaction data not conforming to the respective type definition. Each object consists of the following parameters:
 
 * `type`: REQUIRED. String that is the Identifier of the transaction data type and determines the allowable contents of the object that contains it. The specific values are out of scope of this specification. It is RECOMMENDED to use collision-resistant names for `type` values.
-* `input_descriptor_ids`: REQUIRED. Array of strings each pointing to an Input Descriptor that identifies a request for a Credential that the Verifier is requesting transaction data in a particular object to be bound to.
+* `requested_credential_ids`: REQUIRED. Array of strings each pointing to an Input Descriptor that identifies a request for a Credential that the Verifier is requesting transaction data in a particular object to be bound to.
 
 The following additional considerations are given for pre-existing Authorization Request parameters:
 
