@@ -277,7 +277,7 @@ This enables the Wallet to assess the Verifier's capabilities, allowing it to tr
 `transaction_data`: 
 : OPTIONAL. Array of strings, where each string is a Base64url encoded object that contains a typed parameter set with details about the transaction that the Verifier is requesting the End-User to authorize. See (#transaction_data) for details. The Wallet MUST refuse to process any unknown transaction data type or transaction data not conforming to the respective type definition. Each object consists of the following parameters:
 
-* `type`: REQUIRED. String that is the Identifier of the transaction data type and determines the allowable contents of the object that contains it. The specific values are out of scope of this specification.
+* `type`: REQUIRED. String that is the Identifier of the transaction data type and determines the allowable contents of the object that contains it. The specific values are out of scope of this specification. It is RECOMMENDED to use collision-resistant names for `type` values.
 * `input_descriptor_ids`: REQUIRED. Array of strings each pointing to an Input Descriptor that identifies a request for a Credential that the Verifier is requesting transaction data in a particular object to be bound to.
 
 The following additional considerations are given for pre-existing Authorization Request parameters:
@@ -754,7 +754,7 @@ The following is a non-normative example of the payload of the JWT used in the e
 
 ## Transaction Data {#transaction_data}
 
-Transaction data mechanism enables binding between the user identification/authentication and user’s authorization, for example to complete a payment transaction, or to sign specific document(s) using QES (Qualified Electronic Signatures). This is achieved by signing the transaction data used for user authorization with the user-controlled key used for proof of possession of the Credential being presented as a means for user identification/authentication.
+The transaction data mechanism enables a binding between the user's identification/authentication and the user’s authorization, for example to complete a payment transaction, or to sign specific document(s) using QES (Qualified Electronic Signatures). This is achieved by signing the transaction data used for user authorization with the user-controlled key used for proof of possession of the Credential being presented as a means for user identification/authentication.
 
 The Wallet that received `transaction_data` parameter in the request, MUST include in the response a `tx_data_hashes` parameter defined below: 
 
@@ -807,7 +807,7 @@ This document also defines the following additional error codes and error descri
 
 `invalid_transaction_data`:
 
-- any of the following are true of the objects in the transaction_data structure:
+- any of the following is true for at least one object in the transaction_data structure:
   - contains an unknown transaction data type value,
   - is an object of known type but containing unknown fields,
   - contains fields of the wrong type for the transaction data type,
@@ -1771,7 +1771,7 @@ Setting `limit_disclosure` property defined in [@!DIF.PresentationExchange] to `
 
 A non-normative example of the Authorization Response would look the same as in the examples of other Credential formats in this Annex.
 
-`transaction_data` response parameter defined in (#transaction_data) MUST be included in the Key Binding JWT as a top level claim.
+The `transaction_data` response parameter defined in (#transaction_data) MUST be included in the Key Binding JWT as a top level claim.
 
 The following is a non-normative example of the content of the `presentation_submission` parameter:
 
