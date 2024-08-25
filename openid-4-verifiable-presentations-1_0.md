@@ -261,9 +261,13 @@ This specification defines the following new parameters:
 : OPTIONAL. A string identifying the scheme of the value in the `client_id` Authorization Request parameter (Client Identifier scheme). The `client_id_scheme` parameter namespaces the respective Client Identifier. If an Authorization Request uses the `client_id_scheme` parameter, the Wallet MUST interpret the Client Identifier of the Verifier in the context of the Client Identifier scheme. If the parameter is not present, the Wallet MUST behave as specified in [@!RFC6749]. See (#client_metadata_management) for the values defined by this specification. If the same Client Identifier is used with different Client Identifier schemes, those occurrences MUST be treated as different Verifiers. Note that the Verifier needs to determine which Client Identifier schemes the Wallet supports prior to sending the Authorization Request in order to choose a supported scheme.
 
 `client_metadata`:
-: OPTIONAL. A JSON object containing the Verifier metadata values. It MUST be UTF-8 encoded.
+: OPTIONAL. A JSON object containing the Verifier metadata values. It MUST be UTF-8 encoded. It may contain the following:
 
-A public key to be used by the Wallet as an input to the key agreement to encrypt Authorization Response (see (#jarm)). It MAY be passed by the Verifier using the `jwks` or the `jwks_uri` claim within the `client_metadata` request parameter.
+    * `jwks`: OPTIONAL. A JWKS that can contain a public key to be used by the Wallet as an input to the key agreement to encrypt the Authorization Response (see (#jarm)). This does not replace any JWKS for the Verifier that the Wallet has obtained from other sources (e.g. keys for verifying signed requests may have been obtained from [@!OpenID.Federation]).
+    * `vp_formats`: REQUIRED when not available to the wallet via another mechanism. As defined in (#client_metadata_parameters).
+    * `authorization_signed_response_alg`: OPTIONAL. As defined in [@!JARM].
+    * `authorization_encrypted_response_alg`: OPTIONAL. As defined in [@!JARM].
+    * `authorization_encrypted_response_enc`: OPTIONAL. As defined in [@!JARM].
 
 `request_uri_method`: 
 : OPTIONAL. A string determining the HTTP method to be used when the `request_uri` parameter is included in the same request. Two case-sensitive valid values are defined in this specification: `get` and `post`. If `request_uri_method` value is `get`, the Wallet MUST send the request to retrieve the Request Object using the HTTP GET method, i.e., as defined in [@RFC9101]. If `request_uri_method` value is `post`, a supporting Wallet MUST send the request using the HTTP POST method as detailed in (#request_uri_method_post). If the `request_uri_method` parameter is not present, the Wallet MUST process the `request_uri` parameter as defined in [@RFC9101]. Wallets not supporting the `post` method will send a GET request to the Request URI (default behavior as defined in [@RFC9101]). `request_uri_method` parameter MUST NOT be present if a `request_uri` parameter is not present.
@@ -2047,6 +2051,10 @@ The technology described in this specification was made available from contribut
 # Document History
 
    [[ To be removed from the final specification ]]
+
+   -22
+
+   * clarified what can go in the `client_metadata` parameter
 
    -21
 
