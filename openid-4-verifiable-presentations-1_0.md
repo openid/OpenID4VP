@@ -1972,7 +1972,7 @@ The following is a non-normative example of a request that combines this specifi
 ```
 GET /authorize?
   response_type=vp_token%20id_token
-  scope=openid
+  &scope=openid
   &id_token_type=subject_signed
   &client_id=https%3A%2F%2Fclient.example.org%2Fcb
   &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
