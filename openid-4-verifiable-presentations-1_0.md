@@ -304,7 +304,6 @@ GET /authorize?
 The following is a non-normative example of Authorization Request with request object as value:
 ```
 GET /authorize?
-  response_type=vp_token
   &client_id=https%3A%2F%2Fclient.example.org%2Fcb
   &request=eyJrd...
 ```
@@ -1973,6 +1972,7 @@ The following is a non-normative example of a request that combines this specifi
 ```
 GET /authorize?
   response_type=vp_token%20id_token
+  scope=openid
   &id_token_type=subject_signed
   &client_id=https%3A%2F%2Fclient.example.org%2Fcb
   &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
