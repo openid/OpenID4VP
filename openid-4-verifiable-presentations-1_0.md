@@ -432,7 +432,7 @@ Note: "https://self-issued.me/v2" is a symbolic string and can be used as an `au
 
 ## Verifier Metadata Management {#client_metadata_management}
 
-This specification defines additional mechanisms to allow Wallets to determine whether the provided `redirect_uri` and `response_uri` parameters and public verification keys belong to a particular Client on top of existing mechanisms such as [@!RFC7591], OpenID Federation [@!OpenID.Federation] or `client_metadata` parameter as defined by this specification. Additional Verifier Metadata is fetched using existing mechanisms, or using the `client_metadata` parameter.
+This specification defines additional mechanisms to enable Wallets to determine whether the provided `redirect_uri` and `response_uri` parameters and public verification keys belong to a particular Client, utilizing existing mechanisms such as Dynamic Client Registration [@!RFC7591], OpenID Federation [@!OpenID.Federation], and the `client_metadata` parameter defined by this specification. Additional Verifier Metadata is retrieved using existing mechanisms or the `client_metadata` parameter.
 
 The Wallet MUST verify the provided `redirect_uri` or `response_uri` belongs to the Client.
 
