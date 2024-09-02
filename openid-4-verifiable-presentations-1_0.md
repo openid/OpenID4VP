@@ -438,7 +438,7 @@ The Wallet MUST verify that the provided `redirect_uri` or `response_uri` belong
 
 If the Authorization Request is signed, the Wallet MUST authenticate the Request Object against the `client_id` contained in the Request Object. In this case, any `jwks` parameter in the `client_metadata` parameter MUST NOT be used to verify the signature of the Request Object.
 
-If the Verifier Metadata is not obtained from a trusted source and if the Authorization Request is unsigned, the Wallet MUST check if the `client_id` matches the `redirect_uri` or `response_uri` parameter. Note, examples for trusted sources include prior registration (e.g., using [@!RFC7591]) or other out-of-band processes that allow the Wallet to retrieve trusted Verifier Metadata for a particular Client.
+If the Verifier Metadata is not obtained from a trusted source and if the Authorization Request is unsigned, the Wallet MUST verify that the `client_id` matches the `redirect_uri` or `response_uri` parameter. Examples for trusted sources include prior registration (e.g., using [@!RFC7591]) or other out-of-band processes that allow the Wallet to retrieve trusted Verifier Metadata for a particular Client.
 
 The following is a list of methods defined by this specification that MAY be used by the Wallet to authenticate the Request Object and to verify that the `redirect_uri` or `response_uri` belongs to the Client:
 - Pre-registered: If the Client is pre-registered, the `jwks` Client Metadata parameter provided upon registration MUST be used to verify the signature of the Request Object. The `redirect_uris` Client Metadata parameter is used to verify the `redirect_uri` or `response_uri` for that Client. Note that the Wallet determines whether the Client is pre-registered.
