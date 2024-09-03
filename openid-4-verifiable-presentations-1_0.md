@@ -224,7 +224,6 @@ OpenID for Verifiable Presentations extends existing OAuth 2.0 mechanisms as fol
 * New Response Types `vp_token` and `vp_token id_token` are defined to request Verifiable Credentials to be returned in the Authorization Response (standalone or along with a Self-Issued ID Token [@!SIOPv2]). See (#response) for more details.
 * A new OAuth 2.0 Response Mode `direct_post` is defined to support sending the response across devices, or when the size of the response exceeds the redirect URL character size limitation. See (#response_mode_post) for more details.
 * The [@!DIF.PresentationExchange] `format` parameter is used throughout the protocol in order to enable customization according to the specific needs of a particular Credential format. Examples in (#alternative_credential_formats) are given for Credential formats as specified in [@VC_DATA], [@ISO.18013-5], [@!I-D.ietf-oauth-sd-jwt-vc], and [@Hyperledger.Indy].
-* A new `client_id_scheme` Authorization Request parameter is defined to enable deployments of this specification to use different mechanisms to obtain and validate metadata of the Verifier beyond the scope of [@!RFC6749].
 
 Presentation of Verifiable Credentials using OpenID for Verifiable Presentations can be combined with the user authentication using [@SIOPv2], and the issuance of OAuth 2.0 Access Tokens.
 
@@ -257,9 +256,6 @@ This specification defines the following new parameters:
 `presentation_definition_uri`:
 : A string containing an HTTPS URL pointing to a resource where a Presentation Definition JSON object can be retrieved. This parameter MUST be present when `presentation_definition` parameter, or a `scope` value representing a Presentation Definition is not present. See (#request_presentation_definition_uri) for more details.
 
-`client_id_scheme`: 
-: OPTIONAL. A string identifying the scheme of the value in the `client_id` Authorization Request parameter (Client Identifier scheme). The `client_id_scheme` parameter namespaces the respective Client Identifier. If an Authorization Request uses the `client_id_scheme` parameter, the Wallet MUST interpret the Client Identifier of the Verifier in the context of the Client Identifier scheme. If the parameter is not present, the Wallet MUST behave as specified in [@!RFC6749]. See (#client_metadata_management) for the values defined by this specification. If the same Client Identifier is used with different Client Identifier schemes, those occurrences MUST be treated as different Verifiers. Note that the Verifier needs to determine which Client Identifier schemes the Wallet supports prior to sending the Authorization Request in order to choose a supported scheme.
-
 `client_metadata`:
 : OPTIONAL. A JSON object containing the Verifier metadata values. It MUST be UTF-8 encoded.
 
@@ -269,7 +265,7 @@ A public key to be used by the Wallet as an input to the key agreement to encryp
 : OPTIONAL. A string determining the HTTP method to be used when the `request_uri` parameter is included in the same request. Two case-sensitive valid values are defined in this specification: `get` and `post`. If `request_uri_method` value is `get`, the Wallet MUST send the request to retrieve the Request Object using the HTTP GET method, i.e., as defined in [@RFC9101]. If `request_uri_method` value is `post`, a supporting Wallet MUST send the request using the HTTP POST method as detailed in (#request_uri_method_post). If the `request_uri_method` parameter is not present, the Wallet MUST process the `request_uri` parameter as defined in [@RFC9101]. Wallets not supporting the `post` method will send a GET request to the Request URI (default behavior as defined in [@RFC9101]). `request_uri_method` parameter MUST NOT be present if a `request_uri` parameter is not present.
 
 If the Verifier set the `request_uri_method` parameter value to `post` and there is no other means to convey its capabilities to the Wallet, it SHOULD add the `client_metadata` parameter to the Authorization Request. 
-This enables the Wallet to assess the Verifier's capabilities, allowing it to transmit only the relevant capabilities through the `wallet_metadata` parameter in the Request URI POST request. If the Verifier uses the `client_id_scheme` parameter in the Request Object, it MUST also add the same `client_id_scheme` value in the Authorization Request.   
+This enables the Wallet to assess the Verifier's capabilities, allowing it to transmit only the relevant capabilities through the `wallet_metadata` parameter in the Request URI POST request.
 
 The following additional considerations are given for pre-existing Authorization Request parameters:
 
@@ -293,12 +289,11 @@ GET /authorize?
   &nonce=n-0S6_WzA2Mj HTTP/1.1
 ```
 
-The following is a non-normative example of an Authorization Request with a `request_uri_method` parameter (including the additional `client_id_scheme` and `client_metadata` parameters): 
+The following is a non-normative example of an Authorization Request with a `request_uri_method` parameter (including the additional `client_metadata` parameter): 
 
 ```
 GET /authorize?
-  client_id=client.example.org
-  &client_id_scheme=x509_san_dns
+  &client_id=https%3A%2F%2Fclient.example.org%2Fcb
   &client_metadata=...
   &request_uri=https%3A%2F%2Fclient.example.org%2Frequest%2Fvapof4ql2i7m41m68uep
   &request_uri_method=post HTTP/1.1
@@ -469,7 +464,7 @@ The following parameters are defined:
 
 If the Wallet requires the Verifier to encrypt the Request Object, it SHOULD use the `jwks` or `jwks_uri` parameter within the `wallet_metadata` parameter to pass the public key for the input to the key agreement. Other mechanisms to pass the encryption key can be used as well. If the Wallet requires an encrypted Authorization Response, it SHOULD specify supported encryption algorithms using the `authorization_encryption_alg_values_supported` and `authorization_encryption_enc_values_supported` parameters. 
 
-Additionally, if the `client_id_scheme` value permits signed Request Objects, the Wallet SHOULD list supported cryptographic algorithms for securing the Request Object through the `request_object_signing_alg_values_supported` parameter. Conversely, the Wallet MUST NOT include this parameter if the `client_id_scheme` precludes signed Request Objects.
+Additionally, if the supports signed Request Objects, the Wallet SHOULD list supported cryptographic algorithms for securing the Request Object through the `request_object_signing_alg_values_supported` parameter. Conversely, the Wallet MUST NOT include this parameter if signed Request Objects are not supported.
 
 The following is a non-normative example of a request:
 
@@ -492,8 +487,7 @@ The following is a non-normative example of a request object:
 
 ```json
 {
-  "client_id": "client.example.org",
-  "client_id_scheme": "x509_san_dns",
+  "client_id": "https://client.example.org",
   "response_uri": "https://client.example.org/post",
   "response_type": "vp_token",
   "response_mode": "direct_post",
@@ -506,7 +500,7 @@ The following is a non-normative example of a request object:
 
 The Wallet MUST process the request as defined in [@RFC9101]. Additionally, if the Wallet passed a `wallet_nonce` in the POST request, the Wallet MUST validate whether the request object contains the respective nonce value in a `wallet_nonce` claim. If it does not, the Wallet MUST terminate request processing. 
 
-The Wallet MUST extract the set of Authorization Request parameters from the Request Object. The Wallet MUST only use the parameters in this Request Object, even if the same parameter was provided in an Authorization Request query parameter. The Client Identifier value in the `client_id` Authorization Request parameter and the Request Object `client_id` claim value MUST be identical. If the Authorization Request contains a `client_id_scheme` parameter, the `client_id_scheme` Authorization Request parameter and the Request Object `client_id_scheme` claim value MUST be identical. If any of these conditions are not met, the Wallet MUST terminate request processing.
+The Wallet MUST extract the set of Authorization Request parameters from the Request Object. The Wallet MUST only use the parameters in this Request Object, even if the same parameter was provided in an Authorization Request query parameter. The Client Identifier value in the `client_id` Authorization Request parameter and the Request Object `client_id` claim value MUST be identical. If any of these conditions are not met, the Wallet MUST terminate request processing.
 
 The Wallet then validates the request as specified in OAuth 2.0 [@RFC6749].
 
@@ -607,7 +601,6 @@ The following is a non-normative example of the payload of a Request Object with
 ```json
 {
   "client_id": "https://client.example.org/post",
-  "client_id_scheme": "redirect_uri",
   "response_uri": "https://client.example.org/post",
   "response_type": "vp_token",
   "response_mode": "direct_post",
@@ -645,7 +638,7 @@ Host: client.example.org
 Content-Type: application/x-www-form-urlencoded
 
   error=invalid_request&
-  error_description=unsupported%20client_id_scheme&
+  error_description=invalid%20request&
   state=eyJhb...6-sVA
 ```
 
@@ -730,7 +723,6 @@ The error response follows the rules as defined in [@!RFC6749], with the followi
 - The request contains more than one out of the following three options to communicate a requested Credential: a `presentation_definition` parameter, a `presentation_definition_uri` parameter, or a scope value representing a Presentation Definition.
 - The request uses the `vp_token` Response Type but does not request a Credential using any of the three options
 - Requested Presentation Definition does not conform to the DIF PEv2 specification [@!DIF.PresentationExchange].
-- The Wallet does not support the `client_id_scheme` value passed in the Authorization Request.
 - The Client Identifier passed in the request did not belong to the Client Identifier scheme indicated in the Authorization Request, or requirements of a certain scheme was violated, for example an unsigned request was sent with Client Identifier scheme `entity_id`.
 
 `invalid_client`:
@@ -818,9 +810,6 @@ The following is a non-normative example of a `vp_formats_supported` parameter:
 }
 ```
 
-`client_id_schemes_supported`:
-: OPTIONAL. Array of JSON Strings containing the values of the Client Identifier schemes that the Wallet supports. The values defined by this specification are `pre-registered`, `redirect_uri`, `entity_id`, `did`. If omitted, the default value is `pre-registered`. Other values may be used when defined in the profiles of this specification.
-
 ## Obtaining Wallet's Metadata
 
 Verifier utilizing this specification has multiple options to obtain Wallet's metadata:
@@ -844,7 +833,7 @@ Deployments can extend the formats supported, provided Issuers, Holders and Veri
 
 # Verifier Attestation JWT {#verifier_attestation_jwt}
 
-The Verifier Attestation JWT is a JWT especially designed to allow a Wallet to authenticate a Verifier in a secure and flexible manner. A Verifier Attestation JWT is issued to the Verifier by a party that wallets trust for the purpose of authentication and authorization of Verifiers. The way this trust established is out of scope of this specification. Every Verifier is bound to a public key, the Verifier MUST always present a Verifier Attestation JWT along with the proof of possession for this key. In the case of the `client_id_scheme` `verifier_attestation`, the authorization request is signed with this key, which serves as proof of possession.
+The Verifier Attestation JWT is a JWT especially designed to allow a Wallet to authenticate a Verifier in a secure and flexible manner. A Verifier Attestation JWT is issued to the Verifier by a party that wallets trust for the purpose of authentication and authorization of Verifiers. The way this trust established is out of scope of this specification. Every Verifier is bound to a public key, the Verifier MUST always present a Verifier Attestation JWT along with the proof of possession for this key. In the case the Authorization Request is signed with this key, the Request Object serves as proof of possession.
 
 A Verifier Attestation JWT MUST contain the following claims:
 
@@ -1539,7 +1528,6 @@ try {
 Out of the Authorization Request parameters defined in [@!RFC6749] and (#vp_token_request), the following are supported with this profile: 
 
 * `client_id`
-* `client_id_scheme`
 * `response_type`
 * `response_mode`
 * `nonce`
@@ -1547,7 +1535,7 @@ Out of the Authorization Request parameters defined in [@!RFC6749] and (#vp_toke
 * `client_metadata`
 * `request`
 
-The `client_id` and `client_id_scheme` MUST be omitted in unsigned requests defined in (#unsigned_request). The Wallet determines the Client Identifier from the origin as asserted by the Web Platform and/or app platform. The transport of the request and origin from the Web Platform and/or app platform to the Wallet is platform-specific and is out of scope of this profile.
+The `client_id` MUST be omitted in unsigned requests defined in (#unsigned_request). The Wallet determines the Client Identifier from the origin as asserted by the Web Platform and/or app platform. The transport of the request and origin from the Web Platform and/or app platform to the Wallet is platform-specific and is out of scope of this profile.
 
 The value of the `response_mode` parameter MUST be `w3c_dc_api` when the response is neither signed nor encrypted and `w3c_dc_api.jwt` when the response is signed and/or encrypted as defined in (#jarm).
 
@@ -2019,6 +2007,9 @@ The technology described in this specification was made available from contribut
 # Document History
 
    [[ To be removed from the final specification ]]
+
+   -22
+   * Removed `client_id_scheme` parameter
 
    -21
 
