@@ -449,7 +449,7 @@ The following is a list of methods defined by this specification that MAY be use
 
 It is a policy decision by the Wallet which method to choose to authenticate the Request Object and whether to accept unsigned Authorization Requests.
 
-Note: To prevent downgrade attacks, a Client can choose to include certain parameters in the Request Object or not.
+Note: To prevent downgrade attacks, the Client can choose to enable only specific methods in the Request Object, such as the ones defined above.
 
 Other specifications or ecosystem regulations MAY define rules complementing the rules defined above, but such extensions are out of scope of this specification.
 
