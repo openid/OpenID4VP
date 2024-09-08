@@ -811,13 +811,19 @@ Note: Some of the processing rules of the Presentation Definition and the Presen
 
 The Verifier has the choice of the following mechanisms to invoke a Wallet:
 
-- Custom URL scheme as an `authorization_endpoint` (for example, `openid4vp://` as defined in (#openid4vp-profile))
+- Custom URL scheme as an `authorization_endpoint` (for example, `openid4vp://` as defined in (#openid4vp-custom-url-scheme))
 - Domain-bound Universal Links/App link as an `authorization_endpoint`
 - no specific `authorization_endpoint`, user scanning a QR code with Authorization Request using a manually opened Wallet, instead of an arbitrary camera application on a user-device (neither custom URL scheme nor Universal/App link is used)
 
 # Wallet Metadata (Authorization Server Metadata) {#as_metadata_parameters}
 
 This specification defines how the Verifier can determine Credential formats, proof types and algorithms supported by the Wallet to be used in a protocol exchange.
+
+## Authorization Endpoint Custom URL Scheme {#openid4vp-custom-url-scheme}
+
+The custom URL scheme representing the Authorization Endpoint defined in this specification is `openid4vp`.
+Implementations that use the custom URL scheme defined in this specification MUST configure their `authorization_endpoint` metadata parameter the value `openid4vp://`, presenting the custom URL scheme along with the hier-part and separated by a colon, as defined in [@!RFC3986]].
+
 
 ## Additional Wallet Metadata Parameters
 
@@ -909,13 +915,13 @@ The following is a list of profiles that define static configuration values of W
 
 - [JWT VC Presentation Profile](https://identity.foundation/jwt-vc-presentation-profile/)
 
-### A Set of Static Configuration Values bound to `openid4vp://` {#openid4vp-profile}
+### A Set of Static Configuration Values bound to `openid4vp://` {#openid4vp-profile-consd}
 
-The following is a non-normative example of a set of static configuration values that can be used with `vp_token` parameter as a supported Response Type, bound to a custom URL scheme `openid4vp://` as an Authorization Endpoint:
+Below is a non-normative example of a set of static configuration values that can be used with `vp_token` parameter as a supported Response Type, bound to the `openid4vp` Authorization Endpoint in the form of custom URL scheme. 
 
 ```json
 {
-  "authorization_endpoint": "openid4vp:",
+  "authorization_endpoint": "openid4vp://",
   "response_types_supported": [
     "vp_token"
   ],
