@@ -589,7 +589,7 @@ Including the `presentation_submission` parameter as a separate response paramet
 
 Additional response parameters MAY be defined and used,
 as described in [@!RFC6749].
-The client MUST ignore any unrecognized parameters.
+The Client MUST ignore any unrecognized parameters.
 
 The following is a non-normative example of an Authorization Response when the Response Type value in the Authorization Request was `vp_token`: 
 
