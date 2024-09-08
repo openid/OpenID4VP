@@ -911,7 +911,7 @@ The following is a list of profiles that define static configuration values of W
 
 ### A Set of Static Configuration Values bound to `openid4vp://` {#openid4vp-profile}
 
-The following is a non-normative example of a set of static configuration values that can be used with vp_token parameter as a supported Response Type, bound to a custom URL scheme `openid4vp://` as an Authorization Endpoint
+The following is a non-normative example of a set of static configuration values that can be used with vp_token parameter as a supported Response Type, bound to a custom URL scheme `openid4vp://` as an Authorization Endpoint:
 
 ```json
 {
