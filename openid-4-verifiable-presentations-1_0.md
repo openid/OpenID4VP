@@ -822,7 +822,7 @@ This specification defines how the Verifier can determine Credential formats, pr
 ## Authorization Endpoint Custom URL Scheme {#openid4vp-custom-url-scheme}
 
 The custom URL scheme representing the Authorization Endpoint defined in this specification is `openid4vp`.
-Implementations that use the custom URL scheme defined in this specification MUST configure their `authorization_endpoint` metadata parameter the value `openid4vp://`, presenting the custom URL scheme along with the hier-part and separated by a colon, as defined in [@!RFC3986]].
+Implementations that use the custom URL scheme defined in this specification MUST configure their `authorization_endpoint` metadata parameter using the value `openid4vp://`, presenting the custom URL scheme along with the hier-part and separated by a colon, as defined in [@!RFC3986]].
 
 
 ## Additional Wallet Metadata Parameters
