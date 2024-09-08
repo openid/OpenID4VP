@@ -915,7 +915,7 @@ The following is a list of profiles that define static configuration values of W
 
 - [JWT VC Presentation Profile](https://identity.foundation/jwt-vc-presentation-profile/)
 
-### A Set of Static Configuration Values bound to `openid4vp://` {#openid4vp-profile-consd}
+### A Set of Static Configuration Values bound to `openid4vp://` {#openid4vp-profile}
 
 Below is a non-normative example of a set of static configuration values that can be used with `vp_token` parameter as a supported Response Type, bound to the `openid4vp` Authorization Endpoint in the form of custom URL scheme. 
 
