@@ -893,7 +893,7 @@ This specification defines the following new Client metadata parameters accordin
 : REQUIRED. An object defining the formats and proof types of Verifiable Presentations and Verifiable Credentials that a Verifier supports. For specific values that can be used, see (#alternative_credential_formats).
 Deployments can extend the formats supported, provided Issuers, Holders and Verifiers all understand the new format.
 
-Additional verifier metadata parameters MAY be defined and used,
+Additional Verifier metadata parameters MAY be defined and used,
 as described in [@!RFC7591].
 The Wallet MUST ignore any unrecognized parameters.
 
