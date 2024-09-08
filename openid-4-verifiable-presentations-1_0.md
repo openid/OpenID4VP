@@ -870,7 +870,7 @@ The following is a non-normative example of a `vp_formats_supported` parameter:
 
 Additional wallet metadata parameters MAY be defined and used,
 as described in [@!RFC8414].
-The verifier MUST ignore any unrecognized parameters.
+The Verifier MUST ignore any unrecognized parameters.
 
 ## Obtaining Wallet's Metadata
 
