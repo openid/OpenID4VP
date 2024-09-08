@@ -887,7 +887,7 @@ This specification defines how the Wallet can determine Credential formats, proo
 
 ## Additional Verifier Metadata Parameters {#client_metadata_parameters}
 
-This specification defines the following new client metadata parameters according to [@!RFC7591], to be used by the Verifier:
+This specification defines the following new Client metadata parameters according to [@!RFC7591], to be used by the Verifier:
 
 `vp_formats`:
 : REQUIRED. An object defining the formats and proof types of Verifiable Presentations and Verifiable Credentials that a Verifier supports. For specific values that can be used, see (#alternative_credential_formats).
