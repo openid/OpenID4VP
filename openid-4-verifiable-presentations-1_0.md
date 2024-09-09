@@ -1646,7 +1646,7 @@ if (credential.protocol == "openid4vp") {
 }
 ```
 
-# Examples with Credentials in Various Formats {#alternative_credential_formats}
+# Credential Format Profiles {#alternative_credential_formats}
 
 OpenID for Verifiable Presentations is Credential Format agnostic, i.e., it is designed to allow applications to request and receive Verifiable Presentations and Verifiable Credentials in any Credential Format. This section defines Credential Format Profiles for some of the known Credential Formats. Other specifications or deployments can define their own Credential Format Profiles.
 
