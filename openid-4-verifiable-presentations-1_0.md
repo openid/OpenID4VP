@@ -263,15 +263,15 @@ This specification defines the following new parameters:
 `client_metadata`:
 : OPTIONAL. A JSON object containing the Verifier metadata values. It MUST be UTF-8 encoded. The following metadata parameters MAY be used:
 
-    * `jwks`: OPTIONAL. A JWKS that can contain a public key with the `"use": "enc"` claim to be used by the Wallet as an input to the key agreement to encrypt the Authorization Response (see (#jarm)). This does not replace any JWKS for the Verifier that the Wallet has obtained from other sources (e.g. keys for verifying signed requests may have been obtained from [@!OpenID.Federation]). This allows the verifier to pass an empheral encryption key that is only used for this authorization request. 
+    * `jwks`: OPTIONAL. A JWKS as defined in [@!RFC7591] that can contain one or more public keys with the `"use": "enc"` parameter to be used by the Wallet as an input to the key agreement to encrypt the Authorization Response (see (#jarm)). This allows the verifier to pass an empheral encryption key that is only used for this authorization request. Public keys included in the `jwks` parameter MUST NOT be used to verify the signature of signed Authorization Requests.
     * `vp_formats`: REQUIRED when not available to the wallet via another mechanism. As defined in (#client_metadata_parameters).
     * `authorization_signed_response_alg`: OPTIONAL. As defined in [@!JARM].
     * `authorization_encrypted_response_alg`: OPTIONAL. As defined in [@!JARM].
     * `authorization_encrypted_response_enc`: OPTIONAL. As defined in [@!JARM].
 
-    Values passed in `client_metadata` MUST NOT override authorative data the wallet is able to obtain about the client from other sources, for example those from an OpenID Federation Entity Statement.
+    Authoritative data the wallet is able to obtain about the client from other sources, for example those from an OpenID Federation Entity Statement, take precedence over the values passed in `client_metadata`.
 
-    Other metadata parameters defined in, for example, Section 4.3 and Section 2.1 of the OpenID Connect Dynamic Client Registration 1.0 [@!OpenID.Registration] specification or [@!RFC7591] MUST NOT be used unless a profile of this specification explicitly defines them as usable in the `client_metadata` parameter.
+    Other metadata parameters MUST be ignored unless a profile of this specification explicitly defines them as usable in the `client_metadata` parameter.
 
 `request_uri_method`: 
 : OPTIONAL. A string determining the HTTP method to be used when the `request_uri` parameter is included in the same request. Two case-sensitive valid values are defined in this specification: `get` and `post`. If `request_uri_method` value is `get`, the Wallet MUST send the request to retrieve the Request Object using the HTTP GET method, i.e., as defined in [@RFC9101]. If `request_uri_method` value is `post`, a supporting Wallet MUST send the request using the HTTP POST method as detailed in (#request_uri_method_post). If the `request_uri_method` parameter is not present, the Wallet MUST process the `request_uri` parameter as defined in [@RFC9101]. Wallets not supporting the `post` method will send a GET request to the Request URI (default behavior as defined in [@RFC9101]). `request_uri_method` parameter MUST NOT be present if a `request_uri` parameter is not present.
