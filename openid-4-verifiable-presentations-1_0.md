@@ -145,7 +145,7 @@ Note: The diagram does not illustrate all the optional features of this specific
 !---
 ~~~ ascii-art
 +--------------+   +--------------+                                    +--------------+
-|     User     |   |   Verifier   |                                    |    Wallet    |
+|   End-User   |   |   Verifier   |                                    |    Wallet    |
 +--------------+   +--------------+                                    +--------------+  
         |                 |                                                   |
         |    Interacts    |                                                   |
@@ -155,7 +155,7 @@ Note: The diagram does not illustrate all the optional features of this specific
         |                 |-------------------------------------------------->|
         |                 |                                                   |
         |                 |                                                   |
-        |   User Authentication / Consent                                     |
+        |   End-User Authentication / Consent                                 |
         |                 |                                                   |
         |                 |  (2)   Authorization Response                     |
         |                 |  (VP Token with Verifiable Presentation(s))       |
@@ -172,7 +172,7 @@ Figure: Same Device Flow
 
 Below is a diagram of a flow where the End-User presents a Credential to a Verifier interacting with the End-User on a different device as the device the Wallet resides on.
 
-In this flow, the Verifier prepares an Authorization Request and renders it as a QR Code. The User then uses the Wallet to scan the QR Code. The Verifiable Presentations are sent to the Verifier in a direct HTTP POST request to a URL controlled by the Verifier. The flow uses the Response Type `vp_token` in conjunction with the Response Mode `direct_post`, both defined in this specification. In order to keep the size of the QR Code small and be able to sign and optionally encrypt the Request Object, the actual Authorization Request contains just a Request URI according to [@!RFC9101], which the wallet uses to retrieve the actual Authorization Request data.
+In this flow, the Verifier prepares an Authorization Request and renders it as a QR Code. The End-User then uses the Wallet to scan the QR Code. The Verifiable Presentations are sent to the Verifier in a direct HTTP POST request to a URL controlled by the Verifier. The flow uses the Response Type `vp_token` in conjunction with the Response Mode `direct_post`, both defined in this specification. In order to keep the size of the QR Code small and be able to sign and optionally encrypt the Request Object, the actual Authorization Request contains just a Request URI according to [@!RFC9101], which the wallet uses to retrieve the actual Authorization Request data.
 
 Note: The diagram does not illustrate all the optional features of this specification.
 
@@ -181,7 +181,7 @@ Note: The usage of the Request URI as defined in [@!RFC9101] does not depend on 
 !---
 ~~~ ascii-art
 +--------------+   +--------------+                                    +--------------+
-|     User     |   |   Verifier   |                                    |    Wallet    |
+|   End-User   |   |   Verifier   |                                    |    Wallet    |
 |              |   |  (device A)  |                                    |  (device B)  |
 +--------------+   +--------------+                                    +--------------+
         |                 |                                                   |
@@ -198,7 +198,7 @@ Note: The usage of the Request URI as defined in [@!RFC9101] does not depend on 
         |                 |      (Presentation Definition)                    |
         |                 |-------------------------------------------------->|
         |                 |                                                   |
-        |   User Authentication / Consent                                     |
+        |   End-User Authentication / Consent                                 |
         |                 |                                                   |
         |                 |  (3)   Authorization Response as HTTP POST        |
         |                 |  (VP Token with Verifiable Presentation(s))       |
@@ -226,7 +226,7 @@ OpenID for Verifiable Presentations extends existing OAuth 2.0 mechanisms as fol
 * The [@!DIF.PresentationExchange] `format` parameter is used throughout the protocol in order to enable customization according to the specific needs of a particular Credential format. Examples in (#alternative_credential_formats) are given for Credential formats as specified in [@VC_DATA], [@ISO.18013-5], [@!I-D.ietf-oauth-sd-jwt-vc], and [@Hyperledger.Indy].
 * A new `client_id_scheme` Authorization Request parameter is defined to enable deployments of this specification to use different mechanisms to obtain and validate metadata of the Verifier beyond the scope of [@!RFC6749].
 
-Presentation of Verifiable Credentials using OpenID for Verifiable Presentations can be combined with the user authentication using [@SIOPv2], and the issuance of OAuth 2.0 Access Tokens.
+Presentation of Verifiable Credentials using OpenID for Verifiable Presentations can be combined with the End-User authentication using [@SIOPv2], and the issuance of OAuth 2.0 Access Tokens.
 
 # Authorization Request {#vp_token_request}
 
@@ -809,11 +809,11 @@ Note: Some of the processing rules of the Presentation Definition and the Presen
 
 # Wallet Invocation {#wallet-invocation}
 
-The Verifier has the choice of the following mechanisms to invoke a Wallet:
+The Verifier can use one of the following mechanisms to invoke a Wallet:
 
 - Custom URL scheme as an `authorization_endpoint` (for example, `openid4vp://` as defined in (#openid4vp-profile))
 - Domain-bound Universal Links/App link as an `authorization_endpoint`
-- no specific `authorization_endpoint`, user scanning a QR code with Authorization Request using a manually opened Wallet, instead of an arbitrary camera application on a user-device (neither custom URL scheme nor Universal/App link is used)
+- no specific `authorization_endpoint`, End-User scanning a QR code with Authorization Request using a manually opened Wallet, instead of an arbitrary camera application on a user-device (neither custom URL scheme nor Universal/App link is used)
 
 # Wallet Metadata (Authorization Server Metadata) {#as_metadata_parameters}
 
@@ -933,11 +933,12 @@ The following is a non-normative example of a set of static configuration values
 }
 ```
 
+
 ## Support for Federations/Trust Schemes
 
 Often Verifiers will want to request Verifiable Credentials from a Credential Issuer who is a participant of a federation, or adheres to a known trust scheme, rather than from a specific Credential Issuer, for example, a "BSc Chemistry Degree" Credential from the hypothetical "eduCreds" trust scheme rather than from a specifically named university.
 
-To facilitate this, federations will need to determine how a Credential Issuer can indicate in a Verifiable Credential that they are a member of one or more federations/trust schemes. Once this is done, the Verifier will be able to create a `presentation_definition` that includes this filtering criteria. This will enable the Wallet to select all the Verifiable Credentials that match this criteria and then by some means (for example, by asking the user) determine which matching Verifiable Credential to return to the Verifier. Upon receiving this Verifiable Credential, the Verifier will be able to call its federation API to determine if the Credential Issuer is indeed a member of the federation/trust scheme that it says it is.
+To facilitate this, federations will need to determine how a Credential Issuer can indicate in a Verifiable Credential that they are a member of one or more federations/trust schemes. Once this is done, the Verifier will be able to create a `presentation_definition` that includes this filtering criteria. This will enable the Wallet to select all the Verifiable Credentials that match this criteria and then by some means (for example, by asking the End-User) determine which matching Verifiable Credential to return to the Verifier. Upon receiving this Verifiable Credential, the Verifier will be able to call its federation API to determine if the Credential Issuer is indeed a member of the federation/trust scheme that it says it is.
 
 Indicating the federations/trust schemes used by a Credential Issuer MAY be achieved by defining a `termsOfUse` property [@!VC_DATA].
 
@@ -990,10 +991,10 @@ The design is illustrated in the following sequence diagram:
 
 !---
 ~~~ ascii-art
-+-------+   +------------+           +---------------------+                 +----------+
-| User  |   |  Verifier  |           |  Verifier           |                 |  Wallet  |
-|       |   |            |           |  Response URI       |                 |          |
-+-------+   +------------+           +---------------------+                 +----------+  
++--------+   +------------+           +---------------------+                 +----------+
+|End-User|   |  Verifier  |           |  Verifier           |                 |  Wallet  |
+|        |   |            |           |  Response Endpoint  |                 |          |
++--------+   +------------+           +---------------------+                 +----------+  
     |              |                            |                                  |
     |   interacts  |                            |                                  |
     |------------->|                            |                                  |
@@ -1012,7 +1013,7 @@ The design is illustrated in the following sequence diagram:
     |              |      (response_uri, nonce, state)                             |
     |              |-------------------------------------------------------------->|
     |              |                            |                                  |
-    |              User Authentication / Consent                                   |
+    |              End-User Authentication / Consent                               |
     |              |                            |                                  |
     |              |                            | (5) Authorization Response       |
     |              |                            |     (VP Token, state)            |
@@ -1171,9 +1172,9 @@ Implementations of this specification MUST have security mechanisms in place to 
 * Authentication between the different parts within the Verifier
 * Two cryptographically random numbers.  The first being used to manage state between the Wallet and Verifier. The second being used to ensure that only a legitimate component of the Verifier can obtain the Authorization Response data.
 
-## User Authentication using Verifiable Credentials
+## End-User Authentication using Verifiable Credentials
 
-Clients intending to authenticate the end-user utilizing a claim in a Verifiable Credential MUST ensure this claim is stable for the end-user as well locally unique and never reassigned within the Credential Issuer to another end-user. Such a claim MUST also only be used in combination with the Credential Issuer identifier to ensure global uniqueness and to prevent attacks where an attacker obtains the same claim from a different Credential Issuer and tries to impersonate the legitimate user.
+Clients intending to authenticate the End-User utilizing a claim in a Verifiable Credential MUST ensure this claim is stable for the End-User as well locally unique and never reassigned within the Credential Issuer to another End-User. Such a claim MUST also only be used in combination with the Credential Issuer identifier to ensure global uniqueness and to prevent attacks where an attacker obtains the same claim from a different Credential Issuer and tries to impersonate the legitimate End-User.
 
 ## Encrypting an Unsigned Response {#encrypting_unsigned_response}
 
@@ -1205,15 +1206,15 @@ Whenever TLS is used, a TLS server certificate check MUST be performed, per [@!R
 
 If the Wallet is acting within a trust framework that allows the Wallet to determine whether a 'request_uri' belongs to a certain 'client_id', the Wallet is RECOMMENDED to validate the Verifier's authenticity and authorization given by 'client_id' and that the 'request_uri' corresponds to this Verifier. If the link cannot be established in those cases, the Wallet SHOULD refuse the request or ask the End-User for advise.
 
-If no user interaction is required before sending the request, it is easy to request on a large scale and in an automated fashion the wallet capabilities from all visitors of a website. Even without personally identifiable information (PII) this can reveal some information about users, like their nationality (e.g., a Wallet with special capabilities only used in one EU member state).
+If no End-User interaction is required before sending the request, it is easy to request on a large scale and in an automated fashion the wallet capabilities from all visitors of a website. Even without personally identifiable information (PII) this can reveal some information about End-Users, like their nationality (e.g., a Wallet with special capabilities only used in one EU member state).
 
-Mandatory user interaction before sending the request, like clicking a button, unlocking the wallet or even just showing a screen of the app, can make this less attractive/likely to being exploited.
+Mandatory End-User interaction before sending the request, like clicking a button, unlocking the wallet or even just showing a screen of the app, can make this less attractive/likely to being exploited.
 
-Requests from the Wallet to the Verifier SHOULD be sent with the minimal amount of information possible, and in particular, without any HTTP headers identifying the software used for the request (e.g., HTTP libraries or their versions). The Wallet MUST NOT send PII or any other data that could be used for fingerprinting to the Request URI in order to prevent user tracking. 
+Requests from the Wallet to the Verifier SHOULD be sent with the minimal amount of information possible, and in particular, without any HTTP headers identifying the software used for the request (e.g., HTTP libraries or their versions). The Wallet MUST NOT send PII or any other data that could be used for fingerprinting to the Request URI in order to prevent End-User tracking. 
 
 ## Authorization Error Response with the `wallet_unavailable` error code
 
-In the event that another component is invoked instead of the Wallet, the user MUST be informed and give consent before the invoked component returns the `wallet_unavailable` Authorization Error Response to the Verifier.
+In the event that another component is invoked instead of the Wallet, the End-User MUST be informed and give consent before the invoked component returns the `wallet_unavailable` Authorization Error Response to the Verifier.
 
 {backmatter}
 
@@ -1526,9 +1527,9 @@ This OpenID4VP profile utilizes the mechanisms of the W3C Digital Credentials AP
 
 The Digital Credentials API offers several advantages for implementers of both Verifiers and Wallets. 
 
-Firstly, the API serves as a privacy-preserving alternative to invoking Wallets via URLs, particularly custom URL schemes. The underlying app platform will only invoke a Wallet if the user confirms the request based on contextual information about the credential request and the requestor (Verifier). 
+Firstly, the API serves as a privacy-preserving alternative to invoking Wallets via URLs, particularly custom URL schemes. The underlying app platform will only invoke a Wallet if the End-User confirms the request based on contextual information about the credential request and the requestor (Verifier). 
 
-Secondly, the session with the user will always continue in the initial context, typically a browser tab, when the request has been fulfilled (or aborted), which results in an improved user experience.
+Secondly, the session with the End-User will always continue in the initial context, typically a browser tab, when the request has been fulfilled (or aborted), which results in an improved user experience.
 
 Thirdly, cross-device requests benefit from the use of secure transports with proximity checks, which are handled by the OS platform, e.g., using FIDO CTAP 2.2 with hybrid transports.
 
@@ -1794,7 +1795,7 @@ The following is a non-normative example of the content of the `presentation_sub
 
 <{{examples/response/ps_ac_vc_sd.json}}
 
-The `descriptor_map` refers to the `input_descriptor` element with an identifier `id_credential` and tells the Verifier that there is a proof of AnonCred Credential (`format` is `ac_vp`) directly in the vp_token (path is the root designated by `$`). Furthermore, it indicates using `path_nested` parameter that the user claims can be found embedded in the proof underneath `requested_proof.revealed_attr_groups.id_card_credential`.
+The `descriptor_map` refers to the `input_descriptor` element with an identifier `id_credential` and tells the Verifier that there is a proof of AnonCred Credential (`format` is `ac_vp`) directly in the vp_token (path is the root designated by `$`). Furthermore, it indicates using `path_nested` parameter that the End-User claims can be found embedded in the proof underneath `requested_proof.revealed_attr_groups.id_card_credential`.
 
 The following is the content of the `vp_token` parameter:
 
@@ -1923,7 +1924,7 @@ Note: The Key Binding JWT `nonce` claim contains the value of the `nonce` from t
 
 ## Combining this specification with SIOPv2
 
-This section shows how SIOP and OpenID for Verifiable Presentations can be combined to present Verifiable Credentials and pseudonymously authenticate an end-user using subject controlled key material.
+This section shows how SIOP and OpenID for Verifiable Presentations can be combined to present Verifiable Credentials and pseudonymously authenticate an End-User using subject controlled key material.
 
 ### Request {#siop_request}
 
