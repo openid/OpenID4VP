@@ -1361,22 +1361,6 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
   </front>
 </reference>
 
-<reference anchor="OpenID.Registration" target="https://openid.net/specs/openid-connect-registration-1_0.html">
-        <front>
-          <title>OpenID Connect Dynamic Client Registration 1.0 incorporating errata set 1</title>
-		  <author fullname="Nat Sakimura">
-            <organization>NRI</organization>
-          </author>
-          <author fullname="John Bradley">
-            <organization>Ping Identity</organization>
-          </author>
-          <author fullname="Michael B. Jones">
-            <organization>Microsoft</organization>
-          </author>
-          <date day="8" month="Nov" year="2014"/>
-        </front>
- </reference>
-
 <reference anchor="Hyperledger.Indy" target="https://www.hyperledger.org/use/hyperledger-indy">
         <front>
           <title>Hyperledger Indy Project</title>
