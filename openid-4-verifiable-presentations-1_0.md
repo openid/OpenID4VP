@@ -624,11 +624,11 @@ The Response Mode is defined in accordance with [@!OAuth.Responses] as follows:
 The following new Authorization Request parameter is defined to be used in conjunction with Response Mode `direct_post`: 
 
 `response_uri`:
-: REQUIRED when the Response Mode `direct_post` is used. The Response URI to which the Wallet MUST send the Authorization Response using an HTTP POST request as defined by the Response Mode `direct_post`. The Response URI receives all Authorization Response parameters as defined by the respective Response Type. When the `response_uri` parameter is present, the `redirect_uri` Authorization Request parameter MUST NOT be present. If the `redirect_uri` Authorization Request parameter is present when the Response Mode is `direct_post`, the Wallet MUST return an `invalid_request` Authorization Response error. The `response_uri` value MUST be a value that the client would be permitted to use as `redirect_uri` when following the rules defined in (#client_metadata_management).
+: REQUIRED when the Response Mode `direct_post` is used. The URL to which the Wallet MUST send the Authorization Response using an HTTP POST request as defined by the Response Mode `direct_post`. The Response URI receives all Authorization Response parameters as defined by the respective Response Type. When the `response_uri` parameter is present, the `redirect_uri` Authorization Request parameter MUST NOT be present. If the `redirect_uri` Authorization Request parameter is present when the Response Mode is `direct_post`, the Wallet MUST return an `invalid_request` Authorization Response error. The `response_uri` value MUST be a value that the client would be permitted to use as `redirect_uri` when following the rules defined in (#client_metadata_management).
 
 Note: When the specification text refers to the usage of Redirect URI in the Authorization Request, that part of the text also applies when Response URI is used in the Authorization Request with Response Mode `direct_post`.
 
-Note: The Verifier's component providing the user interface (Frontend) and the Verifier's component providing the Response URI (Response Endpoint) need to be able to map authorization requests to the respective authorization responses. The Verifier MAY use the `state` Authorization Request parameter to add appropriate data to the Authorization Response for that purpose, for details see (#implementation_considerations_direct_post). 
+Note: The Verifier's component providing the user interface (Frontend) and the Verifier's component providing the Response URI need to be able to map authorization requests to the respective authorization responses. The Verifier MAY use the `state` Authorization Request parameter to add appropriate data to the Authorization Response for that purpose, for details see (#implementation_considerations_direct_post).
 
 The following is a non-normative example of the payload of a Request Object with Response Mode `direct_post`:
 
@@ -653,7 +653,7 @@ https://wallet.example.com?
   &request_uri=https%3A%2F%2Fclient.example.org%2F567545564
 ```
 
-The following is a non-normative example of the Authorization Response that is sent via an HTTP POST request to the Verifier's Response Endpoint:
+The following is a non-normative example of the Authorization Response that is sent via an HTTP POST request to the Verifier's Response URI:
 
 ```
 POST /post HTTP/1.1
@@ -665,7 +665,7 @@ Content-Type: application/x-www-form-urlencoded
   state=eyJhb...6-sVA
 ```
 
-The following is a non-normative example of an Authorization Error Response that is sent as an HTTP POST request to the Verifier's Response Endpoint:
+The following is a non-normative example of an Authorization Error Response that is sent as an HTTP POST request to the Verifier's Response URI:
 
 ```
 POST /post HTTP/1.1
@@ -677,18 +677,18 @@ Content-Type: application/x-www-form-urlencoded
   state=eyJhb...6-sVA
 ```
 
-If the Response Endpoint has successfully processed the Authorization Response or Authorization Error Response, it MUST respond with HTTP status code 200.
+If the Response URI has successfully processed the Authorization Response or Authorization Error Response, it MUST respond with HTTP status code 200.
 
 The following new parameter is defined for use in the response from the endpoint:
 
 `redirect_uri`:
-: OPTIONAL. String containing a URI. When this parameter is present the Wallet MUST redirect the user agent to this URI. This allows the Verifier to continue the interaction with the End-User on the device where the Wallet resides after the Wallet has sent the Authorization Response to the Response Endpoint. It can be used by the Verifier to prevent session fixation ((#session_fixation)) attacks. The Response Endpoint MAY return the `redirect_uri` parameter in response to successful Authorization Responses or for Error Responses.
+: OPTIONAL. String containing a URI. When this parameter is present the Wallet MUST redirect the user agent to this URI. This allows the Verifier to continue the interaction with the End-User on the device where the Wallet resides after the Wallet has sent the Authorization Response to the Response URI. It can be used by the Verifier to prevent session fixation ((#session_fixation)) attacks. The Response URI MAY return the `redirect_uri` parameter in response to successful Authorization Responses or for Error Responses.
 
 Note: Response Mode `direct_post` without the `redirect_uri` could be less secure than Response Modes with redirects. For details, see ((#session_fixation)).
 
 The value of the redirect URI is an absolute URI as defined by [@!RFC3986] Section 4.3 and is chosen by the Verifier. The Verifier MUST include a fresh, cryptographically random value in the URL. This value is used to ensure only the receiver of the redirect can fetch and process the Authorization Response. The value can be added as a path component, as a fragment or as a parameter to the URL. It is RECOMMENDED to use a cryptographic random value of 128 bits or more. For implementation considerations see (#implementation_considerations_direct_post).
 
-The following is a non-normative example of the response from the Verifier to the Wallet upon receiving the Authorization Response at the Response Endpoint (using a `response_code` parameter from (#implementation_considerations_direct_post)):
+The following is a non-normative example of the response from the Verifier to the Wallet upon receiving the Authorization Response at the Response URI (using a `response_code` parameter from (#implementation_considerations_direct_post)):
 
 ```
 HTTP/1.1 200 OK
@@ -982,7 +982,7 @@ When using Response Mode `direct_post`, also see (#security_considerations_direc
 
 ## Response Mode `direct_post` {#implementation_considerations_direct_post}
 
-The design of the interactions between the different components of the Verifier (especially Frontend and Response Endpoint) when using Response Mode `direct_post` is at the discretion of the Verifier since it does not affect the interface between the Verifier and the Wallet. 
+The design of the interactions between the different components of the Verifier (especially Frontend and Response URI) when using Response Mode `direct_post` is at the discretion of the Verifier since it does not affect the interface between the Verifier and the Wallet.
 
 In order to support implementers, this section outlines a possible design that fulfills the Security Considerations given in (#security_considerations). 
 
@@ -992,7 +992,7 @@ The design is illustrated in the following sequence diagram:
 ~~~ ascii-art
 +-------+   +------------+           +---------------------+                 +----------+
 | User  |   |  Verifier  |           |  Verifier           |                 |  Wallet  |
-|       |   |            |           |  Response Endpoint  |                 |          |
+|       |   |            |           |  Response URI       |                 |          |
 +-------+   +------------+           +---------------------+                 +----------+  
     |              |                            |                                  |
     |   interacts  |                            |                                  |
@@ -1044,28 +1044,28 @@ Figure: Reference Design for Response Mode `direct_post`
 
 (1) The Verifier produces a `nonce` value by generating at least 16 fresh, cryptographically random bytes with sufficient entropy, associates it with the session and base64url encodes it.
 
-(2) The Verifier initiates a new transaction at its Response Endpoint. 
+(2) The Verifier initiates a new transaction at its Response URI.
 
-(3) The Response Endpoint will set up the transaction and respond with two fresh, cryptographically random numbers with sufficient entropy designated as `transaction-id` and `request-id`. Those values are used in the process to identify the authorization response (`request-id`) and to ensure only the Verifier can obtain the Authorization Response data (`transaction-id`).
+(3) The Response URI will set up the transaction and respond with two fresh, cryptographically random numbers with sufficient entropy designated as `transaction-id` and `request-id`. Those values are used in the process to identify the authorization response (`request-id`) and to ensure only the Verifier can obtain the Authorization Response data (`transaction-id`).
 
 (4) The Verifier then sends the Authorization Request with the `request-id` as `state` and the `nonce` value created in step (1) to the Wallet.
 
 (5) After authenticating the End-User and getting her consent to share the request Credentials, the Wallet sends the Authorization Response with the parameters `vp_token`, `presentation_submission` and `state` to the `response_uri` of the Verifier.  
 
-(6) The Verifier's Response Endpoint checks whether the `state` value is a valid `request-id`. If so, it stores the Authorization Response data linked to the respective `transaction-id`. It then creates a `response_code` as fresh, cryptographically random number with sufficient entropy that it also links with the respective Authorization Response data. It then returns the `redirect_uri`, which includes the `response_code` to the Wallet. 
+(6) The Verifier's Response URI checks whether the `state` value is a valid `request-id`. If so, it stores the Authorization Response data linked to the respective `transaction-id`. It then creates a `response_code` as fresh, cryptographically random number with sufficient entropy that it also links with the respective Authorization Response data. It then returns the `redirect_uri`, which includes the `response_code` to the Wallet.
 
-Note: If the Verifier's Response Endpoint does not return a `redirect_uri`, processing at the Wallet stops at that step. The Verifier is supposed to fetch the Authorization Response without waiting for a redirect (see step 8).  
+Note: If the Verifier's Response URI does not return a `redirect_uri`, processing at the Wallet stops at that step. The Verifier is supposed to fetch the Authorization Response without waiting for a redirect (see step 8).
 
 (7) The Wallet sends the user agent to the Verifier (`redirect_uri`). The Verifier receives the Request and extracts the `response_code` parameter.
 
-(8) The Verifier sends the `response_code` and the `transaction-id` from its session to the Response Endpoint. 
+(8) The Verifier sends the `response_code` and the `transaction-id` from its session to the Response URI.
 
-* The Response Endpoint uses the `transaction-id` to look the matching Authorization Response data up, which implicitly validates the `transaction-id` associated with the Verifier's session. 
-* If an Authorization Response is found, the Response Endpoint checks whether the `response_code` was associated with this Authorization Response in step (6).
+* The Response URI uses the `transaction-id` to look the matching Authorization Response data up, which implicitly validates the `transaction-id` associated with the Verifier's session.
+* If an Authorization Response is found, the Response URI checks whether the `response_code` was associated with this Authorization Response in step (6).
 
-Note: If the Verifier's Response Endpoint did not return a `redirect_uri` in step (6), the Verifier will periodically query the Response Endpoint with the `transaction-id` to obtain the Authorization Response once it becomes available. 
+Note: If the Verifier's Response URI did not return a `redirect_uri` in step (6), the Verifier will periodically query the Response URI with the `transaction-id` to obtain the Authorization Response once it becomes available.
 
-(9) The Response Endpoint returns the VP Token and Presentation Submission for further processing to the Verifier. 
+(9) The Response URI returns the VP Token and Presentation Submission for further processing to the Verifier.
 
 (10) The Verifier checks whether the `nonce` received in the Credential(s) in the VP Token in step (9) corresponds to the `nonce` value from the session. The Verifier then consumes the VP Token and invalidates the `transaction-id`, `request-id` and `nonce` in the session.
 
@@ -1141,9 +1141,9 @@ To perform a Session Fixation attack, an attacker would start the process using 
 
 Such an attack is impossible against flows implemented with the Response Mode `fragment` as the Wallet will always send the VP Token to the redirect endpoint on the same device where it resides. This means an attacker could extract a valid Authorization Request from a Verifier on his device and trick a Victim into performing the same Authorization Request on her device. But there is technically no way for an attacker to get hold of the resulting VP Token. 
 
-However, the Response Mode `direct_post` is susceptible to such an attack as the result is sent from the Wallet out-of-band to the Verifier's Response Endpoint. 
+However, the Response Mode `direct_post` is susceptible to such an attack as the result is sent from the Wallet out-of-band to the Verifier's Response URI.
 
-This kind of attack can be detected if the Response Mode `direct_post` is used in conjunction with the redirect URI, which causes the Wallet to redirect the flow to the Verifier's frontend at the device where the transaction was concluded. The Verifier's Response Endpoint MUST include a fresh secret (Response Code) into the redirect URI returned to the Wallet and the Verifier's Response Endpoint MUST require the frontend to pass the respective Response Code when fetching the Authorization Response. That stops session fixation attacks as long as the attacker is unable to get access to the Response Code.
+This kind of attack can be detected if the Response Mode `direct_post` is used in conjunction with the redirect URI, which causes the Wallet to redirect the flow to the Verifier's frontend at the device where the transaction was concluded. The Verifier's Response URI MUST include a fresh secret (Response Code) into the redirect URI returned to the Wallet and the Verifier's Response URI MUST require the frontend to pass the respective Response Code when fetching the Authorization Response. That stops session fixation attacks as long as the attacker is unable to get access to the Response Code.
 
 Note that this protection technique is not applicable to cross-device scenarios because the browser used by the wallet will not have the original session.
 It is also not applicable in same-device scenarios if the wallet uses a browser different from the one used on the presentation request (e.g. device with multiple installed browsers), because the original session will also not be available there.
@@ -1164,7 +1164,7 @@ The Verifier SHOULD protect its Response URI from inadvertent requests by checki
 
 ### Protection of the Authorization Response Data
 
-This specification assumes that the Verifier's Response Endpoint offers an internal interface to other components of the Verifier to obtain (and subsequently process) Authorization Response data. An attacker could try to obtain Authorization Response Data from a Verifier's Response Endpoint by looking up this data through the internal interface. This could lead to leakage valid Verifiable Presentations containing PII. 
+This specification assumes that the Verifier's Response URI offers an internal interface to other components of the Verifier to obtain (and subsequently process) Authorization Response data. An attacker could try to obtain Authorization Response Data from a Verifier's Response URI by looking up this data through the internal interface. This could lead to leakage valid Verifiable Presentations containing PII.
 
 Implementations of this specification MUST have security mechanisms in place to prevent inadvertent requests against this internal interface. Implementation options to fulfill this requirement include: 
 
@@ -1646,7 +1646,7 @@ if (credential.protocol == "openid4vp") {
 }
 ```
 
-# Examples with Credentials in Various Formats {#alternative_credential_formats}
+# Credential Format Profiles {#alternative_credential_formats}
 
 OpenID for Verifiable Presentations is Credential Format agnostic, i.e., it is designed to allow applications to request and receive Verifiable Presentations and Verifiable Credentials in any Credential Format. This section defines Credential Format Profiles for some of the known Credential Formats. Other specifications or deployments can define their own Credential Format Profiles.
 
