@@ -1599,30 +1599,21 @@ The value of the `protocol` parameter of the W3C Digital Credentials API MUST be
 
 The `request` member of the W3C Digital Credentials API [@!w3c.digital_credentials_api] contains an OpenID4VP Authorization Request, where every OpenID4VP Authorization Request parameter is represented as a top-level JavaScript object member.
 
-The following is a non-normative example of how the W3C Digital Credentials API can be used with an unsigned OpenID4VP request when advanced security features of OpenID4VP are not used:
+The following is a non-normative example of an unsigned OpenID4VP request when advanced security features of OpenID4VP are not used:
 
 ```js
-try {
-  const credential = await navigator.identity.get({
-    digital: {
-      providers: [{
-        protocol: "openid4vp",
-        request:  {
-          response_type: "vp_token",
-          response_mode: "w3c_dc_api",
-          nonce: "n-0S6_WzA2Mj",
-          client_metadata: {...},
-          presentation_definition: {...}
-        }
-      }]
-    }
-  });
-} catch (err) {
-  // Handle errors and/or fallback to other invocation mechanisms
+{
+  protocol: "openid4vp",
+  request:  {
+    response_type: "vp_token",
+    response_mode: "w3c_dc_api",
+    nonce: "n-0S6_WzA2Mj",
+    client_metadata: {...},
+    presentation_definition: {...}
+  }
 }
 ```
-
-Out of the Authorization Request parameters defined in [@!RFC6749] and (#vp_token_request), the following are supported with this profile: 
+Out of the Authorization Request parameters defined in [@!RFC6749] and (#vp_token_request), the following are supported with this profile:
 
 * `client_id`
 * `response_type`
@@ -1658,21 +1649,6 @@ The Verifier MAY send a signed request, for example, when identification and aut
 
 The signed Request Object MAY contain all the parameters listed in (#browser_api_request), except `request`.
 
-Below is a non-normative example of such a request:
-
-```js
-const credential = await navigator.identity.get({
-  digital: {
-    providers: [{
-      protocol: "openid4vp",
-      request: {
-        request: "eyJhbGciOiJF..."
-     }
-    }]
-  }
-});
-```
-
 This is an example of the payload of a signed OpenID4VP request used with the W3C Digital Credentials API:
 
 <{{examples/digital_credentials_api/signed_request_payload.json}}
@@ -1682,29 +1658,6 @@ The signed request allows the Wallet to authenticate the Verifier using a trust 
 ## Response
 
 Every OpenID4VP Authorization Request results in a response being provided through the W3C Digital Credentials API. The response is an instance of the `DigitalCredential` interface, as defined in [@!w3c.digital_credentials_api], and the OpenID4VP Authorization Response parameters as defined for the Response Type are represented as an object within the `data` attribute.
-
-The following is a non-normative example of processing an unsigned OpenID4VP response that could be received from the W3C Digital Credentials API:
-
-```js
-const credential = await navigator.identity.get(request);
-if (credential.protocol == "openid4vp") {
-  // Extract relevant data members
-  const { vp_token, presentation_submission } =  credential.data;
-  // presentation_submission is a javascript object
-  // vp_token is a string or javascript object depending on the credential type
-}
-```
-
-The following is a non-normative example of processing an encrypted OpenID4VP response that could be received from the W3C Digital Credentials API:
-
-```js
-const credential = await navigator.identity.get(request);
-if (credential.protocol == "openid4vp") {
-  // Extract encrypted response
-  const { response } =  credential.data;
-  // response is a string containing a JWE, now decrypt it
-}
-```
 
 # Credential Format Profiles {#alternative_credential_formats}
 
