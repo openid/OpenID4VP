@@ -809,7 +809,7 @@ Note: Some of the processing rules of the Presentation Definition and the Presen
 
 # Wallet Invocation {#wallet-invocation}
 
-The Verifier MAY use one of the following mechanisms to invoke a Wallet:
+The Verifier can use one of the following mechanisms to invoke a Wallet:
 
 - Custom URL scheme as an `authorization_endpoint` (for example, `openid4vp://` as defined in (#openid4vp-profile))
 - Domain-bound Universal Links/App link as an `authorization_endpoint`
