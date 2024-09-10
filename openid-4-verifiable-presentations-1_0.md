@@ -682,7 +682,7 @@ If the Response URI has successfully processed the Authorization Response or Aut
 The following new parameter is defined for use in the response from the endpoint:
 
 `redirect_uri`:
-: OPTIONAL. String containing a URI. When this parameter is present the Wallet MUST redirect the User Agent to this URI. This allows the Verifier to continue the interaction with the End-User on the device where the Wallet resides after the Wallet has sent the Authorization Response to the Response URI. It can be used by the Verifier to prevent session fixation ((#session_fixation)) attacks. The Response URI MAY return the `redirect_uri` parameter in response to successful Authorization Responses or for Error Responses.
+: OPTIONAL. String containing a URI. When this parameter is present the Wallet MUST redirect the user agent to this URI. This allows the Verifier to continue the interaction with the End-User on the device where the Wallet resides after the Wallet has sent the Authorization Response to the Response URI. It can be used by the Verifier to prevent session fixation ((#session_fixation)) attacks. The Response URI MAY return the `redirect_uri` parameter in response to successful Authorization Responses or for Error Responses.
 
 Note: Response Mode `direct_post` without the `redirect_uri` could be less secure than Response Modes with redirects. For details, see ((#session_fixation)).
 
@@ -792,7 +792,7 @@ This document also defines the following additional error codes and error descri
 
 `wallet_unavailable`:
 
-- The Wallet appears to be unavailable and therefore unable to respond to the request. It can be useful in situations where the User Agent cannot invoke the Wallet and another component receives the request while the End-User wishes to continue the journey on the Verifier website. For example, this applies when using claimed HTTPS URIs handled by the Wallet provider in case the platform cannot or does not translate the URI into a platform intent to invoke the Wallet. In this case, the Wallet provider would return the Authorization Error Response to the Verifier and might redirect the User Agent back to the Verifier website.
+- The Wallet appears to be unavailable and therefore unable to respond to the request. It can be useful in situations where the user agent cannot invoke the Wallet and another component receives the request while the End-User wishes to continue the journey on the Verifier website. For example, this applies when using claimed HTTPS URIs handled by the Wallet provider in case the platform cannot or does not translate the URI into a platform intent to invoke the Wallet. In this case, the Wallet provider would return the Authorization Error Response to the Verifier and might redirect the user agent back to the Verifier website.
 
 
 ## VP Token Validation
@@ -1527,13 +1527,13 @@ This OpenID4VP profile utilizes the mechanisms of the W3C Digital Credentials AP
 
 The Digital Credentials API offers several advantages for implementers of both Verifiers and Wallets. 
 
-Firstly, the API serves as a privacy-preserving alternative to invoking Wallets via URLs, particularly custom URL schemes. The underlying app platform will only invoke a Wallet if the End-User confirms the request based on contextual information about the credential request and the requestor (Verifier). 
+Firstly, the API serves as a privacy-preserving alternative to invoking Wallets via URLs, particularly custom URL schemes. The underlying app platform will only invoke a Wallet if the End-User confirms the request based on contextual information about the Credential Request and the requestor (Verifier). 
 
-Secondly, the session with the End-User will always continue in the initial context, typically a browser tab, when the request has been fulfilled (or aborted), which results in an improved user experience.
+Secondly, the session with the End-User will always continue in the initial context, typically a web browser tab, when the request has been fulfilled (or aborted), which results in an improved user experience.
 
 Thirdly, cross-device requests benefit from the use of secure transports with proximity checks, which are handled by the OS platform, e.g., using FIDO CTAP 2.2 with hybrid transports.
 
-And lastly, as part of the request, the Wallet is provided with information about the Verifier's origin as authenticated by the user agent, which is important for phishing resistance.  
+And lastly, as part of the request, the Wallet is provided with information about the Verifier's origin as authenticated by the user agent, which is important for phishing resistance.
 
 ## Protocol
 
@@ -1591,7 +1591,7 @@ Any OpenID4VP request compliant to this section of this specification can be use
 
 ### Unsigned Request {#unsigned_request}
 
-The Verifier MAY send all the OpenID4VP request parameters as members in the `request` member passed to the API. In this case, the Wallet will use the Verifier's origin as asserted by the Browser as the Verifer's Client Identifier.
+The Verifier MAY send all the OpenID4VP request parameters as members in the `request` member passed to the API. In this case, the Wallet will use the Verifier's origin as asserted by the user agent as the Verifer's Client Identifier.
 
 
 ### Signed Request {#signed_request}
@@ -1623,7 +1623,7 @@ The signed request allows the Wallet to authenticate the Verifier using a trust 
 
 ## Response
 
-Every OpenID4VP Authorization Request results in a response being provided through the W3C Digital Credentials API. The response is an instance of the `DigitalCredential` credential interface, as defined in [@!w3c.digital_credentials_api], and the OpenID4VP Authorization Response parameters as defined for the Response Type are represented as an object within the `data` attribute.
+Every OpenID4VP Authorization Request results in a response being provided through the W3C Digital Credentials API. The response is an instance of the `DigitalCredential` interface, as defined in [@!w3c.digital_credentials_api], and the OpenID4VP Authorization Response parameters as defined for the Response Type are represented as an object within the `data` attribute.
 
 The following is a non-normative example of processing an unsigned OpenID4VP response that could be received from the W3C Digital Credentials API:
 
