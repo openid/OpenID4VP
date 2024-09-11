@@ -282,7 +282,7 @@ The following additional considerations are given for pre-existing Authorization
 `response_mode`:
 : OPTIONAL. Defined in [@!OAuth.Responses]. This parameter is used (through the new Response Mode `direct_post`) to ask the Wallet to send the response to the Verifier via an HTTPS connection (see (#response_mode_post) for more details). It is also used to request signing and encrypting (see (#jarm) for more details). If the parameter is not present, the default value is `fragment`. 
 
-Additional Authorization Request parameters MAY be defined and used,
+Additional request parameters MAY be defined and used,
 as described in [@!RFC6749].
 The Wallet MUST ignore any unrecognized parameters.
 
