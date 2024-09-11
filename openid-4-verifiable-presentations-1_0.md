@@ -282,6 +282,8 @@ This enables the Wallet to assess the Verifier's capabilities, allowing it to tr
     The claim transaction_data_alg indicates the hash algorithm used to generate the digests. If the claim is not present, a default value of sha-256 MUST be used.
     * `transaction_data_hashes_alg`: OPTIONAL. Array of strings each representing a hash algorithm identifier, one of which MUST be used to calculate hashes in `transaction_data_hashes` response parameter. The value of the identifier MUST be a hash algorithm value from the "Hash Name String" column in the IANA "Named Information Hash Algorithm" registry [IANA.Hash.Algorithms] or a value defined in another specification and/or profile of this specification. If this parameter is not present, a default value of `sha-256` MUST be used. To promote interoperability, implementations MUST support the sha-256 hash algorithm.
 
+Each document defining a transaction data type specifies whether that type requires a Credential that is bound to transaction data to be specifically issued for that purpose. How the Credential Issuer expresses that a particular Credential can be used for obtaining user's authorization using transaction data mechanism is out of scope for this specification.
+
 The following additional considerations are given for pre-existing Authorization Request parameters:
 
 `nonce`:
@@ -758,10 +760,9 @@ The following is a non-normative example of the payload of the JWT used in the e
 
 The transaction data mechanism enables a binding between the user's identification/authentication and the user’s authorization, for example to complete a payment transaction, or to sign specific document(s) using QES (Qualified Electronic Signatures). This is achieved by signing the transaction data used for user authorization with the user-controlled key used for proof of possession of the Credential being presented as a means for user identification/authentication.
 
-
 The Wallet that received the `transaction_data` parameter in the request MUST include in the response a `transaction_data_hashes` parameter defined below. If the wallet does not support `transaction_data` parameter, it MUST return an error.
 
-Where in the response `transaction_data_hashes` parameter is included is specific to each credential format and is defined in a respective Credential Format Profile.
+Where to include`transaction_data_hashes` parameter in the response is specific to each credential format and is defined in a respective Credential Format Profile.
 
 * `transaction_data_hashes`: Array of hashes, where each hash is calculated using a hash function over the strings received in the `transaction_data` request parameter. Each hash value ensures the integrity of, and maps to, the respective transaction data object. Where in the response this parameter is included is defined by each Credential Format Profile, but it has to be included in the  mechanism used for the proof of possession of the Credential that is signed using the user-controlled key.
 * `transaction_data_hashes_alg`: REQUIRED when this parameter was present in the `transaction_data` request parameter. String representing a hash algorithm identifier used to calculate hashes in `transaction_data_hashes` response parameter.
