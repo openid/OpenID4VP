@@ -503,7 +503,7 @@ If the Wallet requires the Verifier to encrypt the Request Object, it SHOULD use
 
 Additionally, if the `client_id_scheme` value permits signed Request Objects, the Wallet SHOULD list supported cryptographic algorithms for securing the Request Object through the `request_object_signing_alg_values_supported` parameter. Conversely, the Wallet MUST NOT include this parameter if the `client_id_scheme` precludes signed Request Objects.
 
-Additional Request URI endpoint parameters MAY be defined and used.
+Additional  parameters MAY be defined and used in the request to the Request URI Endpoint.
 The Verifier MUST ignore any unrecognized parameters.
 
 The following is a non-normative example of a request:
