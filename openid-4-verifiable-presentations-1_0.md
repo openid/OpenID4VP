@@ -7,7 +7,7 @@ keyword = ["security", "openid", "ssi"]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "openid-4-verifiable-presentations-1_0-20"
+value = "openid-4-verifiable-presentations-1_0-22"
 status = "standard"
 
 [[author]]
@@ -1921,6 +1921,10 @@ The technology described in this specification was made available from contribut
 # Document History
 
    [[ To be removed from the final specification ]]
+
+   -22
+
+   * add transaction data mechanism
 
    -21
 
