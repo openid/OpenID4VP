@@ -491,7 +491,7 @@ This request is handled by the Request URI endpoint of the Verifier.
 
 The request MUST use the HTTP POST method with the `https` scheme, and the content type `application/x-www-form-urlencoded` and the accept header set to `application/oauth-authz-req+jwt`.
 
-The following Request URI endpoint parameters are defined:
+The following parameters are defined to be included in the request to the Request URI Endpoint:
 
 `wallet_metadata`:
 : OPTIONAL. A String containing a JSON object containing metadata parameters as defined in (#as_metadata_parameters). 
