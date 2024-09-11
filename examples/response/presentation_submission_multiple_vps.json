@@ -8,17 +8,13 @@
       "path": "$[0]",
       "path_nested": {
         "format": "ldp_vc",
-        "path": "$[0].verifiableCredential[0]"
+        "path": "$.verifiableCredential[0]"
       }
     },
     {
-      "id": "Ontario Health Insurance Plan",
-      "format": "jwt_vp_json",
-      "path": "$[1]",
-      "path_nested": {
-        "format": "jwt_vc_json",
-        "path": "$[1].vp.verifiableCredential[0]"
-      }
+      "id": "Example credential disclosing only address",
+      "format": "vc+sd-jwt",
+      "path": "$[1]"
     }
   ]
 }
