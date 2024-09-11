@@ -275,10 +275,10 @@ If the Verifier set the `request_uri_method` parameter value to `post` and there
 This enables the Wallet to assess the Verifier's capabilities, allowing it to transmit only the relevant capabilities through the `wallet_metadata` parameter in the Request URI POST request. If the Verifier uses the `client_id_scheme` parameter in the Request Object, it MUST also add the same `client_id_scheme` value in the Authorization Request. 
 
 `transaction_data`: 
-: OPTIONAL. Array of strings, where each string is a Base64url encoded object that contains a typed parameter set with details about the transaction that the Verifier is requesting the End-User to authorize. See (#transaction_data) for details. The Wallet MUST refuse to process any unknown transaction data type or transaction data not conforming to the respective type definition. Each object consists of the following parameters:
+: OPTIONAL. Array of strings, where each string is a base64url encoded JSON object that contains a typed parameter set with details about the transaction that the Verifier is requesting the End-User to authorize. See (#transaction_data) for details. The Wallet MUST return an error if a request contains even one unrecognized transaction data type or transaction data not conforming to the respective type definition. Each object consists of the following parameters:
 
-* `type`: REQUIRED. String that is the Identifier of the transaction data type and determines the allowable contents of the object that contains it. The specific values are out of scope of this specification. It is RECOMMENDED to use collision-resistant names for `type` values.
-* `requested_credential_ids`: REQUIRED. Array of strings each pointing to an Input Descriptor that identifies a request for a Credential that the Verifier is requesting transaction data in a particular object to be bound to.
+    * `type`: REQUIRED. String that is the Identifier of the transaction data type and determines the allowable contents of the object that contains it. The specific values are out of scope of this specification. It is RECOMMENDED to use collision-resistant names for `type` values.
+    * `credential_ids`: REQUIRED. Array of strings each pointing to an identifier that identifies a set of information describing a Credential that the Verifier is requesting transaction data in a particular object to be bound to (Input Descriptor in Presentation Exchange).
 
 The following additional considerations are given for pre-existing Authorization Request parameters:
 
@@ -756,9 +756,12 @@ The following is a non-normative example of the payload of the JWT used in the e
 
 The transaction data mechanism enables a binding between the user's identification/authentication and the user’s authorization, for example to complete a payment transaction, or to sign specific document(s) using QES (Qualified Electronic Signatures). This is achieved by signing the transaction data used for user authorization with the user-controlled key used for proof of possession of the Credential being presented as a means for user identification/authentication.
 
-The Wallet that received `transaction_data` parameter in the request, MUST include in the response a `tx_data_hashes` parameter defined below: 
 
-* `tx_data_hashes`: Array of hashes, where each hash is calculated using a hash function over the strings received in the `transaction_data` request parameter. Each hash value ensures the integrity of, and maps to, the respective transaction data object. Where in the response this parameter is included is defined by each Credential Format Profile, but it has to be included in the  mechanism used for the proof of possession of the Credential that is signed using the user-controlled key.
+The Wallet that received the `transaction_data` parameter in the request MUST include in the response a `tx_data_hashes` parameter defined below. If the wallet does not support `transaction_data` parameter, it MUST return an error.
+
+Where in the response `tx_data_hashes` parameter is included is specific to each credential format and is defined in a respective Credential Format Profile.
+
+* `transaction_data_hashes`: Array of hashes, where each hash is calculated using a hash function over the strings received in the `transaction_data` request parameter. Each hash value ensures the integrity of, and maps to, the respective transaction data object. Where in the response this parameter is included is defined by each Credential Format Profile, but it has to be included in the  mechanism used for the proof of possession of the Credential that is signed using the user-controlled key.
 
 ## Error Response {#error_response}
 
@@ -1771,7 +1774,7 @@ Setting `limit_disclosure` property defined in [@!DIF.PresentationExchange] to `
 
 A non-normative example of the Authorization Response would look the same as in the examples of other Credential formats in this Annex.
 
-The `transaction_data` response parameter defined in (#transaction_data) MUST be included in the Key Binding JWT as a top level claim.
+The `transaction_data` response parameter defined in (#transaction_data) MUST be included in the Key Binding JWT as a top level claim. This means that transaction data mechanism cannot be used with SD-JWT VCs without cryptographic key binding and, therefore, do not use KB JWT.
 
 The following is a non-normative example of the content of the `presentation_submission` parameter:
 
