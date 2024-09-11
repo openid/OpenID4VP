@@ -718,8 +718,7 @@ If the response does not contain the `redirect_uri` parameter, the Wallet is not
 
 Note: In the Response Mode `direct_post` or `direct_post.jwt`, the Wallet can change the UI based on the Verifier's callback to the Wallet following the submission of the Authorization Response.
 
-Additional parameters for use in the response from the Response Endpoint to the Wallet
-MAY be defined and used.
+Additional parameters MAY be defined and used in the response from the Response Endpoint to the Wallet.
 The Wallet MUST ignore any unrecognized parameters.
 
 ## Signed and/or Encrypted Responses {#jarm}
