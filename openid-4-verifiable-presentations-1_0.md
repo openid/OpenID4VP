@@ -279,6 +279,8 @@ This enables the Wallet to assess the Verifier's capabilities, allowing it to tr
 
     * `type`: REQUIRED. String that is the Identifier of the transaction data type and determines the allowable contents of the object that contains it. The specific values are out of scope of this specification. It is RECOMMENDED to use collision-resistant names for `type` values.
     * `credential_ids`: REQUIRED. Array of strings each pointing to an identifier that identifies a set of information describing a Credential that the Verifier is requesting transaction data in a particular object to be bound to (Input Descriptor in Presentation Exchange).
+    The claim transaction_data_alg indicates the hash algorithm used to generate the digests. If the claim is not present, a default value of sha-256 MUST be used.
+    * `transaction_data_hashes_alg`: OPTIONAL. Array of strings each representing a hash algorithm identifier, one of which MUST be used to calculate hashes in `transaction_data_hashes` response parameter. The value of the identifier MUST be a hash algorithm value from the "Hash Name String" column in the IANA "Named Information Hash Algorithm" registry [IANA.Hash.Algorithms] or a value defined in another specification and/or profile of this specification. If this parameter is not present, a default value of `sha-256` MUST be used. To promote interoperability, implementations MUST support the sha-256 hash algorithm.
 
 The following additional considerations are given for pre-existing Authorization Request parameters:
 
@@ -762,6 +764,7 @@ The Wallet that received the `transaction_data` parameter in the request MUST in
 Where in the response `transaction_data_hashes` parameter is included is specific to each credential format and is defined in a respective Credential Format Profile.
 
 * `transaction_data_hashes`: Array of hashes, where each hash is calculated using a hash function over the strings received in the `transaction_data` request parameter. Each hash value ensures the integrity of, and maps to, the respective transaction data object. Where in the response this parameter is included is defined by each Credential Format Profile, but it has to be included in the  mechanism used for the proof of possession of the Credential that is signed using the user-controlled key.
+* `transaction_data_hashes_alg`: REQUIRED when this parameter was present in the `transaction_data` request parameter. String representing a hash algorithm identifier used to calculate hashes in `transaction_data_hashes` response parameter.
 
 ## Error Response {#error_response}
 
