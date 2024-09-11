@@ -641,8 +641,7 @@ Note: When the specification text refers to the usage of Redirect URI in the Aut
 
 Note: The Verifier's component providing the user interface (Frontend) and the Verifier's component providing the Response URI (Response Endpoint) need to be able to map authorization requests to the respective authorization responses. The Verifier MAY use the `state` Authorization Request parameter to add appropriate data to the Authorization Response for that purpose, for details see (#implementation_considerations_direct_post). 
 
-Additional Authorization Request parameters MAY be defined and used
-with the Response Mode `direct_post`.
+Additional request parameters MAY be defined and used with the Response Mode `direct_post`.
 The Wallet MUST ignore any unrecognized parameters.
 
 The following is a non-normative example of the payload of a Request Object with Response Mode `direct_post`:
