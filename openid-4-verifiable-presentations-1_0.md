@@ -303,7 +303,7 @@ GET /authorize?
   &nonce=n-0S6_WzA2Mj HTTP/1.1
 ```
 
-The following is a non-normative example of an Authorization Request with a `request_uri_method` parameter (including the additional `client_id_scheme` and `client_metadata` parameters): 
+The following is a non-normative example of an Authorization Request with a `request_uri_method` parameter (including the additional `client_id_scheme`, `client_metadata` and `transaction_data` parameters): 
 
 ```
 GET /authorize?
@@ -312,6 +312,7 @@ GET /authorize?
   &client_metadata=...
   &request_uri=https%3A%2F%2Fclient.example.org%2Frequest%2Fvapof4ql2i7m41m68uep
   &request_uri_method=post HTTP/1.1
+  &transaction_data=...
 ```
 
 ## `presentation_definition` Parameter {#request_presentation_definition}
