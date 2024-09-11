@@ -5,7 +5,7 @@
       "format": "mso_mdoc",
       "expect_meta": {
         "doctype_values": ["org.iso.7367.1.mVR"],
-        "alg_values": [ "EdDSA" ],
+        "credential_signing_alg_values": [ "EdDSA" ],
         "hash_algorithm_values": [ "SHA-384"]
       },
       "expect_claims": [

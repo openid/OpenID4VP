@@ -1,0 +1,36 @@
+{
+  "expect_credentials": [
+    {
+      "group": "pid",
+      "format": "vc+sd-jwt",
+      "expect_meta": {
+        "vct_values": [ "https://credentials.example.com/identity_credential" ],
+        "credential_signing_alg_values": ["ES256", "ES384"],
+        "sd_alg_values": ["SHA-256"]
+      },
+      "expect_claims": [
+          {"path": ["last_name"]},
+          {
+            "path": ["postal_code"],
+            "alternative_claims": ["locality_and_region"]
+          },
+          {
+            "group": "locality_and_region",
+            "path": ["locality"]
+          },
+          {
+            "group": "locality_and_region",
+            "path": ["region"]
+          },
+          {
+            "group": "age_verification",
+            "path": ["date_of_birth"]
+          },
+          {
+            "group": "newsletter",
+            "path": ["email"]
+          }
+      ]
+    }
+  ]
+}

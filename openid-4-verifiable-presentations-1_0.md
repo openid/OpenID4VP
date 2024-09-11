@@ -558,22 +558,25 @@ query against the Verifiable Credentials it holds and returns the Verifiable
 Presentations that match the query.
 
 A valid VP Query is defined as a JSON-encoded object with the following
-properties:
+top-level property:
 
-`credentials`:
-: REQUIRED. An object. Each key in the object represents one
-Credential Query as defined in (#credential_query). The key is a string that
-uniquely identifies the Credential Query within the VP Query.
+`expect_credentials`:
+: REQUIRED. An array of Credential Queries that specify the requested
+Verifiable Credentials, as defined in (#credential_query).
 
-`rules`:
-: OPTIONAL. An object defining rules that specify which combinations of
-credentials MAY be returned by the Wallet, as defined in (#credential_rules). If
-omitted, all credentials listed in `credentials` are requested for presentation.
+Note: While this specification does not define additional top-level properties,
+future extensions MAY define additional properties that modify the behavior of
+the Wallet when processing the query.
 
 ## Credential Query {#credential_query}
 
 A Credential Query is an object representing a request for one specific
 credential. It contains the following properties:
+
+`group`:
+: REQUIRED. A string identifying the credential in the response, or, if multiple
+credentials carry the same group identifier, the group of credentials that the
+requested credential belongs to.
 
 `format`:
 : REQUIRED. A string that specifies the format of the requested
@@ -581,30 +584,66 @@ Verifiable Credential. Valid Credential format identifier values are defined in
 Appendix A of [@!OpenID.VCI]. The value of this property MUST be one of the
 supported Credential formats as defined in the Wallet's metadata.
 
-Format-specific properties (using the format value as a key):
-: OPTIONAL.
-Additional properties requested by the Verifier that are specific to the
-Credential format, as defined in (#format_specific_properties). If omitted,
-no format-specific restrictions are placed on the requested Credential.
+`expect_meta`: 
+: OPTIONAL. An object defining additional properties requested by the Verifier that
+apply to the metadata and validity data of the credential. The properties of
+this object are defined per format in (#format_specific_properties). If omitted,
+no specific restrictions are placed on the metadata or validity of the requested
+Credential.
 
-`claims`:
+`expect_claims`:
 : OPTIONAL. An array that specifies the claims that the requested
-Verifiable Credential must contain. Each entry in the array corresponds to at
-least one claim that MUST be returned by the Wallet to fulfill the credential
-request (unless specified otherwise by extensions to this specification). Each
-entry MUST be one of the following objects:
+Verifiable Credential must contain. Each entry in the array corresponds to exactly
+one claim that is to be returned by the Wallet to fulfill the credential
+request. 
 
-- Claim query: An object describing a single claim that is to be returned, as
-  specified in (#claim_query).
-- An optionality rule: An object containing the following properties:
-  - `required` (REQUIRED): defines a number of claims that must be returned from
-    the `from` set of claims, as specified next.
-  - `from` (REQUIRED): An array; each entry is either a claim query or another
-    optionality rule. The entries are listed in order of preference, with the
-    first entry being the most preferred.
+`alternative_credentials`:
+: OPTIONAL. An array of credential group identifiers that specify alternative
+groups of credentials that MAY be returned instead of the credential. Any credential
+in a group listed in `alternative_credentials` MUST NOT itself contain an
+`alternative_credentials` property.
 
-More than two nested levels of optionality rules MUST NOT be used by a Verifier
-or allowed by a Wallet.
+Each entry MUST be an object with the following properties:
+
+`group`:
+: OPTIONAL. A string identifying a group of claims for expressing alternatives
+between claims. Multiple claims MAY have the same group identifier. The group
+identifier for claims is not reflected in the response.
+
+`path`:
+: REQUIRED if the credential format uses a JSON-based claims structure; MUST NOT
+be present otherwise. The value MUST be a claims path pointer that specifies the path to the claim
+within the Verifiable Credential, as defined in (#claims_path_pointer).
+
+`namespace`:
+: REQUIRED if the credential format is based on ISO 18013-5; MUST NOT be present otherwise. 
+The value MUST be a string that specifies the namespace of the claim
+within the Verifiable Credential, e.g., `org.iso.18013.5.1`.
+
+`claim_name`:
+: REQUIRED if the credential format is based on ISO 18013-5; MUST NOT be present otherwise. 
+The value MUST be a string that specifies the name of the claim within the provided namespace
+in the Verifiable Credential, e.g., `first_name`.
+
+`alternative_claims`:
+: OPTIONAL. An array of claim group identifiers that specify alternative groups of claims
+that MAY be returned instead of the claim specified by the `path` or `claim_name` property. Any
+claim in a group listed in `alternatives` MUST NOT itself contain an `alternatives` property.
+
+### Semantics of `alternative_claims` and `alternative_credentials`
+
+By default, each element within `expect_credentials` or `expect_claims` MUST be returned, unless:
+
+- The element contains an `alternative_claims` or `alternative_credentials`
+  property and for at least one of the groups listed as an alternative, all
+  elements in the group can be returned.
+- The element is part of a group that is itself listed as an alternative in
+  another element and returning the element is not needed to fulfill the
+  previous rule.
+
+Groups of claims are scoped to the specific credential; i.e., groups with the
+same identifier that appear in separate Credential Query in `expect_credentials`
+have no relation to each other.
 
 ## Format-specific Properties {#format_specific_properties}
 
@@ -640,36 +679,8 @@ TBD
 
 TBD
 
-## Claim Query {#claim_query}
 
-A claim query is an object that describes one or more claims that are to be
-returned. Depending on the format of the requested Verifiable Credential, the
-claim query can contain different properties.
-
-
-
-### JSON-based Claims Structures {#json_based_claims}
-
-For credentials containing JSON-based claims structures, the following
-properties are defined:
-
-`path`:
-: REQUIRED. A claims path pointer that specifies the path to the claim
-within the Verifiable Credential, as defined in (#claims_path_pointer).
-
-### ISO 18013-5 Credentials {#iso_18013-5}
-
-For ISO 18013-5 Credentials, the following properties are defined:
-
-`namespace`:
-: REQUIRED. A string that specifies the namespace of the claim
-within the Verifiable Credential, e.g., `org.iso.18013.5.1`.
-
-`claim_name`:
-: REQUIRED. A string that specifies the name of the claim within the provided namespace
-in the Verifiable Credential, e.g., `first_name`.
-
-### Claims Path Pointer {#claims_path_pointer}
+## Claims Path Pointer {#claims_path_pointer}
 
 A claims path pointer is a pointer into the JSON structure of the Verifiable
 Credential, identifying one or more claims. A claims path pointer MUST be a
@@ -689,7 +700,7 @@ is formed as follows:
 Verifiers MUST NOT point to the same claim more than once in a single query.
 Wallets SHOULD ignore such duplicate claim queries.
 
-#### Example
+### Example
 
 The following shows a non-normative, simplified example of a Credential:
 
@@ -728,7 +739,7 @@ claims:
 - `["nationalities", 1]`: The second nationality is selected.
 - `[]` (empty array): The entire Credential is selected.
 
-#### Processing
+### Processing
 
 In detail, the array is processed by the Wallet from left to right as follows:
 
@@ -753,23 +764,6 @@ In detail, the array is processed by the Wallet from left to right as follows:
 The result of the processing is the set of elements which is requested for
 presentation.
 
-## Credential Rules {#credential_rules}
-
-Just as for claims, the Verifier can define rules that specify which
-combinations of credentials MAY be returned by the Wallet. The rules are defined
-in the top-level property `rules`. The values is a credential rule object,
-defined as having the following properties:
-
-- `required`: An integer specifying the number of credentials that MUST be
-  returned from the `from` set of credentials.
-- `from`: An array of objects, each being either
-  - a nested credential rule, or
-  - a credential query reference, i.e., an object with a single key `ref` that
-    references a credential query defined in the `credentials` object.
-
-Within `from`, the credentials are listed in order of preference, with the first
-entry being the most preferred.
-
 ## Examples {#vp_query_examples}
 
 The following is a non-normative example of a VP Query that requests a Verifiable
@@ -781,17 +775,12 @@ Credential of the format `vc+sd-jwt` with a type value of
 
 Additional examples can be found in (#vp_query_examples).
 
-## Additional Request Properties {#additional_request_properties}
-
-`intent_to_retain`: TBD
-
-`if_present`: TBD
 
 # Response {#response}
 
 A VP Token is only returned if the corresponding Authorization Request contained a `presentation_definition` parameter, a `presentation_definition_uri` parameter, or a `scope` parameter representing a Presentation Definition (#vp_token_request).
 
-VP Token can be returned in the Authorization Response or the Token Response depending on the Response Type used. See (#response_type_vp_token) for more details.
+A VP Token can be returned in the Authorization Response or the Token Response depending on the Response Type used. See (#response_type_vp_token) for more details.
 
 If the Response Type value is `vp_token`, the VP Token is returned in the Authorization Response. When the Response Type value is `vp_token id_token` and the `scope` parameter contains `openid`, the VP Token is returned in the Authorization Response alongside a Self-Issued ID Token as defined in [@!SIOPv2].
 
@@ -2233,6 +2222,7 @@ The following is a non-normative example of the payload of a Self-Issued ID Toke
 
 Note: The `nonce` and `aud` are set to the `nonce` of the request and the Client Identifier of the Verifier, respectively, in the same way as for the Verifier, Verifiable Presentations to prevent replay.
 
+
 # Examples for VP Queries {#vp_query_examples}
 
 The following is a non-normative example of a VP Query that requests a Verifiable
@@ -2241,12 +2231,12 @@ Credential in the format `mso_mdoc` with the claims `vehicle_holder` and
 
 <{{examples/query_lang/simple_mdoc.json}}
 
-The following is a non-normative example of a VP Query that requests the claim `last_name` and
+The following is a non-normative example of a VP Query that requests the claim `last_name`, `date_of_birth`, and `email` and
 
 - either the claim `postal_code`, or
 - the claims `locality` and `region`:
 
-<{{examples/query_lang/nested_claim_queries.json}}
+<{{examples/query_lang/claims_alternatives.json}}
 
 The following is a non-normative example of a VP Query that requests multiple
 Verifiable Credentials; all of them must be returned:
@@ -2254,10 +2244,12 @@ Verifiable Credentials; all of them must be returned:
 <{{examples/query_lang/multi_credentials.json}}
 
 Finally, the following shows a complex query where the Wallet can either deliver
-the first credential (containing all data the Verifier needs) or present two
+the first credential (here called `pid`, containing all data the Verifier
+needs), or a second credential (here called `other_pid`), or present two
 credentials that together contain all the data the Verifier needs:
 
 <{{examples/query_lang/credentials_alternatives.json}}
+
 
 # IANA Considerations
 
