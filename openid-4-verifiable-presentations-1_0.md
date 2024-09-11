@@ -249,7 +249,7 @@ Depending on the Client Identifier Scheme, the Verifier can communicate a JSON o
 
 This specification enables the Verifier to send both Presentation Definition JSON object and Client Metadata JSON object by value or by reference.
 
-This specification defines the following new Authorization Request parameters:
+This specification defines the following new request parameters:
 
 `presentation_definition`:
 : A string containing a Presentation Definition JSON object. See (#request_presentation_definition) for more details. This parameter MUST be present when `presentation_definition_uri` parameter, or a `scope` value representing a Presentation Definition is not present.
