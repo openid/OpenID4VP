@@ -1774,7 +1774,7 @@ Setting `limit_disclosure` property defined in [@!DIF.PresentationExchange] to `
 
 A non-normative example of the Authorization Response would look the same as in the examples of other Credential formats in this Annex.
 
-The `transaction_data` response parameter defined in (#transaction_data) MUST be included in the Key Binding JWT as a top level claim. This means that transaction data mechanism cannot be used with SD-JWT VCs without cryptographic key binding and, therefore, do not use KB JWT.
+The `transaction_data_hashes` response parameter defined in (#transaction_data) MUST be included in the Key Binding JWT as a top level claim. This means that transaction data mechanism cannot be used with SD-JWT VCs without cryptographic key binding and, therefore, do not use KB JWT.
 
 The following is a non-normative example of the content of the `presentation_submission` parameter:
 
