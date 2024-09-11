@@ -625,9 +625,20 @@ within the Verifiable Credential, e.g., `org.iso.18013.5.1`.
 The value MUST be a string that specifies the name of the claim within the provided namespace
 in the Verifiable Credential, e.g., `first_name`.
 
+`value`:
+: OPTIONAL. A string, integer or boolean value that specifies the expected value of the claim. If the
+`value` property is present, the Wallet MUST return the claim only if the type and value
+of the claim match the type and value specified in the query.
+
+`values`:
+: OPTIONAL. An array of strings, integers or boolean values that specifies the expected values of the claim.
+If the `values` property is present, the Wallet MUST return the claim only if the
+type and value of the claim both match for at least one of the elements in the array.
+
 `alternative_claims`:
 : OPTIONAL. An array of claim group identifiers that specify alternative groups of claims
-that MAY be returned instead of the claim specified by the `path` or `claim_name` property. Any
+that MAY be returned instead of the claim specified by the `path` or `claim_name` property if
+that claim is not present or does not match the restriction expressed by `value` or `values`. Any
 claim in a group listed in `alternatives` MUST NOT itself contain an `alternatives` property.
 
 ### Semantics of `alternative_claims` and `alternative_credentials`
@@ -2243,12 +2254,17 @@ Verifiable Credentials; all of them must be returned:
 
 <{{examples/query_lang/multi_credentials.json}}
 
-Finally, the following shows a complex query where the Wallet can either deliver
+The following shows a complex query where the Wallet can either deliver
 the first credential (here called `pid`, containing all data the Verifier
 needs), or a second credential (here called `other_pid`), or present two
 credentials that together contain all the data the Verifier needs:
 
 <{{examples/query_lang/credentials_alternatives.json}}
+
+The following example shows a query that uses the `value` and `values` restrictions
+to request a credential with specific values for the `last_name` and `postal_code` claims:
+
+<{{examples/query_lang/value_matching_simple.json}}
 
 
 # IANA Considerations
