@@ -1610,8 +1610,7 @@ In addition to the above-mentioned parameters, this profile introduces a new par
 
 * `expected_origins`: REQUIRED when signed requests defined in (#signed_request) are used with the W3C Digital Credentials API [@!w3c.digital_credentials_api]. An array of strings, each string representing an origin of the Verifier that is making the request. The Wallet can detect replay of the request from a malicious Verifier by comparing values in this parameter to the origin asserted by the Web Platform.
 
-Additional Authorization Request parameters MAY be defined and used with this profile,
-as described in [@!RFC6749].
+Additional request parameters MAY be defined and used with this profile for the W3C Digital Credentials API.
 The Wallet MUST ignore any unrecognized parameters.
 
 ## Signed and Unsigned Requests
