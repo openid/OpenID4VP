@@ -12,6 +12,7 @@
           {"path": ["last_name"]},
           {
             "path": ["postal_code"],
+            // alternatively, deliver the two claims in the group locality_and_region
             "alternative_claims": ["locality_and_region"]
           },
           {
@@ -23,11 +24,9 @@
             "path": ["region"]
           },
           {
-            "group": "age_verification",
             "path": ["date_of_birth"]
           },
           {
-            "group": "newsletter",
             "path": ["email"]
           }
       ]
