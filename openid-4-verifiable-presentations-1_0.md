@@ -485,7 +485,7 @@ Other specifications can define further values for the `client_id_scheme` parame
 
 This request is handled by the Request URI endpoint of the Verifier.  
 
-The request MUST use the HTTP POST method with the `https` scheme, and the content type `application/x-www-form-urlencoded` and the accept header set to `application/oauth-authz-req+jwt`.
+The request MUST use the HTTP POST method with the `https` scheme, and the content type `application/x-www-form-urlencoded` and the accept header set to `application/oauth-authz-req+jwt`. The names and values in the body MUST be encoded using UTF-8.
 
 The following parameters are defined: 
 
@@ -619,7 +619,7 @@ It has been defined to address the following use cases:
 The Response Mode is defined in accordance with [@!OAuth.Responses] as follows:
 
 `direct_post`:
-: In this mode, the Authorization Response is sent to the Verifier using an HTTP POST request to an endpoint controlled by the Verifier. The Authorization Response parameters are encoded in the body using the `application/x-www-form-urlencoded` content type. The flow can end with an HTTP POST request from the Wallet to the Verifier, or it can end with a redirect that follows the HTTP POST request, if the Verifier responds with a redirect URI to the Wallet.
+: In this mode, the Authorization Response is sent to the Verifier using an HTTP POST request to an endpoint controlled by the Verifier. The Authorization Response parameters are encoded in the body using the `application/x-www-form-urlencoded` content type. The names and values in the body MUST be encoded using UTF-8. The flow can end with an HTTP POST request from the Wallet to the Verifier, or it can end with a redirect that follows the HTTP POST request, if the Verifier responds with a redirect URI to the Wallet.
 
 The following new Authorization Request parameter is defined to be used in conjunction with Response Mode `direct_post`: 
 
@@ -735,7 +735,7 @@ To sign the Authorization Response, the Wallet MUST use a private key that corre
 
 This specification also defines a new Response Mode `direct_post.jwt`, which allows for JARM to be used with Response Mode `direct_post` defined in (#response_mode_post).
 
-The Response Mode `direct_post.jwt` causes the Wallet to send the Authorization Response using an HTTP POST request instead of redirecting back to the Verifier as defined in (#response_mode_post). The Wallet adds the `response` parameter containing the JWT as defined in Section 4.1. of [@!JARM] and (#jarm) in the body of an HTTP POST request using the `application/x-www-form-urlencoded` content type.
+The Response Mode `direct_post.jwt` causes the Wallet to send the Authorization Response using an HTTP POST request instead of redirecting back to the Verifier as defined in (#response_mode_post). The Wallet adds the `response` parameter containing the JWT as defined in Section 4.1. of [@!JARM] and (#jarm) in the body of an HTTP POST request using the `application/x-www-form-urlencoded` content type. The names and values in the body MUST be encoded using UTF-8.
 
 The following is a non-normative example of a response using the `presentation_submission` and `vp_token` values from (#jwt_vc). (line breaks for display purposes only):
 
