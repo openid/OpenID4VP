@@ -252,9 +252,11 @@ The value of the `client_id` Authorization Request parameter, as defined in [@!R
 <client_id_scheme>:<orig_client_id>
 ```
 
-Here, `<client_id_scheme>` is the Client Identifier Scheme and `<orig_client_id>` is the identifier for the Client within the namespace of that scheme. See (#client_metadata_management) for `client_id_scheme` values defined by this specification. 
+Here, `<client_id_scheme>` is the Client Identifier Scheme and `<orig_client_id>` is the identifier for the Client within the namespace of that scheme. See (#client_metadata_management) for Client Identifier Schemes defined by this specification. 
 
-Without the prefix, the `orig_client_id` is not sufficient to identify the Verifier, as different Verifiers (under control by different entities and using different cryptographic material) might have the same `orig_client_id` within different `client_id_scheme` namespaces. Therefore, `orig_client_id` MUST NOT be used independently within the context of the Wallet or its responses to identify the client. Only the full string `<client_id_scheme>:<orig_client_id>` is the Client Identifier of the Verifier. This also applies to all other places where the Client Identifier is used in the context [@!RFC6749] and in the presentation returned to the Verifier.
+For example, a request might contain the parameter `client_id="verifier_attestation:example-client"` to indicate that the `verifier_attestation` Client Identifier Scheme is to be used and that within this scheme, the Verifier can be identified by the string `example-client`. The presentation would contain the string `verifier_attestation:example-client` as the audience (intended receiver). In all other places within the OAuth flow where the Client Identifier is used, the full string `verifier_attestation:example-client` would be.
+
+Important: Without the prefix, the `orig_client_id` is not sufficient to identify the Verifier, as different Verifiers (under control by different entities and using different cryptographic material) might have the same `orig_client_id` within different `client_id_scheme` namespaces. Therefore, `orig_client_id` MUST NOT be used independently within the context of the Wallet or its responses to identify the client. Only the full string `<client_id_scheme>:<orig_client_id>` is the Client Identifier of the Verifier, in particular in places where the Client Identifier is used in [@!RFC6749] and in the presentation returned to the Verifier.
 
 Note that the Verifier needs to determine which Client Identifier schemes the Wallet supports prior to sending the Authorization Request in order to choose a supported scheme.
 
@@ -1138,7 +1140,7 @@ The following is a non-normative example of a Verifiable Presentation of a forma
     "proofPurpose": "authentication",
     "verificationMethod": "did:example:ebfeb1f712ebc6f1c276e12ec21#keys-1",    
     "challenge": "343s$FSFDa-",
-    "domain": "s6BhdRkqt3",
+    "domain": "pre-registered:s6BhdRkqt3",
     "jws": "eyJhb...nKb78"
   }
 }
