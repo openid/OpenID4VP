@@ -243,15 +243,24 @@ when it receives `request_uri_method` parameter with the value `post` but does n
 
 The Verifier articulates requirements of the Credential(s) that are requested using `presentation_definition` and `presentation_definition_uri` parameters that contain a Presentation Definition JSON object as defined in Section 5 of [@!DIF.PresentationExchange]. Wallet implementations MUST process Presentation Definition JSON object and select candidate Verifiable Credential(s) using the evaluation process described in Section 8 of [@!DIF.PresentationExchange] unless implementing only a credential profile that provides rules on how to evaluate and process [@!DIF.PresentationExchange].
 
-The Verifier communicates a Client Identifier Scheme that indicate how the Wallet is supposed to interpret the Client Identifier and associated data in the process of Client identification, authentication, and authorization using a prefix within the `client_id` parameter. This prefix enables deployments of this specification to use different mechanisms to obtain and validate Client metadata beyond the scope of [@!RFC6749]. A certain Client Identifier Scheme MAY require the Verifier to sign the Authorization Request as means of authentication and/or pass additional parameters and require the Wallet to process them.
+## Client Identifier Scheme
+
+This specification defines the concept of a Client Identifier Scheme that indicates how the Wallet is supposed to interpret the Client Identifier and associated data in the process of Client identification, authentication, and authorization. It is communicated in prefix within the `client_id` parameter. This prefix enables deployments of this specification to use different mechanisms to obtain and validate Client metadata beyond the scope of [@!RFC6749]. A certain Client Identifier Scheme MAY require the Verifier to sign the Authorization Request as means of authentication and/or pass additional parameters and require the Wallet to process them.
+
+The value of the `client_id` Authorization Request parameter, as defined in [@!RFC6749], therefore MUST be structured as follows: 
+```
+<client_id_scheme>:<orig_client_id>
+```
+
+Here, `<client_id_scheme>` is the Client Identifier Scheme and `<orig_client_id>` is the identifier for the Client within the namespace of that scheme. See (#client_metadata_management) for `client_id_scheme` values defined by this specification. 
+
+Without the prefix, the `orig_client_id` is not sufficient to identify the Verifier, as different Verifiers (under control by different entities and using different cryptographic material) might have the same `orig_client_id` within different `client_id_scheme` namespaces. Therefore, `orig_client_id` MUST NOT be used independently within the context of the Wallet or its responses to identify the client. Only the full string `<client_id_scheme>:<orig_client_id>` is the Client Identifier of the Verifier. This also applies to all other places where the Client Identifier is used in the context [@!RFC6749] and in the presentation returned to the Verifier.
+
+Note that the Verifier needs to determine which Client Identifier schemes the Wallet supports prior to sending the Authorization Request in order to choose a supported scheme.
 
 Depending on the Client Identifier Scheme, the Verifier can communicate a JSON object with its metadata using the `client_metadata` parameter which contains name/value pairs defined in Section 4.3 and Section 2.1 of the OpenID Connect Dynamic Client Registration 1.0 [@!OpenID.Registration] specification as well as [@!RFC7591].
 
-The value of the `client_id` Authorization Request parameter, as defined in [@!RFC6749], therefore MUST be structured as follows: `<client_id_scheme>:<orig_client_id>`, where `<client_id_scheme>` is the Client Identifier Scheme and `<orig_client_id>` is the original Client Identifier within the namespace of that scheme. Without the prefix, the `orig_client_id` is not sufficient to identify the Verifier, as different Verifiers (under control by different entities and using different cryptographic material) might have the same `orig_client_id` within different `client_id_scheme` namespaces. The `orig_client_id` therefore MUST NOT be used independently within the context of the Wallet or its responses to identify the client, i.e., only the full string `<client_id_scheme>:<orig_client_id>` is the Client Identifier of the Verifier.
-
-See (#client_metadata_management) for `client_id_scheme` values defined by this specification. Note that the Verifier needs to determine which Client Identifier schemes the Wallet supports prior to sending the Authorization Request in order to choose a supported scheme.
-
-This specification enables the Verifier to send both Presentation Definition JSON object and Client Metadata JSON object by value or by reference.
+## New Parameters
 
 This specification defines the following new parameters:
 
@@ -272,6 +281,8 @@ A public key to be used by the Wallet as an input to the key agreement to encryp
 If the Verifier set the `request_uri_method` parameter value to `post` and there is no other means to convey its capabilities to the Wallet, it SHOULD add the `client_metadata` parameter to the Authorization Request. 
 This enables the Wallet to assess the Verifier's capabilities, allowing it to transmit only the relevant capabilities through the `wallet_metadata` parameter in the Request URI POST request. 
 
+## Existing Parameters
+
 The following additional considerations are given for pre-existing Authorization Request parameters:
 
 `nonce`:
@@ -283,12 +294,14 @@ The following additional considerations are given for pre-existing Authorization
 `response_mode`:
 : OPTIONAL. Defined in [@!OAuth.Responses]. This parameter is used (through the new Response Mode `direct_post`) to ask the Wallet to send the response to the Verifier via an HTTPS connection (see (#response_mode_post) for more details). It is also used to request signing and encrypting (see (#jarm) for more details). If the parameter is not present, the default value is `fragment`. 
 
+## Examples
+
 The following is a non-normative example of an Authorization Request: 
 
 ```
 GET /authorize?
   response_type=vp_token
-  &client_id=https%3A%2F%2Fclient.example.org%2Fcb
+  &client_id=redirect_uri:https%3A%2F%2Fclient.example.org%2Fcb
   &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
   &presentation_definition=...
   &nonce=n-0S6_WzA2Mj HTTP/1.1
