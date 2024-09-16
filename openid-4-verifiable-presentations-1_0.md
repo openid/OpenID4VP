@@ -1593,11 +1593,11 @@ And lastly, as part of the request, the Wallet is provided with information abou
 
 ## Protocol
 
-The value of the `protocol` parameter of the W3C Digital Credentials API MUST be set to `openid4vp` for this profile.
+When used with the W3C Digital Credentials API [@!w3c.digital_credentials_api], the exchange protocol is the string `openid4vp` for this profile.
 
 ## Request {#browser_api_request}
 
-The `request` member of the W3C Digital Credentials API [@!w3c.digital_credentials_api] contains an OpenID4VP Authorization Request, where every OpenID4VP Authorization Request parameter is represented as a top-level JavaScript object member.
+The W3C Digital Credentials API [@!w3c.digital_credentials_api] contains an OpenID4VP Authorization Request, where every OpenID4VP Authorization Request parameter is represented as a top-level JavaScript object member.
 
 The following is a non-normative example of an unsigned OpenID4VP request when advanced security features of OpenID4VP are not used:
 
