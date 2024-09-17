@@ -1,5 +1,5 @@
 {
-  "client_id": "pre-registered:s6BhdRkqt3",
+  "client_id": "s6BhdRkqt3",
   "redirect_uri": "https://client.example.org/callback",
   "token_endpoint_auth_method": "client_secret_basic",
   "response_type": "code",
