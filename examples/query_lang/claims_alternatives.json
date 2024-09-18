@@ -8,18 +8,23 @@
         "credential_signing_alg_values": ["ES256", "ES384"],
         "sd_alg_values": ["SHA-256"]
       },
-      "expect_claims": [
-        {"id": "a", "path": ["last_name"]},
+      "expect_claims": [ // define claims, may add other properties like a purpose to each claims
+        {
+          "id": "a",  // required for use in valid_claim_sets below; if that is omitted, the id is optional
+          "path": ["last_name"]
+        },
         {"id": "b", "path": ["postal_code"]},
         {"id": "c", "path": ["locality"]},
         {"id": "d", "path": ["region"]},
         {"id": "e", "path": ["date_of_birth"]},
         {"id": "f", "path": ["email"]}
       ],
-      "valid_claim_sets": [
+      "valid_claim_sets": [ // defines the rules
         // postal code or (locality and region), last_name, and date_of_birth are mandatory; email is optional 
         ["a", "c", "d", "e", "f?"],
-        ["a", "b", "e", "f?"] 
+        ["a", "b", "e", "f?"]
+        
+        // Note: the ? to mark a claim as optional is syntactical sugar; the rules could be rewritten without it, but that would require a lot of repetition
       ]
     }
   ]
