@@ -9,26 +9,17 @@
         "sd_alg_values": ["SHA-256"]
       },
       "expect_claims": [
-          {"path": ["last_name"]},
-          {
-            "path": ["postal_code"],
-            // alternatively, deliver the two claims in the group locality_and_region
-            "alternative_claims": ["locality_and_region"]
-          },
-          {
-            "group": "locality_and_region",
-            "path": ["locality"]
-          },
-          {
-            "group": "locality_and_region",
-            "path": ["region"]
-          },
-          {
-            "path": ["date_of_birth"]
-          },
-          {
-            "path": ["email"]
-          }
+        {"id": "a", "path": ["last_name"]},
+        {"id": "b", "path": ["postal_code"]},
+        {"id": "c", "path": ["locality"]},
+        {"id": "d", "path": ["region"]},
+        {"id": "e", "path": ["date_of_birth"]},
+        {"id": "f", "path": ["email"]}
+      ],
+      "valid_claim_sets": [
+        // postal code or (locality and region), last_name, and date_of_birth are mandatory; email is optional 
+        ["a", "c", "d", "e", "f?"],
+        ["a", "b", "e", "f?"] 
       ]
     }
   ]

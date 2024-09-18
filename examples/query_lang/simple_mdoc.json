@@ -1,7 +1,7 @@
 {
   "expect_credentials": [
     {
-      "group": "my_credential",
+      "id": "my_credential",
       "format": "mso_mdoc",
       "expect_meta": {
         "doctype_values": ["org.iso.7367.1.mVR"],
