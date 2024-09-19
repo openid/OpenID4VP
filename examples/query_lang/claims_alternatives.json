@@ -8,6 +8,7 @@
         "credential_signing_alg_values": ["ES256", "ES384"],
         "sd_alg_values": ["SHA-256"]
       },
+      // Comments in JSON to be removed before merging PR, they are just here to make Brian less sad
       "expect_claims": [ // define claims, may add other properties like a purpose to each claims
         {
           "id": "a",  // required for use in valid_claim_sets below; if that is omitted, the id is optional
@@ -21,8 +22,8 @@
       ],
       "valid_claim_sets": [ // defines the rules
         // postal code or (locality and region), last_name, and date_of_birth are mandatory; email is optional 
-        ["a", "c", "d", "e", "f?"],
-        ["a", "b", "e", "f?"]
+        ["a", "b", "e", "f?"],
+        ["a", "c", "d", "e", "f?"]
         
         // Note: the ? to mark a claim as optional is syntactical sugar; the rules could be rewritten without it, but that would require a lot of repetition
       ]

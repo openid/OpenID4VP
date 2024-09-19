@@ -559,17 +559,24 @@ If the Verifier responds with any HTTP error response, the Wallet MUST terminate
 
 The Verifiable Presentation Query Language (VP Query) is a JSON-encoded query
 language that allows the Verifier to request the Wallet to present Verifiable
-Credentials that match the query. The query consists of a set of constraints
-that the requested Verifiable Credentials must satisfy. The Wallet evaluates the
+Credentials that match the query. The Verifier MAY encode constraints on the
+combinations of credentials and claims that may be returned. The Wallet evaluates the
 query against the Verifiable Credentials it holds and returns the Verifiable
 Presentations that match the query.
 
 A valid VP Query is defined as a JSON-encoded object with the following
-top-level property:
+top-level properties:
 
 `expect_credentials`:
-: REQUIRED. An array of Credential Queries that specify the requested
-Verifiable Credentials, as defined in (#credential_query).
+: REQUIRED. A non-empty array of Credential Queries as defined in (#credential_query)
+that specify the requested Verifiable Credentials.
+
+`valid_credential_sets`:
+: OPTIONAL. A non-empty array containing arrays of identifiers for elements in
+`expect_credentials` that defines which sets of Credentials may be returned.
+The identifier MAY be postfixed by `?`, indicating that
+delivery of the the respective credential is optional. For details, see
+(#vp_query_lang_processing_rules).
 
 Note: While this specification does not define additional top-level properties,
 future extensions MAY define additional properties that modify the behavior of
@@ -578,12 +585,13 @@ the Wallet when processing the query.
 ## Credential Query {#credential_query}
 
 A Credential Query is an object representing a request for one specific
-credential. It contains the following properties:
+credential. 
 
-`group`:
-: REQUIRED. A string identifying the credential in the response, or, if multiple
-credentials carry the same group identifier, the group of credentials that the
-requested credential belongs to.
+It contains the following properties:
+
+`id`:
+: REQUIRED. A string identifying the credential in the response and, if provided,
+the constraints in `valid_credential_sets`.
 
 `format`:
 : REQUIRED. A string that specifies the format of the requested
@@ -599,23 +607,24 @@ no specific restrictions are placed on the metadata or validity of the requested
 Credential.
 
 `expect_claims`:
-: OPTIONAL. An array that specifies the claims that the requested
-Verifiable Credential must contain. Each entry in the array corresponds to exactly
-one claim that is to be returned by the Wallet to fulfill the credential
-request. 
+: OPTIONAL. A non-empty array of objects as defined in (#claims_query) that specifies
+claims in the requested Credentials.
 
-`alternative_credentials`:
-: OPTIONAL. An array of credential group identifiers that specify alternative
-groups of credentials that MAY be returned instead of the credential. Any credential
-in a group listed in `alternative_credentials` MUST NOT itself contain an
-`alternative_credentials` property.
+`valid_claim_sets`:
+: OPTIONAL. A non-empty array containing arrays of identifiers for elements in
+`expect_claims`. The identifier MAY be postfixed by `?`, indicating that
+delivery of the the respective claim is OPTIONAL.  
 
-Each entry MUST be an object with the following properties:
+## Claims Query {#claims_query}
 
-`group`:
-: OPTIONAL. A string identifying a group of claims for expressing alternatives
-between claims. Multiple claims MAY have the same group identifier. The group
-identifier for claims is not reflected in the response.
+Each entry in `expect_claims` MUST be an object with the following properties:
+
+`id`:
+: REQUIRED if `valid_claim_sets` is present; OPTIONAL otherwise. A string
+identifying the particular claim. The value MUST be a non-empty string
+consisting of alphanumeric, underscore (`_`) or hyphen (`-`) characters.
+Within the particular `expected_claims` array, the same `id` MUST NOT
+be present more than once.
 
 `path`:
 : REQUIRED if the credential format uses a JSON-based claims structure; MUST NOT
@@ -642,26 +651,40 @@ of the claim match the type and value specified in the query.
 If the `values` property is present, the Wallet MUST return the claim only if the
 type and value of the claim both match for at least one of the elements in the array.
 
-`alternative_claims`:
-: OPTIONAL. An array of claim group identifiers that specify alternative groups of claims
-that MAY be returned instead of the claim specified by the `path` or `claim_name` property if
-that claim is not present or does not match the restriction expressed by `value` or `values`. Any
-claim in a group listed in `alternatives` MUST NOT itself contain an `alternatives` property.
+### Selecting Claims and Credentials {#vp_query_lang_processing_rules}
 
-### Semantics of `alternative_claims` and `alternative_credentials`
+The same basic logic applies for selecting claims and for selecting credentials, as detailed in the following.
 
-By default, each element within `expect_credentials` or `expect_claims` MUST be returned, unless:
+#### Selecting Claims
 
-- The element contains an `alternative_claims` or `alternative_credentials`
-  property and for at least one of the groups listed as an alternative, all
-  elements in the group can be returned.
-- The element is part of a group that is itself listed as an alternative in
-  another element and returning the element is not needed to fulfill the
-  previous rule.
+The following rules apply for selecting claims via `expect_claims` and `valid_claim_sets`:
 
-Groups of claims are scoped to the specific credential; i.e., groups with the
-same identifier that appear in separate Credential Query in `expect_credentials`
-have no relation to each other.
+- If `expect_claims` is not provided, the Verifier expects all claims existing
+  in the Credential to be returned.
+- If `expect_claims` is provided, but `valid_claim_sets` is not provided,
+  the Verifier expects all claims in `expect_claims` to be returned.
+- Otherwise, the Verifier expects one combination of the claims listed in
+  `valid_claim_sets`, with optional claims marked by the postfix `?`.
+
+If the Wallet cannot fulfill the request by the Verifier, it MUST NOT
+return the respective credential.
+
+#### Selecting Credentials
+
+The following rules apply for selecting credentials via `expect_credentials` and `valid_credential_sets`:
+
+- If `valid_credential_sets` is not provided, the Verifier expects all
+  credentials in `expect_credentials` to be returned.
+- Otherwise, the Verifier expects one combination of the credentials
+  listed in `valid_credential_sets`, with optional credentials marked by the postfix `?`.
+
+Credentials not matching the respective restrictions expressed within
+`expect_credentials` MUST NOT be returned, i.e., they are treated as if
+they would not exist in the Wallet.
+
+If the Wallet cannot fulfill the request by the Verifier, it MUST NOT
+return any credential.
+
 
 ## Format-specific Properties {#format_specific_properties}
 
@@ -791,7 +814,7 @@ Credential of the format `vc+sd-jwt` with a type value of
 
 <{{examples/query_lang/simple.json}}
 
-Additional examples can be found in (#vp_query_examples).
+Additional, more complex examples can be found in (#vp_query_examples).
 
 
 # Response {#response}
@@ -2272,10 +2295,11 @@ Credential in the format `mso_mdoc` with the claims `vehicle_holder` and
 
 <{{examples/query_lang/simple_mdoc.json}}
 
-The following is a non-normative example of a VP Query that requests the claim `last_name`, `date_of_birth`, and `email` and
+The following is a non-normative example of a VP Query that requests 
 
-- either the claim `postal_code`, or
-- the claims `locality` and `region`:
+- the mandatory claims `last_name` and `date_of_birth`, and
+- either the claim `postal_code`, or both of the the claims `locality` and `region`, and
+- optionally the claim `email`.
 
 <{{examples/query_lang/claims_alternatives.json}}
 
@@ -2284,10 +2308,9 @@ Verifiable Credentials; all of them must be returned:
 
 <{{examples/query_lang/multi_credentials.json}}
 
-The following shows a complex query where the Wallet can either deliver
-the first credential (here called `pid`, containing all data the Verifier
-needs), or a second credential (here called `other_pid`), or present two
-credentials that together contain all the data the Verifier needs:
+The following shows a complex query where the Wallet is requested to deliver the `pid` credential, or the `other_pid` credential, or both `pid_reduced_cred_1` and `pid_reduced_cred_2`. Additionally, the `nice_to_have` credential may optionally be
+delivered. From the latter, the claim `legacy_system_rewards_number` may optionally
+be delivered.
 
 <{{examples/query_lang/credentials_alternatives.json}}
 
