@@ -263,13 +263,13 @@ This specification defines the following new request parameters:
 `client_metadata`:
 : OPTIONAL. A JSON object containing the Verifier metadata values. It MUST be UTF-8 encoded. The following metadata parameters MAY be used:
 
-    * `jwks`: OPTIONAL. A JWKS as defined in [@!RFC7591] that can contain one or more public keys with the `"use": "enc"` parameter to be used by the Wallet as an input to the key agreement to encrypt the Authorization Response (see (#jarm)). This allows the verifier to pass an empheral encryption key that is only used for this authorization request. Public keys included in the `jwks` parameter MUST NOT be used to verify the signature of signed Authorization Requests.
-    * `vp_formats`: REQUIRED when not available to the wallet via another mechanism. As defined in (#client_metadata_parameters).
+    * `jwks`: OPTIONAL. A JWKS as defined in [@!RFC7591]. It MAY contain one or more public keys, such as keys with the `"use": "enc"` parameter used by the Wallet as an input to a key agreement that may be used for encryption of the Authorization Response (see (#jarm)), or keys for signature algorithms that require a public key of the Verifier. This allows the Verifier to pass ephemeral keys specific to this Authorization Request. Public keys included in this parameter MUST NOT be used to verify the signature of signed Authorization Requests.
+    * `vp_formats`: REQUIRED when not available to the Wallet via another mechanism. As defined in (#client_metadata_parameters).
     * `authorization_signed_response_alg`: OPTIONAL. As defined in [@!JARM].
     * `authorization_encrypted_response_alg`: OPTIONAL. As defined in [@!JARM].
     * `authorization_encrypted_response_enc`: OPTIONAL. As defined in [@!JARM].
 
-    Authoritative data the wallet is able to obtain about the client from other sources, for example those from an OpenID Federation Entity Statement, take precedence over the values passed in `client_metadata`.
+    Authoritative data the Wallet is able to obtain about the Client from other sources, for example those from an OpenID Federation Entity Statement, take precedence over the values passed in `client_metadata`.
 
     Other metadata parameters MUST be ignored unless a profile of this specification explicitly defines them as usable in the `client_metadata` parameter.
 
