@@ -591,7 +591,10 @@ It contains the following properties:
 
 `id`:
 : REQUIRED. A string identifying the Credential in the response and, if provided,
-the constraints in `valid_credential_sets`.
+the constraints in `valid_credential_sets`. The value MUST be a non-empty string
+consisting of alphanumeric, underscore (`_`) or hyphen (`-`) characters.
+Within the Authorization Request, the same `id` MUST NOT
+be present more than once.
 
 `format`:
 : REQUIRED. A string that specifies the format of the requested
@@ -603,7 +606,7 @@ supported Credential Formats as defined in the Wallet's metadata.
 : OPTIONAL. An object defining additional properties requested by the Verifier that
 apply to the metadata and validity data of the Credential. The properties of
 this object are defined per Credential Format in (#format_specific_properties). If omitted,
-no specific restrictions are placed on the metadata or validity of the requested
+no specific constraints are placed on the metadata or validity of the requested
 Credential.
 
 `expect_claims`:
@@ -659,14 +662,14 @@ The same basic logic applies for selecting claims and for selecting credentials,
 
 The following rules apply for selecting claims via `expect_claims` and `valid_claim_sets`:
 
-- If `expect_claims` is not provided, the Verifier expects all claims existing
-  in the Credential to be returned.
+- If `expect_claims` is not provided, the Verifier requests all claims existing
+  in the Credential.
 - If `expect_claims` is provided, but `valid_claim_sets` is not provided,
-  the Verifier expects all claims in `expect_claims` to be returned.
-- Otherwise, the Verifier expects one combination of the claims listed in
+  the Verifier requests all claims listed in `expect_claims`.
+- Otherwise, the Verifier requests one combination of the claims listed in
   `valid_claim_sets`, with optional claims marked by the postfix `?`.
 
-If the Wallet cannot fulfill the request by the Verifier, it MUST NOT
+If the Wallet cannot deliver all claims requested by the Verifier according to these rules, it MUST NOT
 return the respective Credential.
 
 #### Selecting Credentials
@@ -678,7 +681,7 @@ The following rules apply for selecting Credentials via `expect_credentials` and
 - Otherwise, the Verifier expects one combination of the Credentials
   listed in `valid_credential_sets`, with optional credentials marked by the postfix `?`.
 
-Credentials not matching the respective restrictions expressed within
+Credentials not matching the respective constraints expressed within
 `expect_credentials` MUST NOT be returned, i.e., they are treated as if
 they would not exist in the Wallet.
 
@@ -785,16 +788,16 @@ claims:
 In detail, the array is processed by the Wallet from left to right as follows:
 
  1. Select the root element of the Credential, i.e., the top-level JSON object.
- 2. Process the query components from left to right:
-    1. If the query component is a string, select the element in the respective
+ 2. Process the query of the claims path query array from left to right:
+    1. If the component is a string, select the element in the respective
        key in the currently selected element(s). If any of the currently
        selected element(s) is not an object, abort processing and return an
        error. If the key does not exist in any element currently selected,
        remove that element from the selection.
-    2. If the query component is `*`, select all elements of the currently
+    2. If the component is `*`, select all elements of the currently
        selected array(s). If any of the currently selected element(s) is not an
        array, abort processing and return an error.
-    3. If the query component is a non-negative integer, select the element at
+    3. If the component is a non-negative integer, select the element at
        the respective index in the currently selected array(s). If any of the
        currently selected element(s) is not an array, abort processing and
        return an error. If the index does not exist in a selected array, remove
@@ -2314,7 +2317,7 @@ be delivered.
 
 <{{examples/query_lang/credentials_alternatives.json}}
 
-The following example shows a query that uses the `value` and `values` restrictions
+The following example shows a query that uses the `value` and `values` constraints
 to request a credential with specific values for the `last_name` and `postal_code` claims:
 
 <{{examples/query_lang/value_matching_simple.json}}
