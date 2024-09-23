@@ -560,7 +560,7 @@ If the Verifier responds with any HTTP error response, the Wallet MUST terminate
 The Verifiable Presentation Query Language (VP Query) is a JSON-encoded query
 language that allows the Verifier to request the Wallet to present Verifiable
 Credentials that match the query. The Verifier MAY encode constraints on the
-combinations of credentials and claims that may be returned. The Wallet evaluates the
+combinations of credentials and claims that are requested. The Wallet evaluates the
 query against the Verifiable Credentials it holds and returns the Verifiable
 Presentations that match the query.
 
@@ -572,10 +572,10 @@ top-level properties:
 that specify the requested Verifiable Credentials.
 
 `valid_credential_sets`:
-: OPTIONAL. A non-empty array containing arrays of identifiers for elements in
+: OPTIONAL. A non-empty array containing arrays of identifiers for Credential Queries defined in
 `expect_credentials` that defines which sets of Credentials may be returned.
 The identifier MAY be postfixed by `?`, indicating that
-delivery of the the respective credential is optional. For details, see
+delivery of the the respective Credential is optional. For details, see
 (#vp_query_lang_processing_rules).
 
 Note: While this specification does not define additional top-level properties,
@@ -585,24 +585,24 @@ the Wallet when processing the query.
 ## Credential Query {#credential_query}
 
 A Credential Query is an object representing a request for one specific
-credential. 
+Credential. 
 
 It contains the following properties:
 
 `id`:
-: REQUIRED. A string identifying the credential in the response and, if provided,
+: REQUIRED. A string identifying the Credential in the response and, if provided,
 the constraints in `valid_credential_sets`.
 
 `format`:
 : REQUIRED. A string that specifies the format of the requested
-Verifiable Credential. Valid Credential format identifier values are defined in
+Verifiable Credential. Valid Credential Format Identifier values are defined in
 Appendix A of [@!OpenID.VCI]. The value of this property MUST be one of the
-supported Credential formats as defined in the Wallet's metadata.
+supported Credential Formats as defined in the Wallet's metadata.
 
 `expect_meta`: 
 : OPTIONAL. An object defining additional properties requested by the Verifier that
-apply to the metadata and validity data of the credential. The properties of
-this object are defined per format in (#format_specific_properties). If omitted,
+apply to the metadata and validity data of the Credential. The properties of
+this object are defined per Credential Format in (#format_specific_properties). If omitted,
 no specific restrictions are placed on the metadata or validity of the requested
 Credential.
 
@@ -627,17 +627,17 @@ Within the particular `expected_claims` array, the same `id` MUST NOT
 be present more than once.
 
 `path`:
-: REQUIRED if the credential format uses a JSON-based claims structure; MUST NOT
+: REQUIRED if the Credential Format uses a JSON-based claims structure; MUST NOT
 be present otherwise. The value MUST be a claims path pointer that specifies the path to the claim
 within the Verifiable Credential, as defined in (#claims_path_pointer).
 
 `namespace`:
-: REQUIRED if the credential format is based on ISO 18013-5; MUST NOT be present otherwise. 
+: REQUIRED if the Credential Format is based on mdoc format defined in ISO 18013-5; MUST NOT be present otherwise. 
 The value MUST be a string that specifies the namespace of the claim
 within the Verifiable Credential, e.g., `org.iso.18013.5.1`.
 
 `claim_name`:
-: REQUIRED if the credential format is based on ISO 18013-5; MUST NOT be present otherwise. 
+: REQUIRED if the Credential Format is based on mdoc format defined in ISO 18013-5; MUST NOT be present otherwise. 
 The value MUST be a string that specifies the name of the claim within the provided namespace
 in the Verifiable Credential, e.g., `first_name`.
 
@@ -667,15 +667,15 @@ The following rules apply for selecting claims via `expect_claims` and `valid_cl
   `valid_claim_sets`, with optional claims marked by the postfix `?`.
 
 If the Wallet cannot fulfill the request by the Verifier, it MUST NOT
-return the respective credential.
+return the respective Credential.
 
 #### Selecting Credentials
 
-The following rules apply for selecting credentials via `expect_credentials` and `valid_credential_sets`:
+The following rules apply for selecting Credentials via `expect_credentials` and `valid_credential_sets`:
 
 - If `valid_credential_sets` is not provided, the Verifier expects all
-  credentials in `expect_credentials` to be returned.
-- Otherwise, the Verifier expects one combination of the credentials
+  Credentials in `expect_credentials` to be returned.
+- Otherwise, the Verifier expects one combination of the Credentials
   listed in `valid_credential_sets`, with optional credentials marked by the postfix `?`.
 
 Credentials not matching the respective restrictions expressed within
@@ -725,10 +725,10 @@ TBD
 
 A claims path pointer is a pointer into the JSON structure of the Verifiable
 Credential, identifying one or more claims. A claims path pointer MUST be a
-non-empty array of strings and non-negative integers. A `*` string value indicates
-that all elements of the currently selected array(s) are to be selected; any other
-string indicates that the respective key is to be selected; and a non-negative
-integer indicates that the respective index in an array is to be selected. The path
+non-empty array of strings and non-negative integers. A string value 
+indicates that the respective key is to be selected, the special string value `*` 
+indicates that all elements of the currently selected array(s) are to be selected;
+and a non-negative integer indicates that the respective index in an array is to be selected. The path
 is formed as follows:
 
   - Start with an empty array.
@@ -784,7 +784,7 @@ claims:
 
 In detail, the array is processed by the Wallet from left to right as follows:
 
- 1. Select the root element of the credential, i.e., the top-level JSON object.
+ 1. Select the root element of the Credential, i.e., the top-level JSON object.
  2. Process the query components from left to right:
     1. If the query component is a string, select the element in the respective
        key in the currently selected element(s). If any of the currently
