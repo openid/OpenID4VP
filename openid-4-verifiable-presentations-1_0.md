@@ -669,23 +669,23 @@ The following rules apply for selecting claims via `expect_claims` and `valid_cl
 - Otherwise, the Verifier requests one combination of the claims listed in
   `valid_claim_sets`, with optional claims marked by the postfix `?`.
 
-If the Wallet cannot deliver all claims requested by the Verifier according to these rules, it MUST NOT
+If the Wallet cannot deliver all non-optional claims requested by the Verifier according to these rules, it MUST NOT
 return the respective Credential.
 
 #### Selecting Credentials
 
 The following rules apply for selecting Credentials via `expect_credentials` and `valid_credential_sets`:
 
-- If `valid_credential_sets` is not provided, the Verifier expects all
+- If `valid_credential_sets` is not provided, the Verifier requests all
   Credentials in `expect_credentials` to be returned.
-- Otherwise, the Verifier expects one combination of the Credentials
+- Otherwise, the Verifier requests one combination of the Credentials
   listed in `valid_credential_sets`, with optional credentials marked by the postfix `?`.
 
 Credentials not matching the respective constraints expressed within
 `expect_credentials` MUST NOT be returned, i.e., they are treated as if
 they would not exist in the Wallet.
 
-If the Wallet cannot fulfill the request by the Verifier, it MUST NOT
+If the Wallet cannot deliver all non-optional Credentials requested by the Verifier according to these rules, it MUST NOT
 return any credential.
 
 
