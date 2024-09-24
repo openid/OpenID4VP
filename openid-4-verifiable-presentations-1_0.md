@@ -297,7 +297,7 @@ GET /authorize?
   &nonce=n-0S6_WzA2Mj HTTP/1.1
 ```
 
-The following is a non-normative example of an Authorization Request with a `request_uri_method` parameter (including the additional`client_metadata` parameters): 
+The following is a non-normative example of an Authorization Request with a `request_uri_method` parameter (including the additional `client_metadata` parameter): 
 
 ```
 GET /authorize?
@@ -450,7 +450,9 @@ Here, `<client_id_scheme>` is the Client Identifier Scheme and `<orig_client_id>
 
 For example, an Authorization Request might contain `client_id=verifier_attestation:example-client` to indicate that the `verifier_attestation` Client Identifier Scheme is to be used and that within this scheme, the Verifier can be identified by the string `example-client`. The presentation would contain the full `verifier_attestation:example-client` string as the audience (intended receiver) and the same full string would be used as the Client Identifier anywhere in the OAuth flow.
 
-Without the prefix, `example-client` in the example above would be interpreted as referring to a pre-registered client, as defined below. Therefore, Wallets MUST always use the full Client Identifier, including the prefix if provided, within the context of the Wallet or its responses to identify the client. This refers in particular to places where the Client Identifier is used in [@!RFC6749] and in the presentation returned to the Verifier.
+Without the prefix, `example-client` in the example above would be interpreted as referring to a pre-registered client, as defined below.
+
+Confusing Verifiers using a Client Identifier Scheme with those using none can lead to attacks. Therefore, Wallets MUST always use the full Client Identifier, including the prefix if provided, within the context of the Wallet or its responses to identify the client. This refers in particular to places where the Client Identifier is used in [@!RFC6749] and in the presentation returned to the Verifier.
 
 Note that the Verifier needs to determine which Client Identifier Schemes the Wallet supports prior to sending the Authorization Request in order to choose a supported scheme.
 
