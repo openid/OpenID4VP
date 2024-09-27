@@ -638,7 +638,7 @@ It has been defined to address the following use cases:
 The Response Mode is defined in accordance with [@!OAuth.Responses] as follows:
 
 `direct_post`:
-: In this mode, the Authorization Response is sent to the Verifier using an HTTP POST request to an endpoint controlled by the Verifier. The Authorization Response parameters are encoded in the body using the `application/x-www-form-urlencoded` content type. The names and values in the body MUST be encoded using UTF-8. The flow can end with an HTTP POST request from the Wallet to the Verifier, or it can end with a redirect that follows the HTTP POST request, if the Verifier responds with a redirect URI to the Wallet.
+: In this mode, the Authorization Response is sent to the Verifier using an HTTP POST request to an endpoint controlled by the Verifier. The Authorization Response parameters are encoded in the body using the `application/x-www-form-urlencoded` content type. The names and values in the body MUST be encoded using UTF-8. The response from the Verifier is a JSON object as defined below. The flow can end with an HTTP POST request from the Wallet to the Verifier, or it can end with a redirect that follows the HTTP POST request, if the Verifier responds with a redirect URI to the Wallet.
 
 The following new Authorization Request parameter is defined to be used in conjunction with Response Mode `direct_post`: 
 
@@ -699,12 +699,14 @@ Content-Type: application/x-www-form-urlencoded
   state=eyJhb...6-sVA
 ```
 
-If the Response URI has successfully processed the Authorization Response or Authorization Error Response, it MUST respond with HTTP status code 200.
+If the Response URI has successfully processed the Authorization Response or Authorization Error Response, it MUST respond with HTTP status code 200 and a JSON object.
 
-The following new parameter is defined for use in the response from the Response Endpoint to the Wallet:
+The following new parameter is defined for use in the JSON object returned from the Response Endpoint to the Wallet:
 
 `redirect_uri`:
 : OPTIONAL. String containing a URI. When this parameter is present the Wallet MUST redirect the user agent to this URI. This allows the Verifier to continue the interaction with the End-User on the device where the Wallet resides after the Wallet has sent the Authorization Response to the Response URI. It can be used by the Verifier to prevent session fixation ((#session_fixation)) attacks. The Response URI MAY return the `redirect_uri` parameter in response to successful Authorization Responses or for Error Responses.
+
+Additional response parameters MAY be defined and used. The Wallet MUST ignore any unrecognized parameters.
 
 Note: Response Mode `direct_post` without the `redirect_uri` could be less secure than Response Modes with redirects. For details, see ((#session_fixation)).
 
