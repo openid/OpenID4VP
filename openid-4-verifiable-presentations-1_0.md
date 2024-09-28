@@ -1282,29 +1282,29 @@ In the event that another component is invoked instead of the Wallet, the End-Us
     <author initials="T." surname="Lodderstedt" fullname="Torsten Lodderstedt">
       <organization>German Federal Agency for Disruptive Innovation (SPRIND)</organization>
     </author>
-   <date day="1" month="January" year="2023"/>
+   <date day="28" month="November" year="2023"/>
   </front>
 </reference>
 
-<reference anchor="OpenID.Core" target="http://openid.net/specs/openid-connect-core-1_0.html">
+<reference anchor="OpenID.Core" target="https://openid.net/specs/openid-connect-core-1_0.html">
   <front>
-    <title>OpenID Connect Core 1.0 incorporating errata set 1</title>
-    <author initials="N." surname="Sakimura" fullname="Nat Sakimura">
-      <organization>NRI</organization>
+    <title>OpenID Connect Core 1.0 incorporating errata set 2</title>
+    <author fullname="Nat Sakimura" initials="N." surname="Sakimura">
+      <organization abbrev="NAT.Consulting (was at NRI)">NAT.Consulting</organization>
     </author>
-    <author initials="J." surname="Bradley" fullname="John Bradley">
-      <organization>Ping Identity</organization>
+    <author fullname="John Bradley" initials="J." surname="Bradley">
+      <organization abbrev="Yubico (was at Ping Identity)">Yubico</organization>
     </author>
-    <author initials="M." surname="Jones" fullname="Michael B. Jones">
-      <organization>Microsoft</organization>
+    <author fullname="Michael B. Jones" initials="M.B." surname="Jones">
+      <organization abbrev="Self-Issued Consulting (was at Microsoft)">Self-Issued Consulting</organization>
     </author>
-    <author initials="B." surname="de Medeiros" fullname="Breno de Medeiros">
-      <organization>Google</organization>
+    <author fullname="Breno de Medeiros" initials="B." surname="de Medeiros">
+      <organization abbrev="Google">Google</organization>
     </author>
-    <author initials="C." surname="Mortimore" fullname="Chuck Mortimore">
-      <organization>Salesforce</organization>
+    <author fullname="Chuck Mortimore" initials="C." surname="Mortimore">
+      <organization abbrev="Disney (was at Salesforce)">Disney</organization>
     </author>
-   <date day="8" month="Nov" year="2014"/>
+    <date day="15" month="December" year="2023"/>
   </front>
 </reference>
 
@@ -1362,40 +1362,21 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </front>
 </reference>
 
-<reference anchor="OpenID-Discovery" target="https://openid.net/specs/openid-connect-discovery-1_0.html">
+<reference anchor="OpenID.Registration" target="https://openid.net/specs/openid-connect-registration-1_0.html">
   <front>
-    <title>OpenID Connect Discovery 1.0 incorporating errata set 1</title>
-    <author initials="N." surname="Sakimura" fullname="Nat Sakimura">
-      <organization>NRI</organization>
+    <title>OpenID Connect Dynamic Client Registration 1.0 incorporating errata set 2</title>
+    <author fullname="Nat Sakimura" initials="N." surname="Sakimura">
+      <organization abbrev="NAT.Consulting (was at NRI)">NAT.Consulting</organization>
     </author>
-    <author initials="J." surname="Bradley" fullname="John Bradley">
-      <organization>Ping Identity</organization>
+    <author fullname="John Bradley" initials="J." surname="Bradley">
+      <organization abbrev="Yubico (was at Ping Identity)">Yubico</organization>
     </author>
-    <author initials="B." surname="de Medeiros" fullname="Breno de Medeiros">
-      <organization>Google</organization>
+    <author fullname="Michael B. Jones" initials="M.B." surname="Jones">
+      <organization abbrev="Self-Issued Consulting (was at Microsoft)">Self-Issued Consulting</organization>
     </author>
-    <author initials="E." surname="Jay" fullname="Edmund Jay">
-      <organization> Illumila </organization>
-    </author>
-   <date day="8" month="Nov" year="2014"/>
+    <date day="15" month="December" year="2023"/>
   </front>
 </reference>
-
-<reference anchor="OpenID.Registration" target="https://openid.net/specs/openid-connect-registration-1_0.html">
-        <front>
-          <title>OpenID Connect Dynamic Client Registration 1.0 incorporating errata set 1</title>
-		  <author fullname="Nat Sakimura">
-            <organization>NRI</organization>
-          </author>
-          <author fullname="John Bradley">
-            <organization>Ping Identity</organization>
-          </author>
-          <author fullname="Michael B. Jones">
-            <organization>Microsoft</organization>
-          </author>
-          <date day="8" month="Nov" year="2014"/>
-        </front>
- </reference>
 
 <reference anchor="Hyperledger.Indy" target="https://www.hyperledger.org/use/hyperledger-indy">
         <front>
@@ -1505,7 +1486,7 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </front>
 </reference>
 
-<reference anchor="OpenID.Federation" target="https://openid.net/specs/openid-connect-federation-1_0.html">
+<reference anchor="OpenID.Federation" target="https://openid.net/specs/openid-federation-1_0.html">
         <front>
           <title>OpenID Federation 1.0</title>
 		  <author fullname="R. Hedberg, Ed.">
@@ -1526,7 +1507,7 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
           <author fullname="Vladimir Dzhuvinov">
             <organization>Connect2id</organization>
           </author>
-          <date day="8" month="November" year="2023"/>
+          <date day="15" month="September" year="2024"/>
         </front>
 </reference>
 
@@ -1540,6 +1521,26 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
             <organization>Google</organization>
           </author>
         </front>
+</reference>
+
+<reference anchor="IANA.OAuth" target="https://www.iana.org/assignments/oauth-parameters">
+  <front>
+    <title>OAuth Parameters</title>
+    <author>
+      <organization>IANA</organization>
+    </author>
+    <date/>
+  </front>
+</reference>
+
+<reference anchor="IANA.MediaTypes" target="https://www.iana.org/assignments/media-types">
+  <front>
+    <title>Media Types</title>
+    <author>
+      <organization>IANA</organization>
+    </author>
+    <date/>
+  </front>
 </reference>
 
 # OpenID4VP profile for the W3C Digital Credentials API
@@ -2009,60 +2010,68 @@ Note: The `nonce` and `aud` are set to the `nonce` of the request and the Client
 
 # IANA Considerations
 
-## Response Types
+## OAuth Authorization Endpoint Response Types Registry
+
+This specification registers the `response_type` values defined by this specification
+in the IANA "OAuth Authorization Endpoint Response Types" registry [@IANA.OAuth]
+established by [@!RFC6749].
+
+### vp_token
 
 * Response Type Name: `vp_token`
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
 * Specification Document(s): https://openid.net/specs/openid-4-verifiable-presentations-1_0.html
 
+### vp_token id_token
+
 * Response Type Name: `vp_token id_token`
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
 * Specification Document(s): https://openid.net/specs/openid-4-verifiable-presentations-1_0.html
 
-Note: Plan to register the following Response Types in the [OAuth Authorization Endpoint Response Types IANA Registry](https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml#endpoint).
+## Media Types Registry
 
-## Media Types
+This section registers the following media type [@RFC2046"]
+in the IANA "Media Types" registry <xref target="IANA.MediaTypes"/>
+in the manner described in [@RFC6838].
+
 ### application/verifier-attestation+jwt {#va_media_type}
 
-The Internet media type for a Verifier Attestation JWT is `application/verifier-attestation+jwt`.
+The media type for a Verifier Attestation JWT is `application/verifier-attestation+jwt`.
 
-Type name: : `application`
-
-Subtype name: : `verifier-attestation+jwt`
-
-Required parameters: : n/a
-
-Optional parameters: : n/a
-
-Encoding considerations: : Compact Serialization as defined in [@!RFC7519].
-
-Security considerations: : See Security Considerations in in [@!RFC7519].
-
-Interoperability considerations: : n/a
-
-- Published specification: : TODO
-- Applications that use this media type: : Applications that issue, present,
-  verify verifier attestation VCs.
-- Additional information:
+* Type name: `application`
+* Subtype name: `verifier-attestation+jwt`
+* Required parameters: n/a
+* Optional parameters: n/a
+* Encoding considerations: Uses JWS Compact Serialization as defined in [@!RFC7515].
+* Security considerations: See Security Considerations in in [@!RFC7519].
+* Interoperability considerations: n/a
+* Published specification: (#verifier_attestation_jwt) of this specification
+* Applications that use this media type: Applications that issue, present, verify verifier attestation VCs
+* Additional information:
   - Magic number(s): n/a
   - File extension(s): n/a
   - Macintosh file type code(s): n/a
-  - Person & email address to contact for further information: TBD
-  - Intended usage: COMMON
-  - Restrictions on usage: none
-  - Author: tbd <TODO@email.com>
-  - Change controller: OpenID Foundation
+* Person & email address to contact for further information: TBD
+* Intended usage: COMMON
+* Restrictions on usage: none
+* Author: Oliver Terbu, oliver.terbu@mattr.global
+* Change controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
 
+## JSON Web Signature and Encryption Header Parameters Registry {#jose_header}
 
-## JWS Headers
-### JWT {#jose_header}
+This specification registers the following JWS header parameter in
+the IANA "JSON Web Signature and Encryption Header Parameters" registry [@IANA.JOSE]
+established by [@!RFC7515].
+
+### jwt
+
 This specification registers the following JWS header name in the IANA "JSON Web Signature and Encryption Header Parameters" registry established by [@!RFC7515].
 
 * Header Parameter Name: `jwt`
 * Header Parameter Description: This header contains a JWT. Processing rules MAY depend on the `typ` header value of the respective JWT. 
 * Header Parameter Usage Location: JWS
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
-* Specification Document(s): (#verifier_attestation_jwt)
+* Specification Document(s): (#verifier_attestation_jwt) of this specification
 
 # Acknowledgements {#Acknowledgements}
 
