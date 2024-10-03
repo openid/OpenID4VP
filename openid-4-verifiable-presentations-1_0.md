@@ -2223,7 +2223,7 @@ established by [@!RFC6755].
 
 ## Media Types Registry
 
-This section registers the following media type [@RFC2046"]
+This section registers the following media type [@RFC2046]
 in the IANA "Media Types" registry <xref target="IANA.MediaTypes"/>
 in the manner described in [@RFC6838].
 
