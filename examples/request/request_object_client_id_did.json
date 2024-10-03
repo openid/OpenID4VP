@@ -1,6 +1,5 @@
 {
   "client_id": "did:example:123",
-  "client_id_scheme": "did",
   "response_type": "vp_token",
   "redirect_uri": "https://client.example.org/callback",
   "nonce": "n-0S6_WzA2Mj",
