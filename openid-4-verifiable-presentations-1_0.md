@@ -2106,7 +2106,7 @@ established by [@!RFC6749].
 ### vp_token
 
 * Name: vp_token
-* Parameter Usage Location: authorization response
+* Parameter Usage Location: authorization response, token response
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
 * Reference: (#response-parameters) of this specification
 
