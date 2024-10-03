@@ -2092,9 +2092,16 @@ established by [@!RFC6749].
 ### wallet_nonce
 
 * Name: wallet_nonce
-* Parameter Usage Location: authorization request
+* Parameter Usage Location: authorization request, token response
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
 * Reference: (#request_uri_method_post) of this specification
+
+### response_uri
+
+* Name: response_uri
+* Parameter Usage Location: authorization request
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#response_mode_post) of this specification
 
 ### vp_token
 
@@ -2105,17 +2112,10 @@ established by [@!RFC6749].
 
 ### presentation_submission
 
-* Name: presentation_submission
+* Name: presentation_submission, token response
 * Parameter Usage Location: authorization response
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
 * Reference: (#response-parameters) of this specification
-
-### response_uri
-
-* Name: response_uri
-* Parameter Usage Location: authorization request
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
-* Reference: (#response_mode_post) of this specification
 
 ### expected_origins
 
@@ -2123,13 +2123,6 @@ established by [@!RFC6749].
 * Parameter Usage Location: authorization request
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
 * Reference: (#browser_api_request) of this specification
-
-### id_token_type
-
-* Name: id_token_type
-* Parameter Usage Location: authorization request
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
-* Reference: (#siop_request) of this specification
 
 ## OAuth Extensions Error Registry
 
@@ -2140,7 +2133,7 @@ established by [@!RFC6749].
 ### vp_formats_not_supported
 
 * Name: vp_formats_not_supported
-* Usage Location: authorization endpoint
+* Usage Location: authorization endpoint, token endpoint
 * Protocol Extension: OpenID for Verifiable Presentations
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
 * Reference: (#error-response) of this specification
@@ -2148,7 +2141,7 @@ established by [@!RFC6749].
 ### invalid_presentation_definition_uri
 
 * Name: invalid_presentation_definition_uri
-* Usage Location: authorization endpoint
+* Usage Location: authorization endpoint, token endpoint
 * Protocol Extension: OpenID for Verifiable Presentations
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
 * Reference: (#error-response) of this specification
@@ -2156,7 +2149,7 @@ established by [@!RFC6749].
 ### invalid_presentation_definition_reference
 
 * Name: invalid_presentation_definition_reference
-* Usage Location: authorization endpoint
+* Usage Location: authorization endpoint, token endpoint
 * Protocol Extension: OpenID for Verifiable Presentations
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
 * Reference: (#error-response) of this specification
@@ -2172,7 +2165,7 @@ established by [@!RFC6749].
 ### wallet_unavailable
 
 * Name: wallet_unavailable
-* Usage Location: authorization endpoint
+* Usage Location: authorization endpoint, token endpoint
 * Protocol Extension: OpenID for Verifiable Presentations
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
 * Reference: (#error-response) of this specification
