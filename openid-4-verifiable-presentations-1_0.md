@@ -2063,63 +2063,63 @@ established by [@!RFC6749].
 
 ### presentation_definition
 
-* Name: presentation_definition
+* Name: `presentation_definition`
 * Parameter Usage Location: authorization request
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
 * Reference: (#vp_token_request) of this specification
 
 ### presentation_definition_uri
 
-* Name: presentation_definition_uri
+* Name: `presentation_definition_uri`
 * Parameter Usage Location: authorization request
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
 * Reference: (#vp_token_request) of this specification
 
 ### client_metadata
 
-* Name: client_metadata
+* Name: `client_metadata`
 * Parameter Usage Location: authorization request
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
 * Reference: (#vp_token_request) of this specification
 
 ### request_uri_method
 
-* Name: request_uri_method
+* Name: `request_uri_method`
 * Parameter Usage Location: authorization request
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
 * Reference: (#vp_token_request) of this specification
 
 ### wallet_nonce
 
-* Name: wallet_nonce
+* Name: `wallet_nonce`
 * Parameter Usage Location: authorization request, token response
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
 * Reference: (#request_uri_method_post) of this specification
 
 ### response_uri
 
-* Name: response_uri
+* Name: `response_uri`
 * Parameter Usage Location: authorization request
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
 * Reference: (#response_mode_post) of this specification
 
 ### vp_token
 
-* Name: vp_token
+* Name: `vp_token`
 * Parameter Usage Location: authorization response, token response
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
 * Reference: (#response-parameters) of this specification
 
 ### presentation_submission
 
-* Name: presentation_submission, token response
-* Parameter Usage Location: authorization response
+* Name: `presentation_submission`
+* Parameter Usage Location: authorization response, token response
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
 * Reference: (#response-parameters) of this specification
 
 ### expected_origins
 
-* Name: expected_origins
+* Name: `expected_origins`
 * Parameter Usage Location: authorization request
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
 * Reference: (#browser_api_request) of this specification
@@ -2132,7 +2132,7 @@ established by [@!RFC6749].
 
 ### vp_formats_not_supported
 
-* Name: vp_formats_not_supported
+* Name: `vp_formats_not_supported`
 * Usage Location: authorization endpoint, token endpoint
 * Protocol Extension: OpenID for Verifiable Presentations
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
@@ -2140,7 +2140,7 @@ established by [@!RFC6749].
 
 ### invalid_presentation_definition_uri
 
-* Name: invalid_presentation_definition_uri
+* Name: `invalid_presentation_definition_uri`
 * Usage Location: authorization endpoint, token endpoint
 * Protocol Extension: OpenID for Verifiable Presentations
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
@@ -2148,7 +2148,7 @@ established by [@!RFC6749].
 
 ### invalid_presentation_definition_reference
 
-* Name: invalid_presentation_definition_reference
+* Name: `invalid_presentation_definition_reference`
 * Usage Location: authorization endpoint, token endpoint
 * Protocol Extension: OpenID for Verifiable Presentations
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
@@ -2156,7 +2156,7 @@ established by [@!RFC6749].
 
 ### invalid_request_uri_method
 
-* Name: invalid_request_uri_method
+* Name: `invalid_request_uri_method`
 * Usage Location: authorization endpoint
 * Protocol Extension: OpenID for Verifiable Presentations
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
@@ -2164,7 +2164,7 @@ established by [@!RFC6749].
 
 ### wallet_unavailable
 
-* Name: wallet_unavailable
+* Name: `wallet_unavailable`
 * Usage Location: authorization endpoint, token endpoint
 * Protocol Extension: OpenID for Verifiable Presentations
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
@@ -2178,14 +2178,14 @@ established by [@!RFC8414].
 
 ### presentation_definition_uri_supported
 
-* Metadata Name: presentation_definition_uri_supported
+* Metadata Name: `presentation_definition_uri_supported`
 * Metadata Description: Boolean value specifying whether the Wallet supports the transfer of presentation_definition by reference
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
 * Reference: (#as_metadata_parameters) of this specification
 
 ### vp_formats_supported
 
-* Metadata Name: vp_formats_supported
+* Metadata Name: `vp_formats_supported`
 * Metadata Description: An object containing a list of name/value pairs, where the name is a string identifying a Credential format supported by the Wallet
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
 * Reference: (#as_metadata_parameters) of this specification
@@ -2198,7 +2198,7 @@ established by [@!RFC7591].
 
 ### vp_formats
 
-* Client Metadata Name: vp_formats
+* Client Metadata Name: `vp_formats`
 * Client Metadata Description: Boolean value specifying whether the Wallet supports the transfer of presentation_definition by reference
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
 * Reference: (#client_metadata_parameters) of this specification
@@ -2211,14 +2211,14 @@ established by [@!RFC6755].
 
 ### urn:ietf:params:oauth:federation
 
-* URN: urn:ietf:params:oauth:federation
+* URN: `urn:ietf:params:oauth:federation`
 * Common Name: OpenID Federation
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
 * Reference: (#federations) of this specification
 
 ### urn:ietf:params:oauth:federation_trust_mark
 
-* URN: urn:ietf:params:oauth:federation_trust_mark
+* URN: `urn:ietf:params:oauth:federation_trust_mark`
 * Common Name: OpenID Federation Trust Mark
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
 * Reference: (#federations) of this specification
@@ -2273,7 +2273,7 @@ in the IANA "Uniform Resource Identifier (URI) Schemes" registry [@IANA.URI.Sche
 
 ### openid4vp
 
-* URI Scheme: openid4vp
+* URI Scheme: `openid4vp`
 * Description: Custom scheme used for wallet invocation
 * Status: Provisional
 * Well-Known URI Support: -
