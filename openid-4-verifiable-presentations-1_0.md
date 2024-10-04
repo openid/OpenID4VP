@@ -1613,6 +1613,7 @@ The following is a non-normative example of an unsigned OpenID4VP request when a
   }
 }
 ```
+
 Out of the Authorization Request parameters defined in [@!RFC6749] and (#vp_token_request), the following are supported with this profile:
 
 * `client_id`
@@ -1649,6 +1650,21 @@ The Verifier MAY send a signed request, for example, when identification and aut
 
 The signed Request Object MAY contain all the parameters listed in (#browser_api_request), except `request`.
 
+Below is a non-normative example of such a request:
+
+```js
+{
+  digital: {
+    providers: [{
+      protocol: "openid4vp",
+      request: {
+        request: "eyJhbGciOiJF..."
+     }
+    }]
+  }
+}
+```
+
 This is an example of the payload of a signed OpenID4VP request used with the W3C Digital Credentials API:
 
 <{{examples/digital_credentials_api/signed_request_payload.json}}
@@ -1657,7 +1673,7 @@ The signed request allows the Wallet to authenticate the Verifier using a trust 
 
 ## Response
 
-Every OpenID4VP Authorization Request results in a response being provided through the W3C Digital Credentials API. The response is an instance of the `DigitalCredential` interface, as defined in [@!w3c.digital_credentials_api], and the OpenID4VP Authorization Response parameters as defined for the Response Type are represented as part of the returned `DigitalCredential` object.
+Every OpenID4VP Authorization Request results in a response being provided through the W3C Digital Credentials API. The response is an instance of the `DigitalCredential` interface, as defined in [@!w3c.digital_credentials_api], and the OpenID4VP Authorization Response parameters as defined for the Response Type are represented as an object within the `data` attribute.
 
 # Credential Format Profiles {#alternative_credential_formats}
 
