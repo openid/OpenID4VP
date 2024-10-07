@@ -1031,7 +1031,7 @@ The following is a non-normative example of the terms of use that may be defined
 }
 ```
 
-Federations that conform to those specified in [@OpenID.Federation] are identified by the `type` `urn:ietf:params:oauth:federation`. Individual federations are identified by the Entity Identifier of the trust anchor. If the federation decides to use trust marks as signs of whether an entity belongs to a federation or not then the federation is identified by the `type` `urn:ietf:params:oauth:federation_trust_mark` and individual federations are identified by the Entity Identifier of the trust mark issuer.
+Federations that conform to those specified in [@OpenID.Federation] are identified by the `type` `urn:openid:params:terms-of-use-type:federation`. Individual federations are identified by the Entity Identifier of the trust anchor. If the federation decides to use trust marks as signs of whether an entity belongs to a federation or not then the federation is identified by the `type` `urn:openid:params:terms-of-use-type:federation_trust_mark` and individual federations are identified by the Entity Identifier of the trust mark issuer.
 
 Trust schemes that conform to the TRAIN [@TRAIN] trust scheme are identified by the `type` `https://train.trust-scheme.de/info`. Individual federations are identified by their DNS names.
 
