@@ -696,7 +696,7 @@ Credentials not matching the respective constraints expressed within
 they would not exist in the Wallet.
 
 If the Wallet cannot deliver all non-optional Credentials requested by the Verifier according to these rules, it MUST NOT
-return any credential.
+return any credential(s).
 
 
 ## Format-specific Properties {#format_specific_properties}
