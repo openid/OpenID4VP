@@ -12,9 +12,9 @@ participant "Verifier" as r
 u --> r : use
 activate r
 
-r --> u: authorization request\n(client_id, request_uri, request_uri_method=post, [client_id_scheme])
+r --> u: authorization request\n(client_id, request_uri, request_uri_method=post)
 deactivate r
-u --> w: authorization request\n(client_id, request_uri, request_uri_method=post, [client_id_scheme])
+u --> w: authorization request\n(client_id, request_uri, request_uri_method=post)
 activate w
 w --> w: [optional. Check client_id with trust framework]
 note over r,w
@@ -24,7 +24,7 @@ note over r,w
 end note
 w --> r: POST **request_uri** ([wallet_metadata][, wallet_nonce])
 r -> r: create and sign (and optionally encrypt) request object 
-r --> w: **signed (optionally encrypted) request object** (client_id, client_id_scheme, wallet_nonce, nonce, \nresponse_uri, presentation_definition, state)
+r --> w: **signed (optionally encrypted) request object** (client_id, wallet_nonce, nonce, \nresponse_uri, presentation_definition, state)
 w -> w: authenticate and\n authorize Verifier
 
 note over u, w: User authentication and Credential selection/confirmation
