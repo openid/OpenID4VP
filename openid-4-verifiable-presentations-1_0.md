@@ -613,15 +613,15 @@ Presentations that match the query.
 A valid VP Query is defined as a JSON-encoded object with the following
 top-level properties:
 
-`expect_credentials`:
+`credentials`:
 : REQUIRED. A non-empty array of Credential Queries as defined in (#credential_query)
 that specify the requested Verifiable Credentials.
 
-`valid_credential_sets`:
+`credential_sets`:
 : OPTIONAL. A non-empty array containing arrays of identifiers for Credential Queries defined in
-`expect_credentials` that defines which sets of Credentials may be returned.
+`credentials` that defines which sets of Credentials may be returned.
 The identifier MAY be postfixed by `?`, indicating that
-delivery of the the respective Credential is optional. For details, see
+delivery of the respective Credential is optional. For details, see
 (#vp_query_lang_processing_rules).
 
 Note: While this specification does not define additional top-level properties,
@@ -637,7 +637,7 @@ It contains the following properties:
 
 `id`:
 : REQUIRED. A string identifying the Credential in the response and, if provided,
-the constraints in `valid_credential_sets`. The value MUST be a non-empty string
+the constraints in `credential_sets`. The value MUST be a non-empty string
 consisting of alphanumeric, underscore (`_`) or hyphen (`-`) characters.
 Within the Authorization Request, the same `id` MUST NOT
 be present more than once.
@@ -645,31 +645,30 @@ be present more than once.
 `format`:
 : REQUIRED. A string that specifies the format of the requested
 Verifiable Credential. Valid Credential Format Identifier values are defined in
-Appendix A of [@!OpenID.VCI]. The value of this property MUST be one of the
-supported Credential Formats as defined in the Wallet's metadata.
+Appendix A of [@!OpenID.VCI].
 
-`expect_meta`: 
+`meta`: 
 : OPTIONAL. An object defining additional properties requested by the Verifier that
 apply to the metadata and validity data of the Credential. The properties of
 this object are defined per Credential Format in (#format_specific_properties). If omitted,
 no specific constraints are placed on the metadata or validity of the requested
 Credential.
 
-`expect_claims`:
+`claims`:
 : OPTIONAL. A non-empty array of objects as defined in (#claims_query) that specifies
 claims in the requested Credentials.
 
-`valid_claim_sets`:
+`claim_sets`:
 : OPTIONAL. A non-empty array containing arrays of identifiers for elements in
-`expect_claims`. The identifier MAY be postfixed by `?`, indicating that
+`claims`. The identifier MAY be postfixed by `?`, indicating that
 delivery of the the respective claim is OPTIONAL.  
 
 ## Claims Query {#claims_query}
 
-Each entry in `expect_claims` MUST be an object with the following properties:
+Each entry in `claims` MUST be an object with the following properties:
 
 `id`:
-: REQUIRED if `valid_claim_sets` is present; OPTIONAL otherwise. A string
+: REQUIRED if `claim_sets` is present; OPTIONAL otherwise. A string
 identifying the particular claim. The value MUST be a non-empty string
 consisting of alphanumeric, underscore (`_`) or hyphen (`-`) characters.
 Within the particular `expected_claims` array, the same `id` MUST NOT
@@ -693,12 +692,12 @@ in the Verifiable Credential, e.g., `first_name`.
 `value`:
 : OPTIONAL. A string, integer or boolean value that specifies the expected value of the claim. If the
 `value` property is present, the Wallet MUST return the claim only if the type and value
-of the claim match the type and value specified in the query.
+of the claim match the type and value specified in the query. This property MUST NOT be present if the `values` property is present.
 
 `values`:
 : OPTIONAL. An array of strings, integers or boolean values that specifies the expected values of the claim.
 If the `values` property is present, the Wallet MUST return the claim only if the
-type and value of the claim both match for at least one of the elements in the array.
+type and value of the claim both match for at least one of the elements in the array. This property MUST NOT be present if the `value` property is present.
 
 ### Selecting Claims and Credentials {#vp_query_lang_processing_rules}
 
@@ -706,29 +705,29 @@ The same basic logic applies for selecting claims and for selecting credentials,
 
 #### Selecting Claims
 
-The following rules apply for selecting claims via `expect_claims` and `valid_claim_sets`:
+The following rules apply for selecting claims via `claims` and `claim_sets`:
 
-- If `expect_claims` is not provided, the Verifier requests all claims existing
+- If `claims` is not provided, the Verifier requests all claims existing
   in the Credential.
-- If `expect_claims` is provided, but `valid_claim_sets` is not provided,
-  the Verifier requests all claims listed in `expect_claims`.
+- If `claims` is provided, but `claim_sets` is not provided,
+  the Verifier requests all claims listed in `claims`.
 - Otherwise, the Verifier requests one combination of the claims listed in
-  `valid_claim_sets`, with optional claims marked by the postfix `?`.
+  `claim_sets`, with optional claims marked by the postfix `?`.
 
 If the Wallet cannot deliver all non-optional claims requested by the Verifier according to these rules, it MUST NOT
 return the respective Credential.
 
 #### Selecting Credentials
 
-The following rules apply for selecting Credentials via `expect_credentials` and `valid_credential_sets`:
+The following rules apply for selecting Credentials via `credentials` and `credential_sets`:
 
-- If `valid_credential_sets` is not provided, the Verifier requests all
-  Credentials in `expect_credentials` to be returned.
+- If `credential_sets` is not provided, the Verifier requests all
+  Credentials in `credentials` to be returned.
 - Otherwise, the Verifier requests one combination of the Credentials
-  listed in `valid_credential_sets`, with optional credentials marked by the postfix `?`.
+  listed in `credential_sets`, with optional credentials marked by the postfix `?`.
 
 Credentials not matching the respective constraints expressed within
-`expect_credentials` MUST NOT be returned, i.e., they are treated as if
+`credentials` MUST NOT be returned, i.e., they are treated as if
 they would not exist in the Wallet.
 
 If the Wallet cannot deliver all non-optional Credentials requested by the Verifier according to these rules, it MUST NOT
@@ -748,22 +747,12 @@ be valid type identifiers as defined in [@!I-D.ietf-oauth-sd-jwt-vc]. The Wallet
 MAY return credentials that inherit from any of the specified types, following
 the inheritance logic defined in [@!I-D.ietf-oauth-sd-jwt-vc].
 
-`credential_signing_alg_values`:
-: OPTIONAL. An array of strings that specifies
-the allowed algorithms for signing the SD-JWT (i.e., only the issuer-signed part).
-
-`kbjwt_signing_alg_values`:
-: OPTIONAL. An array of strings that specifies the
-allowed algorithms for signing the Key-Binding JWT (KB-JWT) (i.e., the part signed
-by the holder).
-
-`sd_alg_values`:
-: OPTIONAL. An array of strings that specifies the allowed hash algorithms for
-digests in the SD-JWT and KB-JWT.
-
 ### Format `mso_mdoc` {#format_mso_mdoc}
 
-TBD
+`doctype_values`:
+: OPTIONAL. An array of strings that specifies allowed values for the
+doctype of the requested Verifiable Credential. All elements in the array MUST
+be valid doctype identifiers as defined in ISO 18013-5.
 
 ### Format `jwt_vp*`
 

@@ -1,17 +1,15 @@
 {
-  "expect_credentials": [
+  "credentials": [
     {
       "group": "pid",
       "format": "vc+sd-jwt",
-      "expect_meta": {
-        "vct_values": [ "https://credentials.example.com/identity_credential" ],
-        "credential_signing_alg_values": ["ES256", "ES384"],
-        "sd_alg_values": ["SHA-256"]
+      "meta": {
+        "vct_values": [ "https://credentials.example.com/identity_credential" ]
       },
       // Comments in JSON to be removed before merging PR, they are just here to make Brian less sad
-      "expect_claims": [ // define claims, may add other properties like a purpose to each claims
+      "claims": [ // define claims, may add other properties like a purpose to each claims
         {
-          "id": "a",  // required for use in valid_claim_sets below; if that is omitted, the id is optional
+          "id": "a",  // required for use in claim_sets below; if that is omitted, the id is optional
           "path": ["last_name"]
         },
         {"id": "b", "path": ["postal_code"]},
@@ -20,7 +18,7 @@
         {"id": "e", "path": ["date_of_birth"]},
         {"id": "f", "path": ["email"]}
       ],
-      "valid_claim_sets": [ // defines the rules
+      "claim_sets": [ // defines the rules
         // postal code or (locality and region), last_name, and date_of_birth are mandatory; email is optional 
         ["a", "b", "e", "f?"],
         ["a", "c", "d", "e", "f?"]
