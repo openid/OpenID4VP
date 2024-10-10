@@ -1,7 +1,7 @@
 {
   "credentials": [
     {
-      "group": "pid",
+      "id": "pid",
       "format": "vc+sd-jwt",
       "meta": {
         "vct_values": [ "https://credentials.example.com/identity_credential" ]
