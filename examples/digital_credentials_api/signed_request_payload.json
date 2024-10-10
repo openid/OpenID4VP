@@ -1,6 +1,5 @@
 {
   "client_id": "https://client.example.org",
-  "client_id_scheme": "entity_id",
   "expected_origins": [
     "https://origin1.example.com",
     "https://origin2.example.com"
