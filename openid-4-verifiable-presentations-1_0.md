@@ -251,6 +251,10 @@ Depending on the Client Identifier Scheme, the Verifier can communicate a JSON o
 
 This specification enables the Verifier to send both Presentation Definition JSON object and Client Metadata JSON object by value or by reference.
 
+Additional request parameters, other than those defined in this section, MAY be defined and used, as described in [@!RFC6749].
+The Wallet MUST ignore any unrecognized parameters, other than `transaction_data` parameter. 
+The wallets that do not recognize `transaction_data` parameter MUST reject requests that contain it.
+
 ## New Parameters {#new_parameters}
 This specification defines the following new request parameters:
 
@@ -305,10 +309,6 @@ The following additional considerations are given for pre-existing Authorization
 
 `client_id`:
 : REQUIRED. Defined in [@!RFC6749]. This specification defines additional requirements to enable the use of Client Identifier Schemes as described in (#client_metadata_management).
-
-Additional request parameters MAY be defined and used,
-as described in [@!RFC6749].
-The Wallet MUST ignore any unrecognized parameters.
 
 ## Examples
 
