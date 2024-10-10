@@ -660,8 +660,8 @@ claims in the requested Credentials.
 
 `claim_sets`:
 : OPTIONAL. A non-empty array containing arrays of identifiers for elements in
-`claims`. The identifier MAY be postfixed by `?`, indicating that
-delivery of the the respective claim is OPTIONAL.  
+`claims`. The identifier MAY be postfixed by `?` or `?!`, indicating that
+delivery of the respective claim is optional under certain conditions, as defined in (#selecting_claims).
 
 ## Claims Query {#claims_query}
 
@@ -689,21 +689,23 @@ within the Verifiable Credential, e.g., `org.iso.18013.5.1`.
 The value MUST be a string that specifies the name of the claim within the provided namespace
 in the Verifiable Credential, e.g., `first_name`.
 
-`value`:
-: OPTIONAL. A string, integer or boolean value that specifies the expected value of the claim. If the
-`value` property is present, the Wallet MUST return the claim only if the type and value
-of the claim match the type and value specified in the query. This property MUST NOT be present if the `values` property is present.
-
 `values`:
 : OPTIONAL. An array of strings, integers or boolean values that specifies the expected values of the claim.
 If the `values` property is present, the Wallet MUST return the claim only if the
-type and value of the claim both match for at least one of the elements in the array. This property MUST NOT be present if the `value` property is present.
+type and value of the claim both match for at least one of the elements in the array. 
 
 ### Selecting Claims and Credentials {#vp_query_lang_processing_rules}
 
-The same basic logic applies for selecting claims and for selecting credentials, as detailed in the following.
+The same basic logic applies for selecting claims and for selecting credentials,
+as detailed in the following. 
 
-#### Selecting Claims
+Note: While this specification provides the mechanisms for requesting different
+sets of claims and credentials and request some of those optionally, it does not
+make assumptions about the user interface of the Wallet, for example, if users
+can select which claims to present or which combination of credentials to
+present.
+
+#### Selecting Claims {#selecting_claims}
 
 The following rules apply for selecting claims via `claims` and `claim_sets`:
 
@@ -712,10 +714,13 @@ The following rules apply for selecting claims via `claims` and `claim_sets`:
 - If `claims` is provided, but `claim_sets` is not provided,
   the Verifier requests all claims listed in `claims`.
 - Otherwise, the Verifier requests one combination of the claims listed in
-  `claim_sets`, with optional claims marked by the postfix `?`.
+  `claim_sets`. Claims listed without a postfix are requested unconditionally.
+  Claims postfixed by `?` are requested optionally, i.e., it is up to the Wallet
+  to send the claim in the response or not. Claims postfixed by `?!` have to be
+  provided by the Wallet if they exist in the Credential.
 
-If the Wallet cannot deliver all non-optional claims requested by the Verifier according to these rules, it MUST NOT
-return the respective Credential.
+If the Wallet cannot deliver all non-optional claims requested by the Verifier
+according to these rules, it MUST NOT return the respective Credential.
 
 #### Selecting Credentials
 
