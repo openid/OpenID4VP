@@ -1593,7 +1593,7 @@ And lastly, as part of the request, the Wallet is provided with information abou
 
 ## Protocol
 
-For the profile defined in this section, the value of the exchange protocol used with the W3C Digital Credentials API [@!w3c.digital_credentials_api], is the `openid4vp`.
+For the profile defined in this section, the value of the exchange protocol used with the W3C Digital Credentials API [@!w3c.digital_credentials_api], is `openid4vp`.
 
 ## Request {#browser_api_request}
 
