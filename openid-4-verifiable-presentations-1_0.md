@@ -1597,7 +1597,7 @@ For the profile defined in this section, the value of the exchange protocol used
 
 ## Request {#browser_api_request}
 
-The W3C Digital Credentials API [@!w3c.digital_credentials_api] contains an OpenID4VP Authorization Request, where every OpenID4VP Authorization Request parameter is represented as a top-level JavaScript object member.
+The Verifier MAY send all the OpenID4VP request parameters to the W3C Digital Credentials API as defined in [@!w3c.digital_credentials_api].
 
 The following is a non-normative example of an unsigned OpenID4VP request when advanced security features of OpenID4VP are not used:
 
