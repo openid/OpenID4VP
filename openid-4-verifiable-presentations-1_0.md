@@ -1609,7 +1609,6 @@ The following is a non-normative example of an unsigned OpenID4VP request when a
   client_metadata: {...},
   presentation_definition: {...}
 }
-}
 ```
 
 Out of the Authorization Request parameters defined in [@!RFC6749] and (#vp_token_request), the following are supported with this profile:
@@ -1651,16 +1650,7 @@ The signed Request Object MAY contain all the parameters listed in (#browser_api
 Below is a non-normative example of such a request:
 
 ```js
-{
-  digital: {
-    providers: [{
-      protocol: "openid4vp",
-      request: {
-        request: "eyJhbGciOiJF..."
-     }
-    }]
-  }
-}
+{ request: "eyJhbGciOiJF..." }
 ```
 
 This is an example of the payload of a signed OpenID4VP request used with the W3C Digital Credentials API:
