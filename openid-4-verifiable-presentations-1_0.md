@@ -2203,25 +2203,6 @@ established by [@!RFC7591].
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
 * Reference: (#client_metadata_parameters) of this specification
 
-## OAuth URI Registry
-
-This specification registers the following URNs
-in the IANA "OAuth URI" registry [@IANA.OAuth.Parameters]
-established by [@!RFC6755].
-
-### urn:ietf:params:oauth:federation
-
-* URN: `urn:ietf:params:oauth:federation`
-* Common Name: OpenID Federation
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
-* Reference: (#federations) of this specification
-
-### urn:ietf:params:oauth:federation_trust_mark
-
-* URN: `urn:ietf:params:oauth:federation_trust_mark`
-* Common Name: OpenID Federation Trust Mark
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
-* Reference: (#federations) of this specification
 
 ## Media Types Registry
 
