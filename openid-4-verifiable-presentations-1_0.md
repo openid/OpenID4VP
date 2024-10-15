@@ -728,7 +728,18 @@ The following rules apply for selecting claims via `claims` and `claim_sets`:
 - Otherwise, the Verifier requests one combination of the claims listed in
   `claim_sets`. Claims listed without a postfix are requested unconditionally. 
   Claims postfixed by `?!` have to be provided by the Wallet if they exist on 
-  the matched Credential.
+  the matched Credential. The order of the options conveyed in the `claim_sets`
+  array expresses the Verifiers preference for what is returned. A wallet MUST 
+  prioritise returning the most preferred option.
+
+With regard to the `claim_sets` syntax, the purpose of it to provide a way for a 
+verifier to describe alternative ways a given credential can satisfy their request, 
+the array ordering should express the Verifiers preference for how the request should 
+be fulfilled where the first element in the array is the most preferred and the last 
+element in the array is the least preferred. Verifiers should use the principle of 
+least information disclosure to influence how they order these options. For example a 
+proof of age request should prioritise requesting an attribute like `age_over_18` ahead
+of requesting an attribute like `birth_date`.
 
 If the Wallet cannot deliver all unconditional claims requested by the Verifier
 according to these rules, it MUST NOT return the respective Credential.
