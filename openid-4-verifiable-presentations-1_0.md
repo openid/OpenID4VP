@@ -252,8 +252,8 @@ Depending on the Client Identifier Scheme, the Verifier can communicate a JSON o
 This specification enables the Verifier to send both Presentation Definition JSON object and Client Metadata JSON object by value or by reference.
 
 Additional request parameters, other than those defined in this section, MAY be defined and used, as described in [@!RFC6749].
-The Wallet MUST ignore any unrecognized parameters, other than `transaction_data` parameter. 
-The wallets that do not recognize `transaction_data` parameter MUST reject requests that contain it.
+The Wallet MUST ignore any unrecognized parameters, other than the `transaction_data` parameter.
+The wallets that do not support the `transaction_data` parameter MUST reject requests that contain it.
 
 ## New Parameters {#new_parameters}
 This specification defines the following new request parameters:
@@ -282,14 +282,13 @@ This specification defines the following new request parameters:
 
 If the Verifier set the `request_uri_method` parameter value to `post` and there is no other means to convey its capabilities to the Wallet, it SHOULD add the `client_metadata` parameter to the Authorization Request. 
 
-This enables the Wallet to assess the Verifier's capabilities, allowing it to transmit only the relevant capabilities through the `wallet_metadata` parameter in the Request URI POST request. If the Verifier uses the `client_id_scheme` parameter in the Request Object, it MUST also add the same `client_id_scheme` value in the Authorization Request. 
+This enables the Wallet to assess the Verifier's capabilities, allowing it to transmit only the relevant capabilities through the `wallet_metadata` parameter in the Request URI POST request.
 
 `transaction_data`: 
 : OPTIONAL. Array of strings, where each string is a base64url encoded JSON object that contains a typed parameter set with details about the transaction that the Verifier is requesting the End-User to authorize. See (#transaction_data) for details. The Wallet MUST return an error if a request contains even one unrecognized transaction data type or transaction data not conforming to the respective type definition. Each object consists of the following parameters:
 
     * `type`: REQUIRED. String that is the Identifier of the transaction data type and determines the allowable contents of the object that contains it. The specific values are out of scope of this specification. It is RECOMMENDED to use collision-resistant names for `type` values.
     * `credential_ids`: REQUIRED. Array of strings each pointing to an identifier that identifies a set of information describing a Credential that the Verifier is requesting transaction data in a particular object to be bound to (e.g., Input Descriptor in Presentation Exchange).
-    The claim transaction_data_alg indicates the hash algorithm used to generate the digests. If the claim is not present, a default value of sha-256 MUST be used.
     * `transaction_data_hashes_alg`: OPTIONAL. Array of strings each representing a hash algorithm identifier, one of which MUST be used to calculate hashes in `transaction_data_hashes` response parameter. The value of the identifier MUST be a hash algorithm value from the "Hash Name String" column in the IANA "Named Information Hash Algorithm" registry [IANA.Hash.Algorithms] or a value defined in another specification and/or profile of this specification. If this parameter is not present, a default value of `sha-256` MUST be used. To promote interoperability, implementations MUST support the sha-256 hash algorithm.
 
 Each document defining a transaction data type specifies whether that type requires a Credential that is bound to transaction data to be specifically issued for that purpose. How the Credential Issuer expresses that a particular Credential can be used for obtaining user's authorization using transaction data mechanism is out of scope for this specification.
@@ -323,15 +322,14 @@ GET /authorize?
   &nonce=n-0S6_WzA2Mj HTTP/1.1
 ```
 
-The following is a non-normative example of an Authorization Request with a `request_uri_method` parameter (including the additional `client_metadata` and `transaction_data` parameters): 
+The following is a non-normative example of an Authorization Request with a `request_uri_method` parameter (including the additional `client_metadata`): 
 
 ```
 GET /authorize?
   client_id=x509_san_dns:client.example.org
   &client_metadata=...
   &request_uri=https%3A%2F%2Fclient.example.org%2Frequest%2Fvapof4ql2i7m41m68uep
-  &request_uri_method=post HTTP/1.1
-  &transaction_data=...
+  &request_uri_method=post
 ```
 
 ## `presentation_definition` Parameter {#request_presentation_definition}
@@ -827,10 +825,10 @@ The transaction data mechanism enables a binding between the user's identificati
 
 The Wallet that received the `transaction_data` parameter in the request MUST include in the response a `transaction_data_hashes` parameter defined below. If the wallet does not support `transaction_data` parameter, it MUST return an error.
 
-Where to include`transaction_data_hashes` parameter in the response is specific to each credential format and is defined in a respective Credential Format Profile.
+Where to include the`transaction_data_hashes` parameter in the response is specific to each credential format and is defined by the Credential Format Profile, such as those in (#alternative_credential_formats).
 
 * `transaction_data_hashes`: Array of hashes, where each hash is calculated using a hash function over the strings received in the `transaction_data` request parameter. Each hash value ensures the integrity of, and maps to, the respective transaction data object. Where in the response this parameter is included is defined by each Credential Format Profile, but it has to be included in the  mechanism used for the proof of possession of the Credential that is signed using the user-controlled key.
-* `transaction_data_hashes_alg`: REQUIRED when this parameter was present in the `transaction_data` request parameter. String representing a hash algorithm identifier used to calculate hashes in `transaction_data_hashes` response parameter.
+* `transaction_data_hashes_alg`: REQUIRED when this parameter was present in the `transaction_data` request parameter. String representing the hash algorithm identifier used to calculate hashes in `transaction_data_hashes` response parameter.
 
 ## Error Response {#error_response}
 
@@ -879,7 +877,7 @@ This document also defines the following additional error codes and error descri
 
 `invalid_transaction_data`:
 
-- any of the following is true for at least one object in the transaction_data structure:
+- any of the following is true for at least one object in the `transaction_data` structure:
   - contains an unknown transaction data type value,
   - is an object of known type but containing unknown fields,
   - contains fields of the wrong type for the transaction data type,
