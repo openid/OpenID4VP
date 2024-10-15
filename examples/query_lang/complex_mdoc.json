@@ -1,0 +1,94 @@
+// Adding some comments here to ensure Brian isn't sad ;)
+{
+  "credentials": [
+    {
+      "id": "mdl",
+      "format": "mso_mdoc",
+      "meta": {
+        "doctype_values": ["org.iso.18013.5.1.mdl"]
+      },
+      "claims": [
+        {
+          "id": "age_over_18",
+          "namespace": "org.iso.18013.5.1",
+          "claim_name": "age_over_18"
+        },
+        {
+          "id": "birth_date",
+          "namespace": "org.iso.18013.5.1",
+          "claim_name": "birth_date"
+        },
+        {
+          "id": "portrait",
+          "namespace": "org.iso.18013.5.1",
+          "claim_name": "portrait"
+        }
+      ],
+      "claim_sets": [
+        [ "portrait", "age_over_18" ],
+        [ "portrait", "birth_date" ]
+      ]
+    },
+    {
+      "id": "photo_card",
+      "format": "mso_mdoc",
+      "meta": {
+        "doctype_values": ["org.iso.23220.photoid"]
+      },
+      "claims": [
+        {
+          "id": "age_over_18",
+          "namespace": "org.iso.23220.1",
+          "claim_name": "age_over_18"
+        },
+        {
+          "id": "birth_date",
+          "namespace": "org.iso.23220.1",
+          "claim_name": "birth_date"
+        },
+        {
+          "id": "portrait",
+          "namespace": "org.iso.23220.1",
+          "claim_name": "portrait"
+        }
+      ],
+      "claim_sets": [
+        [ "portrait", "age_over_18" ],
+        [ "portrait", "birth_date" ]
+      ]
+    },
+    {
+      "id": "loyalty_card",
+      "format": "mso_mdoc",
+      "meta": {
+        "doctype_values": ["loyalty_card"]
+      },
+      
+      "claims": [
+        {
+          "namespace": "namespace.loyalty_card",
+          "claim_name": "loyalty_card_number"
+        }
+      ]
+    }
+  ],
+  // The intention with the credential_sets array is that all "credential set queries" (objects in this array)
+  // are responded too, if they are either marked `required:true` explicitly or implicitly.
+  // Any "credential set queries" marked with `required:false` are optional for the wallet to return
+  "credential_sets": [
+    {
+      "purpose": "Prove your age",
+      "query_options": [ // Choose one of the elements in this array as the way you want to satisfy this credential set query
+        [ "mdl" ],
+        [ "photo_card" ] // All conditions for all elements in this inner array MUST be met, reason we have this inner array is incase a given usecase can be satisfied across multiple credentials.
+      ]
+    },
+    {
+      "purpose": "Prove your customer loyalty",
+      "required": false,
+      "query_options": [
+        [ "loyalty_card" ]
+      ]
+    }
+  ]
+}
