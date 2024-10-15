@@ -1356,23 +1356,6 @@ In the event that another component is invoked instead of the Wallet, the End-Us
         </front>
 </reference>
 
-<reference anchor="TRAIN" target="https://oid2022.compute.dtu.dk/index.html">
-        <front>
-          <title>A novel approach to establish trust in Verifiable Credential
-issuers in Self-Sovereign Identity ecosystems using TRAIN</title>	  
-           <author fullname="Isaac Henderson Johnson Jeyakumar">
-            <organization>University of Stuttgart</organization>
-          </author>
-          <author fullname="David W Chadwick">
-            <organization>Crossword Cybersecurity</organization>
-          </author>
-          <author fullname="Michael Kubach">
-            <organization>Fraunhofer IAO</organization>
-          </author>
-   <date day="8" month="July" year="2022"/>
-        </front>
-</reference>
-
 <reference anchor="OpenID-Discovery" target="https://openid.net/specs/openid-connect-discovery-1_0.html">
   <front>
     <title>OpenID Connect Discovery 1.0 incorporating errata set 1</title>
