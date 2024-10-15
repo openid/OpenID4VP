@@ -1007,42 +1007,6 @@ The following is a non-normative example of a set of static configuration values
 }
 ```
 
-
-## Support for Federations/Trust Schemes
-
-Often Verifiers will want to request Verifiable Credentials from a Credential Issuer who is a participant of a federation, or adheres to a known trust scheme, rather than from a specific Credential Issuer, for example, a "BSc Chemistry Degree" Credential from the hypothetical "eduCreds" trust scheme rather than from a specifically named university.
-
-To facilitate this, federations will need to determine how a Credential Issuer can indicate in a Verifiable Credential that they are a member of one or more federations/trust schemes. Once this is done, the Verifier will be able to create a `presentation_definition` that includes this filtering criteria. This will enable the Wallet to select all the Verifiable Credentials that match this criteria and then by some means (for example, by asking the End-User) determine which matching Verifiable Credential to return to the Verifier. Upon receiving this Verifiable Credential, the Verifier will be able to call its federation API to determine if the Credential Issuer is indeed a member of the federation/trust scheme that it says it is.
-
-Indicating the federations/trust schemes used by a Credential Issuer MAY be achieved by defining a `termsOfUse` property [@!VC_DATA].
-
-Note: [@!VC_DATA] describes terms of use as "can be utilized by a Credential Issuer ... to communicate the terms under which a Verifiable Credential ... was issued."
-
-The following is a non-normative example of the terms of use that may be defined:
-
-```json
-{
-  "termsOfUse": [
-    {
-      "type": "<uri that identifies this type of terms of use>",
-      "federations": [
-        "<list of federations/trust schemes the Credential Issuer asserts it is a member of>"
-      ]
-    }
-  ]
-}
-```
-
-Federations that conform to those specified in [@OpenID.Federation] are identified by the `type` `urn:ietf:params:oauth:federation`. Individual federations are identified by the Entity Identifier of the trust anchor. If the federation decides to use trust marks as signs of whether an entity belongs to a federation or not then the federation is identified by the `type` `urn:ietf:params:oauth:federation_trust_mark` and individual federations are identified by the Entity Identifier of the trust mark issuer.
-
-Trust schemes that conform to the TRAIN [@TRAIN] trust scheme are identified by the `type` `https://train.trust-scheme.de/info`. Individual federations are identified by their DNS names.
-
-The following is a non-normative example of a `claims` parameter containing a `presentation_definition` that filters VCs based on their federation memberships:
-
-<{{examples/request/vp_token_federation.json}}
-
-This example will choose a Verifiable Credential that has been issued by a university that is a member of the `ukuniversities.ac.uk` federation and that uses the TRAIN terms of use specification for asserting federation memberships.
-
 ## Nested Verifiable Presentations
 
 Current version of this document does not support presentation of a Verifiable Presentation nested inside another Verifiable Presentation, even though [@!DIF.PresentationExchange] specification theoretically supports this by stating that the nesting of `path_nested` objects "may be any number of levels deep".
