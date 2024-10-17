@@ -618,11 +618,8 @@ top-level properties:
 that specify the requested Verifiable Credentials.
 
 `credential_sets`:
-: OPTIONAL. A non-empty array containing arrays of identifiers for Credential Queries defined in
-`credentials` that defines which sets of Credentials may be returned.
-The identifier MAY be postfixed by `?`, indicating that
-delivery of the respective Credential is optional. For details, see
-(#vp_query_lang_processing_rules).
+: OPTIONAL. A non-empty array of credential set queries as defined in (#credential_set_query)
+that specifies additional constraints on which of the requested Verifiable Credentials to return.
 
 Note: While this specification does not define additional top-level properties,
 future extensions MAY define additional properties that modify the behavior of
@@ -631,9 +628,9 @@ the Wallet when processing the query.
 ## Credential Query {#credential_query}
 
 A Credential Query is an object representing a request for one specific
-Credential. 
+Credential.
 
-It contains the following properties:
+Each entry in `credentials` MUST be an object with the following properties:
 
 `id`:
 : REQUIRED. A string identifying the Credential in the response and, if provided,
@@ -660,8 +657,24 @@ claims in the requested Credentials.
 
 `claim_sets`:
 : OPTIONAL. A non-empty array containing arrays of identifiers for elements in
-`claims`. The identifier MAY be postfixed by `?` or `?!`, indicating that
-delivery of the respective claim is optional under certain conditions, as defined in (#selecting_claims).
+`claims`. The identifier MAY be postfixed by `?!` indicating that
+delivery of the respective claim is required if present on the credential, see (#selecting_claims) for more details.
+
+## Credential Set Query {#credential_set_query}
+
+A Credential Set Query is an object representing a request for one or more credentials to satisfy
+a particular usecase with the Verifier.
+
+Each entry in `credential_sets` MUST be an object with the following properties:
+
+`query_options`
+: REQUIRED: A non-empty array, where each value in the array represents a distinct query that satisfies 
+the Usecase. The value of each element in the `query_options` array, is an array of identifiers which reference
+elements in `credentials`.
+
+`required`
+: OPTIONAL. A boolean flag which indicates whether the wallet is required to respond to the query. 
+If omitted, the effective value MUST be processed as `true`.
 
 ## Claims Query {#claims_query}
 
@@ -671,7 +684,7 @@ Each entry in `claims` MUST be an object with the following properties:
 : REQUIRED if `claim_sets` is present; OPTIONAL otherwise. A string
 identifying the particular claim. The value MUST be a non-empty string
 consisting of alphanumeric, underscore (`_`) or hyphen (`-`) characters.
-Within the particular `expected_claims` array, the same `id` MUST NOT
+Within the particular `claims` array, the same `id` MUST NOT
 be present more than once.
 
 `path`:
@@ -680,14 +693,14 @@ be present otherwise. The value MUST be a claims path pointer that specifies the
 within the Verifiable Credential, as defined in (#claims_path_pointer).
 
 `namespace`:
-: REQUIRED if the Credential Format is based on mdoc format defined in ISO 18013-5; MUST NOT be present otherwise. 
-The value MUST be a string that specifies the namespace of the claim
-within the Verifiable Credential, e.g., `org.iso.18013.5.1`.
+: REQUIRED if the Credential Format is based on the mdoc format defined in ISO 18013-5; MUST NOT be present otherwise. 
+The value MUST be a string that specifies the namespace of the data element
+within the mdoc, e.g., `org.iso.18013.5.1`.
 
 `claim_name`:
 : REQUIRED if the Credential Format is based on mdoc format defined in ISO 18013-5; MUST NOT be present otherwise. 
-The value MUST be a string that specifies the name of the claim within the provided namespace
-in the Verifiable Credential, e.g., `first_name`.
+The value MUST be a string that specifies the data element identifier of the data element within the provided namespace
+in the mdoc, e.g., `first_name`.
 
 `values`:
 : OPTIONAL. An array of strings, integers or boolean values that specifies the expected values of the claim.
@@ -696,14 +709,13 @@ type and value of the claim both match for at least one of the elements in the a
 
 ### Selecting Claims and Credentials {#vp_query_lang_processing_rules}
 
-The same basic logic applies for selecting claims and for selecting credentials,
-as detailed in the following. 
+The following section describes the logic that applies for selecting claims 
+and for selecting credentials. 
 
 Note: While this specification provides the mechanisms for requesting different
-sets of claims and credentials and request some of those optionally, it does not
-make assumptions about the user interface of the Wallet, for example, if users
-can select which claims to present or which combination of credentials to
-present.
+sets of claims and credentials, it does not make assumptions about the user 
+interface of the Wallet, for example, if users can select which claims to present 
+or which combination of credentials to present.
 
 #### Selecting Claims {#selecting_claims}
 
@@ -714,12 +726,22 @@ The following rules apply for selecting claims via `claims` and `claim_sets`:
 - If `claims` is provided, but `claim_sets` is not provided,
   the Verifier requests all claims listed in `claims`.
 - Otherwise, the Verifier requests one combination of the claims listed in
-  `claim_sets`. Claims listed without a postfix are requested unconditionally.
-  Claims postfixed by `?` are requested optionally, i.e., it is up to the Wallet
-  to send the claim in the response or not. Claims postfixed by `?!` have to be
-  provided by the Wallet if they exist in the Credential.
+  `claim_sets`. Claims listed without a postfix are requested unconditionally. 
+  Claims postfixed by `?!` have to be provided by the Wallet if they exist on 
+  the matched Credential. The order of the options conveyed in the `claim_sets`
+  array expresses the Verifiers preference for what is returned. A wallet MUST 
+  prioritise returning the most preferred option.
 
-If the Wallet cannot deliver all non-optional claims requested by the Verifier
+With regard to the `claim_sets` syntax, the purpose of it to provide a way for a 
+verifier to describe alternative ways a given credential can satisfy their request, 
+the array ordering should express the Verifiers preference for how the request should 
+be fulfilled where the first element in the array is the most preferred and the last 
+element in the array is the least preferred. Verifiers should use the principle of 
+least information disclosure to influence how they order these options. For example a 
+proof of age request should prioritise requesting an attribute like `age_over_18` ahead
+of requesting an attribute like `birth_date`.
+
+If the Wallet cannot deliver all unconditional claims requested by the Verifier
 according to these rules, it MUST NOT return the respective Credential.
 
 #### Selecting Credentials
@@ -728,8 +750,11 @@ The following rules apply for selecting Credentials via `credentials` and `crede
 
 - If `credential_sets` is not provided, the Verifier requests all
   Credentials in `credentials` to be returned.
-- Otherwise, the Verifier requests one combination of the Credentials
-  listed in `credential_sets`, with optional credentials marked by the postfix `?`.
+- Otherwise, the Verifier requests all of the credential set queries in the `credential_sets` array
+  with `required` evaluated as true to be returned at a minimum and optionally any of the credential set queries 
+  with `required` evaluated as false.
+- For each credential set query inside the `credential_sets` array, in order to satisfy the query, the Wallet MUST return
+a credential or credentials that match to one of the `query_options` inside the object.
 
 Credentials not matching the respective constraints expressed within
 `credentials` MUST NOT be returned, i.e., they are treated as if
@@ -737,7 +762,6 @@ they would not exist in the Wallet.
 
 If the Wallet cannot deliver all non-optional Credentials requested by the Verifier according to these rules, it MUST NOT
 return any credential(s).
-
 
 ## Format-specific Properties {#format_specific_properties}
 
