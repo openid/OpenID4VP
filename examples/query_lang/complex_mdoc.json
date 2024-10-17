@@ -1,0 +1,105 @@
+{
+  "credentials": [
+    {
+      "id": "mdl-id",
+      "format": "mso_mdoc",
+      "meta": {
+        "doctype_values": ["org.iso.18013.5.1.mdl"]
+      },
+      "claims": [
+        {
+          "id": "given_name",
+          "namespace": "org.iso.18013.5.1",
+          "claim_name": "given_name"
+        },
+        {
+          "id": "family_name",
+          "namespace": "org.iso.18013.5.1",
+          "claim_name": "family_name"
+        },
+        {
+          "id": "portrait",
+          "namespace": "org.iso.18013.5.1",
+          "claim_name": "portrait"
+        }
+      ]
+    },
+    {
+      "id": "mdl-address",
+      "format": "mso_mdoc",
+      "meta": {
+        "doctype_values": ["org.iso.18013.5.1.mdl"]
+      },
+      "claims": [
+        {
+          "id": "resident_address",
+          "namespace": "org.iso.18013.5.1",
+          "claim_name": "resident_address"
+        },
+        {
+          "id": "resident_country",
+          "namespace": "org.iso.18013.5.1",
+          "claim_name": "resident_country"
+        }
+      ]
+    },
+    {
+      "id": "photo_card-id",
+      "format": "mso_mdoc",
+      "meta": {
+        "doctype_values": ["org.iso.23220.photoid"]
+      },
+      "claims": [
+        {
+          "id": "given_name",
+          "namespace": "org.iso.23220.1",
+          "claim_name": "given_name"
+        },
+        {
+          "id": "family_name",
+          "namespace": "org.iso.23220.1",
+          "claim_name": "family_name"
+        },
+        {
+          "id": "portrait",
+          "namespace": "org.iso.23220.1",
+          "claim_name": "portrait"
+        }
+      ]
+    },
+    {
+      "id": "photo_card-address",
+      "format": "mso_mdoc",
+      "meta": {
+        "doctype_values": ["org.iso.23220.photoid"]
+      },
+      "claims": [
+        {
+          "id": "resident_address",
+          "namespace": "org.iso.23220.1",
+          "claim_name": "resident_address"
+        },
+        {
+          "id": "resident_country",
+          "namespace": "org.iso.23220.1",
+          "claim_name": "resident_country"
+        }
+      ]
+    }
+  ],
+  "credential_sets": [
+    { // Purpose of this request is to prove your ID, response to this request is required 
+      "query_options": [ // These options mean you could use either your mDL or Photo Card to respond to the request
+        [ "mdl-id" ],
+        [ "photo_card-id" ]
+      ]
+    },
+    { // Purpose of this request is to prove your address, response to this request is not required
+      "required": false,
+      "query_options": [ // These options mean you could use either your mDL or Photo Card to respond to the request
+        [ "mdl-address" ],
+        [ "photo_card-address" ]
+      ]
+    }
+  ]
+}
