@@ -253,7 +253,7 @@ This specification enables the Verifier to send both Presentation Definition JSO
 
 Additional request parameters, other than those defined in this section, MAY be defined and used, as described in [@!RFC6749].
 The Wallet MUST ignore any unrecognized parameters, other than the `transaction_data` parameter.
-The wallets that do not support the `transaction_data` parameter MUST reject requests that contain it.
+One exception to this rule is `transaction_data` parameter, and the wallets that do not support this parameter MUST reject requests that contain it.
 
 ## New Parameters {#new_parameters}
 This specification defines the following new request parameters:
