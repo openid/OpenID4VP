@@ -829,7 +829,7 @@ Where to include the`transaction_data_hashes` parameter in the response is speci
 * `transaction_data_hashes`: Array of hashes, where each hash is calculated using a hash function over the strings received in the `transaction_data` request parameter. Each hash value ensures the integrity of, and maps to, the respective transaction data object. Where in the response this parameter is included is defined by each Credential Format Profile, but it has to be included in the mechanism used for the proof of possession of the Credential that is signed using the user-controlled key.
 * `transaction_data_hashes_alg`: REQUIRED when this parameter was present in the `transaction_data` request parameter. String representing the hash algorithm identifier used to calculate hashes in `transaction_data_hashes` response parameter.
 
-## Error Response {#error_response}
+## Error Response {#error-response}
 
 The error response follows the rules as defined in [@!RFC6749], with the following additional clarifications:
 
@@ -1036,7 +1036,7 @@ The following is a non-normative example of a set of static configuration values
 ```
 
 
-## Support for Federations/Trust Schemes
+## Support for Federations/Trust Schemes {#federations}
 
 Often Verifiers will want to request Verifiable Credentials from a Credential Issuer who is a participant of a federation, or adheres to a known trust scheme, rather than from a specific Credential Issuer, for example, a "BSc Chemistry Degree" Credential from the hypothetical "eduCreds" trust scheme rather than from a specifically named university.
 
@@ -1357,29 +1357,29 @@ In the event that another component is invoked instead of the Wallet, the End-Us
     <author initials="T." surname="Lodderstedt" fullname="Torsten Lodderstedt">
       <organization>German Federal Agency for Disruptive Innovation (SPRIND)</organization>
     </author>
-   <date day="1" month="January" year="2023"/>
+   <date day="28" month="November" year="2023"/>
   </front>
 </reference>
 
-<reference anchor="OpenID.Core" target="http://openid.net/specs/openid-connect-core-1_0.html">
+<reference anchor="OpenID.Core" target="https://openid.net/specs/openid-connect-core-1_0.html">
   <front>
-    <title>OpenID Connect Core 1.0 incorporating errata set 1</title>
-    <author initials="N." surname="Sakimura" fullname="Nat Sakimura">
-      <organization>NRI</organization>
+    <title>OpenID Connect Core 1.0 incorporating errata set 2</title>
+    <author fullname="Nat Sakimura" initials="N." surname="Sakimura">
+      <organization abbrev="NAT.Consulting (was at NRI)">NAT.Consulting</organization>
     </author>
-    <author initials="J." surname="Bradley" fullname="John Bradley">
-      <organization>Ping Identity</organization>
+    <author fullname="John Bradley" initials="J." surname="Bradley">
+      <organization abbrev="Yubico (was at Ping Identity)">Yubico</organization>
     </author>
-    <author initials="M." surname="Jones" fullname="Michael B. Jones">
-      <organization>Microsoft</organization>
+    <author fullname="Michael B. Jones" initials="M.B." surname="Jones">
+      <organization abbrev="Self-Issued Consulting (was at Microsoft)">Self-Issued Consulting</organization>
     </author>
-    <author initials="B." surname="de Medeiros" fullname="Breno de Medeiros">
-      <organization>Google</organization>
+    <author fullname="Breno de Medeiros" initials="B." surname="de Medeiros">
+      <organization abbrev="Google">Google</organization>
     </author>
-    <author initials="C." surname="Mortimore" fullname="Chuck Mortimore">
-      <organization>Salesforce</organization>
+    <author fullname="Chuck Mortimore" initials="C." surname="Mortimore">
+      <organization abbrev="Disney (was at Salesforce)">Disney</organization>
     </author>
-   <date day="8" month="Nov" year="2014"/>
+    <date day="15" month="December" year="2023"/>
   </front>
 </reference>
 
@@ -1437,22 +1437,19 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </front>
 </reference>
 
-<reference anchor="OpenID-Discovery" target="https://openid.net/specs/openid-connect-discovery-1_0.html">
+<reference anchor="OpenID.Registration" target="https://openid.net/specs/openid-connect-registration-1_0.html">
   <front>
-    <title>OpenID Connect Discovery 1.0 incorporating errata set 1</title>
-    <author initials="N." surname="Sakimura" fullname="Nat Sakimura">
-      <organization>NRI</organization>
+    <title>OpenID Connect Dynamic Client Registration 1.0 incorporating errata set 2</title>
+    <author fullname="Nat Sakimura" initials="N." surname="Sakimura">
+      <organization abbrev="NAT.Consulting (was at NRI)">NAT.Consulting</organization>
     </author>
-    <author initials="J." surname="Bradley" fullname="John Bradley">
-      <organization>Ping Identity</organization>
+    <author fullname="John Bradley" initials="J." surname="Bradley">
+      <organization abbrev="Yubico (was at Ping Identity)">Yubico</organization>
     </author>
-    <author initials="B." surname="de Medeiros" fullname="Breno de Medeiros">
-      <organization>Google</organization>
+    <author fullname="Michael B. Jones" initials="M.B." surname="Jones">
+      <organization abbrev="Self-Issued Consulting (was at Microsoft)">Self-Issued Consulting</organization>
     </author>
-    <author initials="E." surname="Jay" fullname="Edmund Jay">
-      <organization> Illumila </organization>
-    </author>
-   <date day="8" month="Nov" year="2014"/>
+    <date day="15" month="December" year="2023"/>
   </front>
 </reference>
 
@@ -1564,7 +1561,7 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </front>
 </reference>
 
-<reference anchor="OpenID.Federation" target="https://openid.net/specs/openid-connect-federation-1_0.html">
+<reference anchor="OpenID.Federation" target="https://openid.net/specs/openid-federation-1_0.html">
         <front>
           <title>OpenID Federation 1.0</title>
 		  <author fullname="R. Hedberg, Ed.">
@@ -1585,7 +1582,7 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
           <author fullname="Vladimir Dzhuvinov">
             <organization>Connect2id</organization>
           </author>
-          <date day="8" month="November" year="2023"/>
+          <date day="15" month="September" year="2024"/>
         </front>
 </reference>
 
@@ -1597,6 +1594,45 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
           </author>
           <author fullname="Sam Goto">
             <organization>Google</organization>
+          </author>
+        </front>
+</reference>
+
+<reference anchor="IANA.OAuth.Parameters" target="https://www.iana.org/assignments/oauth-parameters">
+  <front>
+    <title>OAuth Parameters</title>
+    <author>
+      <organization>IANA</organization>
+    </author>
+    <date/>
+  </front>
+</reference>
+
+<reference anchor="IANA.MediaTypes" target="https://www.iana.org/assignments/media-types">
+  <front>
+    <title>Media Types</title>
+    <author>
+      <organization>IANA</organization>
+    </author>
+    <date/>
+  </front>
+</reference>
+
+<reference anchor="IANA.URI.Schemes" target="https://www.iana.org/assignments/uri-schemes">
+  <front>
+    <title>Uniform Resource Identifier (URI) Schemes</title>
+    <author>
+      <organization>IANA</organization>
+    </author>
+    <date/>
+  </front>
+</reference>
+
+<reference anchor="IANA.JOSE" target="https://www.iana.org/assignments/jose">
+        <front>
+          <title>JSON Object Signing and Encryption (JOSE)</title>
+          <author>
+            <organization>IANA</organization>
           </author>
         </front>
 </reference>
@@ -1890,7 +1926,7 @@ The following is the content of the `vp_token` parameter:
 
 <{{examples/response/ac_vp_sd.json}}
 
-## Mobile Documents or mdocs (ISO/IEC 18013 and ISO/IEC 23220 series)
+## Mobile Documents or mdocs (ISO/IEC 18013 and ISO/IEC 23220 series) {#mdocs}
 
 ISO/IEC 18013-5:2021 [@ISO.18013-5] defines a mobile driving license (mDL) Credential in the mobile document (mdoc) format. Although ISO/IEC 18013-5:2021 [@ISO.18013-5] is specific to mobile driving licenses (mDLs), the Credential format can be utilized with any type of Credential (or mdoc document types). The ISO/IEC 23220 series has extracted components from ISO/IEC 18013-5:2021 [@ISO.18013-5] and ISO/IEC TS 18013-7 [@ISO.18013-7] that are common across document types to facilitate the profiling of the specification for other document types. The core data structures are shared between ISO/IEC 18013-5:2021 [@ISO.18013-5], ISO/IEC 23220-2 [@ISO.23220-2], ISO/IEC 23220-4 [@ISO.23220-4] which are encoded in CBOR and secured using COSE_Sign1.
 
@@ -2069,60 +2105,229 @@ Note: The `nonce` and `aud` are set to the `nonce` of the request and the Client
 
 # IANA Considerations
 
-## Response Types
+## OAuth Authorization Endpoint Response Types Registry
+
+This specification registers the following `response_type` values
+in the IANA "OAuth Authorization Endpoint Response Types" registry [@IANA.OAuth.Parameters]
+established by [@!RFC6749].
+
+### vp_token
 
 * Response Type Name: `vp_token`
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
-* Specification Document(s): https://openid.net/specs/openid-4-verifiable-presentations-1_0.html
+* Specification Document(s): (#response) of this specification
+
+### vp_token id_token
 
 * Response Type Name: `vp_token id_token`
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
-* Specification Document(s): https://openid.net/specs/openid-4-verifiable-presentations-1_0.html
+* Specification Document(s): (#response) of this specification
 
-Note: Plan to register the following Response Types in the [OAuth Authorization Endpoint Response Types IANA Registry](https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml#endpoint).
+## OAuth Parameters Registry
 
-## Media Types
+This specification registers the following OAuth parameters
+in the IANA "OAuth Parameters" registry [@IANA.OAuth.Parameters]
+established by [@!RFC6749].
+
+### presentation_definition
+
+* Name: `presentation_definition`
+* Parameter Usage Location: authorization request
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#vp_token_request) of this specification
+
+### presentation_definition_uri
+
+* Name: `presentation_definition_uri`
+* Parameter Usage Location: authorization request
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#vp_token_request) of this specification
+
+### client_metadata
+
+* Name: `client_metadata`
+* Parameter Usage Location: authorization request
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#vp_token_request) of this specification
+
+### request_uri_method
+
+* Name: `request_uri_method`
+* Parameter Usage Location: authorization request
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#vp_token_request) of this specification
+
+### wallet_nonce
+
+* Name: `wallet_nonce`
+* Parameter Usage Location: authorization request, token response
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#request_uri_method_post) of this specification
+
+### response_uri
+
+* Name: `response_uri`
+* Parameter Usage Location: authorization request
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#response_mode_post) of this specification
+
+### vp_token
+
+* Name: `vp_token`
+* Parameter Usage Location: authorization response, token response
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#response-parameters) of this specification
+
+### presentation_submission
+
+* Name: `presentation_submission`
+* Parameter Usage Location: authorization response, token response
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#response-parameters) of this specification
+
+### expected_origins
+
+* Name: `expected_origins`
+* Parameter Usage Location: authorization request
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#browser_api_request) of this specification
+
+## OAuth Extensions Error Registry
+
+This specification registers the following errors
+in the IANA "OAuth Extensions Error" registry [@IANA.OAuth.Parameters]
+established by [@!RFC6749].
+
+### vp_formats_not_supported
+
+* Name: `vp_formats_not_supported`
+* Usage Location: authorization endpoint, token endpoint
+* Protocol Extension: OpenID for Verifiable Presentations
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#error-response) of this specification
+
+### invalid_presentation_definition_uri
+
+* Name: `invalid_presentation_definition_uri`
+* Usage Location: authorization endpoint, token endpoint
+* Protocol Extension: OpenID for Verifiable Presentations
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#error-response) of this specification
+
+### invalid_presentation_definition_reference
+
+* Name: `invalid_presentation_definition_reference`
+* Usage Location: authorization endpoint, token endpoint
+* Protocol Extension: OpenID for Verifiable Presentations
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#error-response) of this specification
+
+### invalid_request_uri_method
+
+* Name: `invalid_request_uri_method`
+* Usage Location: authorization endpoint
+* Protocol Extension: OpenID for Verifiable Presentations
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#error-response) of this specification
+
+### wallet_unavailable
+
+* Name: `wallet_unavailable`
+* Usage Location: authorization endpoint, token endpoint
+* Protocol Extension: OpenID for Verifiable Presentations
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#error-response) of this specification
+
+## OAuth Authorization Server Metadata Registry
+
+This specification registers the following authorization server metadata parameters
+in the IANA "OAuth Authorization Server Metadata" registry [@IANA.OAuth.Parameters]
+established by [@!RFC8414].
+
+### presentation_definition_uri_supported
+
+* Metadata Name: `presentation_definition_uri_supported`
+* Metadata Description: Boolean value specifying whether the Wallet supports the transfer of presentation_definition by reference
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#as_metadata_parameters) of this specification
+
+### vp_formats_supported
+
+* Metadata Name: `vp_formats_supported`
+* Metadata Description: An object containing a list of name/value pairs, where the name is a string identifying a Credential format supported by the Wallet
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#as_metadata_parameters) of this specification
+
+## OAuth Dynamic Client Registration Metadata Registry
+
+This specification registers the following client metadata parameters
+in the IANA "OAuth Dynamic Client Registration Metadata" registry [@IANA.OAuth.Parameters]
+established by [@!RFC7591].
+
+### vp_formats
+
+* Client Metadata Name: `vp_formats`
+* Client Metadata Description: Boolean value specifying whether the Wallet supports the transfer of presentation_definition by reference
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#client_metadata_parameters) of this specification
+
+
+## Media Types Registry
+
+This section registers the following media type [@RFC2046]
+in the IANA "Media Types" registry <xref target="IANA.MediaTypes"/>
+in the manner described in [@RFC6838].
+
 ### application/verifier-attestation+jwt {#va_media_type}
 
-The Internet media type for a Verifier Attestation JWT is `application/verifier-attestation+jwt`.
+The media type for a Verifier Attestation JWT is `application/verifier-attestation+jwt`.
 
-Type name: : `application`
-
-Subtype name: : `verifier-attestation+jwt`
-
-Required parameters: : n/a
-
-Optional parameters: : n/a
-
-Encoding considerations: : Compact Serialization as defined in [@!RFC7519].
-
-Security considerations: : See Security Considerations in in [@!RFC7519].
-
-Interoperability considerations: : n/a
-
-- Published specification: : TODO
-- Applications that use this media type: : Applications that issue, present,
-  verify verifier attestation VCs.
-- Additional information:
+* Type name: `application`
+* Subtype name: `verifier-attestation+jwt`
+* Required parameters: n/a
+* Optional parameters: n/a
+* Encoding considerations: Uses JWS Compact Serialization as defined in [@!RFC7515].
+* Security considerations: See Security Considerations in in [@!RFC7519].
+* Interoperability considerations: n/a
+* Published specification: (#verifier_attestation_jwt) of this specification
+* Applications that use this media type: Applications that issue, present, verify verifier attestation VCs
+* Additional information:
   - Magic number(s): n/a
   - File extension(s): n/a
   - Macintosh file type code(s): n/a
-  - Person & email address to contact for further information: TBD
-  - Intended usage: COMMON
-  - Restrictions on usage: none
-  - Author: tbd <TODO@email.com>
-  - Change controller: OpenID Foundation
+* Person & email address to contact for further information: TBD
+* Intended usage: COMMON
+* Restrictions on usage: none
+* Author: Oliver Terbu, oliver.terbu@mattr.global
+* Change controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
 
+## JSON Web Signature and Encryption Header Parameters Registry {#jose_header}
 
-## JWS Headers
-### JWT {#jose_header}
-This specification registers the following JWS header name in the IANA "JSON Web Signature and Encryption Header Parameters" registry established by [@!RFC7515].
+This specification registers the following JWS header parameter
+in the IANA "JSON Web Signature and Encryption Header Parameters" registry [@IANA.JOSE]
+established by [@!RFC7515].
+
+### jwt
 
 * Header Parameter Name: `jwt`
 * Header Parameter Description: This header contains a JWT. Processing rules MAY depend on the `typ` header value of the respective JWT. 
 * Header Parameter Usage Location: JWS
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
-* Specification Document(s): (#verifier_attestation_jwt)
+* Specification Document(s): (#verifier_attestation_jwt) of this specification
+
+## Uniform Resource Identifier (URI) Schemes Registry
+
+This specification registers the following URI scheme
+in the IANA "Uniform Resource Identifier (URI) Schemes" registry [@IANA.URI.Schemes].
+
+### openid4vp
+
+* URI Scheme: `openid4vp`
+* Description: Custom scheme used for wallet invocation
+* Status: Provisional
+* Well-Known URI Support: -
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#openid4vp-profile) of this specification
 
 # Acknowledgements {#Acknowledgements}
 
@@ -2130,7 +2335,7 @@ We would like to thank Richard Barnes, Paul Bastian, Vittorio Bertocci, Christia
 
 # Notices
 
-Copyright (c) 2023 The OpenID Foundation.
+Copyright (c) 2024 The OpenID Foundation.
 
 The OpenID Foundation (OIDF) grants to any Contributor, developer, implementer, or other interested party a non-exclusive, royalty free, worldwide copyright license to reproduce, prepare derivative works from, distribute, perform and display, this Implementers Draft or Final Specification solely for the purposes of (i) developing specifications, and (ii) implementing Implementers Drafts and Final Specifications based on such documents, provided that attribution be made to the OIDF as the source of the material, but that such attribution does not indicate an endorsement by the OIDF.
 
@@ -2147,6 +2352,7 @@ The technology described in this specification was made available from contribut
    * remove `client_id_scheme` and turn it into a prefix of the `client_id`; this addresses a security issue with the previous solution
    * Clarified what can go in the `client_metadata` parameter
    * Fixed #227: Enabled non-breaking extensibility.
+   * Fixed #383: Completed IANA Considerations section.
 
    -21
 
