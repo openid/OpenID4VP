@@ -1861,7 +1861,6 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </front>
 </reference>
 
-<<<<<<< HEAD
 <reference anchor="BCP47" target="https://www.rfc-editor.org/info/bcp47">
         <front>
           <title>BCP47</title>
@@ -1873,7 +1872,6 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
 </reference>
 
 
-=======
 <reference anchor="IANA.OAuth.Parameters" target="https://www.iana.org/assignments/oauth-parameters">
   <front>
     <title>OAuth Parameters</title>
@@ -1913,7 +1911,6 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </front>
 </reference>
 
->>>>>>> main
 # OpenID4VP profile for the W3C Digital Credentials API
 
 This section defines a profile of OpenID4VP for use with the W3C Digital Credentials API [@!w3c.digital_credentials_api].
