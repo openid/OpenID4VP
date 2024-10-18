@@ -1637,6 +1637,15 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </front>
 </reference>
 
+<reference anchor="IANA.Hash.Algorithms" target="https://www.iana.org/assignments/named-information/named-information.xhtml">
+        <front>
+          <title>Named Information Hash Algorithm Registry</title>
+          <author>
+            <organization>IANA</organization>
+          </author>
+        </front>
+</reference>
+
 # OpenID4VP profile for the W3C Digital Credentials API
 
 This section defines a profile of OpenID4VP for use with the W3C Digital Credentials API [@!w3c.digital_credentials_api].
