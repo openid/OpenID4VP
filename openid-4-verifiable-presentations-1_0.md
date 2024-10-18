@@ -113,7 +113,7 @@ Biometrics-based Holder Binding:
 :  Ability of the Holder to prove legitimate possession of a Verifiable Credential by demonstrating a certain biometric trait, such as finger print or face. One example of a Verifiable Credential with biometric Holder Binding is a mobile driving license [@ISO.18013-5], which contains a portrait of the Holder.
 
 VP Token:
-: An artifact defined in this specification that contains a single Verifiable Presentation or an array of Verifiable Presentations as defined in (#response-parameters).
+: An artifact containing one or more Verifiable Presentations returned as a response to an Authorization Request. The structure of VP Tokens is defined in (#response-parameters).
 
 Wallet:
 :  An entity used by the Holder to receive, store, present, and manage Verifiable Credentials and key material. There is no single deployment model of a Wallet: Verifiable Credentials and keys can both be stored/managed locally, or by using a remote self-hosted service, or a remote third-party service. In the context of this specification, the Wallet acts as an OAuth 2.0 Authorization Server (see [@!RFC6749]) towards the Credential Verifier which acts as the OAuth 2.0 Client.
@@ -222,6 +222,8 @@ Figure: Cross Device Flow
 OpenID for Verifiable Presentations extends existing OAuth 2.0 mechanisms as following:
 
 * A new `presentation_definition` Authorization Request parameter that uses the [@!DIF.PresentationExchange] syntax is defined to request presentation of Verifiable Credentials in arbitrary formats. See (#vp_token_request) for more details. 
+* A new query language is defined to enable requesting Verifiable Credentials in a more flexible way. See (#vp_query) for more details.
+* A new `vp_query` Authorization Request parameter is defined to request presentation of Verifiable Credentials in the JSON-encoded VP Query format. See (#vp_token_request) for more details.
 * A new `vp_token` response parameter is defined to return Verifiable Presentations to the Verifier in either Authorization or Token Response depending on the Response Type. See (#response) for more details. 
 * New Response Types `vp_token` and `vp_token id_token` are defined to request Verifiable Credentials to be returned in the Authorization Response (standalone or along with a Self-Issued ID Token [@!SIOPv2]). See (#response) for more details.
 * A new OAuth 2.0 Response Mode `direct_post` is defined to support sending the response across devices, or when the size of the response exceeds the redirect URL character size limitation. See (#response_mode_post) for more details.
@@ -255,10 +257,14 @@ This specification enables the Verifier to send both Presentation Definition JSO
 This specification defines the following new request parameters:
 
 `presentation_definition`:
-: A string containing a Presentation Definition JSON object. See (#request_presentation_definition) for more details. This parameter MUST be present when `presentation_definition_uri` parameter, or a `scope` value representing a Presentation Definition is not present.
+: A string containing a Presentation Definition JSON object. See (#request_presentation_definition) for more details. Exactly one of `vp_query` or `presentation_definition` or `presentation_definition_uri` MUST be present in the Authorization Request.
 
 `presentation_definition_uri`:
-: A string containing an HTTPS URL pointing to a resource where a Presentation Definition JSON object can be retrieved. This parameter MUST be present when `presentation_definition` parameter, or a `scope` value representing a Presentation Definition is not present. See (#request_presentation_definition_uri) for more details.
+: A string containing an HTTPS URL pointing to a resource where a Presentation Definition JSON object can be retrieved. See (#request_presentation_definition_uri) for more details. Exactly one of `vp_query` or `presentation_definition` or `presentation_definition_uri` MUST be present in the Authorizat
+ion Request.
+
+`vp_query`:
+: A string containing a JSON-encoded VP Query as defined in (#vp_query). This parameter is OPTIONAL. Exactly one of `vp_query` or `presentation_definition` or `presentation_definition_uri` MUST be present in the Authorization Request.
 
 `client_metadata`:
 : OPTIONAL. A JSON object containing the Verifier metadata values. It MUST be UTF-8 encoded. The following metadata parameters MAY be used:
@@ -595,11 +601,294 @@ The Wallet then validates the request as specified in OAuth 2.0 [@RFC6749].
 
 If the Verifier responds with any HTTP error response, the Wallet MUST terminate the process.
 
+# Verifiable Presentation Query Language {#vp_query}
+
+The Verifiable Presentation Query Language (VP Query) is a JSON-encoded query
+language that allows the Verifier to request the Wallet to present Verifiable
+Credentials that match the query. The Verifier MAY encode constraints on the
+combinations of credentials and claims that are requested. The Wallet evaluates the
+query against the Verifiable Credentials it holds and returns the Verifiable
+Presentations that match the query.
+
+A valid VP Query is defined as a JSON-encoded object with the following
+top-level properties:
+
+`credentials`:
+: REQUIRED. A non-empty array of Credential Queries as defined in (#credential_query)
+that specify the requested Verifiable Credentials.
+
+`credential_sets`:
+: OPTIONAL. A non-empty array of credential set queries as defined in (#credential_set_query)
+that specifies additional constraints on which of the requested Verifiable Credentials to return.
+
+Note: While this specification does not define additional top-level properties,
+future extensions MAY define additional properties that modify the behavior of
+the Wallet when processing the query.
+
+## Credential Query {#credential_query}
+
+A Credential Query is an object representing a request for one specific
+Credential.
+
+Each entry in `credentials` MUST be an object with the following properties:
+
+`id`:
+: REQUIRED. A string identifying the Credential in the response and, if provided,
+the constraints in `credential_sets`. The value MUST be a non-empty string
+consisting of alphanumeric, underscore (`_`) or hyphen (`-`) characters.
+Within the Authorization Request, the same `id` MUST NOT
+be present more than once.
+
+`format`:
+: REQUIRED. A string that specifies the format of the requested
+Verifiable Credential. Valid Credential Format Identifier values are defined in
+Appendix A of [@!OpenID.VCI].
+
+`meta`: 
+: OPTIONAL. An object defining additional properties requested by the Verifier that
+apply to the metadata and validity data of the Credential. The properties of
+this object are defined per Credential Format in (#format_specific_properties). If omitted,
+no specific constraints are placed on the metadata or validity of the requested
+Credential.
+
+`claims`:
+: OPTIONAL. A non-empty array of objects as defined in (#claims_query) that specifies
+claims in the requested Credentials.
+
+`claim_sets`:
+: OPTIONAL. A non-empty array containing arrays of identifiers for elements in
+`claims`. The identifier MAY be postfixed by `?!` indicating that
+delivery of the respective claim is required if present on the credential, see (#selecting_claims) for more details.
+
+## Credential Set Query {#credential_set_query}
+
+A Credential Set Query is an object representing a request for one or more credentials to satisfy
+a particular usecase with the Verifier.
+
+Each entry in `credential_sets` MUST be an object with the following properties:
+
+`query_options`
+: REQUIRED: A non-empty array, where each value in the array represents a distinct query that satisfies 
+the Usecase. The value of each element in the `query_options` array, is an array of identifiers which reference
+elements in `credentials`.
+
+`required`
+: OPTIONAL. A boolean flag which indicates whether the wallet is required to respond to the query. 
+If omitted, the effective value MUST be processed as `true`.
+
+## Claims Query {#claims_query}
+
+Each entry in `claims` MUST be an object with the following properties:
+
+`id`:
+: REQUIRED if `claim_sets` is present; OPTIONAL otherwise. A string
+identifying the particular claim. The value MUST be a non-empty string
+consisting of alphanumeric, underscore (`_`) or hyphen (`-`) characters.
+Within the particular `claims` array, the same `id` MUST NOT
+be present more than once.
+
+`path`:
+: REQUIRED if the Credential Format uses a JSON-based claims structure; MUST NOT
+be present otherwise. The value MUST be a claims path pointer that specifies the path to the claim
+within the Verifiable Credential, as defined in (#claims_path_pointer).
+
+`namespace`:
+: REQUIRED if the Credential Format is based on the mdoc format defined in ISO 18013-5; MUST NOT be present otherwise. 
+The value MUST be a string that specifies the namespace of the data element
+within the mdoc, e.g., `org.iso.18013.5.1`.
+
+`claim_name`:
+: REQUIRED if the Credential Format is based on mdoc format defined in ISO 18013-5; MUST NOT be present otherwise. 
+The value MUST be a string that specifies the data element identifier of the data element within the provided namespace
+in the mdoc, e.g., `first_name`.
+
+`values`:
+: OPTIONAL. An array of strings, integers or boolean values that specifies the expected values of the claim.
+If the `values` property is present, the Wallet MUST return the claim only if the
+type and value of the claim both match for at least one of the elements in the array. 
+
+### Selecting Claims and Credentials {#vp_query_lang_processing_rules}
+
+The following section describes the logic that applies for selecting claims 
+and for selecting credentials. 
+
+Note: While this specification provides the mechanisms for requesting different
+sets of claims and credentials, it does not make assumptions about the user 
+interface of the Wallet, for example, if users can select which claims to present 
+or which combination of credentials to present.
+
+#### Selecting Claims {#selecting_claims}
+
+The following rules apply for selecting claims via `claims` and `claim_sets`:
+
+- If `claims` is not provided, the Verifier requests all claims existing
+  in the Credential.
+- If `claims` is provided, but `claim_sets` is not provided,
+  the Verifier requests all claims listed in `claims`.
+- Otherwise, the Verifier requests one combination of the claims listed in
+  `claim_sets`. Claims listed without a postfix are requested unconditionally. 
+  Claims postfixed by `?!` have to be provided by the Wallet if they exist on 
+  the matched Credential. The order of the options conveyed in the `claim_sets`
+  array expresses the Verifiers preference for what is returned. A wallet MUST 
+  prioritise returning the most preferred option.
+
+The purpose of the `claim_sets` syntax is to provide a way for a 
+verifier to describe alternative ways a given credential can satisfy the request. 
+The array ordering expresses the Verifier's preference for how the request should 
+be fulfilled where the first element in the array is the most preferred and the last 
+element in the array is the least preferred. Verifiers should use the principle of 
+least information disclosure to influence how they order these options. For example, a 
+proof of age request should prioritize requesting an attribute like `age_over_18` over
+an attribute like `birth_date`.
+
+If the Wallet cannot deliver all unconditional claims requested by the Verifier
+according to these rules, it MUST NOT return the respective Credential.
+
+#### Selecting Credentials
+
+The following rules apply for selecting Credentials via `credentials` and `credential_sets`:
+
+- If `credential_sets` is not provided, the Verifier requests all
+  Credentials in `credentials` to be returned.
+- Otherwise, the Verifier requests all of the credential set queries in the `credential_sets` array
+  with `required` evaluated as true to be returned at a minimum and optionally any of the credential set queries 
+  with `required` evaluated as false.
+- For each credential set query inside the `credential_sets` array, in order to satisfy the query, the Wallet MUST return
+a credential or credentials that match to one of the `query_options` inside the object.
+
+Credentials not matching the respective constraints expressed within
+`credentials` MUST NOT be returned, i.e., they are treated as if
+they would not exist in the Wallet.
+
+If the Wallet cannot deliver all non-optional Credentials requested by the Verifier according to these rules, it MUST NOT
+return any credential(s).
+
+## Format-specific Properties {#format_specific_properties}
+
+The following format-specific properties are defined:
+
+### Format `vc+sd-jwt` {#format_vc_sd_jwt}
+
+`vct_values`:
+: OPTIONAL. An array of strings that specifies allowed values for
+the type of the requested Verifiable Credential. All elements in the array MUST
+be valid type identifiers as defined in [@!I-D.ietf-oauth-sd-jwt-vc]. The Wallet
+MAY return credentials that inherit from any of the specified types, following
+the inheritance logic defined in [@!I-D.ietf-oauth-sd-jwt-vc].
+
+### Format `mso_mdoc` {#format_mso_mdoc}
+
+`doctype_values`:
+: OPTIONAL. An array of strings that specifies allowed values for the
+doctype of the requested Verifiable Credential. All elements in the array MUST
+be valid doctype identifiers as defined in ISO 18013-5.
+
+### Format `jwt_vp*`
+
+TBD
+
+
+## Claims Path Pointer {#claims_path_pointer}
+
+A claims path pointer is a pointer into the JSON structure of the Verifiable
+Credential, identifying one or more claims. A claims path pointer MUST be a
+non-empty array of strings and non-negative integers. A string value 
+indicates that the respective key is to be selected, the special string value `*` 
+indicates that all elements of the currently selected array(s) are to be selected;
+and a non-negative integer indicates that the respective index in an array is to be selected. The path
+is formed as follows:
+
+  - Start with an empty array.
+  - To address a particular claim within an object, append the key (claim name)
+    to the array.
+  - To address an element within an array, append the index to the array (as a
+    non-negative, 0-based integer).
+  - To address all elements within an array, append the string `*` to the array.
+
+Verifiers MUST NOT point to the same claim more than once in a single query.
+Wallets SHOULD ignore such duplicate claim queries.
+
+### Example
+
+The following shows a non-normative, simplified example of a Credential:
+
+```json
+{
+  "name": "Arthur Dent",
+  "address": {
+    "street_address": "42 Market Street",
+    "locality": "Milliways",
+    "postal_code": "12345"
+  },
+  "degrees": [
+    {
+      "type": "Bachelor of Science",
+      "university": "University of Betelgeuse"
+    },
+    {
+      "type": "Master of Science",
+      "university": "University of Betelgeuse"
+    }
+  ],
+  "nationalities": ["British", "Betelgeusian"]
+}
+```
+
+The following shows examples of claims path queries and the respective selected
+claims:
+
+- `["name"]`: The claim `name` with the value `Arthur Dent` is selected.
+- `["address"]`: The claim `address` with its sub-claims as the value is
+  selected.
+- `["address", "street_address"]`: The claim `street_address` with the value `42
+  Market Street` is selected.
+- `["degrees", "*", "type"]`: All `type` claims in the `degrees` array are
+  selected.
+- `["nationalities", 1]`: The second nationality is selected.
+- `[]` (empty array): The entire Credential is selected.
+
+### Processing
+
+In detail, the array is processed by the Wallet from left to right as follows:
+
+ 1. Select the root element of the Credential, i.e., the top-level JSON object.
+ 2. Process the query of the claims path query array from left to right:
+    1. If the component is a string, select the element in the respective
+       key in the currently selected element(s). If any of the currently
+       selected element(s) is not an object, abort processing and return an
+       error. If the key does not exist in any element currently selected,
+       remove that element from the selection.
+    2. If the component is `*`, select all elements of the currently
+       selected array(s). If any of the currently selected element(s) is not an
+       array, abort processing and return an error.
+    3. If the component is a non-negative integer, select the element at
+       the respective index in the currently selected array(s). If any of the
+       currently selected element(s) is not an array, abort processing and
+       return an error. If the index does not exist in a selected array, remove
+       that array from the selection.
+  3. If the set of elements currently selected is empty, abort processing and
+     return an error.
+
+The result of the processing is the set of elements which is requested for
+presentation.
+
+## Examples {#vp_query_examples}
+
+The following is a non-normative example of a VP Query that requests a Verifiable
+Credential of the format `vc+sd-jwt` with a type value of
+`https://credentials.example.com/identity_credential` and the claims `last_name`,
+`first_name`, and `address.street_address`:
+
+<{{examples/query_lang/simple.json}}
+
+Additional, more complex examples can be found in (#vp_query_examples).
+
+
 # Response {#response}
 
 A VP Token is only returned if the corresponding Authorization Request contained a `presentation_definition` parameter, a `presentation_definition_uri` parameter, or a `scope` parameter representing a Presentation Definition (#vp_token_request).
 
-VP Token can be returned in the Authorization Response or the Token Response depending on the Response Type used. See (#response_type_vp_token) for more details.
+A VP Token can be returned in the Authorization Response or the Token Response depending on the Response Type used. See (#response_type_vp_token) for more details.
 
 If the Response Type value is `vp_token`, the VP Token is returned in the Authorization Response. When the Response Type value is `vp_token id_token` and the `scope` parameter contains `openid`, the VP Token is returned in the Authorization Response alongside a Self-Issued ID Token as defined in [@!SIOPv2].
 
@@ -622,7 +911,9 @@ The behavior with respect to the VP Token is unspecified for any other individua
 When a VP Token is returned, the respective response MUST include the following parameters:
 
 `vp_token`:
-: REQUIRED. JSON String or JSON object that MUST contain a single Verifiable Presentation or an array of JSON Strings and JSON objects each of them containing a Verifiable Presentations. Each Verifiable Presentation MUST be represented as a JSON string (that is a base64url-encoded value) or a JSON object depending on a format as defined in Appendix A of [@!OpenID.VCI].  When a single Verifiable Presentation is returned, the array syntax MUST NOT be used.  If Appendix A of [@!OpenID.VCI] defines a rule for encoding the respective Credential format in the Credential Response, this rules MUST also be followed when encoding Credentials of this format in the `vp_token` response parameter. Otherwise, this specification does not require any additional encoding when a Credential format is already represented as a JSON object or a JSON string.
+: REQUIRED. The structure of this parameter depends on the Authorization Request:
+ * In case Presentation Exchange was used in the Authorization Request, it is a JSON String or JSON object that MUST contain a single Verifiable Presentation or an array of JSON Strings and JSON objects each of them containing a Verifiable Presentations. Each Verifiable Presentation MUST be represented as a JSON string (that is a base64url-encoded value) or a JSON object depending on a format as defined in Appendix A of [@!OpenID.VCI].  When a single Verifiable Presentation is returned, the array syntax MUST NOT be used.  If Appendix A of [@!OpenID.VCI] defines a rule for encoding the respective Credential format in the Credential Response, this rules MUST also be followed when encoding Credentials of this format in the `vp_token` response parameter. Otherwise, this specification does not require any additional encoding when a Credential format is already represented as a JSON object or a JSON string.
+ * In case the `vp_query` parameter was used, this is a JSON-encoded object; the keys are the `id` values used for the Credential Queries in the VP Query, and the values are the Verifiable Presentations that match the respective Credential Query. The Verifiable Presentations are represented as strings or objects depending on the format as defined in Appendix A of [@!OpenID.VCI]. The same rules as above apply for encoding the Verifiable Presentations.
 
 `presentation_submission`:
 : REQUIRED. The `presentation_submission` element as defined in [@!DIF.PresentationExchange]. It contains mappings between the requested Verifiable Credentials and where to find them within the returned VP Token. This is expressed via elements in the `descriptor_map` array, known as Input Descriptor Mapping Objects. These objects contain a field called `path`, which, for this specification, MUST have the value `$` (top level root path) when only one Verifiable Presentation is contained in the VP Token, and MUST have the value `$[n]` (indexed path from root) when there are multiple Verifiable Presentations, where `n` is the index to select. Additional parameters can be defined by Credential Formats, see (#alternative_credential_formats) for details.
@@ -1570,6 +1861,17 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </front>
 </reference>
 
+<reference anchor="BCP47" target="https://www.rfc-editor.org/info/bcp47">
+        <front>
+          <title>BCP47</title>
+          <author>
+            <organization>IETF</organization>
+          </author>
+          <date year="2009"/>
+        </front>
+</reference>
+
+
 <reference anchor="IANA.OAuth.Parameters" target="https://www.iana.org/assignments/oauth-parameters">
   <front>
     <title>OAuth Parameters</title>
@@ -2073,6 +2375,40 @@ The following is a non-normative example of the payload of a Self-Issued ID Toke
 
 Note: The `nonce` and `aud` are set to the `nonce` of the request and the Client Identifier of the Verifier, respectively, in the same way as for the Verifier, Verifiable Presentations to prevent replay.
 
+
+# Examples for VP Queries {#vp_query_examples}
+
+The following is a non-normative example of a VP Query that requests a Verifiable
+Credential in the format `mso_mdoc` with the claims `vehicle_holder` and
+`first_name`:
+
+<{{examples/query_lang/simple_mdoc.json}}
+
+The following is a non-normative example of a VP Query that requests 
+
+- the mandatory claims `last_name` and `date_of_birth`, and
+- either the claim `postal_code`, or both of the the claims `locality` and `region`, and
+- optionally the claim `email`.
+
+<{{examples/query_lang/claims_alternatives.json}}
+
+The following is a non-normative example of a VP Query that requests multiple
+Verifiable Credentials; all of them must be returned:
+
+<{{examples/query_lang/multi_credentials.json}}
+
+The following shows a complex query where the Wallet is requested to deliver the `pid` credential, or the `other_pid` credential, or both `pid_reduced_cred_1` and `pid_reduced_cred_2`. Additionally, the `nice_to_have` credential may optionally be
+delivered. From the latter, the claim `legacy_system_rewards_number` may optionally
+be delivered.
+
+<{{examples/query_lang/credentials_alternatives.json}}
+
+The following example shows a query that uses the `value` and `values` constraints
+to request a credential with specific values for the `last_name` and `postal_code` claims:
+
+<{{examples/query_lang/value_matching_simple.json}}
+
+
 # IANA Considerations
 
 ## OAuth Authorization Endpoint Response Types Registry
@@ -2317,6 +2653,7 @@ The technology described in this specification was made available from contribut
 
    -22
 
+   * Introduced VP Query Language
    * remove `client_id_scheme` and turn it into a prefix of the `client_id`; this addresses a security issue with the previous solution
    * Clarified what can go in the `client_metadata` parameter
    * Fixed #227: Enabled non-breaking extensibility.
