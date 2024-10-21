@@ -286,11 +286,11 @@ This enables the Wallet to assess the Verifier's capabilities, allowing it to tr
 `transaction_data`: 
 : OPTIONAL. Array of strings, where each string is a base64url encoded JSON object that contains a typed parameter set with details about the transaction that the Verifier is requesting the End-User to authorize. See (#transaction_data) for details. The Wallet MUST return an error if a request contains even one unrecognized transaction data type or transaction data not conforming to the respective type definition. Each object consists of the following parameters:
 
-    * `type`: REQUIRED. String that is the Identifier of the transaction data type and determines the allowable contents of the object that contains it. The specific values are out of scope of this specification. It is RECOMMENDED to use collision-resistant names for `type` values.
-    * `credential_ids`: REQUIRED. Array of strings each pointing to an identifier that identifies a set of information describing a Credential that the Verifier is requesting transaction data in a particular object to be bound to (i.e., the `id` field in the Input Descriptor in Presentation Exchange or the `id` field in the Credential Query in Verifiable Presentation Query Language). When there are more than one element in the array, the Wallet MUST use only one of those Credentials.
+    * `type`: REQUIRED. String that identifies the type of transaction data . This value determines parameters that can be included in the `transaction_data` object. The specific values are out of scope of this specification. It is RECOMMENDED to use collision-resistant names for `type` values.
+    * `credential_ids`: REQUIRED. Array of strings each referencing a Credential requested by the Verifier that can be used to authorize this transaction. In Presentation Exchange, the string matches the `id` field in the Input Descriptor. In Verifiable Presentation Query Language (defined in (#vp_query)), the string matches the `id` field in the Credential Query. If there is more than one element in the array, the Wallet MUST use only one of the referenced Credentials for transaction authorization.
     * `transaction_data_hashes_alg`: OPTIONAL. Array of strings each representing a hash algorithm identifier, one of which MUST be used to calculate hashes in `transaction_data_hashes` response parameter. The value of the identifier MUST be a hash algorithm value from the "Hash Name String" column in the IANA "Named Information Hash Algorithm" registry [@IANA.Hash.Algorithms] or a value defined in another specification and/or profile of this specification. If this parameter is not present, a default value of `sha-256` MUST be used. To promote interoperability, implementations MUST support the sha-256 hash algorithm.
 
-Each document defining a transaction data type specifies whether that type requires a Credential that is bound to transaction data to be specifically issued for that purpose. How the Credential Issuer expresses that a particular Credential can be used for obtaining user's authorization using transaction data mechanism is out of scope for this specification.
+Each document specifying details of a transaction data type defines what Credential(s) can be used to authorize those transactions. Those Credential(s) can be issued specifically for the transaction authorization use case or re-use existing Credential(s) used for user identification. A mechanism for Credential Issuers to express that a particular Credential can be used for authorization of transaction data is out of scope for this specification.
 
 ## Existing Parameters
 
@@ -877,11 +877,13 @@ This document also defines the following additional error codes and error descri
 `invalid_transaction_data`:
 
 - any of the following is true for at least one object in the `transaction_data` structure:
-  - contains an unknown transaction data type value,
+  - contains an unknown or unsupported transaction data type value,
   - is an object of known type but containing unknown fields,
   - contains fields of the wrong type for the transaction data type,
   - contains fields with invalid values for the transaction data type, or
   - is missing required fields for the transaction data type.
+  - the credential_ids does not match
+  - the referenced Credential is not available in the Wallet
 
 `wallet_unavailable`:
 
