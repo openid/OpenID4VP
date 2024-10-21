@@ -9,7 +9,7 @@
       "claims": [
           {
             "path": ["last_name"],
-            "value": "Doe"
+            "values": ["Doe"]
           },
           {"path": ["first_name"]},
           {"path": ["address", "street_address"]},

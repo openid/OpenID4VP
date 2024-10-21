@@ -88,15 +88,15 @@
     }
   ],
   "credential_sets": [
-    { // Purpose of this request is to prove your ID, response to this request is required 
-      "query_options": [ // These options mean you could use either your mDL or Photo Card to respond to the request
+    {
+      "query_options": [
         [ "mdl-id" ],
         [ "photo_card-id" ]
       ]
     },
-    { // Purpose of this request is to prove your address, response to this request is not required
+    {
       "required": false,
-      "query_options": [ // These options mean you could use either your mDL or Photo Card to respond to the request
+      "query_options": [
         [ "mdl-address" ],
         [ "photo_card-address" ]
       ]

@@ -6,23 +6,16 @@
       "meta": {
         "vct_values": [ "https://credentials.example.com/identity_credential" ]
       },
-      // Comments in JSON to be removed before merging PR, they are just here to make Brian less sad
-      "claims": [ // define claims, may add other properties like a purpose to each claims
-        {
-          "id": "a",  // required for use in claim_sets below; if that is omitted, the id is optional
-          "path": ["last_name"]
-        },
+      "claims": [
+        {"id": "a","path": ["last_name"]},
         {"id": "b", "path": ["postal_code"]},
         {"id": "c", "path": ["locality"]},
         {"id": "d", "path": ["region"]},
-        {"id": "e", "path": ["date_of_birth"]},
-        {"id": "f", "path": ["email"]}
+        {"id": "e", "path": ["date_of_birth"]}
       ],
-      "claim_sets": [ // defines the rules
-        // postal code or (locality and region), last_name, and date_of_birth are mandatory; email is required if present on the matched credential 
-        ["a", "b", "e", "f?!"],
-        ["a", "c", "d", "e", "f?!"]
-        // Note: the ?! to mark a claim as `required if present` is syntactical sugar; the rules could be rewritten without it, but that would require a lot of repetition
+      "claim_sets": [
+        ["a", "c", "d", "e"],
+        ["a", "b", "e"]
       ]
     }
   ]
