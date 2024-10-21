@@ -251,6 +251,10 @@ Depending on the Client Identifier Scheme, the Verifier can communicate a JSON o
 
 This specification enables the Verifier to send both Presentation Definition JSON object and Client Metadata JSON object by value or by reference.
 
+Additional request parameters, other than those defined in this section, MAY be defined and used, as described in [@!RFC6749].
+The Wallet MUST ignore any unrecognized parameters, other than the `transaction_data` parameter.
+One exception to this rule is `transaction_data` parameter, and the wallets that do not support this parameter MUST reject requests that contain it.
+
 ## New Parameters {#new_parameters}
 This specification defines the following new request parameters:
 
@@ -277,7 +281,27 @@ This specification defines the following new request parameters:
 : OPTIONAL. A string determining the HTTP method to be used when the `request_uri` parameter is included in the same request. Two case-sensitive valid values are defined in this specification: `get` and `post`. If `request_uri_method` value is `get`, the Wallet MUST send the request to retrieve the Request Object using the HTTP GET method, i.e., as defined in [@RFC9101]. If `request_uri_method` value is `post`, a supporting Wallet MUST send the request using the HTTP POST method as detailed in (#request_uri_method_post). If the `request_uri_method` parameter is not present, the Wallet MUST process the `request_uri` parameter as defined in [@RFC9101]. Wallets not supporting the `post` method will send a GET request to the Request URI (default behavior as defined in [@RFC9101]). `request_uri_method` parameter MUST NOT be present if a `request_uri` parameter is not present.
 
 If the Verifier set the `request_uri_method` parameter value to `post` and there is no other means to convey its capabilities to the Wallet, it SHOULD add the `client_metadata` parameter to the Authorization Request. 
-This enables the Wallet to assess the Verifier's capabilities, allowing it to transmit only the relevant capabilities through the `wallet_metadata` parameter in the Request URI POST request. 
+This enables the Wallet to assess the Verifier's capabilities, allowing it to transmit only the relevant capabilities through the `wallet_metadata` parameter in the Request URI POST request.
+
+`transaction_data`: 
+: OPTIONAL. Array of strings, where each string is a base64url encoded JSON object that contains a typed parameter set with details about the transaction that the Verifier is requesting the End-User to authorize. See (#transaction_data) for details. The Wallet MUST return an error if a request contains even one unrecognized transaction data type or transaction data not conforming to the respective type definition. In addition to the parameters determined by the type of transaction data, each `transaction_data` object consists of the following parameters defined by this specification:
+
+    * `type`: REQUIRED. String that identifies the type of transaction data . This value determines parameters that can be included in the `transaction_data` object. The specific values are out of scope of this specification. It is RECOMMENDED to use collision-resistant names for `type` values.
+    * `credential_ids`: REQUIRED. Array of strings each referencing a Credential requested by the Verifier that can be used to authorize this transaction. In Presentation Exchange, the string matches the `id` field in the Input Descriptor. In Verifiable Presentation Query Language, the string matches the `id` field in the Credential Query. If there is more than one element in the array, the Wallet MUST use only one of the referenced Credentials for transaction authorization.
+    * `transaction_data_hashes_alg`: OPTIONAL. Array of strings each representing a hash algorithm identifier, one of which MUST be used to calculate hashes in `transaction_data_hashes` response parameter. The value of the identifier MUST be a hash algorithm value from the "Hash Name String" column in the IANA "Named Information Hash Algorithm" registry [@IANA.Hash.Algorithms] or a value defined in another specification and/or profile of this specification. If this parameter is not present, a default value of `sha-256` MUST be used. To promote interoperability, implementations MUST support the sha-256 hash algorithm.
+
+Each document specifying details of a transaction data type defines what Credential(s) can be used to authorize those transactions. Those Credential(s) can be issued specifically for the transaction authorization use case or re-use existing Credential(s) used for user identification. A mechanism for Credential Issuers to express that a particular Credential can be used for authorization of transaction data is out of scope for this specification.
+
+The following is a non-normative example of a transaction data content, after base64url decoding one of the strings in the `transaction_data` parameter:
+
+```
+{
+  "type": "example_type",
+  "credential_ids": [ "id card credential" ],
+  "transaction_data_hashes_alg": [ "sha-256" ]
+  // other transaction data type specific parameters
+}
+```
 
 ## Existing Parameters
 
@@ -295,10 +319,6 @@ The following additional considerations are given for pre-existing Authorization
 `client_id`:
 : REQUIRED. Defined in [@!RFC6749]. This specification defines additional requirements to enable the use of Client Identifier Schemes as described in (#client_metadata_management).
 
-Additional request parameters MAY be defined and used,
-as described in [@!RFC6749].
-The Wallet MUST ignore any unrecognized parameters.
-
 ## Examples
 
 The following is a non-normative example of an Authorization Request: 
@@ -309,10 +329,11 @@ GET /authorize?
   &client_id=redirect_uri:https%3A%2F%2Fclient.example.org%2Fcb
   &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
   &presentation_definition=...
+  &transaction_data=...
   &nonce=n-0S6_WzA2Mj HTTP/1.1
 ```
 
-The following is a non-normative example of an Authorization Request with a `request_uri_method` parameter (including the additional `client_metadata` parameter): 
+The following is a non-normative example of an Authorization Request with a `request_uri_method` parameter (including the additional `client_metadata`): 
 
 ```
 GET /authorize?
@@ -809,6 +830,17 @@ The following is a non-normative example of the payload of the JWT used in the e
 
 <{{examples/response/jarm_jwt_vc_json_body.json}}
 
+## Transaction Data {#transaction_data}
+
+The transaction data mechanism enables a binding between the user's identification/authentication and the user’s authorization, for example to complete a payment transaction, or to sign specific document(s) using QES (Qualified Electronic Signatures). This is achieved by signing the transaction data used for user authorization with the user-controlled key used for proof of possession of the Credential being presented as a means for user identification/authentication.
+
+The Wallet that received the `transaction_data` parameter in the request MUST include in the response a `transaction_data_hashes` parameter defined below. If the wallet does not support `transaction_data` parameter, it MUST return an error.
+
+Where to include the`transaction_data_hashes` parameter in the response is specific to each credential format and is defined by the Credential Format Profile, such as those in (#alternative_credential_formats).
+
+* `transaction_data_hashes`: Array of hashes, where each hash is calculated using a hash function over the strings received in the `transaction_data` request parameter. Each hash value ensures the integrity of, and maps to, the respective transaction data object. Where in the response this parameter is included is defined by each Credential Format Profile, but it has to be included in the mechanism used for the proof of possession of the Credential that is signed using the user-controlled key.
+* `transaction_data_hashes_alg`: REQUIRED when this parameter was present in the `transaction_data` request parameter. String representing the hash algorithm identifier used to calculate hashes in `transaction_data_hashes` response parameter.
+
 ## Error Response {#error-response}
 
 The error response follows the rules as defined in [@!RFC6749], with the following additional clarifications:
@@ -854,10 +886,20 @@ This document also defines the following additional error codes and error descri
 
 - The value of the `request_uri_method` request parameter is neither `get` nor `post` (case-sensitive).
 
+`invalid_transaction_data`:
+
+- any of the following is true for at least one object in the `transaction_data` structure:
+  - contains an unknown or unsupported transaction data type value,
+  - is an object of known type but containing unknown fields,
+  - contains fields of the wrong type for the transaction data type,
+  - contains fields with invalid values for the transaction data type, or
+  - is missing required fields for the transaction data type.
+  - the credential_ids does not match
+  - the referenced Credential(s) are not available in the Wallet
+
 `wallet_unavailable`:
 
 - The Wallet appears to be unavailable and therefore unable to respond to the request. It can be useful in situations where the user agent cannot invoke the Wallet and another component receives the request while the End-User wishes to continue the journey on the Verifier website. For example, this applies when using claimed HTTPS URIs handled by the Wallet provider in case the platform cannot or does not translate the URI into a platform intent to invoke the Wallet. In this case, the Wallet provider would return the Authorization Error Response to the Verifier and might redirect the user agent back to the Verifier website.
-
 
 ## VP Token Validation
 
@@ -1609,6 +1651,15 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </front>
 </reference>
 
+<reference anchor="IANA.Hash.Algorithms" target="https://www.iana.org/assignments/named-information/named-information.xhtml">
+        <front>
+          <title>Named Information Hash Algorithm Registry</title>
+          <author>
+            <organization>IANA</organization>
+          </author>
+        </front>
+</reference>
+
 # OpenID4VP profile for the W3C Digital Credentials API
 
 This section defines a profile of OpenID4VP for use with the W3C Digital Credentials API [@!w3c.digital_credentials_api].
@@ -2003,6 +2054,8 @@ Setting `limit_disclosure` property defined in [@!DIF.PresentationExchange] to `
 
 A non-normative example of the Authorization Response would look the same as in the examples of other Credential formats in this Annex.
 
+The `transaction_data_hashes` response parameter defined in (#transaction_data) MUST be included in the Key Binding JWT as a top level claim. This means that transaction data mechanism cannot be used with SD-JWT VCs without cryptographic key binding and, therefore, do not use KB JWT.
+
 The following is a non-normative example of the content of the `presentation_submission` parameter:
 
 <{{examples/response/ps_sd_jwt_vc.json}}
@@ -2317,6 +2370,8 @@ The technology described in this specification was made available from contribut
 
    -22
 
+
+   * add transaction data mechanism
    * remove `client_id_scheme` and turn it into a prefix of the `client_id`; this addresses a security issue with the previous solution
    * Clarified what can go in the `client_metadata` parameter
    * Fixed #227: Enabled non-breaking extensibility.
