@@ -292,6 +292,16 @@ This enables the Wallet to assess the Verifier's capabilities, allowing it to tr
 
 Each document specifying details of a transaction data type defines what Credential(s) can be used to authorize those transactions. Those Credential(s) can be issued specifically for the transaction authorization use case or re-use existing Credential(s) used for user identification. A mechanism for Credential Issuers to express that a particular Credential can be used for authorization of transaction data is out of scope for this specification.
 
+The following is a non-normative example of a transaction data content, after base64url decoding one of the strings in the `transaction_data` parameter:
+
+```
+{
+  "type": "example_type",
+  "credential_ids": [ "id card credential" ],
+  "transaction_data_hashes_alg": [ "sha-256" ]
+}
+```
+
 ## Existing Parameters
 
 The following additional considerations are given for pre-existing Authorization Request parameters:
@@ -318,6 +328,7 @@ GET /authorize?
   &client_id=redirect_uri:https%3A%2F%2Fclient.example.org%2Fcb
   &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
   &presentation_definition=...
+  &transaction_data=...
   &nonce=n-0S6_WzA2Mj HTTP/1.1
 ```
 
