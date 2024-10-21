@@ -787,7 +787,7 @@ Verifier according to these rules, it MUST NOT return any credential(s).
 
 The following format-specific properties are defined:
 
-### Format `vc+sd-jwt` {#format_vc_sd_jwt}
+### IETF SD-JWT VC {#format_vc_sd_jwt}
 
 `vct_values`:
 : OPTIONAL. An array of strings that specifies allowed values for
@@ -796,7 +796,7 @@ be valid type identifiers as defined in [@!I-D.ietf-oauth-sd-jwt-vc]. The Wallet
 MAY return credentials that inherit from any of the specified types, following
 the inheritance logic defined in [@!I-D.ietf-oauth-sd-jwt-vc].
 
-### Format `mso_mdoc` {#format_mso_mdoc}
+### Mobile Documents or mdocs (ISO/IEC 18013 and ISO/IEC 23220 series) {#format_mso_mdoc}
 
 `doctype_values`:
 : OPTIONAL. An array of strings that specifies allowed values for the

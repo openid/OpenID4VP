@@ -4,7 +4,7 @@
       "id": "mdl-id",
       "format": "mso_mdoc",
       "meta": {
-        "doctype_values": ["org.iso.18013.5.1.mdl"]
+        "doctype_values": ["org.iso.18013.5.1.mDL"]
       },
       "claims": [
         {
@@ -28,7 +28,7 @@
       "id": "mdl-address",
       "format": "mso_mdoc",
       "meta": {
-        "doctype_values": ["org.iso.18013.5.1.mdl"]
+        "doctype_values": ["org.iso.18013.5.1.mDL"]
       },
       "claims": [
         {
@@ -47,7 +47,7 @@
       "id": "photo_card-id",
       "format": "mso_mdoc",
       "meta": {
-        "doctype_values": ["org.iso.23220.photoid"]
+        "doctype_values": ["org.iso.23220.photoid.1"]
       },
       "claims": [
         {
@@ -71,7 +71,7 @@
       "id": "photo_card-address",
       "format": "mso_mdoc",
       "meta": {
-        "doctype_values": ["org.iso.23220.photoid"]
+        "doctype_values": ["org.iso.23220.photoid.1"]
       },
       "claims": [
         {
