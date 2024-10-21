@@ -883,7 +883,7 @@ This document also defines the following additional error codes and error descri
   - contains fields with invalid values for the transaction data type, or
   - is missing required fields for the transaction data type.
   - the credential_ids does not match
-  - the referenced Credential is not available in the Wallet
+  - the referenced Credential(s) are not available in the Wallet
 
 `wallet_unavailable`:
 
