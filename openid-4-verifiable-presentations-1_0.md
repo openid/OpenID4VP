@@ -680,7 +680,8 @@ claims in the requested Credentials.
 
 `claim_sets`:
 : OPTIONAL. A non-empty array containing arrays of identifiers for
-elements in `claims`. The rules for selecting claims to send are defined in (#selecting_claims).
+elements in `claims` that specifies which combinations of `claims` for the Credential are requested.
+The rules for selecting claims to send are defined in (#selecting_claims).
 
 Note that multiple Credential Queries in a request MAY request a presentation of the same Credential.
 
@@ -748,13 +749,13 @@ and for selecting credentials.
 
 The following rules apply for selecting claims via `claims` and `claim_sets`:
 
-- If `claims` is not provided, the Verifier requests all claims existing
+- If `claims` is absent, the Verifier requests all claims existing
   in the Credential.
-- If `claims` is provided, but `claim_sets` is not provided,
+- If `claims` is present, but `claim_sets` is absent,
   the Verifier requests all claims listed in `claims`.
-- Otherwise, the Verifier requests one combination of the claims listed in
+- If both `claims` and `claim_sets` are present, the Verifier requests one combination of the claims listed in
   `claim_sets`. The order of the options conveyed in the `claim_sets`
-  array expresses the Verifiers' preference for what is returned; the Wallet MUST return
+  array expresses the Verifier's preference for what is returned; the Wallet MUST return
   the first option that it can satisfy. If the Wallet cannot satisfy any of the
   options, it MUST NOT return any claims.
 
