@@ -7,7 +7,7 @@
         "vct_values": [ "https://credentials.example.com/identity_credential" ]
       },
       "claims": [
-        {"id": "a","path": ["last_name"]},
+        {"id": "a", "path": ["last_name"]},
         {"id": "b", "path": ["postal_code"]},
         {"id": "c", "path": ["locality"]},
         {"id": "d", "path": ["region"]},
