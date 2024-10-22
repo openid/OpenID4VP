@@ -14,7 +14,6 @@ participant "App Platform" as ap
 participant "Wallet" as w
 
 u --> r : use
-activate r
 
 deactivate r
 activate wp
