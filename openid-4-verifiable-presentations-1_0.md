@@ -261,7 +261,7 @@ One exception to this rule is `transaction_data` parameter, and the wallets that
 This specification defines the following new request parameters:
 
 `presentation_definition`:
-: A string containing a Presentation Definition JSON object. See (#request_presentation_definition) for more details. Exactly one of `vp_query` or `presentation_definition` or `presentation_definition_uri` MUST be present in the Authorization Request.
+: A string containing a Presentation Definition JSON object. See (#request_presentation_definition) for more details. Exactly one of  the following parameters MUST be present in the Authorization Request:`vp_query`, `presentation_definition`, `presentation_definition_uri`, or a `scope` value representing a Presentation Definition.
 
 `presentation_definition_uri`:
 : A string containing an HTTPS URL pointing to a resource where a Presentation Definition JSON object can be retrieved. See (#request_presentation_definition_uri) for more details. Exactly one of `vp_query` or `presentation_definition` or `presentation_definition_uri` MUST be present in the Authorizat
@@ -768,8 +768,7 @@ user privacy, but MUST NOT rely on it for security checks.
 
 The purpose of the `claim_sets` syntax is to provide a way for a 
 verifier to describe alternative ways a given credential can satisfy the request. 
-The array ordering expresses the Verifier's preference for how the request must 
-be fulfilled. The first element in the array is the most preferred and the last 
+The array ordering expresses the Verifier's preference for how to fulfill the request. The first element in the array is the most preferred and the last 
 element in the array is the least preferred. Verifiers SHOULD use the principle of 
 least information disclosure to influence how they order these options. For example, a 
 proof of age request should prioritize requesting an attribute like `age_over_18` over
@@ -818,7 +817,7 @@ presentations.
 
 ## Format-specific Properties {#format_specific_properties}
 
-The following format-specific properties are defined:
+OpenID for Verifiable Presentations is Credential Format agnostic, i.e., it is designed to allow applications to request and receive Verifiable Presentations and Verifiable Credentials in any Credential Format. This section defines Credential Format Profiles for some of the known Credential Formats. Other specifications or deployments can define their own Credential Format Profiles:
 
 ### IETF SD-JWT VC {#format_vc_sd_jwt}
 
@@ -831,10 +830,10 @@ the inheritance logic defined in [@!I-D.ietf-oauth-sd-jwt-vc].
 
 ### Mobile Documents or mdocs (ISO/IEC 18013 and ISO/IEC 23220 series) {#format_mso_mdoc}
 
-`doctype_values`:
-: OPTIONAL. An array of strings that specifies allowed values for the
-doctype of the requested Verifiable Credential. All elements in the array MUST
-be valid doctype identifiers as defined in ISO 18013-5.
+`doctype_value`:
+: OPTIONAL. String that specifies an allowed value for the
+doctype of the requested Verifiable Credential. It MUST
+be a valid doctype identifier as defined in [@ISO.18013-5].
 
 
 ## Claims Path Pointer {#claims_path_pointer}
