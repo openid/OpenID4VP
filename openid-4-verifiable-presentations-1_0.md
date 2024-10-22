@@ -261,14 +261,15 @@ One exception to this rule is `transaction_data` parameter, and the wallets that
 This specification defines the following new request parameters:
 
 `presentation_definition`:
-: A string containing a Presentation Definition JSON object. See (#request_presentation_definition) for more details. Exactly one of  the following parameters MUST be present in the Authorization Request:`vp_query`, `presentation_definition`, `presentation_definition_uri`, or a `scope` value representing a Presentation Definition.
+: A string containing a Presentation Definition JSON object. See (#request_presentation_definition) for more details.
 
 `presentation_definition_uri`:
-: A string containing an HTTPS URL pointing to a resource where a Presentation Definition JSON object can be retrieved. See (#request_presentation_definition_uri) for more details. Exactly one of `vp_query` or `presentation_definition` or `presentation_definition_uri` MUST be present in the Authorizat
-ion Request.
+: A string containing an HTTPS URL pointing to a resource where a Presentation Definition JSON object can be retrieved. See (#request_presentation_definition_uri) for more details.
 
 `vp_query`:
-: A string containing a JSON-encoded VP Query as defined in (#vp_query). This parameter is OPTIONAL. Exactly one of `vp_query` or `presentation_definition` or `presentation_definition_uri` MUST be present in the Authorization Request.
+: A string containing a JSON-encoded VP Query as defined in (#vp_query).
+
+Exactly one of the following parameters MUST be present in the Authorization Request: `vp_query`, `presentation_definition`, `presentation_definition_uri`, or a `scope` value representing a Presentation Definition.
 
 `client_metadata`:
 : OPTIONAL. A JSON object containing the Verifier metadata values. It MUST be UTF-8 encoded. The following metadata parameters MAY be used:
@@ -695,9 +696,8 @@ the use case. The value of each element in the `options` array is an array of id
 elements in `credentials`.
 
 `required`
-: OPTIONAL. A boolean flag which indicates whether this set of Credentials is required
-to satisfy the particular use case at the Verifier.
-If omitted, the effective value MUST be processed as `true`.
+: OPTIONAL. A boolean which indicates whether this set of Credentials is required
+to satisfy the particular use case at the Verifier. If omitted, the default value is `true`.
 
 `purpose`
 : OPTIONAL. A string, number or object specifying the purpose of the
@@ -781,38 +781,37 @@ according to these rules, it MUST NOT return the respective Credential.
 
 The following rules apply for selecting Credentials via `credentials` and `credential_sets`:
 
-- If `credential_sets` is not provided, the Verifier requests all
+- If `credential_sets` is not provided, the Verifier requests presentations for all
   Credentials in `credentials` to be returned.
-- Otherwise, the Verifier requests all of the Credential Set Queries in the `credential_sets` array
-  with `required` evaluated as true to be returned at a minimum and optionally any of the credential set queries 
-  with `required` evaluated as false.
+- Otherwise, the Verifier requests presentations of Credentials to be returned satisfying
+  - all of the Credential Set Queries in the `credential_sets` array where the `required` attribute is true or omitted, and
+  - optionally, any of the other Credential Set Queries.
 
-For each credential set query inside the `credential_sets` array, in order to
-satisfy the query, the Wallet MUST return a credential or credentials that
-match to one of the `options` inside the object. It is typically
+To satisfy a Credential Set Query, the Wallet MUST return a presentation of a Credential or of Credentials that
+match to one of the `options` inside the Credential Set Query. It is typically
 expected that the Wallet presents the End-User with a choice of which
-credential to present if multiple credentials match the query.
+Credential to present if multiple Credentials match the query.
 
 Credentials not matching the respective constraints expressed within
 `credentials` MUST NOT be returned, i.e., they are treated as if
 they would not exist in the Wallet.
 
 If the Wallet cannot deliver all non-optional Credentials requested by the
-Verifier according to these rules, it MUST NOT return any credential(s).
+Verifier according to these rules, it MUST NOT return any Credential(s).
 
 #### User Interface Considerations {#vp_query_ui}
 
 While this specification provides the mechanisms for requesting different sets
-of claims and credentials, it does not make assumptions about the user interface
-of the Wallet, for example, if users can select which combination of credentials
+of claims and Credentials, it does not make assumptions about the user interface
+of the Wallet, for example, if users can select which combination of Credentials
 to present.
 
 #### Security Considerations {#vp_query_security}
 
 While the Verifier can specify various constraints both on the claims level and
-the credential level as shown above, it MUST NOT rely on the Wallet to enforce
+the Credential level as shown above, it MUST NOT rely on the Wallet to enforce
 these constraints. The Wallet is not controlled by the Verifier and the Verifier
-MUST perform its own security checks on the returned credentials and
+MUST perform its own security checks on the returned Credentials and
 presentations.
 
 ## Format-specific Properties {#format_specific_properties}
@@ -934,7 +933,7 @@ Additional, more complex examples can be found in (#vp_query_examples).
 
 # Response {#response}
 
-A VP Token is only returned if the corresponding Authorization Request contained a `presentation_definition` parameter, a `presentation_definition_uri` parameter, or a `scope` parameter representing a Presentation Definition (#vp_token_request).
+A VP Token is only returned if the corresponding Authorization Request contained a `vp_query` parameter, a `presentation_definition` parameter, a `presentation_definition_uri` parameter, or a `scope` parameter representing a Presentation Definition (#vp_token_request).
 
 A VP Token can be returned in the Authorization Response or the Token Response depending on the Response Type used. See (#response_type_vp_token) for more details.
 
