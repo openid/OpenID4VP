@@ -15,7 +15,6 @@ participant "Wallet" as w
 
 u --> r : use
 
-deactivate r
 activate wp
 
 wp -> ap: forward request (\norigin="example.verifier.com",\nprotocol="openid4vp",\nrequest="client_id, \nrequest_uri, request_uri_method=post,\n presentation_definition")
