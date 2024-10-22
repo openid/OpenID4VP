@@ -1599,7 +1599,7 @@ For the profile defined in this section, the value of the exchange protocol used
 
 The Verifier MAY send all the OpenID4VP request parameters to the W3C Digital Credentials API as defined in [@!w3c.digital_credentials_api].
 
-The following is a non-normative example of an unsigned OpenID4VP request when advanced security features of OpenID4VP are not used:
+The following is a non-normative example of an unsigned OpenID4VP request (when advanced security features of OpenID4VP are not used) that can be sent over the W3C Digital Credentials API :
 
 ```js
 {
@@ -1647,7 +1647,7 @@ The Verifier MAY send a signed request, for example, when identification and aut
 
 The signed Request Object MAY contain all the parameters listed in (#browser_api_request), except `request`.
 
-Below is a non-normative example of such a request:
+Below is a non-normative example of such a request sent over the W3C Digital Credentials API:
 
 ```js
 { request: "eyJhbGciOiJF..." }
