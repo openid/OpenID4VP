@@ -695,7 +695,8 @@ the use case. The value of each element in the `options` array is an array of id
 elements in `credentials`.
 
 `required`
-: OPTIONAL. A boolean flag which indicates whether the wallet is required to respond to the query. 
+: OPTIONAL. A boolean flag which indicates whether this set of Credentials is required
+to satisfy the particular use case at the Verifier.
 If omitted, the effective value MUST be processed as `true`.
 
 `purpose`
@@ -741,11 +742,6 @@ type and value of the claim both match for at least one of the elements in the a
 The following section describes the logic that applies for selecting claims 
 and for selecting credentials. 
 
-Note: While this specification provides the mechanisms for requesting different
-sets of claims and credentials, it does not make assumptions about the user 
-interface of the Wallet, for example, if users can select which claims to present 
-or which combination of credentials to present.
-
 #### Selecting Claims {#selecting_claims}
 
 The following rules apply for selecting claims via `claims` and `claim_sets`:
@@ -788,14 +784,15 @@ The following rules apply for selecting Credentials via `credentials` and `crede
 
 - If `credential_sets` is not provided, the Verifier requests all
   Credentials in `credentials` to be returned.
-- Otherwise, the Verifier requests all of the credential set queries in the `credential_sets` array
+- Otherwise, the Verifier requests all of the Credential Set Queries in the `credential_sets` array
   with `required` evaluated as true to be returned at a minimum and optionally any of the credential set queries 
   with `required` evaluated as false.
-- For each credential set query inside the `credential_sets` array, in order to
-  satisfy the query, the Wallet MUST return a credential or credentials that
-  match to one of the `options` inside the object. It is typically
-  expected that the Wallet presents the End-User with a choice of which
-  credential to present if multiple credentials match the query.
+
+For each credential set query inside the `credential_sets` array, in order to
+satisfy the query, the Wallet MUST return a credential or credentials that
+match to one of the `options` inside the object. It is typically
+expected that the Wallet presents the End-User with a choice of which
+credential to present if multiple credentials match the query.
 
 Credentials not matching the respective constraints expressed within
 `credentials` MUST NOT be returned, i.e., they are treated as if
@@ -803,6 +800,21 @@ they would not exist in the Wallet.
 
 If the Wallet cannot deliver all non-optional Credentials requested by the
 Verifier according to these rules, it MUST NOT return any credential(s).
+
+#### User Interface Considerations {#vp_query_ui}
+
+While this specification provides the mechanisms for requesting different sets
+of claims and credentials, it does not make assumptions about the user interface
+of the Wallet, for example, if users can select which combination of credentials
+to present.
+
+#### Security Considerations {#vp_query_security}
+
+While the Verifier can specify various constraints both on the claims level and
+the credential level as shown above, it MUST NOT rely on the Wallet to enforce
+these constraints. The Wallet is not controlled by the Verifier and the Verifier
+MUST perform its own security checks on the returned credentials and
+presentations.
 
 ## Format-specific Properties {#format_specific_properties}
 

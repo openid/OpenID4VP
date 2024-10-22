@@ -89,14 +89,14 @@
   ],
   "credential_sets": [
     {
-      "query_options": [
+      "options": [
         [ "mdl-id" ],
         [ "photo_card-id" ]
       ]
     },
     {
       "required": false,
-      "query_options": [
+      "options": [
         [ "mdl-address" ],
         [ "photo_card-address" ]
       ]
