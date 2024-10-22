@@ -920,7 +920,7 @@ In detail, the array is processed by the Wallet from left to right as follows:
 The result of the processing is the set of elements which is requested for
 presentation.
 
-## Examples {#vp_query_examples}
+## Examples {#vp_query_example}
 
 The following is a non-normative example of a VP Query that requests a Verifiable
 Credential of the format `vc+sd-jwt` with a type value of
@@ -929,7 +929,7 @@ Credential of the format `vc+sd-jwt` with a type value of
 
 <{{examples/query_lang/simple.json}}
 
-Additional, more complex examples can be found in (#vp_query_examples).
+Additional, more complex examples can be found in (#more_vp_query_examples).
 
 
 # Response {#response}
@@ -985,11 +985,25 @@ Location: https://client.example.org/cb#
   &vp_token=...
 ```
 
-The following is a non-normative example of a VP Token containing a single Verifiable Presentation:
+### Examples (VP Query) {#response_vp_query}
+
+The following is a non-normative example of the contents of a VP Token
+containing a single Verifiable Presentation after a request using VP Query like
+the one shown in (#vp_query_example) (shortened for brevity):
+
+```json
+{
+  "my_credential": "eyJhbGci...QMA"
+}
+```
+
+### Examples (Presentation Exchange) {#response_presentation_exchange}
+
+The following is a non-normative example of a VP Token containing a single Verifiable Presentation after a request using Presentation Exchange:
 
 <{{examples/response/vp_token_raw_ldp_vp.json}}
 
-The following is a non-normative example of a `presentation_submission` parameter sent alongside a VP Token in the example above. It corresponds to a second Presentation Definition example in (#request_presentation_definition):
+The following is a non-normative example of a `presentation_submission` parameter sent alongside a VP Token in the example above. It corresponds to the second Presentation Definition example in (#request_presentation_definition):
 
 <{{examples/response/presentation_submission.json}}
 
@@ -999,7 +1013,7 @@ The following is a non-normative example of a VP Token containing multiple Verif
 
 <{{examples/response/vp_token_multiple_vps.json}}
 
-The following is a non-normative example of a `presentation_submission` parameter sent alongside a VP Token in the example above. It does not correspond to any Presentation Definition examples in this specification:
+The following is a non-normative example of a `presentation_submission` parameter sent alongside a VP Token in the example above. It does not correspond to any Presentation Definition example in this specification:
 
 <{{examples/response/presentation_submission_multiple_vps.json}}
 
@@ -2297,6 +2311,16 @@ The profile includes the following elements:
 * Required Wallet and Verifier Metadata parameters and their values.
 * Additional restrictions on Authorization Request and Authorization Response parameters to ensure compliance with ISO/IEC TS 18013-7 [@ISO.18013-7] and ISO/IEC 23220-4 [@ISO.23220-4]. For instance, to comply with ISO/IEC TS 18013-7 [@ISO.18013-7], only the same-device flow is supported, the `request_uri` Authorization Request parameter is required, and the Authorization Response has to be encrypted.
 
+### VP Query and Response
+
+An example request using the mdoc format is shown in (#more_vp_query_examples). The following is a non-normative example for a VP Token in the response:
+
+```json
+{
+  "my_credential": "<base64url-encoded DeviceResponse>"
+}
+```
+
 ### Presentation Request
 
 See ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 Annex C [@ISO.23220-4] for the latest examples on how to use the `presentation_definition` parameter for requesting Credentials in the mdoc format.
@@ -2366,6 +2390,13 @@ The `format` value in the `vp_formats` parameter of the Verifier metadata MUST h
 The following is a non-normative example of `client_metadata` request parameter value in a request to present an IETF SD-JWT VC.
 
 <{{examples/client_metadata/sd_jwt_vc_verifier_metadata.json}}
+
+### VP Query and Response
+
+A non-normative example request using the SD-JWT VC format is shown in (#vp_query_example).
+The respective response is shown in (#response_vp_query).
+
+Additional examples are shown in (#more_vp_query_examples).
 
 ### Presentation Request
 
@@ -2458,7 +2489,7 @@ The following is a non-normative example of the payload of a Self-Issued ID Toke
 Note: The `nonce` and `aud` are set to the `nonce` of the request and the Client Identifier of the Verifier, respectively, in the same way as for the Verifier, Verifiable Presentations to prevent replay.
 
 
-# Examples for VP Queries {#vp_query_examples}
+# Examples for VP Queries {#more_vp_query_examples}
 
 The following is a non-normative example of a VP Query that requests a Verifiable
 Credential in the format `mso_mdoc` with the claims `vehicle_holder` and
