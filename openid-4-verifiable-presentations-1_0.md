@@ -882,7 +882,7 @@ The following shows a non-normative, simplified example of a Credential:
 }
 ```
 
-The following shows examples of claims path pointeres and the respective selected
+The following shows examples of claims path pointers and the respective selected
 claims:
 
 - `["name"]`: The claim `name` with the value `Arthur Dent` is selected.
