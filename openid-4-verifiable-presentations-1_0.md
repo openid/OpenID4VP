@@ -222,8 +222,8 @@ Figure: Cross Device Flow
 OpenID for Verifiable Presentations extends existing OAuth 2.0 mechanisms as following:
 
 * A new `presentation_definition` Authorization Request parameter that uses the [@!DIF.PresentationExchange] syntax is defined to request presentation of Verifiable Credentials in arbitrary formats. See (#vp_token_request) for more details. 
-* A new query language is defined to enable requesting Verifiable Credentials in a more flexible way. See (#vp_query) for more details.
-* A new `vp_query` Authorization Request parameter is defined to request presentation of Verifiable Credentials in the JSON-encoded VP Query format. See (#vp_token_request) for more details.
+* A new query language, the Digital Credentials Query Language (DCQL), is defined to enable requesting Verifiable Credentials in an easier and more flexible way. See (#dcql_query) for more details.
+* A new `dcql_query` Authorization Request parameter is defined to request presentation of Verifiable Credentials in the JSON-encoded DCQL format. See (#vp_token_request) for more details.
 * A new `vp_token` response parameter is defined to return Verifiable Presentations to the Verifier in either Authorization or Token Response depending on the Response Type. See (#response) for more details. 
 * New Response Types `vp_token` and `vp_token id_token` are defined to request Verifiable Credentials to be returned in the Authorization Response (standalone or along with a Self-Issued ID Token [@!SIOPv2]). See (#response) for more details.
 * A new OAuth 2.0 Response Mode `direct_post` is defined to support sending the response across devices, or when the size of the response exceeds the redirect URL character size limitation. See (#response_mode_post) for more details.
@@ -266,10 +266,10 @@ This specification defines the following new request parameters:
 `presentation_definition_uri`:
 : A string containing an HTTPS URL pointing to a resource where a Presentation Definition JSON object can be retrieved. See (#request_presentation_definition_uri) for more details.
 
-`vp_query`:
-: A string containing a JSON-encoded VP Query as defined in (#vp_query).
+`dcql_query`:
+: A string containing a JSON-encoded DCQL query as defined in (#dcql_query).
 
-Exactly one of the following parameters MUST be present in the Authorization Request: `vp_query`, `presentation_definition`, `presentation_definition_uri`, or a `scope` value representing a Presentation Definition.
+Exactly one of the following parameters MUST be present in the Authorization Request: `dcql_query`, `presentation_definition`, `presentation_definition_uri`, or a `scope` value representing a Presentation Definition.
 
 `client_metadata`:
 : OPTIONAL. A JSON object containing the Verifier metadata values. It MUST be UTF-8 encoded. The following metadata parameters MAY be used:
@@ -427,11 +427,11 @@ Content-Type: application/json
 Wallets MAY support requesting presentation of Verifiable Credentials using OAuth 2.0 scope values.
 
 Such a scope value MUST be an alias for 
-- a well-defined VP Query, or
+- a well-defined DCQL query, or
 - a well-defined Presentation Definition (for Presentation Exchange) that will be referred to in the `presentation_submission` response parameter. 
 
 The specific scope values, and the mapping between a certain scope value and the respective 
-VP Query or Presentation Definition is out of scope of this specification. 
+DCQL query or Presentation Definition is out of scope of this specification. 
 
 Possible options include normative text in a separate specification defining scope values along with a description of their
 semantics or machine-readable definitions in the Wallet's server metadata, mapping a scope value to an equivalent 
@@ -624,16 +624,16 @@ The Wallet then validates the request as specified in OAuth 2.0 [@RFC6749].
 
 If the Verifier responds with any HTTP error response, the Wallet MUST terminate the process.
 
-# Verifiable Presentation Query Language {#vp_query}
+# Digital Credentials Query Language (DCQL) {#dcql_query}
 
-The Verifiable Presentation Query Language (VP Query) is a JSON-encoded query
-language that allows the Verifier to request Verifiable
+The Digital Credentials Query Language (DCQL, pronounced [ˈdakl̩]) is a
+JSON-encoded query language that allows the Verifier to request Verifiable
 Presentations that match the query. The Verifier MAY encode constraints on the
-combinations of credentials and claims that are requested. The Wallet evaluates the
-query against the Verifiable Credentials it holds and returns the Verifiable
-Presentations that match the query.
+combinations of credentials and claims that are requested. The Wallet evaluates
+the query against the Verifiable Credentials it holds and returns Verifiable
+Presentations matching the query.
 
-A valid VP Query is defined as a JSON-encoded object with the following
+A valid DCQL query is defined as a JSON-encoded object with the following
 top-level properties:
 
 `credentials`:
@@ -644,9 +644,9 @@ that specify the requested Verifiable Credentials.
 : OPTIONAL. A non-empty array of credential set queries as defined in (#credential_set_query)
 that specifies additional constraints on which of the requested Verifiable Credentials to return.
 
-Note: While this specification does not define additional top-level properties,
-future extensions MAY define additional properties that modify the behavior of
-the Wallet when processing the query.
+Note: Future extensions may define additional properties both on the top level
+and in the rest of the DCQL data structure. Implementations MUST ignore any
+unknown properties.
 
 ## Credential Query {#credential_query}
 
@@ -740,7 +740,7 @@ in the mdoc, e.g., `first_name`.
 If the `values` property is present, the Wallet SHOULD return the claim only if the
 type and value of the claim both match for at least one of the elements in the array. Details of the processing rules are defined in (#selecting_claims).
 
-### Selecting Claims and Credentials {#vp_query_lang_processing_rules}
+### Selecting Claims and Credentials {#dcql_query_lang_processing_rules}
 
 The following section describes the logic that applies for selecting claims 
 and for selecting credentials. 
@@ -777,7 +777,7 @@ array is the least preferred. Verifiers SHOULD use the principle of least
 information disclosure to influence how they order these options. For example, a
 proof of age request should prioritize requesting an attribute like
 `age_over_18` over an attribute like `birth_date`. The `claim_sets` syntax is
-not intended to define options the user can choose from, see (#vp_query_ui) for
+not intended to define options the user can choose from, see (#dcql_query_ui) for
 more information.
 
 If the Wallet cannot deliver all claims requested by the Verifier
@@ -804,7 +804,7 @@ they would not exist in the Wallet.
 If the Wallet cannot deliver all non-optional Credentials requested by the
 Verifier according to these rules, it MUST NOT return any Credential(s).
 
-#### User Interface Considerations {#vp_query_ui}
+#### User Interface Considerations {#dcql_query_ui}
 
 While this specification provides the mechanisms for requesting different sets
 of claims and Credentials, it does not define details about the user interface
@@ -813,7 +813,7 @@ Credentials to present. However, it is typically expected that the Wallet
 presents the End-User with a choice of which Credential(s) to present if
 multiple of the sets of Credentials in `options` can satisfy the request.
 
-#### Security Considerations {#vp_query_security}
+#### Security Considerations {#dcql_query_security}
 
 While the Verifier can specify various constraints both on the claims level and
 the Credential level as shown above, it MUST NOT rely on the Wallet to enforce
@@ -926,21 +926,21 @@ In detail, the array is processed by the Wallet from left to right as follows:
 The result of the processing is the set of elements which is requested for
 presentation.
 
-## Examples {#vp_query_example}
+## Examples {#dcql_query_example}
 
-The following is a non-normative example of a VP Query that requests a Verifiable
+The following is a non-normative example of a DCQL query that requests a Verifiable
 Credential of the format `vc+sd-jwt` with a type value of
 `https://credentials.example.com/identity_credential` and the claims `last_name`,
 `first_name`, and `address.street_address`:
 
 <{{examples/query_lang/simple.json}}
 
-Additional, more complex examples can be found in (#more_vp_query_examples).
+Additional, more complex examples can be found in (#more_dcql_query_examples).
 
 
 # Response {#response}
 
-A VP Token is only returned if the corresponding Authorization Request contained a `vp_query` parameter, a `presentation_definition` parameter, a `presentation_definition_uri` parameter, or a `scope` parameter representing a Presentation Definition (#vp_token_request).
+A VP Token is only returned if the corresponding Authorization Request contained a `dcql_query` parameter, a `presentation_definition` parameter, a `presentation_definition_uri` parameter, or a `scope` parameter representing a Presentation Definition (#vp_token_request).
 
 A VP Token can be returned in the Authorization Response or the Token Response depending on the Response Type used. See (#response_type_vp_token) for more details.
 
@@ -966,7 +966,7 @@ When a VP Token is returned, the respective response includes the following para
 
 `vp_token`:
 : REQUIRED. The structure of this parameter depends on the query language used to request the presentations in the Authorization Request:
- * If VP Query was used, this is a JSON-encoded object; the keys are the `id` values used for the Credential Queries in the VP Query, and the values are the Verifiable Presentations that match the respective Credential Query. The Verifiable Presentations are represented as strings or objects depending on the format as defined in Appendix A of [@!OpenID.VCI]. The same rules as above apply for encoding the Verifiable Presentations.
+ * If DCQL was used, this is a JSON-encoded object; the keys are the `id` values used for the Credential Queries in the DCQL query, and the values are the Verifiable Presentations that match the respective Credential Query. The Verifiable Presentations are represented as strings or objects depending on the format as defined in Appendix A of [@!OpenID.VCI]. The same rules as above apply for encoding the Verifiable Presentations.
  * In case Presentation Exchange was used, it is a JSON String or JSON object that MUST contain a single Verifiable Presentation or an array of JSON Strings and JSON objects each of them containing a Verifiable Presentations. Each Verifiable Presentation MUST be represented as a JSON string (that is a base64url-encoded value) or a JSON object depending on a format as defined in Appendix A of [@!OpenID.VCI].  When a single Verifiable Presentation is returned, the array syntax MUST NOT be used.  If Appendix A of [@!OpenID.VCI] defines a rule for encoding the respective Credential format in the Credential Response, this rules MUST also be followed when encoding Credentials of this format in the `vp_token` response parameter. Otherwise, this specification does not require any additional encoding when a Credential format is already represented as a JSON object or a JSON string.
 
 `presentation_submission`:
@@ -991,11 +991,11 @@ Location: https://client.example.org/cb#
   &vp_token=...
 ```
 
-### Examples (VP Query) {#response_vp_query}
+### Examples (DCQL) {#response_dcql_query}
 
 The following is a non-normative example of the contents of a VP Token
 containing a single Verifiable Presentation in the SD-JWT VC format after a
-request using VP Query like the one shown in (#vp_query_example) (shortened for
+request using DCQL like the one shown in (#dcql_query_example) (shortened for
 brevity):
 
 ```json
@@ -1245,7 +1245,7 @@ This document also defines the following additional error codes and error descri
 Verifiers MUST validate the VP Token in the following manner:
 
 1. Validate the format of the VP Token as defined in (#response-parameters) and verify the contents depending on the language used in the Authorization Request:
-   1. If VP Query was used, ensure that the set of VPs returned satisfies all required Credential Sets (and optionally other Credential Sets).
+   1. If DCQL was used, ensure that the set of VPs returned satisfies all required Credential Sets (and optionally other Credential Sets).
    1. If Presentation Exchange was used, determine the number of VPs returned in the VP Token and identify in which VP which requested VC is included, using the Input Descriptor Mapping Object(s) in the Presentation Submission.
 1. Validate the integrity, authenticity, and Holder Binding of any Verifiable Presentation provided in the VP Token according to the rules of the respective Presentation format. See (#preventing-replay) for the checks required to prevent replay of a VP.
 1. Perform the checks on the Credential(s) specific to the Credential Format (i.e., validation of the signature(s) on each VC).
@@ -1545,7 +1545,7 @@ The Verifier MUST validate every individual Verifiable Presentation in an Author
 
 The `client_id` is used to detect the presentation of Verifiable Credentials to a party other than the one intended. This allows Verifiers take appropriate action in that case, such as not accepting the Verifiable Presentation. The `nonce` value binds the Presentation to a certain authentication transaction and allows the Verifier to detect injection of a Presentation in the flow, which is especially important in the flows where the Presentation is passed through the front-channel.
 
-Note: Different formats for Verifiable Presentations and signature/proof schemes use different ways to represent the intended audience and the session binding. Some use claims to directly represent those values, others include the values into the calculation of cryptographic proofs. There are also different naming conventions across the different formats. In case Presentation Exchange is used in the Authorization Request, the format of the respective presentation is determined from the format information in the presentation submission in the Authorization Response. If VP Query was used, the format was defined by the Verifier in the request.
+Note: Different formats for Verifiable Presentations and signature/proof schemes use different ways to represent the intended audience and the session binding. Some use claims to directly represent those values, others include the values into the calculation of cryptographic proofs. There are also different naming conventions across the different formats. In case Presentation Exchange is used in the Authorization Request, the format of the respective presentation is determined from the format information in the presentation submission in the Authorization Response. If DCQL was used, the format was defined by the Verifier in the request.
 
 The following is a non-normative example of the payload of a Verifiable Presentation of a format identifier `jwt_vp_json`:
 
@@ -2318,9 +2318,9 @@ The profile includes the following elements:
 * Required Wallet and Verifier Metadata parameters and their values.
 * Additional restrictions on Authorization Request and Authorization Response parameters to ensure compliance with ISO/IEC TS 18013-7 [@ISO.18013-7] and ISO/IEC 23220-4 [@ISO.23220-4]. For instance, to comply with ISO/IEC TS 18013-7 [@ISO.18013-7], only the same-device flow is supported, the `request_uri` Authorization Request parameter is required, and the Authorization Response has to be encrypted.
 
-### VP Query and Response
+### DCQL Query and Response
 
-An example request using the mdoc format is shown in (#more_vp_query_examples). The following is a non-normative example for a VP Token in the response:
+An example DCQL query using the mdoc format is shown in (#more_dcql_query_examples). The following is a non-normative example for a VP Token in the response:
 
 ```json
 {
@@ -2398,12 +2398,12 @@ The following is a non-normative example of `client_metadata` request parameter 
 
 <{{examples/client_metadata/sd_jwt_vc_verifier_metadata.json}}
 
-### VP Query and Response
+### DCQL Query and Response
 
-A non-normative example request using the SD-JWT VC format is shown in (#vp_query_example).
-The respective response is shown in (#response_vp_query).
+A non-normative example DCQL query using the SD-JWT VC format is shown in (#dcql_query_example).
+The respective response is shown in (#response_dcql_query).
 
-Additional examples are shown in (#more_vp_query_examples).
+Additional examples are shown in (#more_dcql_query_examples).
 
 ### Presentation Request
 
@@ -2496,15 +2496,15 @@ The following is a non-normative example of the payload of a Self-Issued ID Toke
 Note: The `nonce` and `aud` are set to the `nonce` of the request and the Client Identifier of the Verifier, respectively, in the same way as for the Verifier, Verifiable Presentations to prevent replay.
 
 
-# Examples for VP Queries {#more_vp_query_examples}
+# Examples for DCQL Queries {#more_dcql_query_examples}
 
-The following is a non-normative example of a VP Query that requests a Verifiable
+The following is a non-normative example of a DCQL query that requests a Verifiable
 Credential in the format `mso_mdoc` with the claims `vehicle_holder` and
 `first_name`:
 
 <{{examples/query_lang/simple_mdoc.json}}
 
-The following is a non-normative example of a VP Query that requests multiple
+The following is a non-normative example of a DCQL query that requests multiple
 Verifiable Credentials; all of them must be returned:
 
 <{{examples/query_lang/multi_credentials.json}}
@@ -2521,7 +2521,7 @@ come from an mDL or a photoid Credential.
 
 <{{examples/query_lang/complex_mdoc.json}}
 
-The following is a non-normative example of a VP Query that requests 
+The following is a non-normative example of a DCQL query that requests 
 
 - the mandatory claims `last_name` and `date_of_birth`, and
 - either the claim `postal_code`, or, if that is not available, both of the claims `locality` and `region`.
@@ -2778,7 +2778,7 @@ The technology described in this specification was made available from contribut
 
    -22
 
-   * Introduced VP Query Language
+   * Introduced the Digital Credentials Query Language
    * add transaction data mechanism
    * remove `client_id_scheme` and turn it into a prefix of the `client_id`; this addresses a security issue with the previous solution
    * Clarified what can go in the `client_metadata` parameter
