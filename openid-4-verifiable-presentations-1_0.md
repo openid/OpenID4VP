@@ -692,9 +692,10 @@ a particular use case with the Verifier.
 Each entry in `credential_sets` MUST be an object with the following properties:
 
 `options`
-: REQUIRED: A non-empty array, where each value in the array represents a distinct query that satisfies 
-the use case. The value of each element in the `options` array is an array of identifiers which reference
-elements in `credentials`.
+: REQUIRED: A non-empty array, where each value in the array is a list
+of Credential Query identifiers representing one set of Credentials that
+satisfies the use case. The value of each element in the `options` array is an
+array of identifiers which reference elements in `credentials`.
 
 `required`
 : OPTIONAL. A boolean which indicates whether this set of Credentials is required
@@ -767,13 +768,16 @@ the request to the Wallet does not have access to the claim value. Therefore, Ve
 must treat restrictions expressed using `values` as a best-effort way to improve
 user privacy, but MUST NOT rely on it for security checks.
 
-The purpose of the `claim_sets` syntax is to provide a way for a 
-verifier to describe alternative ways a given credential can satisfy the request. 
-The array ordering expresses the Verifier's preference for how to fulfill the request. The first element in the array is the most preferred and the last 
-element in the array is the least preferred. Verifiers SHOULD use the principle of 
-least information disclosure to influence how they order these options. For example, a 
-proof of age request should prioritize requesting an attribute like `age_over_18` over
-an attribute like `birth_date`.
+The purpose of the `claim_sets` syntax is to provide a way for a verifier to
+describe alternative ways a given credential can satisfy the request. The array
+ordering expresses the Verifier's preference for how to fulfill the request. The
+first element in the array is the most preferred and the last element in the
+array is the least preferred. Verifiers SHOULD use the principle of least
+information disclosure to influence how they order these options. For example, a
+proof of age request should prioritize requesting an attribute like
+`age_over_18` over an attribute like `birth_date`. The `claim_sets` syntax is
+not intended to define options the user can choose from, see (#vp_query_ui) for
+more information.
 
 If the Wallet cannot deliver all claims requested by the Verifier
 according to these rules, it MUST NOT return the respective Credential.
@@ -788,10 +792,9 @@ The following rules apply for selecting Credentials via `credentials` and `crede
   - all of the Credential Set Queries in the `credential_sets` array where the `required` attribute is true or omitted, and
   - optionally, any of the other Credential Set Queries.
 
-To satisfy a Credential Set Query, the Wallet MUST return a presentation of a Credential or of Credentials that
-match to one of the `options` inside the Credential Set Query. It is typically
-expected that the Wallet presents the End-User with a choice of which
-Credential to present if multiple Credentials match the query.
+To satisfy a Credential Set Query, the Wallet MUST return a presentation of a
+Credential or of Credentials that match to one of the `options` inside the
+Credential Set Query.
 
 Credentials not matching the respective constraints expressed within
 `credentials` MUST NOT be returned, i.e., they are treated as if
@@ -803,9 +806,11 @@ Verifier according to these rules, it MUST NOT return any Credential(s).
 #### User Interface Considerations {#vp_query_ui}
 
 While this specification provides the mechanisms for requesting different sets
-of claims and Credentials, it does not make assumptions about the user interface
-of the Wallet, for example, if users can select which combination of Credentials
-to present.
+of claims and Credentials, it does not define details about the user interface
+of the Wallet, for example, if and how users can select which combination of
+Credentials to present. However, it is typically expected that the Wallet
+presents the End-User with a choice of which Credential(s) to present if
+multiple of the sets of Credentials in `options` can satisfy the request.
 
 #### Security Considerations {#vp_query_security}
 
