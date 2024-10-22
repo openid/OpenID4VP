@@ -988,8 +988,9 @@ Location: https://client.example.org/cb#
 ### Examples (VP Query) {#response_vp_query}
 
 The following is a non-normative example of the contents of a VP Token
-containing a single Verifiable Presentation after a request using VP Query like
-the one shown in (#vp_query_example) (shortened for brevity):
+containing a single Verifiable Presentation in the SD-JWT VC format after a
+request using VP Query like the one shown in (#vp_query_example) (shortened for
+brevity):
 
 ```json
 {
