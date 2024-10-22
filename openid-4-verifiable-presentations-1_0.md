@@ -251,6 +251,10 @@ Depending on the Client Identifier Scheme, the Verifier can communicate a JSON o
 
 This specification enables the Verifier to send both Presentation Definition JSON object and Client Metadata JSON object by value or by reference.
 
+Additional request parameters, other than those defined in this section, MAY be defined and used, as described in [@!RFC6749].
+The Wallet MUST ignore any unrecognized parameters, other than the `transaction_data` parameter.
+One exception to this rule is `transaction_data` parameter, and the wallets that do not support this parameter MUST reject requests that contain it.
+
 ## New Parameters {#new_parameters}
 This specification defines the following new request parameters:
 
@@ -277,7 +281,27 @@ This specification defines the following new request parameters:
 : OPTIONAL. A string determining the HTTP method to be used when the `request_uri` parameter is included in the same request. Two case-sensitive valid values are defined in this specification: `get` and `post`. If `request_uri_method` value is `get`, the Wallet MUST send the request to retrieve the Request Object using the HTTP GET method, i.e., as defined in [@RFC9101]. If `request_uri_method` value is `post`, a supporting Wallet MUST send the request using the HTTP POST method as detailed in (#request_uri_method_post). If the `request_uri_method` parameter is not present, the Wallet MUST process the `request_uri` parameter as defined in [@RFC9101]. Wallets not supporting the `post` method will send a GET request to the Request URI (default behavior as defined in [@RFC9101]). `request_uri_method` parameter MUST NOT be present if a `request_uri` parameter is not present.
 
 If the Verifier set the `request_uri_method` parameter value to `post` and there is no other means to convey its capabilities to the Wallet, it SHOULD add the `client_metadata` parameter to the Authorization Request. 
-This enables the Wallet to assess the Verifier's capabilities, allowing it to transmit only the relevant capabilities through the `wallet_metadata` parameter in the Request URI POST request. 
+This enables the Wallet to assess the Verifier's capabilities, allowing it to transmit only the relevant capabilities through the `wallet_metadata` parameter in the Request URI POST request.
+
+`transaction_data`: 
+: OPTIONAL. Array of strings, where each string is a base64url encoded JSON object that contains a typed parameter set with details about the transaction that the Verifier is requesting the End-User to authorize. See (#transaction_data) for details. The Wallet MUST return an error if a request contains even one unrecognized transaction data type or transaction data not conforming to the respective type definition. In addition to the parameters determined by the type of transaction data, each `transaction_data` object consists of the following parameters defined by this specification:
+
+    * `type`: REQUIRED. String that identifies the type of transaction data . This value determines parameters that can be included in the `transaction_data` object. The specific values are out of scope of this specification. It is RECOMMENDED to use collision-resistant names for `type` values.
+    * `credential_ids`: REQUIRED. Array of strings each referencing a Credential requested by the Verifier that can be used to authorize this transaction. In Presentation Exchange, the string matches the `id` field in the Input Descriptor. In Verifiable Presentation Query Language, the string matches the `id` field in the Credential Query. If there is more than one element in the array, the Wallet MUST use only one of the referenced Credentials for transaction authorization.
+    * `transaction_data_hashes_alg`: OPTIONAL. Array of strings each representing a hash algorithm identifier, one of which MUST be used to calculate hashes in `transaction_data_hashes` response parameter. The value of the identifier MUST be a hash algorithm value from the "Hash Name String" column in the IANA "Named Information Hash Algorithm" registry [@IANA.Hash.Algorithms] or a value defined in another specification and/or profile of this specification. If this parameter is not present, a default value of `sha-256` MUST be used. To promote interoperability, implementations MUST support the sha-256 hash algorithm.
+
+Each document specifying details of a transaction data type defines what Credential(s) can be used to authorize those transactions. Those Credential(s) can be issued specifically for the transaction authorization use case or re-use existing Credential(s) used for user identification. A mechanism for Credential Issuers to express that a particular Credential can be used for authorization of transaction data is out of scope for this specification.
+
+The following is a non-normative example of a transaction data content, after base64url decoding one of the strings in the `transaction_data` parameter:
+
+```
+{
+  "type": "example_type",
+  "credential_ids": [ "id card credential" ],
+  "transaction_data_hashes_alg": [ "sha-256" ]
+  // other transaction data type specific parameters
+}
+```
 
 ## Existing Parameters
 
@@ -295,10 +319,6 @@ The following additional considerations are given for pre-existing Authorization
 `client_id`:
 : REQUIRED. Defined in [@!RFC6749]. This specification defines additional requirements to enable the use of Client Identifier Schemes as described in (#client_metadata_management).
 
-Additional request parameters MAY be defined and used,
-as described in [@!RFC6749].
-The Wallet MUST ignore any unrecognized parameters.
-
 ## Examples
 
 The following is a non-normative example of an Authorization Request: 
@@ -309,10 +329,11 @@ GET /authorize?
   &client_id=redirect_uri:https%3A%2F%2Fclient.example.org%2Fcb
   &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
   &presentation_definition=...
+  &transaction_data=...
   &nonce=n-0S6_WzA2Mj HTTP/1.1
 ```
 
-The following is a non-normative example of an Authorization Request with a `request_uri_method` parameter (including the additional `client_metadata` parameter): 
+The following is a non-normative example of an Authorization Request with a `request_uri_method` parameter (including the additional `client_metadata`): 
 
 ```
 GET /authorize?
@@ -809,7 +830,18 @@ The following is a non-normative example of the payload of the JWT used in the e
 
 <{{examples/response/jarm_jwt_vc_json_body.json}}
 
-## Error Response
+## Transaction Data {#transaction_data}
+
+The transaction data mechanism enables a binding between the user's identification/authentication and the user’s authorization, for example to complete a payment transaction, or to sign specific document(s) using QES (Qualified Electronic Signatures). This is achieved by signing the transaction data used for user authorization with the user-controlled key used for proof of possession of the Credential being presented as a means for user identification/authentication.
+
+The Wallet that received the `transaction_data` parameter in the request MUST include in the response a `transaction_data_hashes` parameter defined below. If the wallet does not support `transaction_data` parameter, it MUST return an error.
+
+Where to include the`transaction_data_hashes` parameter in the response is specific to each credential format and is defined by the Credential Format Profile, such as those in (#alternative_credential_formats).
+
+* `transaction_data_hashes`: Array of hashes, where each hash is calculated using a hash function over the strings received in the `transaction_data` request parameter. Each hash value ensures the integrity of, and maps to, the respective transaction data object. Where in the response this parameter is included is defined by each Credential Format Profile, but it has to be included in the mechanism used for the proof of possession of the Credential that is signed using the user-controlled key.
+* `transaction_data_hashes_alg`: REQUIRED when this parameter was present in the `transaction_data` request parameter. String representing the hash algorithm identifier used to calculate hashes in `transaction_data_hashes` response parameter.
+
+## Error Response {#error-response}
 
 The error response follows the rules as defined in [@!RFC6749], with the following additional clarifications:
 
@@ -854,10 +886,20 @@ This document also defines the following additional error codes and error descri
 
 - The value of the `request_uri_method` request parameter is neither `get` nor `post` (case-sensitive).
 
+`invalid_transaction_data`:
+
+- any of the following is true for at least one object in the `transaction_data` structure:
+  - contains an unknown or unsupported transaction data type value,
+  - is an object of known type but containing unknown fields,
+  - contains fields of the wrong type for the transaction data type,
+  - contains fields with invalid values for the transaction data type, or
+  - is missing required fields for the transaction data type.
+  - the credential_ids does not match
+  - the referenced Credential(s) are not available in the Wallet
+
 `wallet_unavailable`:
 
 - The Wallet appears to be unavailable and therefore unable to respond to the request. It can be useful in situations where the user agent cannot invoke the Wallet and another component receives the request while the End-User wishes to continue the journey on the Verifier website. For example, this applies when using claimed HTTPS URIs handled by the Wallet provider in case the platform cannot or does not translate the URI into a platform intent to invoke the Wallet. In this case, the Wallet provider would return the Authorization Error Response to the Verifier and might redirect the user agent back to the Verifier website.
-
 
 ## VP Token Validation
 
@@ -1293,29 +1335,29 @@ In the event that another component is invoked instead of the Wallet, the End-Us
     <author initials="T." surname="Lodderstedt" fullname="Torsten Lodderstedt">
       <organization>German Federal Agency for Disruptive Innovation (SPRIND)</organization>
     </author>
-   <date day="1" month="January" year="2023"/>
+   <date day="28" month="November" year="2023"/>
   </front>
 </reference>
 
-<reference anchor="OpenID.Core" target="http://openid.net/specs/openid-connect-core-1_0.html">
+<reference anchor="OpenID.Core" target="https://openid.net/specs/openid-connect-core-1_0.html">
   <front>
-    <title>OpenID Connect Core 1.0 incorporating errata set 1</title>
-    <author initials="N." surname="Sakimura" fullname="Nat Sakimura">
-      <organization>NRI</organization>
+    <title>OpenID Connect Core 1.0 incorporating errata set 2</title>
+    <author fullname="Nat Sakimura" initials="N." surname="Sakimura">
+      <organization abbrev="NAT.Consulting (was at NRI)">NAT.Consulting</organization>
     </author>
-    <author initials="J." surname="Bradley" fullname="John Bradley">
-      <organization>Ping Identity</organization>
+    <author fullname="John Bradley" initials="J." surname="Bradley">
+      <organization abbrev="Yubico (was at Ping Identity)">Yubico</organization>
     </author>
-    <author initials="M." surname="Jones" fullname="Michael B. Jones">
-      <organization>Microsoft</organization>
+    <author fullname="Michael B. Jones" initials="M.B." surname="Jones">
+      <organization abbrev="Self-Issued Consulting (was at Microsoft)">Self-Issued Consulting</organization>
     </author>
-    <author initials="B." surname="de Medeiros" fullname="Breno de Medeiros">
-      <organization>Google</organization>
+    <author fullname="Breno de Medeiros" initials="B." surname="de Medeiros">
+      <organization abbrev="Google">Google</organization>
     </author>
-    <author initials="C." surname="Mortimore" fullname="Chuck Mortimore">
-      <organization>Salesforce</organization>
+    <author fullname="Chuck Mortimore" initials="C." surname="Mortimore">
+      <organization abbrev="Disney (was at Salesforce)">Disney</organization>
     </author>
-   <date day="8" month="Nov" year="2014"/>
+    <date day="15" month="December" year="2023"/>
   </front>
 </reference>
 
@@ -1356,22 +1398,20 @@ In the event that another component is invoked instead of the Wallet, the End-Us
         </front>
 </reference>
 
-<reference anchor="OpenID-Discovery" target="https://openid.net/specs/openid-connect-discovery-1_0.html">
+
+<reference anchor="OpenID.Registration" target="https://openid.net/specs/openid-connect-registration-1_0.html">
   <front>
-    <title>OpenID Connect Discovery 1.0 incorporating errata set 1</title>
-    <author initials="N." surname="Sakimura" fullname="Nat Sakimura">
-      <organization>NRI</organization>
+    <title>OpenID Connect Dynamic Client Registration 1.0 incorporating errata set 2</title>
+    <author fullname="Nat Sakimura" initials="N." surname="Sakimura">
+      <organization abbrev="NAT.Consulting (was at NRI)">NAT.Consulting</organization>
     </author>
-    <author initials="J." surname="Bradley" fullname="John Bradley">
-      <organization>Ping Identity</organization>
+    <author fullname="John Bradley" initials="J." surname="Bradley">
+      <organization abbrev="Yubico (was at Ping Identity)">Yubico</organization>
     </author>
-    <author initials="B." surname="de Medeiros" fullname="Breno de Medeiros">
-      <organization>Google</organization>
+    <author fullname="Michael B. Jones" initials="M.B." surname="Jones">
+      <organization abbrev="Self-Issued Consulting (was at Microsoft)">Self-Issued Consulting</organization>
     </author>
-    <author initials="E." surname="Jay" fullname="Edmund Jay">
-      <organization> Illumila </organization>
-    </author>
-   <date day="8" month="Nov" year="2014"/>
+    <date day="15" month="December" year="2023"/>
   </front>
 </reference>
 
@@ -1483,7 +1523,7 @@ In the event that another component is invoked instead of the Wallet, the End-Us
         </front>
 </reference>
 
-<reference anchor="OpenID.Federation" target="https://openid.net/specs/openid-connect-federation-1_0.html">
+<reference anchor="OpenID.Federation" target="https://openid.net/specs/openid-federation-1_0.html">
         <front>
           <title>OpenID Federation 1.0</title>
 		  <author fullname="R. Hedberg, Ed.">
@@ -1504,7 +1544,7 @@ In the event that another component is invoked instead of the Wallet, the End-Us
           <author fullname="Vladimir Dzhuvinov">
             <organization>Connect2id</organization>
           </author>
-          <date day="8" month="November" year="2023"/>
+          <date day="15" month="September" year="2024"/>
         </front>
 </reference>
 
@@ -1516,6 +1556,54 @@ In the event that another component is invoked instead of the Wallet, the End-Us
           </author>
           <author fullname="Sam Goto">
             <organization>Google</organization>
+          </author>
+        </front>
+</reference>
+
+<reference anchor="IANA.OAuth.Parameters" target="https://www.iana.org/assignments/oauth-parameters">
+  <front>
+    <title>OAuth Parameters</title>
+    <author>
+      <organization>IANA</organization>
+    </author>
+    <date/>
+  </front>
+</reference>
+
+<reference anchor="IANA.MediaTypes" target="https://www.iana.org/assignments/media-types">
+  <front>
+    <title>Media Types</title>
+    <author>
+      <organization>IANA</organization>
+    </author>
+    <date/>
+  </front>
+</reference>
+
+<reference anchor="IANA.URI.Schemes" target="https://www.iana.org/assignments/uri-schemes">
+  <front>
+    <title>Uniform Resource Identifier (URI) Schemes</title>
+    <author>
+      <organization>IANA</organization>
+    </author>
+    <date/>
+  </front>
+</reference>
+
+<reference anchor="IANA.JOSE" target="https://www.iana.org/assignments/jose">
+        <front>
+          <title>JSON Object Signing and Encryption (JOSE)</title>
+          <author>
+            <organization>IANA</organization>
+          </author>
+        </front>
+</reference>
+
+<reference anchor="IANA.Hash.Algorithms" target="https://www.iana.org/assignments/named-information/named-information.xhtml">
+        <front>
+          <title>Named Information Hash Algorithm Registry</title>
+          <author>
+            <organization>IANA</organization>
           </author>
         </front>
 </reference>
@@ -1809,7 +1897,7 @@ The following is the content of the `vp_token` parameter:
 
 <{{examples/response/ac_vp_sd.json}}
 
-## Mobile Documents or mdocs (ISO/IEC 18013 and ISO/IEC 23220 series)
+## Mobile Documents or mdocs (ISO/IEC 18013 and ISO/IEC 23220 series) {#mdocs}
 
 ISO/IEC 18013-5:2021 [@ISO.18013-5] defines a mobile driving license (mDL) Credential in the mobile document (mdoc) format. Although ISO/IEC 18013-5:2021 [@ISO.18013-5] is specific to mobile driving licenses (mDLs), the Credential format can be utilized with any type of Credential (or mdoc document types). The ISO/IEC 23220 series has extracted components from ISO/IEC 18013-5:2021 [@ISO.18013-5] and ISO/IEC TS 18013-7 [@ISO.18013-7] that are common across document types to facilitate the profiling of the specification for other document types. The core data structures are shared between ISO/IEC 18013-5:2021 [@ISO.18013-5], ISO/IEC 23220-2 [@ISO.23220-2], ISO/IEC 23220-4 [@ISO.23220-4] which are encoded in CBOR and secured using COSE_Sign1.
 
@@ -1914,6 +2002,8 @@ Setting `limit_disclosure` property defined in [@!DIF.PresentationExchange] to `
 
 A non-normative example of the Authorization Response would look the same as in the examples of other Credential formats in this Annex.
 
+The `transaction_data_hashes` response parameter defined in (#transaction_data) MUST be included in the Key Binding JWT as a top level claim. This means that transaction data mechanism cannot be used with SD-JWT VCs without cryptographic key binding and, therefore, do not use KB JWT.
+
 The following is a non-normative example of the content of the `presentation_submission` parameter:
 
 <{{examples/response/ps_sd_jwt_vc.json}}
@@ -1986,60 +2076,229 @@ Note: The `nonce` and `aud` are set to the `nonce` of the request and the Client
 
 # IANA Considerations
 
-## Response Types
+## OAuth Authorization Endpoint Response Types Registry
+
+This specification registers the following `response_type` values
+in the IANA "OAuth Authorization Endpoint Response Types" registry [@IANA.OAuth.Parameters]
+established by [@!RFC6749].
+
+### vp_token
 
 * Response Type Name: `vp_token`
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
-* Specification Document(s): https://openid.net/specs/openid-4-verifiable-presentations-1_0.html
+* Specification Document(s): (#response) of this specification
+
+### vp_token id_token
 
 * Response Type Name: `vp_token id_token`
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
-* Specification Document(s): https://openid.net/specs/openid-4-verifiable-presentations-1_0.html
+* Specification Document(s): (#response) of this specification
 
-Note: Plan to register the following Response Types in the [OAuth Authorization Endpoint Response Types IANA Registry](https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml#endpoint).
+## OAuth Parameters Registry
 
-## Media Types
+This specification registers the following OAuth parameters
+in the IANA "OAuth Parameters" registry [@IANA.OAuth.Parameters]
+established by [@!RFC6749].
+
+### presentation_definition
+
+* Name: `presentation_definition`
+* Parameter Usage Location: authorization request
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#vp_token_request) of this specification
+
+### presentation_definition_uri
+
+* Name: `presentation_definition_uri`
+* Parameter Usage Location: authorization request
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#vp_token_request) of this specification
+
+### client_metadata
+
+* Name: `client_metadata`
+* Parameter Usage Location: authorization request
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#vp_token_request) of this specification
+
+### request_uri_method
+
+* Name: `request_uri_method`
+* Parameter Usage Location: authorization request
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#vp_token_request) of this specification
+
+### wallet_nonce
+
+* Name: `wallet_nonce`
+* Parameter Usage Location: authorization request, token response
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#request_uri_method_post) of this specification
+
+### response_uri
+
+* Name: `response_uri`
+* Parameter Usage Location: authorization request
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#response_mode_post) of this specification
+
+### vp_token
+
+* Name: `vp_token`
+* Parameter Usage Location: authorization response, token response
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#response-parameters) of this specification
+
+### presentation_submission
+
+* Name: `presentation_submission`
+* Parameter Usage Location: authorization response, token response
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#response-parameters) of this specification
+
+### expected_origins
+
+* Name: `expected_origins`
+* Parameter Usage Location: authorization request
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#browser_api_request) of this specification
+
+## OAuth Extensions Error Registry
+
+This specification registers the following errors
+in the IANA "OAuth Extensions Error" registry [@IANA.OAuth.Parameters]
+established by [@!RFC6749].
+
+### vp_formats_not_supported
+
+* Name: `vp_formats_not_supported`
+* Usage Location: authorization endpoint, token endpoint
+* Protocol Extension: OpenID for Verifiable Presentations
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#error-response) of this specification
+
+### invalid_presentation_definition_uri
+
+* Name: `invalid_presentation_definition_uri`
+* Usage Location: authorization endpoint, token endpoint
+* Protocol Extension: OpenID for Verifiable Presentations
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#error-response) of this specification
+
+### invalid_presentation_definition_reference
+
+* Name: `invalid_presentation_definition_reference`
+* Usage Location: authorization endpoint, token endpoint
+* Protocol Extension: OpenID for Verifiable Presentations
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#error-response) of this specification
+
+### invalid_request_uri_method
+
+* Name: `invalid_request_uri_method`
+* Usage Location: authorization endpoint
+* Protocol Extension: OpenID for Verifiable Presentations
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#error-response) of this specification
+
+### wallet_unavailable
+
+* Name: `wallet_unavailable`
+* Usage Location: authorization endpoint, token endpoint
+* Protocol Extension: OpenID for Verifiable Presentations
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#error-response) of this specification
+
+## OAuth Authorization Server Metadata Registry
+
+This specification registers the following authorization server metadata parameters
+in the IANA "OAuth Authorization Server Metadata" registry [@IANA.OAuth.Parameters]
+established by [@!RFC8414].
+
+### presentation_definition_uri_supported
+
+* Metadata Name: `presentation_definition_uri_supported`
+* Metadata Description: Boolean value specifying whether the Wallet supports the transfer of presentation_definition by reference
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#as_metadata_parameters) of this specification
+
+### vp_formats_supported
+
+* Metadata Name: `vp_formats_supported`
+* Metadata Description: An object containing a list of name/value pairs, where the name is a string identifying a Credential format supported by the Wallet
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#as_metadata_parameters) of this specification
+
+## OAuth Dynamic Client Registration Metadata Registry
+
+This specification registers the following client metadata parameters
+in the IANA "OAuth Dynamic Client Registration Metadata" registry [@IANA.OAuth.Parameters]
+established by [@!RFC7591].
+
+### vp_formats
+
+* Client Metadata Name: `vp_formats`
+* Client Metadata Description: Boolean value specifying whether the Wallet supports the transfer of presentation_definition by reference
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#client_metadata_parameters) of this specification
+
+
+## Media Types Registry
+
+This section registers the following media type [@RFC2046]
+in the IANA "Media Types" registry <xref target="IANA.MediaTypes"/>
+in the manner described in [@RFC6838].
+
 ### application/verifier-attestation+jwt {#va_media_type}
 
-The Internet media type for a Verifier Attestation JWT is `application/verifier-attestation+jwt`.
+The media type for a Verifier Attestation JWT is `application/verifier-attestation+jwt`.
 
-Type name: : `application`
-
-Subtype name: : `verifier-attestation+jwt`
-
-Required parameters: : n/a
-
-Optional parameters: : n/a
-
-Encoding considerations: : Compact Serialization as defined in [@!RFC7519].
-
-Security considerations: : See Security Considerations in in [@!RFC7519].
-
-Interoperability considerations: : n/a
-
-- Published specification: : TODO
-- Applications that use this media type: : Applications that issue, present,
-  verify verifier attestation VCs.
-- Additional information:
+* Type name: `application`
+* Subtype name: `verifier-attestation+jwt`
+* Required parameters: n/a
+* Optional parameters: n/a
+* Encoding considerations: Uses JWS Compact Serialization as defined in [@!RFC7515].
+* Security considerations: See Security Considerations in in [@!RFC7519].
+* Interoperability considerations: n/a
+* Published specification: (#verifier_attestation_jwt) of this specification
+* Applications that use this media type: Applications that issue, present, verify verifier attestation VCs
+* Additional information:
   - Magic number(s): n/a
   - File extension(s): n/a
   - Macintosh file type code(s): n/a
-  - Person & email address to contact for further information: TBD
-  - Intended usage: COMMON
-  - Restrictions on usage: none
-  - Author: tbd <TODO@email.com>
-  - Change controller: OpenID Foundation
+* Person & email address to contact for further information: TBD
+* Intended usage: COMMON
+* Restrictions on usage: none
+* Author: Oliver Terbu, oliver.terbu@mattr.global
+* Change controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
 
+## JSON Web Signature and Encryption Header Parameters Registry {#jose_header}
 
-## JWS Headers
-### JWT {#jose_header}
-This specification registers the following JWS header name in the IANA "JSON Web Signature and Encryption Header Parameters" registry established by [@!RFC7515].
+This specification registers the following JWS header parameter
+in the IANA "JSON Web Signature and Encryption Header Parameters" registry [@IANA.JOSE]
+established by [@!RFC7515].
+
+### jwt
 
 * Header Parameter Name: `jwt`
 * Header Parameter Description: This header contains a JWT. Processing rules MAY depend on the `typ` header value of the respective JWT. 
 * Header Parameter Usage Location: JWS
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
-* Specification Document(s): (#verifier_attestation_jwt)
+* Specification Document(s): (#verifier_attestation_jwt) of this specification
+
+## Uniform Resource Identifier (URI) Schemes Registry
+
+This specification registers the following URI scheme
+in the IANA "Uniform Resource Identifier (URI) Schemes" registry [@IANA.URI.Schemes].
+
+### openid4vp
+
+* URI Scheme: `openid4vp`
+* Description: Custom scheme used for wallet invocation
+* Status: Provisional
+* Well-Known URI Support: -
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#openid4vp-profile) of this specification
 
 # Acknowledgements {#Acknowledgements}
 
@@ -2047,7 +2306,7 @@ We would like to thank Richard Barnes, Paul Bastian, Vittorio Bertocci, Christia
 
 # Notices
 
-Copyright (c) 2023 The OpenID Foundation.
+Copyright (c) 2024 The OpenID Foundation.
 
 The OpenID Foundation (OIDF) grants to any Contributor, developer, implementer, or other interested party a non-exclusive, royalty free, worldwide copyright license to reproduce, prepare derivative works from, distribute, perform and display, this Implementers Draft or Final Specification solely for the purposes of (i) developing specifications, and (ii) implementing Implementers Drafts and Final Specifications based on such documents, provided that attribution be made to the OIDF as the source of the material, but that such attribution does not indicate an endorsement by the OIDF.
 
@@ -2059,9 +2318,12 @@ The technology described in this specification was made available from contribut
 
    -22
 
+
+   * add transaction data mechanism
    * remove `client_id_scheme` and turn it into a prefix of the `client_id`; this addresses a security issue with the previous solution
    * Clarified what can go in the `client_metadata` parameter
    * Fixed #227: Enabled non-breaking extensibility.
+   * Fixed #383: Completed IANA Considerations section.
 
    -21
 
