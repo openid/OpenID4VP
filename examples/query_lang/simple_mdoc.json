@@ -4,7 +4,7 @@
       "id": "my_credential",
       "format": "mso_mdoc",
       "meta": {
-        "doctype_values": ["org.iso.7367.1.mVRC"]
+        "doctype_value": "org.iso.7367.1.mVRC"
       },
       "claims": [
         {
