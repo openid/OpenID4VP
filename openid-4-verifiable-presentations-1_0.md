@@ -1987,7 +1987,7 @@ The following is a non-normative example of an unsigned OpenID4VP request (when 
   response_mode: "w3c_dc_api",
   nonce: "n-0S6_WzA2Mj",
   client_metadata: {...},
-  presentation_definition: {...}
+  dcql_query: {...}
 }
 ```
 
