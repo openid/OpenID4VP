@@ -676,7 +676,7 @@ Credential.
 
 `claims`:
 : OPTIONAL. A non-empty array of objects as defined in (#claims_query) that specifies
-claims in the requested Credentials.
+claims in the requested Credential.
 
 `claim_sets`:
 : OPTIONAL. A non-empty array containing arrays of identifiers for
@@ -793,8 +793,8 @@ The following rules apply for selecting Credentials via `credentials` and `crede
   - all of the Credential Set Queries in the `credential_sets` array where the `required` attribute is true or omitted, and
   - optionally, any of the other Credential Set Queries.
 
-To satisfy a Credential Set Query, the Wallet MUST return a presentation of a
-Credential or of Credentials that match to one of the `options` inside the
+To satisfy a Credential Set Query, the Wallet MUST return presentations of a
+set of Credentials that match to one of the `options` inside the
 Credential Set Query.
 
 Credentials not matching the respective constraints expressed within
@@ -852,7 +852,8 @@ indicates that all elements of the currently selected array(s) are to be selecte
 and a non-negative integer indicates that the respective index in an array is to be selected. The path
 is formed as follows:
 
-  - Start with an empty array.
+Start with an empty array and repeat the following until the full path is formed. 
+
   - To address a particular claim within an object, append the key (claim name)
     to the array.
   - To address an element within an array, append the index to the array (as a
@@ -1508,7 +1509,7 @@ Figure: Reference Design for Response Mode `direct_post`
 
 (4) The Verifier then sends the Authorization Request with the `request-id` as `state` and the `nonce` value created in step (1) to the Wallet.
 
-(5) After authenticating the End-User and getting her consent to share the request Credentials, the Wallet sends the Authorization Response with the parameters `vp_token`, `presentation_submission` (optional) and `state` to the `response_uri` of the Verifier.  
+(5) After authenticating the End-User and getting their consent to share the request Credentials, the Wallet sends the Authorization Response with the parameters `vp_token`, `presentation_submission` (optional) and `state` to the `response_uri` of the Verifier.  
 
 (6) The Verifier's Response URI checks whether the `state` value is a valid `request-id`. If so, it stores the Authorization Response data linked to the respective `transaction-id`. It then creates a `response_code` as fresh, cryptographically random number with sufficient entropy that it also links with the respective Authorization Response data. It then returns the `redirect_uri`, which includes the `response_code` to the Wallet.
 
@@ -1953,15 +1954,6 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </front>
 </reference>
 
-<reference anchor="BCP47" target="https://www.rfc-editor.org/info/bcp47">
-        <front>
-          <title>BCP47</title>
-          <author>
-            <organization>IETF</organization>
-          </author>
-          <date year="2009"/>
-        </front>
-</reference>
 
 
 <reference anchor="IANA.OAuth.Parameters" target="https://www.iana.org/assignments/oauth-parameters">
