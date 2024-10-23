@@ -19,7 +19,6 @@ activate r
 note over r,wp
     Note that the signed request object contains the Verifier's origin.
 end note
-r -> wp: navigator.identity.get(\nprotocol="openid4vp",\nrequest="client_id, request")
 
 deactivate r
 activate wp

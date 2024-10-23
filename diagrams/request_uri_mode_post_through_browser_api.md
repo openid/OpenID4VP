@@ -14,11 +14,7 @@ participant "App Platform" as ap
 participant "Wallet" as w
 
 u --> r : use
-activate r
 
-r -> wp: navigator.identity.get(\nprotocol="openid4vp",\nrequest="client_id, \nrequest_uri, request_uri_method=post, \npresentation_definition")
-
-deactivate r
 activate wp
 
 wp -> ap: forward request (\norigin="example.verifier.com",\nprotocol="openid4vp",\nrequest="client_id, \nrequest_uri, request_uri_method=post,\n presentation_definition")
