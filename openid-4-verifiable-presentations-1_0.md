@@ -722,7 +722,7 @@ be present more than once.
 
 `path`:
 : REQUIRED if the Credential Format uses a JSON-based claims structure; MUST NOT
-be present otherwise. The value MUST be a claims path pointer that specifies the path to the claim
+be present otherwise. The value MUST be a non-empty array representing a claims path pointer that specifies the path to a claim
 within the Verifiable Credential, as defined in (#claims_path_pointer).
 
 `namespace`:
@@ -847,7 +847,7 @@ be a valid doctype identifier as defined in [@ISO.18013-5].
 A claims path pointer is a pointer into the JSON structure of the Verifiable
 Credential, identifying one or more claims. A claims path pointer MUST be a
 non-empty array of strings and non-negative integers. A string value 
-indicates that the respective key is to be selected, the special string value `*` 
+indicates that the respective key is to be selected, a null value
 indicates that all elements of the currently selected array(s) are to be selected;
 and a non-negative integer indicates that the respective index in an array is to be selected. The path
 is formed as follows:
@@ -858,12 +858,37 @@ Start with an empty array and repeat the following until the full path is formed
     to the array.
   - To address an element within an array, append the index to the array (as a
     non-negative, 0-based integer).
-  - To address all elements within an array, append the string `*` to the array.
+  - To address all elements within an array, append a null value to the array.
 
 Verifiers MUST NOT point to the same claim more than once in a single query.
 Wallets SHOULD ignore such duplicate claim queries.
 
-### Example
+### Processing
+
+In detail, the array is processed by the Wallet from left to right as follows:
+
+ 1. Select the root element of the Credential, i.e., the top-level JSON object.
+ 2. Process the query of the claims path pointer array from left to right:
+    1. If the component is a string, select the element in the respective
+       key in the currently selected element(s). If any of the currently
+       selected element(s) is not an object, abort processing and return an
+       error. If the key does not exist in any element currently selected,
+       remove that element from the selection.
+    2. If the component is null, select all elements of the currently
+       selected array(s). If any of the currently selected element(s) is not an
+       array, abort processing and return an error.
+    3. If the component is a non-negative integer, select the element at
+       the respective index in the currently selected array(s). If any of the
+       currently selected element(s) is not an array, abort processing and
+       return an error. If the index does not exist in a selected array, remove
+       that array from the selection.
+  3. If the set of elements currently selected is empty, abort processing and
+     return an error.
+
+The result of the processing is the set of elements which is requested for
+presentation.
+
+### Claims Path Pointer Example {#claims_path_pointer_example}
 
 The following shows a non-normative, simplified example of a Credential:
 
@@ -897,37 +922,11 @@ claims:
   selected.
 - `["address", "street_address"]`: The claim `street_address` with the value `42
   Market Street` is selected.
-- `["degrees", "*", "type"]`: All `type` claims in the `degrees` array are
+- `["degrees", null, "type"]`: All `type` claims in the `degrees` array are
   selected.
 - `["nationalities", 1]`: The second nationality is selected.
-- `[]` (empty array): The entire Credential is selected.
 
-### Processing
-
-In detail, the array is processed by the Wallet from left to right as follows:
-
- 1. Select the root element of the Credential, i.e., the top-level JSON object.
- 2. Process the query of the claims path pointer array from left to right:
-    1. If the component is a string, select the element in the respective
-       key in the currently selected element(s). If any of the currently
-       selected element(s) is not an object, abort processing and return an
-       error. If the key does not exist in any element currently selected,
-       remove that element from the selection.
-    2. If the component is `*`, select all elements of the currently
-       selected array(s). If any of the currently selected element(s) is not an
-       array, abort processing and return an error.
-    3. If the component is a non-negative integer, select the element at
-       the respective index in the currently selected array(s). If any of the
-       currently selected element(s) is not an array, abort processing and
-       return an error. If the index does not exist in a selected array, remove
-       that array from the selection.
-  3. If the set of elements currently selected is empty, abort processing and
-     return an error.
-
-The result of the processing is the set of elements which is requested for
-presentation.
-
-## Examples {#dcql_query_example}
+## DCQL Examples {#dcql_query_example}
 
 The following is a non-normative example of a DCQL query that requests a Verifiable
 Credential of the format `vc+sd-jwt` with a type value of
