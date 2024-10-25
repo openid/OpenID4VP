@@ -39,12 +39,13 @@
   "id": "ebc6f1c2",
   "holder": "did:example:holder",
   "proof": {
-    "type": "Ed25519Signature2018",
-    "created": "2021-03-19T15:30:15Z",
+    "type": "DataIntegrityProof",
     "challenge": "n-0S6_WzA2Mj",
     "domain": "https://client.example.org/cb",
-    "jws": "eyJhbG...IAoDA",
-    "proofPurpose": "authentication",
-    "verificationMethod": "did:example:holder#key-1"
+    "cryptosuite": "eddsa-rdfc-2022",
+    "created": "2021-11-13T18:19:39Z",
+    "verificationMethod": "did:example:holder#key-1",
+    "proofPurpose": "assertionMethod",
+    "proofValue": "z58DAdFfa9SkqZMVPxAQp...jQCrfFPP2oumHKtz"
   }
 }
