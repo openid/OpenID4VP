@@ -1,12 +1,14 @@
 {
-  "id": "example_jwt_vc",
+  "id": "example_jose_vc",
   "input_descriptors": [
     {
       "id": "id_credential",
       "format": {
-        "jwt_vc_json": {
-          "proof_type": [
-            "JsonWebSignature2020"
+        "jose_vc_json": {
+          "alg": [
+            "EdDSA",
+            "ES256K",
+            "ES384"
           ]
         }
       },
@@ -14,7 +16,7 @@
         "fields": [
           {
             "path": [
-              "$.vc.type"
+              "$.type"
             ],
             "filter": {
               "type": "array",

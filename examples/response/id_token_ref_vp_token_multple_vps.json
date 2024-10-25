@@ -18,20 +18,20 @@
       "descriptor_map": [
         {
           "id": "ID Card with constraints",
-          "format": "ldp_vp",
+          "format": "dip_vp",
           "path": "$[0]",
           "path_nested": {
-            "format": "ldp_vc",
+            "format": "dip_vc",
             "path": "$[0].verifiableCredential[0]"
           }
         },
         {
           "id": "Ontario Health Insurance Plan",
-          "format": "jwt_vp_json",
+          "format": "jose_vp_json",
           "path": "$[1].presentation",
           "path_nested": {
-            "format": "jwt_vc",
-            "path": "$[1].presentation.vp.verifiableCredential[0]"
+            "format": "jose_vc",
+            "path": "$[1].presentation.verifiableCredential[0]"
           }
         }
       ]

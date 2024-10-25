@@ -6,15 +6,18 @@
   "presentation_definition": "...",
   "client_metadata": {
     "vp_formats": {
-      "jwt_vp": {
+      "jose_vp": {
         "alg": [
           "EdDSA",
           "ES256K"
         ]
       },
-      "ldp_vp": {
+      "dip_vp": {
         "proof_type": [
-          "Ed25519Signature2018"
+          "DataIntegrityProof"
+        ],
+        "cryptosuite": [
+          "eddsa-rdfc-2022"
         ]
       }
     }

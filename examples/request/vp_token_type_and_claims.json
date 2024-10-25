@@ -4,9 +4,12 @@
     {
       "id": "ID card with constraints",
       "format": {
-        "ldp_vc": {
+        "dip_vc": {
           "proof_type": [
-            "Ed25519Signature2018"
+            "DataIntegrityProof"
+          ],
+          "cryptosuite": [
+            "eddsa-rdfc-2022"
           ]
         }
       },

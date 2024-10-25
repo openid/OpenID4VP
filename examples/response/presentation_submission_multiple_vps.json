@@ -4,16 +4,16 @@
   "descriptor_map": [
     {
       "id": "ID Card with constraints",
-      "format": "ldp_vp",
+      "format": "dip_vp",
       "path": "$[0]",
       "path_nested": {
-        "format": "ldp_vc",
+        "format": "dip_vc",
         "path": "$.verifiableCredential[0]"
       }
     },
     {
       "id": "Example credential disclosing only address",
-      "format": "vc+sd-jwt",
+      "format": "sdjwt_vc",
       "path": "$[1]"
     }
   ]

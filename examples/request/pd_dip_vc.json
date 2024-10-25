@@ -1,12 +1,15 @@
 {
-  "id": "example_ldp_vc",
+  "id": "example_dip_vc",
   "input_descriptors": [
     {
       "id": "id_credential",
       "format": {
-        "ldp_vc": {
+        "dip_vc": {
           "proof_type": [
-            "Ed25519Signature2018"
+            "DataIntegrityProof"
+          ],
+          "cryptosuite": [
+            "eddsa-rdfc-2022"
           ]
         }
       },

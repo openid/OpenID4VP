@@ -1,0 +1,96 @@
+{
+  "aud": "https://book.itsourweb.org:3000/ohip",
+  "auth_time": 1615910535,
+  "nonce": "960848874",
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+  ],
+  "type": [
+    "VerifiablePresentation"
+  ],
+  "issuer": "https://self-issued.me/v2",
+  "validFrom": "2010-01-01T19:23:24Z",
+  "validUntil": "2015-01-01T19:23:24Z",
+  "holder": "did:key:zUC728ZwioxiqLMp4LKmwkso1G3us1F9Az873MoEdDkni8GCAam5NeKqzVLjiynmtdGeBiJAbYe6BcqU2QmUBQQpiRf4HE9nmRFPqYwbVSNJcs4LEmrnzHLAVwN9iS76PD3W59W",
+  "verifiableCredential": [
+    {
+      "credentialSubject": {
+        "givenName": "Marion",
+        "id": "did:key:zUC728ZwioxiqLMp4LKmwkso1G3us1F9Az873MoEdDkni8GCAam5NeKqzVLjiynmtdGeBiJAbYe6BcqU2QmUBQQpiRf4HE9nmRFPqYwbVSNJcs4LEmrnzHLAVwN9iS76PD3W59W",
+        "type": [
+          "Person",
+          "PermanentResident"
+        ]
+      },
+      "validFrom": "2021-09-09T10:21:48.674916400",
+      "id": "urn:bnid:_:c14n0",
+      "proof": {
+        "type": "DataIntegrityProof",
+        "verificationMethod": "did:web:playground.alpha.chapi.io#zUC75LjjCLGKRxSissX1nAebRDmY4Bv4T6MAbzgaap9Q8rAGf6SEjc2Hf4nH6bUPDwky3GWoYcUjMCcEqRRQfXEiNwfeDwNYLoeqk1J1W2Ye8vCdwv4fSd8AZ1yS6UoNzcsQoPS",
+        "cryptosuite": "bbs-2023",
+        "proofPurpose": "assertionMethod",
+        "proofValue": "u2V0ChVhQjYs9O7wUb3KRSMaIRX7jmafVHYDPYBLD4ta85_qmuXTBU_t2Ir7pNujwRE6fERsBUEZRSjJjtI-hqOqDs3VvBvH6gd3o2KeUS2V_zpuphPpYQEkapOeQgRTak9lHKSTqEQqa4j2lyHqekEeGvzPlqcHQGFccGifvLUXtP59jCuGJ86HDA9HL5kDzUT6n4Gi50HlYYIzNqhbjIxlqOuxO2IgIppSTWjQGeer34-PmKnOzKX8m_9DHPhif7TUf5uTV4OQWdhb0SxHnJ-CPu_z9FJ5ACekBQhz6YWS0_CY6j_ibucXzeVfZwLv1W47pjbt-l1Vl5VggSn2xVt69Q0GD9mPKpOhkKV_hyOL7i6haf7bq-gOKAwWDZy9pc3N1ZXJtL2lzc3VhbmNlRGF0ZW8vZXhwaXJhdGlvbkRhdGU"
+      },
+      "type": [
+        "PermanentResidentCard",
+        "VerifiableCredential"
+      ],
+      "@context": [
+        "https://www.w3.org/ns/credentials/v2",
+        "https://w3id.org/citizenship/v3",
+      ],
+      "issuer": "did:key:zUC75L3fD1DJhbPaDxPJxnVWJ84JT8cQB45cgeJ1UMcFamZDtkPujCG7fuoQDy6JbsT3kCyx24i1k9NE7PoVwQbzifyH7eu4fsAmxXgArdwJ1wbZ3eKbtpPbLYK8QuuUfafxyoH"
+    },
+    {
+      "credentialSubject": {
+        "nextVaccinationDate": "2021-08-16T13:40:12Z",
+        "dateOfVaccination": "2021-06-23T13:40:12Z",
+        "id": "did:key:zUC728ZwioxiqLMp4LKmwkso1G3us1F9Az873MoEdDkni8GCAam5NeKqzVLjiynmtdGeBiJAbYe6BcqU2QmUBQQpiRf4HE9nmRFPqYwbVSNJcs4LEmrnzHLAVwN9iS76PD3W59W",
+        "type": "VaccinationEvent",
+        "healthProfessional": "883110000015376"
+      },
+      "validFrom": "2021-09-09T10:20:47.334854600",
+      "id": "urn:bnid:_:c14n0",
+      "proof": {
+        "type": "DataIntegrityProof",
+        "verificationMethod": "did:web:playground.alpha.chapi.io#zUC75LjjCLGKRxSissX1nAebRDmY4Bv4T6MAbzgaap9Q8rAGf6SEjc2Hf4nH6bUPDwky3GWoYcUjMCcEqRRQfXEiNwfeDwNYLoeqk1J1W2Ye8vCdwv4fSd8AZ1yS6UoNzcsQoPS",
+        "cryptosuite": "bbs-2023",
+        "proofPurpose": "assertionMethod",
+        "proofValue": "u2V0ChVhQjYs9O7wUb3KRSMaIRX7jmafVHYDPYBLD4ta85_qmuXTBU_t2Ir7pNujwRE6fERsBUEZRSjJjtI-hqOqDs3VvBvH6gd3o2KeUS2V_zpuphPpYQEkapOeQgRTak9lHKSTqEQqa4j2lyHqekEeGvzPlqcHQGFccGifvLUXtP59jCuGJ86HDA9HL5kDzUT6n4Gi50HlYYIzNqhbjIxlqOuxO2IgIppSTWjQGeer34-PmKnOzKX8m_9DHPhif7TUf5uTV4OQWdhb0SxHnJ-CPu_z9FJ5ACekBQhz6YWS0_CY6j_ibucXzeVfZwLv1W47pjbt-l1Vl5VggSn2xVt69Q0GD9mPKpOhkKV_hyOL7i6haf7bq-gOKAwWDZy9pc3N1ZXJtL2lzc3VhbmNlRGF0ZW8vZXhwaXJhdGlvbkRhdGU"
+      },
+      "type": [
+        "VaccinationCertificate",
+        "VerifiableCredential"
+      ],
+      "@context": [
+        "https://www.w3.org/ns/credentials/v2",
+        "https://w3id.org/vaccination/v1",
+        "https://w3id.org/security/bbs/v1"
+      ],
+      "issuer": "did:key:zUC7DQWuAVPvLFioEsN7KbLwuuSwiKHZhG7DyJBRPT9FN4LnaCbT7EkQFGyA32C9tfovnijMo9MtKQB7Fr5fDood26NiCNVJDpycMPT24gvRHvcyMGQQESzN54vGdJGxdCKQTW9"
+    }
+  ]
+},
+"presentation_submission": {
+  "descriptor_map": [
+    {
+      "format": "jose_vp_json",
+      "id": "citizenship",
+      "path": "$",
+      "path_nested": {
+        "path": "$.verifiableCredential[0]",
+        "format": "dip_vp"
+      }
+    },
+    {
+      "format": "jose_vp",
+      "id": "vaccination certificate",
+      "path_nested": {
+        "path": "$.verifiableCredential[1]",
+        "format": "dip_vp"
+      }
+    }
+  ],
+  "definition_id": "f837a384-31b3-4947-b344-8180c62bea41",
+  "id": "d60ac9e4-7fcf-4303-af7b-722d2a62ebb3"
+}

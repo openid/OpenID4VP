@@ -1,0 +1,18 @@
+{
+  "vp_token": "eyJhb...YMetA",
+  "presentation_submission": {
+    "definition_id": "example_jose_vc",
+    "id": "example_jose_vc_presentation_submission",
+    "descriptor_map": [
+      {
+        "id": "id_credential",
+        "path": "$",
+        "format": "jose_vp_json",
+        "path_nested": {
+          "path": "$.verifiableCredential[0]",
+          "format": "jose_vc"
+        }
+      }
+    ]
+  }
+}

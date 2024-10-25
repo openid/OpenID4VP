@@ -104,7 +104,7 @@ Holder Binding:
 : Ability of the Holder to prove legitimate possession of a Verifiable Credential. 
 
 Cryptographic Holder Binding:
-:  Ability of the Holder to prove legitimate possession of a Verifiable Credential by proving control over the same private key during the issuance and presentation. Mechanism might depend on the Credential Format. For example, in `jose_vc_json` Credential Format, a Verifiable Credential with Cryptographic Holder Binding contains a public key or a reference to a public key that matches to the private key controlled by the Holder. 
+:  Ability of the Holder to prove legitimate possession of a Verifiable Credential by proving control over the same private key during the issuance and presentation. Mechanism might depend on the Credential Format. For example, in `jose_vc` Credential Format, a Verifiable Credential with Cryptographic Holder Binding contains a public key or a reference to a public key that matches to the private key controlled by the Holder. 
 
 Claims-based Holder Binding:
 :  Ability of the Holder to prove legitimate possession of a Verifiable Credential by proofing certain claims, e.g., name and date of birth, for example by presenting another Verifiable Credential. Claims-based Holder Binding allows long term, cross device use of a Credential as it does not depend on cryptographic key material stored on a certain device. One example of such a Verifiable Credential could be a Diploma.
@@ -532,7 +532,7 @@ Location: https://client.example.org/universal-link?
   &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
   &presentation_definition=...
   &nonce=n-0S6_WzA2Mj
-  &client_metadata=%7B%22vp_formats%22:%7B%22jose_vp_json%22:%
+  &client_metadata=%7B%22vp_formats%22:%7B%22jose_vp%22:%
   7B%22alg%22:%5B%22EdDSA%22,%22ES256K%22%5D%7D,%22dip
   _vc%22:%7B%22proof_type%22:%5B%22DataIntegrityProof%22%5D,%22
   cryptosuite%22:%5B%22ecdsa-sd-2023%22%5D%7D%7D%7D
@@ -592,8 +592,8 @@ POST /request HTTP/1.1
 Host: client.example.org
 Content-Type: application/x-www-form-urlencoded
 
-  wallet_metadata=%7B%22vp_formats_supported%22%3A%7B%22jose_vc_json%22%3A%7B%22alg_values_supported
-  %22%3A%5B%22ES256K%22%2C%22ES384%22%5D%7D%2C%22jose_vp_json%22%3A%7B%22alg_values_supported%22%3A%
+  wallet_metadata=%7B%22vp_formats_supported%22%3A%7B%22jose_vc%22%3A%7B%22alg_values_supported
+  %22%3A%5B%22ES256K%22%2C%22ES384%22%5D%7D%2C%22jose_vp%22%3A%7B%22alg_values_supported%22%3A%
   5B%22ES256K%22%2C%22EdDSA%22%5D%7D%7D%7D&
   wallet_nonce=qPmxiNFCR3QTm19POc8u
 ```
@@ -1148,7 +1148,7 @@ If the JWT is only a JWE, the following processing rules MUST be followed:
 
 The following is a non-normative example of the payload of a JWT used in an Authorization Response that is encrypted and not signed:
 
-<{{examples/response/jarm_jwt_enc_only_vc_json_body.json}}
+<{{examples/response/jarm_jose_enc_only_vc_json_body.json}}
 
 The JWT response document MUST include the `vp_token` and, if Presentation Exchange was used in the request, the `presentation_submission` parameters as defined in (#response-parameters).
 
@@ -1281,13 +1281,13 @@ The following is a non-normative example of a `vp_formats_supported` parameter:
 
 ```json
 "vp_formats_supported": {
-  "jose_vc_json": {
+  "jose_vc": {
     "alg_values_supported": [
       "ES256K",
       "ES384"
     ]
   },
-  "jose_vp_json": {
+  "jose_vp": {
     "alg_values_supported": [
       "ES256K",
       "EdDSA"
@@ -1380,10 +1380,10 @@ The following is a non-normative example of a set of static configuration values
     "vp_token"
   ],
   "vp_formats_supported": {
-    "jose_vp_json": {
+    "jose_vp": {
       "alg_values_supported": ["ES256"]
     },
-    "jose_vc_json": {
+    "jose_vc": {
       "alg_values_supported": ["ES256"]
     }
   },
@@ -1514,7 +1514,7 @@ The `client_id` is used to detect the presentation of Verifiable Credentials to 
 
 Note: Different formats for Verifiable Presentations and signature/proof schemes use different ways to represent the intended audience and the session binding. Some use claims to directly represent those values, others include the values into the calculation of cryptographic proofs. There are also different naming conventions across the different formats. In case Presentation Exchange is used in the Authorization Request, the format of the respective presentation is determined from the format information in the presentation submission in the Authorization Response. If DCQL was used, the format was defined by the Verifier in the request.
 
-The following is a non-normative example of the payload of a Verifiable Presentation of a format identifier `jose_vp_json`:
+The following is a non-normative example of the payload of a Verifiable Presentation of a format identifier `jose_vp`:
 
 ```json
 {
@@ -2068,7 +2068,7 @@ W3C Verifiable Credentials may use an additional parameter for the `descriptor_m
 
 This section illustrates presentation of a Credential conformant to [@VC_DATA] that is signed using JOSE, COSE, and SD-JWT.
 
-The Credential format identifiers are `jose_vc_json` for a W3C Verifiable Credential and `jose_vp_json` for W3C Verifiable Presentation using JOSE, `cose_vc_json` for a W3C Verifiable Credential and `cose_vp_json` from a W3C Verifiable Presentation using COSE, and `sdjwt_vc_json` for a W3C Verifiable Credential and `sdjwt_vp_json` for a W3C Verifiable Presentation using SD-JWT.
+The Credential format identifiers are `jose_vc` for a W3C Verifiable Credential and `jose_vp` for W3C Verifiable Presentation using JOSE, `cose_vc` for a W3C Verifiable Credential and `cose_vp` from a W3C Verifiable Presentation using COSE, and `sdjwt_vc` for a W3C Verifiable Credential and `sdjwt_vp` for a W3C Verifiable Presentation using SD-JWT.
 
 Cipher suites should use algorithm names defined in [IANA JOSE Algorithms Registry](https://www.iana.org/assignments/jose/jose.xhtml#web-signature-encryption-algorithms).
 
@@ -2088,9 +2088,9 @@ The requirements regarding the Credential to be presented are conveyed in the `p
 
 The following is a non-normative example of the contents of a `presentation_definition` parameter:
 
-<{{examples/request/pd_jwt_vc.json}}
+<{{examples/request/pd_jose_vc.json}}
 
-This `presentation_definition` parameter contains a single `input_descriptor` element, which sets the desired format to JWT VC and defines a constraint over the `vc.type` parameter to select Verifiable Credentials of type `IDCredential`. 
+This `presentation_definition` parameter contains a single `input_descriptor` element, which sets the desired format to JOSE VC and defines a constraint over the `vc.type` parameter to select Verifiable Credentials of type `IDCredential`. 
 
 #### Presentation Response
 

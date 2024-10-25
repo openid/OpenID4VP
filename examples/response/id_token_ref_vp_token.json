@@ -18,10 +18,10 @@
       "descriptor_map": [
         {
           "id": "ID Card with constraints",
-          "format": "ldp_vp",
+          "format": "dip_vp",
           "path": "$",
           "path_nested": {
-            "format": "ldp_vc",
+            "format": "dip_vc",
             "path": "$.verifiableCredential[0]"
           }
         }
