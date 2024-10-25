@@ -4,7 +4,7 @@
   "response_type": "vp_token id_token",
   "client_metadata": {
     "vp_formats": {
-      "jose_vp_json": {
+      "jose_vp": {
         "alg": [
           "EdDSA",
           "ES256K"

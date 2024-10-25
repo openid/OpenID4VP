@@ -7,7 +7,7 @@
       {
         "id": "id_credential",
         "path": "$",
-        "format": "jose_vp_json",
+        "format": "jose_vp",
         "path_nested": {
           "path": "$.verifiableCredential[0]",
           "format": "jose_vc"

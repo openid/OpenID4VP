@@ -27,7 +27,7 @@
         },
         {
           "id": "Ontario Health Insurance Plan",
-          "format": "jose_vp_json",
+          "format": "jose_vp",
           "path": "$[1].presentation",
           "path_nested": {
             "format": "jose_vc",

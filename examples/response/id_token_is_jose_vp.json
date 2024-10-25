@@ -74,7 +74,7 @@
 "presentation_submission": {
   "descriptor_map": [
     {
-      "format": "jose_vp_json",
+      "format": "jose_vp",
       "id": "citizenship",
       "path": "$",
       "path_nested": {

@@ -5,7 +5,7 @@
   "response_type": "code",
   "grant_type": "authorization_code",
   "vp_formats": {
-    "jose_vp_json": {
+    "jose_vp": {
       "alg": [
         "EdDSA",
         "ES256K"
