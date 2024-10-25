@@ -2259,11 +2259,11 @@ The Credential format identifier is `vc+sd-jwt`.
 
 The following is a non-normative example of the unsecured payload of an IETF SD-JWT VC that will be used throughout this section:
 
-<{{examples/credentials/sd_jose_vc_unsecured.json}}
+<{{examples/credentials/sd_jwt_vc_unsecured.json}}
 
 The following is a non-normative example of an IETF SD-JWT VC using the unsecured payload above, containing claims that are selectively disclosable.
 
-<{{examples/credentials/sd_jose_vc.json}}
+<{{examples/credentials/sd_jwt_vc.json}}
 
 The following are disclosures belonging to the claims from the example above.
 
