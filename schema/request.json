@@ -30,7 +30,7 @@
     "format": {
       "type": "object",
       "patternProperties": {
-        "^jwt$|^jwt_vc$|^jwt_vp$": {
+        "^jwt$|^jose_vc$|^jose_vp$|^cose_vc$|^cose_vp$|^sdjwt_vc$|^sdjwt_vp$": {
           "type": "object",
           "properties": {
             "alg": {
@@ -42,10 +42,15 @@
           "required": ["alg"],
           "additionalProperties": false
         },
-        "^ldp_vc$|^ldp_vp$|^ldp$": {
+        "^dip_vc$|^dip_vp$|^dip$": {
           "type": "object",
           "properties": {
             "proof_type": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "type": "string" }
+            },
+            "cryptosuite": {
               "type": "array",
               "minItems": 1,
               "items": { "type": "string" }

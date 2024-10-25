@@ -104,7 +104,7 @@ Holder Binding:
 : Ability of the Holder to prove legitimate possession of a Verifiable Credential. 
 
 Cryptographic Holder Binding:
-:  Ability of the Holder to prove legitimate possession of a Verifiable Credential by proving control over the same private key during the issuance and presentation. Mechanism might depend on the Credential Format. For example, in `jwt_vc_json` Credential Format, a Verifiable Credential with Cryptographic Holder Binding contains a public key or a reference to a public key that matches to the private key controlled by the Holder. 
+:  Ability of the Holder to prove legitimate possession of a Verifiable Credential by proving control over the same private key during the issuance and presentation. Mechanism might depend on the Credential Format. For example, in `jose_vc_json` Credential Format, a Verifiable Credential with Cryptographic Holder Binding contains a public key or a reference to a public key that matches to the private key controlled by the Holder. 
 
 Claims-based Holder Binding:
 :  Ability of the Holder to prove legitimate possession of a Verifiable Credential by proofing certain claims, e.g., name and date of birth, for example by presenting another Verifiable Credential. Claims-based Holder Binding allows long term, cross device use of a Credential as it does not depend on cryptographic key material stored on a certain device. One example of such a Verifiable Credential could be a Diploma.
@@ -398,9 +398,12 @@ Content-Type: application/json
     {
       "id": "id card credential",
       "format": {
-        "ldp_vc": {
+        "dip_vc": {
           "proof_type": [
-            "Ed25519Signature2018"
+            "DataIntegrityProof"
+          ],
+          "cryptosuite": [
+            "ecdsa-sd-2023"
           ]
         }
       },
@@ -529,10 +532,10 @@ Location: https://client.example.org/universal-link?
   &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
   &presentation_definition=...
   &nonce=n-0S6_WzA2Mj
-  &client_metadata=%7B%22vp_formats%22:%7B%22jwt_vp_json%22:%
-  7B%22alg%22:%5B%22EdDSA%22,%22ES256K%22%5D%7D,%22ldp
-  _vp%22:%7B%22proof_type%22:%5B%22Ed25519Signature201
-  8%22%5D%7D%7D%7D
+  &client_metadata=%7B%22vp_formats%22:%7B%22jose_vp_json%22:%
+  7B%22alg%22:%5B%22EdDSA%22,%22ES256K%22%5D%7D,%22dip
+  _vc%22:%7B%22proof_type%22:%5B%22DataIntegrityProof%22%5D,%22
+  cryptosuite%22:%5B%22ecdsa-sd-2023%22%5D%7D%7D%7D
 ```
 
 * `https`: This value indicates that the Client Identifier is an Entity Identifier defined in OpenID Federation [@!OpenID.Federation]. Since the Entity Identifier is already defined to start with `https:`, this Client Identifier Scheme MUST NOT be prefixed additionally. Processing rules given in [@!OpenID.Federation] MUST be followed. Automatic Registration as defined in [@!OpenID.Federation] MUST be used. The Authorization Request MAY also contain a `trust_chain` parameter. The final Verifier metadata is obtained from the Trust Chain after applying the policies, according to [@!OpenID.Federation]. The `client_metadata` parameter, if present in the Authorization Request, MUST be ignored when this Client Identifier scheme is used. Example Client Identifier: `https://federation-verifier.example.com`.
@@ -589,8 +592,8 @@ POST /request HTTP/1.1
 Host: client.example.org
 Content-Type: application/x-www-form-urlencoded
 
-  wallet_metadata=%7B%22vp_formats_supported%22%3A%7B%22jwt_vc_json%22%3A%7B%22alg_values_supported
-  %22%3A%5B%22ES256K%22%2C%22ES384%22%5D%7D%2C%22jwt_vp_json%22%3A%7B%22alg_values_supported%22%3A%
+  wallet_metadata=%7B%22vp_formats_supported%22%3A%7B%22jose_vc_json%22%3A%7B%22alg_values_supported
+  %22%3A%5B%22ES256K%22%2C%22ES384%22%5D%7D%2C%22jose_vp_json%22%3A%7B%22alg_values_supported%22%3A%
   5B%22ES256K%22%2C%22EdDSA%22%5D%7D%7D%7D&
   wallet_nonce=qPmxiNFCR3QTm19POc8u
 ```
@@ -1008,7 +1011,7 @@ brevity):
 
 The following is a non-normative example of a VP Token containing a single Verifiable Presentation after a request using Presentation Exchange:
 
-<{{examples/response/vp_token_raw_ldp_vp.json}}
+<{{examples/response/vp_token_raw_dip_vp.json}}
 
 The following is a non-normative example of a `presentation_submission` parameter sent alongside a VP Token in the example above. It corresponds to the second Presentation Definition example in (#request_presentation_definition):
 
@@ -1161,13 +1164,13 @@ This specification also defines a new Response Mode `direct_post.jwt`, which all
 
 The Response Mode `direct_post.jwt` causes the Wallet to send the Authorization Response using an HTTP POST request instead of redirecting back to the Verifier as defined in (#response_mode_post). The Wallet adds the `response` parameter containing the JWT as defined in Section 4.1. of [@!JARM] and (#jarm) in the body of an HTTP POST request using the `application/x-www-form-urlencoded` content type. The names and values in the body MUST be encoded using UTF-8.
 
-The following is a non-normative example of a response using the `presentation_submission` and `vp_token` values from (#jwt_vc). (line breaks for display purposes only):
+The following is a non-normative example of a response using the `presentation_submission` and `vp_token` values from (#jose_vc). (line breaks for display purposes only):
 
-<{{examples/response/jarm_jwt_vc_json_post.txt}}
+<{{examples/response/jarm_jose_vc_json_post.txt}}
 
 The following is a non-normative example of the payload of the JWT used in the example above before base64url encoding and signing:
 
-<{{examples/response/jarm_jwt_vc_json_body.json}}
+<{{examples/response/jarm_jose_vc_json_body.json}}
 
 ## Transaction Data {#transaction_data}
 
@@ -1278,13 +1281,13 @@ The following is a non-normative example of a `vp_formats_supported` parameter:
 
 ```json
 "vp_formats_supported": {
-  "jwt_vc_json": {
+  "jose_vc_json": {
     "alg_values_supported": [
       "ES256K",
       "ES384"
     ]
   },
-  "jwt_vp_json": {
+  "jose_vp_json": {
     "alg_values_supported": [
       "ES256K",
       "EdDSA"
@@ -1377,10 +1380,10 @@ The following is a non-normative example of a set of static configuration values
     "vp_token"
   ],
   "vp_formats_supported": {
-    "jwt_vp_json": {
+    "jose_vp_json": {
       "alg_values_supported": ["ES256"]
     },
-    "jwt_vc_json": {
+    "jose_vc_json": {
       "alg_values_supported": ["ES256"]
     }
   },
@@ -1511,7 +1514,7 @@ The `client_id` is used to detect the presentation of Verifiable Credentials to 
 
 Note: Different formats for Verifiable Presentations and signature/proof schemes use different ways to represent the intended audience and the session binding. Some use claims to directly represent those values, others include the values into the calculation of cryptographic proofs. There are also different naming conventions across the different formats. In case Presentation Exchange is used in the Authorization Request, the format of the respective presentation is determined from the format information in the presentation submission in the Authorization Response. If DCQL was used, the format was defined by the Verifier in the request.
 
-The following is a non-normative example of the payload of a Verifiable Presentation of a format identifier `jwt_vp_json`:
+The following is a non-normative example of the payload of a Verifiable Presentation of a format identifier `jose_vp_json`:
 
 ```json
 {
@@ -1522,21 +1525,24 @@ The following is a non-normative example of the payload of a Verifiable Presenta
   "nbf": 1541493724,
   "iat": 1541493724,
   "exp": 1573029723,
-  "vp": {
-    "@context": [
-      "https://www.w3.org/2018/credentials/v1",
-      "https://www.w3.org/2018/credentials/examples/v1"
-    ],
-    "type": ["VerifiablePresentation"],
-
-    "verifiableCredential": [""]
-  }
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://www.w3.org/ns/credentials/examples/v2"
+  ],
+  "type": "VerifiablePresentation",
+  "verifiableCredential": [
+    {
+      "@context": "https://www.w3.org/ns/credentials/v2",
+      "id": "data:application/vc+jwt,eyJraWQiOiJFeEhrQk1XOWZtYmt2VjI2Nm1ScHVQMnNVWV9OX0VXSU4xbGFwVXpPOHJvIiwiYWxnIjoiRVMzODQifQ.eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvbnMvY3JlZGVudGlhbHMvdjIiLCJodHRwczovL3d3dy53My5vcmcvbnMvY3JlZGVudGlhbHMvZXhhbXBsZXMvdjIiXSwiaWQiOiJodHRwOi8vdW5pdmVyc2l0eS5leGFtcGxlL2NyZWRlbnRpYWxzLzE4NzIiLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiRXhhbXBsZUFsdW1uaUNyZWRlbnRpYWwiXSwiaXNzdWVyIjoiaHR0cHM6Ly91bml2ZXJzaXR5LmV4YW1wbGUvaXNzdWVycy81NjUwNDkiLCJ2YWxpZEZyb20iOiIyMDEwLTAxLTAxVDE5OjIzOjI0WiIsImNyZWRlbnRpYWxTY2hlbWEiOnsiaWQiOiJodHRwczovL2V4YW1wbGUub3JnL2V4YW1wbGVzL2RlZ3JlZS5qc29uIiwidHlwZSI6Ikpzb25TY2hlbWEifSwiY3JlZGVudGlhbFN1YmplY3QiOnsiaWQiOiJkaWQ6ZXhhbXBsZToxMjMiLCJkZWdyZWUiOnsidHlwZSI6IkJhY2hlbG9yRGVncmVlIiwibmFtZSI6IkJhY2hlbG9yIG9mIFNjaWVuY2UgYW5kIEFydHMifX19.d2k4O3FytQJf83kLh-HsXuPvh6yeOlhJELVo5TF71gu7elslQyOf2ZItAXrtbXF4Kz9WivNdztOayz4VUQ0Mwa8yCDZkP9B2pH-9S_tcAFxeoeJ6Z4XnFuL_DOfkR1fP;data:application/vc+jwt,eyJraWQiOiJFeEhrQk1XOWZtYmt2VjI2Nm1ScHVQMnNVWV9OX0VXSU4xbGFwVXpPOHJvIiwiYWxnIjoiRVMzODQifQ.eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvbnMvY3JlZGVudGlhbHMvdjIiLCJodHRwczovL3d3dy53My5vcmcvbnMvY3JlZGVudGlhbHMvZXhhbXBsZXMvdjIiXSwiaWQiOiJodHRwOi8vdW5pdmVyc2l0eS5leGFtcGxlL2NyZWRlbnRpYWxzLzE4NzIiLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiRXhhbXBsZUFsdW1uaUNyZWRlbnRpYWwiXSwiaXNzdWVyIjoiaHR0cHM6Ly91bml2ZXJzaXR5LmV4YW1wbGUvaXNzdWVycy81NjUwNDkiLCJ2YWxpZEZyb20iOiIyMDEwLTAxLTAxVDE5OjIzOjI0WiIsImNyZWRlbnRpYWxTY2hlbWEiOnsiaWQiOiJodHRwczovL2V4YW1wbGUub3JnL2V4YW1wbGVzL2RlZ3JlZS5qc29uIiwidHlwZSI6Ikpzb25TY2hlbWEifSwiY3JlZGVudGlhbFN1YmplY3QiOnsiaWQiOiJkaWQ6ZXhhbXBsZToxMjMiLCJkZWdyZWUiOnsidHlwZSI6IkJhY2hlbG9yRGVncmVlIiwibmFtZSI6IkJhY2hlbG9yIG9mIFNjaWVuY2UgYW5kIEFydHMifX19.d2k4O3FytQJf83kLh-HsXuPvh6yeOlhJELVo5TF71gu7elslQyOf2ZItAXrtbXF4Kz9WivNdztOayz4VUQ0Mwa8yCDZkP9B2pH-9S_tcAFxeoeJ6Z4XnFuL_DOfkR1fP",
+      "type": "EnvelopedVerifiableCredential"
+    }
+  ]
 }
 ```
 
 In the example above, the requested `nonce` value is included as the `nonce` and `client_id` as the `aud` value in the proof of the Verifiable Presentation.
 
-The following is a non-normative example of a Verifiable Presentation of a format identifier `ldp_vp` without a `proof` property:
+The following is a non-normative example of a Verifiable Presentation of a format identifier `dip_vp` with an embedded `proof` property:
 
 ```json
 {
@@ -1544,13 +1550,14 @@ The following is a non-normative example of a Verifiable Presentation of a forma
   "type": "VerifiablePresentation",
   "verifiableCredential": [ ... ],
   "proof": {
-    "type": "RsaSignature2018",
-    "created": "2018-09-14T21:19:10Z",
-    "proofPurpose": "authentication",
-    "verificationMethod": "did:example:ebfeb1f712ebc6f1c276e12ec21#keys-1",    
+    "type": "DataIntegrityProof",
+    "cryptosuite": "eddsa-rdfc-2022",
+    "created": "2021-11-13T18:19:39Z",
+    "verificationMethod": "https://university.example/issuers/14#key-1",
     "challenge": "343s$FSFDa-",
     "domain": "s6BhdRkqt3",
-    "jws": "eyJhb...nKb78"
+    "proofPurpose": "assertionMethod",
+    "proofValue": "z58DAdFfa9SkqZMVPxAQp...jQCrfFPP2oumHKtz"
   }
 }
 ```
@@ -1639,28 +1646,34 @@ In the event that another component is invoked instead of the Wallet, the End-Us
 
 {backmatter}
 
-<reference anchor="VC_DATA" target="https://www.w3.org/TR/2022/REC-vc-data-model-20220303/">
+<reference anchor="VC_DATA" target="https://www.w3.org/TR/vc-data-model-2.0/">
   <front>
-    <title>Verifiable Credentials Data Model 1.1</title>
+    <title>Verifiable Credentials Data Model v2.0</title>
     <author fullname="Manu Sporny">
       <organization>Digital Bazaar</organization>
     </author>
-    <author fullname="Grant Noble">
-      <organization>ConsenSys</organization>
+    <author fullname="Ted Thibodeau Jr">
+      <organization>OpenLink Software</organization>
     </author>
-    <author fullname="Dave Longley">
+    <author fullname="Ivan Herman">
+      <organization>W3C</organization>
+    </author>
+    <author fullname="Michael B. Jones">
+      <organization>Invited Expert</organization>
+    </author>
+    <author fullname="Gabe Cohen">
+      <organization>Block</organization>
+    </author>
+    <author fullname="Dave  Longley">
       <organization>Digital Bazaar</organization>
-    </author>
-    <author fullname="Daniel C. Burnett">
-      <organization>ConsenSys</organization>
-    </author>
-    <author fullname="Brent Zundel">
-      <organization>Evernym</organization>
     </author>
     <author fullname="David Chadwick">
       <organization>University of Kent</organization>
     </author>
-   <date day="19" month="Nov" year="2019"/>
+    <author fullname="Orie Steele">
+      <organization>Transmute</organization>
+    </author>
+   <date day="19" month="October" year="2024"/>
   </front>
 </reference>
 
@@ -2051,19 +2064,19 @@ OpenID for Verifiable Presentations is Credential Format agnostic, i.e., it is d
 
 W3C Verifiable Credentials may use an additional parameter for the `descriptor_map` with the `presentation_submission`: The `path_nested` object inside an Input Descriptor Mapping Object is used to describe how to find a returned Credential within a Verifiable Presentation, and contains a `format` parameter with the Credential format identifier as a value and a `path` parameter with a relative path to the Verifiable Credential. Non-normative examples can be found further in this section.
 
-### VC signed as a JWT, not using JSON-LD {#jwt_vc}
+### VCs and VPs secured using JOSE, COSE, and SD-JWT {#jose_cose_sdjwt_vc}
 
-This section illustrates presentation of a Credential conformant to [@VC_DATA] that is signed using JWS, and does not use JSON-LD.
+This section illustrates presentation of a Credential conformant to [@VC_DATA] that is signed using JOSE, COSE, and SD-JWT.
 
-The Credential format identifiers are `jwt_vc_json` for a W3C Verifiable Credential and `jwt_vp_json` for W3C Verifiable Presentation.
+The Credential format identifiers are `jose_vc_json` for a W3C Verifiable Credential and `jose_vp_json` for W3C Verifiable Presentation using JOSE, `cose_vc_json` for a W3C Verifiable Credential and `cose_vp_json` from a W3C Verifiable Presentation using COSE, and `sdjwt_vc_json` for a W3C Verifiable Credential and `sdjwt_vp_json` for a W3C Verifiable Presentation using SD-JWT.
 
 Cipher suites should use algorithm names defined in [IANA JOSE Algorithms Registry](https://www.iana.org/assignments/jose/jose.xhtml#web-signature-encryption-algorithms).
 
 #### Example Credential
 
-The following is a non-normative example of the payload of a JWT-based W3C Verifiable Credential that will be used throughout this section:
+The following is a non-normative example of the payload of a JOSE-based W3C Verifiable Credential that will be used throughout this section:
 
-<{{examples/credentials/jwt_vc.json}}
+<{{examples/credentials/jose_vc.json}}
 
 #### Presentation Request
 
@@ -2087,27 +2100,27 @@ The following is a non-normative example of an Authorization Response:
 
 The following is a non-normative example of the content of the `presentation_submission` parameter: 
 
-<{{examples/response/ps_jwt_vc.json}}
+<{{examples/response/ps_jose_vc.json}}
 
 The following is a non-normative example of the payload of the Verifiable Presentation in the `vp_token` parameter provided in the same response and referred to by the `presentation_submission` above:
 
-<{{examples/response/jwt_vp.json}}
+<{{examples/response/jose_vp.json}}
 
 Note: The VP's `nonce` claim contains the value of the `nonce` of the presentation request and the `aud` claim contains the Client Identifier of the Verifier. This allows the Verifier to detect replay of a Presentation as recommended in (#preventing-replay).
 
-### LDP VCs
+### Data Integrity Proof VCs
 
 This section illustrates presentation of a Credential conformant to [@VC_DATA] that is secured using Data Integrity, using JSON-LD.
 
-The Credential format identifiers are `ldp_vc` for a W3C Verifiable Credential and `ldp_vp` for W3C Verifiable Presentation.
+The Credential format identifiers are `dip_vc` for a W3C Verifiable Credential and `dip_vp` for W3C Verifiable Presentation.
 
-Cipher suites should use signature suites names defined in [Linked Data Cryptographic Suite Registry](https://w3c-ccg.github.io/ld-cryptosuite-registry/).
+Cipher suites should use securing mechanisms names defined in [Securing Mechanisms sectino of the Verifiable Credential Extensions Note](https://www.w3.org/TR/vc-extensions/#securing-mechanisms).
 
 #### Example Credential
 
 The following is a non-normative example of the payload of a Verifiable Credential that will be used throughout this section:
 
-<{{examples/credentials/ldp_vc.json}}
+<{{examples/credentials/dip_vc.json}}
 
 #### Presentation Request
 
@@ -2117,9 +2130,9 @@ The following is a non-normative example of an Authorization Request:
 
 The following is a non-normative example of the contents of a `presentation_definition` parameter that contains the requirements regarding the Credential to be presented:
 
-<{{examples/request/pd_ldp_vc.json}}
+<{{examples/request/pd_dip_vc.json}}
 
-This `presentation_definition` parameter contains a single `input_descriptor` element, which sets the desired format to LDP VC and defines a constraint over the `type` parameter to select Verifiable Credentials of type `IDCredential`.
+This `presentation_definition` parameter contains a single `input_descriptor` element, which sets the desired format to DIP VC and defines a constraint over the `type` parameter to select Verifiable Credentials of type `IDCredential`.
 
 #### Presentation Response
 
@@ -2129,11 +2142,11 @@ The following is a non-normative example of an Authorization Response:
 
 The following is a non-normative example of the content of the `presentation_submission` parameter:
 
-<{{examples/response/ps_ldp_vc.json}}
+<{{examples/response/ps_dip_vc.json}}
 
 The following is a non-normative example of the Verifiable Presentation in the `vp_token` parameter provided in the same response and referred to by the `presentation_submission` above:
 
-<{{examples/response/ldp_vp.json}}
+<{{examples/response/dip_vp.json}}
 
 Note: The VP's `challenge` claim contains the value of the `nonce` of the presentation request and the `domain` claims contains the Client Identifier of the Verifier. This allows the Verifier to detect replay of a presentation as recommended in (#preventing-replay). 
 
@@ -2167,7 +2180,7 @@ The following is a non-normative example of the content of the `presentation_def
 
 <{{examples/request/pd_ac_vc.json}}
 
-The `format` object in the `input_descrioptor` element uses the format identifier `ac_vc` as defined above and sets the `proof_type` to `CLSignature2019` to denote this descriptor requires a Credential in AnonCreds format signed with a CL signature (Camenisch-Lysyanskaya signature). The rest of the expressions operate on the AnonCreds JSON structure.
+The `format` object in the `input_descriptor` element uses the format identifier `ac_vc` as defined above and sets the `proof_type` to `CLSignature2019` to denote this descriptor requires a Credential in AnonCreds format signed with a CL signature (Camenisch-Lysyanskaya signature). The rest of the expressions operate on the AnonCreds JSON structure.
 
 The `constraints` object requires the selected Credential to conform with the schema definition `did:indy:idu:test:3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0\\.1`, which is denoted as a constraint over the AnonCred's `schema_id` parameter. 
 
@@ -2246,11 +2259,11 @@ The Credential format identifier is `vc+sd-jwt`.
 
 The following is a non-normative example of the unsecured payload of an IETF SD-JWT VC that will be used throughout this section:
 
-<{{examples/credentials/sd_jwt_vc_unsecured.json}}
+<{{examples/credentials/sd_jose_vc_unsecured.json}}
 
 The following is a non-normative example of an IETF SD-JWT VC using the unsecured payload above, containing claims that are selectively disclosable.
 
-<{{examples/credentials/sd_jwt_vc.json}}
+<{{examples/credentials/sd_jose_vc.json}}
 
 The following are disclosures belonging to the claims from the example above.
 

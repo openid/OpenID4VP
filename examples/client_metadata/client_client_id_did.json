@@ -4,15 +4,18 @@
   "response_type": "vp_token id_token",
   "client_metadata": {
     "vp_formats": {
-      "jwt_vp_json": {
+      "jose_vp_json": {
         "alg": [
           "EdDSA",
           "ES256K"
         ]
       },
-      "ldp_vp": {
+      "dip_vp": {
         "proof_type": [
-          "Ed25519Signature2018"
+          "DataIntegrityProof"
+        ],
+        "cryptosuite": [
+          "ecdsa-sd-2023"
         ]
       }
     },

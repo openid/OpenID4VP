@@ -5,15 +5,18 @@
   "response_type": "code",
   "grant_type": "authorization_code",
   "vp_formats": {
-    "jwt_vp_json": {
+    "jose_vp_json": {
       "alg": [
         "EdDSA",
         "ES256K"
       ]
     },
-    "ldp_vp": {
+    "dip_vp": {
       "proof_type": [
-        "Ed25519Signature2018"
+        "DataIntegrityProof"
+      ],
+      "cryptosuite": [
+        "ecdsa-sd-2023"
       ]
     },
     "client_name": "My Example",
