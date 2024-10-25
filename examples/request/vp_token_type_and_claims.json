@@ -4,7 +4,7 @@
     {
       "id": "ID card with constraints",
       "format": {
-        "dip_vc": {
+        "di_vc": {
           "proof_type": [
             "DataIntegrityProof"
           ],

@@ -4,10 +4,10 @@
   "descriptor_map": [
     {
       "id": "ID Card with constraints",
-      "format": "dip_vp",
+      "format": "di_vp",
       "path": "$[0]",
       "path_nested": {
-        "format": "dip_vc",
+        "format": "di_vc",
         "path": "$.verifiableCredential[0]"
       }
     },

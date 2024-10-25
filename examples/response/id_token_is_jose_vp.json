@@ -79,7 +79,7 @@
       "path": "$",
       "path_nested": {
         "path": "$.verifiableCredential[0]",
-        "format": "dip_vp"
+        "format": "di_vp"
       }
     },
     {
@@ -87,7 +87,7 @@
       "id": "vaccination certificate",
       "path_nested": {
         "path": "$.verifiableCredential[1]",
-        "format": "dip_vp"
+        "format": "di_vp"
       }
     }
   ],

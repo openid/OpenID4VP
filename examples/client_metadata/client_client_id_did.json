@@ -10,7 +10,7 @@
           "ES256K"
         ]
       },
-      "dip_vp": {
+      "di_vp": {
         "proof_type": [
           "DataIntegrityProof"
         ],

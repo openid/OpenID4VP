@@ -1,13 +1,13 @@
 {
-  "definition_id": "example_dip_vc",
-  "id": "example_dip_vc_presentation_submission",
+  "definition_id": "example_di_vc",
+  "id": "example_di_vc_presentation_submission",
   "descriptor_map": [
     {
       "id": "id_credential",
       "path": "$",
-      "format": "dip_vp",
+      "format": "di_vp",
       "path_nested": {
-        "format": "dip_vc",
+        "format": "di_vc",
         "path": "$.verifiableCredential[0]"
       }
     }

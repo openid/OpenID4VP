@@ -42,7 +42,7 @@
           "required": ["alg"],
           "additionalProperties": false
         },
-        "^dip_vc$|^dip_vp$|^dip$": {
+        "^di_vc$|^di_vp$|^di$": {
           "type": "object",
           "properties": {
             "proof_type": {

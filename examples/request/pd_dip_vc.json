@@ -1,10 +1,10 @@
 {
-  "id": "example_dip_vc",
+  "id": "example_di_vc",
   "input_descriptors": [
     {
       "id": "id_credential",
       "format": {
-        "dip_vc": {
+        "di_vc": {
           "proof_type": [
             "DataIntegrityProof"
           ],

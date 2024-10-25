@@ -107,7 +107,7 @@ Cryptographic Holder Binding:
 :  Ability of the Holder to prove legitimate possession of a Verifiable Credential by proving control over the same private key during the issuance and presentation. Mechanism might depend on the Credential Format. For example, in `jose_vc` Credential Format, a Verifiable Credential with Cryptographic Holder Binding contains a public key or a reference to a public key that matches to the private key controlled by the Holder. 
 
 Claims-based Holder Binding:
-:  Ability of the Holder to prove legitimate possession of a Verifiable Credential by proofing certain claims, e.g., name and date of birth, for example by presenting another Verifiable Credential. Claims-based Holder Binding allows long term, cross device use of a Credential as it does not depend on cryptographic key material stored on a certain device. One example of such a Verifiable Credential could be a Diploma.
+:  Ability of the Holder to prove legitimate possession of a Verifiable Credential by proofing certain claims, e.g., name and date of birth, for example by presenting another Verifiable Credential. Claims-based Holder Binding allows long term, cross device use of a Credential as it does not depend on cryptographic key material stored on a certain device. One example of such a Verifiable Credential could be a diloma.
 
 Biometrics-based Holder Binding:
 :  Ability of the Holder to prove legitimate possession of a Verifiable Credential by demonstrating a certain biometric trait, such as finger print or face. One example of a Verifiable Credential with biometric Holder Binding is a mobile driving license [@ISO.18013-5], which contains a portrait of the Holder.
@@ -398,7 +398,7 @@ Content-Type: application/json
     {
       "id": "id card credential",
       "format": {
-        "dip_vc": {
+        "di_vc": {
           "proof_type": [
             "DataIntegrityProof"
           ],
@@ -533,7 +533,7 @@ Location: https://client.example.org/universal-link?
   &presentation_definition=...
   &nonce=n-0S6_WzA2Mj
   &client_metadata=%7B%22vp_formats%22:%7B%22jose_vp%22:%
-  7B%22alg%22:%5B%22EdDSA%22,%22ES256K%22%5D%7D,%22dip
+  7B%22alg%22:%5B%22EdDSA%22,%22ES256K%22%5D%7D,%22di
   _vc%22:%7B%22proof_type%22:%5B%22DataIntegrityProof%22%5D,%22
   cryptosuite%22:%5B%22ecdsa-sd-2023%22%5D%7D%7D%7D
 ```
@@ -1011,7 +1011,7 @@ brevity):
 
 The following is a non-normative example of a VP Token containing a single Verifiable Presentation after a request using Presentation Exchange:
 
-<{{examples/response/vp_token_raw_dip_vp.json}}
+<{{examples/response/vp_token_raw_di_vp.json}}
 
 The following is a non-normative example of a `presentation_submission` parameter sent alongside a VP Token in the example above. It corresponds to the second Presentation Definition example in (#request_presentation_definition):
 
@@ -1542,7 +1542,7 @@ The following is a non-normative example of the payload of a Verifiable Presenta
 
 In the example above, the requested `nonce` value is included as the `nonce` and `client_id` as the `aud` value in the proof of the Verifiable Presentation.
 
-The following is a non-normative example of a Verifiable Presentation of a format identifier `dip_vp` with an embedded `proof` property:
+The following is a non-normative example of a Verifiable Presentation of a format identifier `di_vp` with an embedded `proof` property:
 
 ```json
 {
@@ -2112,7 +2112,7 @@ Note: The VP's `nonce` claim contains the value of the `nonce` of the presentati
 
 This section illustrates presentation of a Credential conformant to [@VC_DATA] that is secured using Data Integrity, using JSON-LD.
 
-The Credential format identifiers are `dip_vc` for a W3C Verifiable Credential and `dip_vp` for W3C Verifiable Presentation.
+The Credential format identifiers are `di_vc` for a W3C Verifiable Credential and `di_vp` for W3C Verifiable Presentation.
 
 Cipher suites should use securing mechanisms names defined in [Securing Mechanisms sectino of the Verifiable Credential Extensions Note](https://www.w3.org/TR/vc-extensions/#securing-mechanisms).
 
@@ -2120,7 +2120,7 @@ Cipher suites should use securing mechanisms names defined in [Securing Mechanis
 
 The following is a non-normative example of the payload of a Verifiable Credential that will be used throughout this section:
 
-<{{examples/credentials/dip_vc.json}}
+<{{examples/credentials/di_vc.json}}
 
 #### Presentation Request
 
@@ -2130,9 +2130,9 @@ The following is a non-normative example of an Authorization Request:
 
 The following is a non-normative example of the contents of a `presentation_definition` parameter that contains the requirements regarding the Credential to be presented:
 
-<{{examples/request/pd_dip_vc.json}}
+<{{examples/request/pd_di_vc.json}}
 
-This `presentation_definition` parameter contains a single `input_descriptor` element, which sets the desired format to DIP VC and defines a constraint over the `type` parameter to select Verifiable Credentials of type `IDCredential`.
+This `presentation_definition` parameter contains a single `input_descriptor` element, which sets the desired format to di VC and defines a constraint over the `type` parameter to select Verifiable Credentials of type `IDCredential`.
 
 #### Presentation Response
 
@@ -2142,11 +2142,11 @@ The following is a non-normative example of an Authorization Response:
 
 The following is a non-normative example of the content of the `presentation_submission` parameter:
 
-<{{examples/response/ps_dip_vc.json}}
+<{{examples/response/ps_di_vc.json}}
 
 The following is a non-normative example of the Verifiable Presentation in the `vp_token` parameter provided in the same response and referred to by the `presentation_submission` above:
 
-<{{examples/response/dip_vp.json}}
+<{{examples/response/di_vp.json}}
 
 Note: The VP's `challenge` claim contains the value of the `nonce` of the presentation request and the `domain` claims contains the Client Identifier of the Verifier. This allows the Verifier to detect replay of a presentation as recommended in (#preventing-replay). 
 

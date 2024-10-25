@@ -4,7 +4,7 @@
     {
       "id": "id card credential",
       "format": {
-        "dip_vc": {
+        "di_vc": {
           "proof_type": [
             "DataIntegrityProof"
           ],
