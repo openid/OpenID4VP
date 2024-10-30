@@ -13,7 +13,7 @@
     },
     {
       "id": "Example credential disclosing only address",
-      "format": "sdjwt_vc",
+      "format": "vc+sd-jwt",
       "path": "$[1]"
     }
   ]
