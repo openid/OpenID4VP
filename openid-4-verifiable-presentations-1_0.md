@@ -7,7 +7,7 @@ keyword = ["security", "openid", "ssi"]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "openid-4-verifiable-presentations-1_0-22"
+value = "openid-4-verifiable-presentations-1_0-23"
 status = "standard"
 
 [[author]]
@@ -2000,6 +2000,7 @@ Out of the Authorization Request parameters defined in [@!RFC6749] and (#vp_toke
 * `presentation_definition`
 * `client_metadata`
 * `request`
+* `transaction_data`
 
 The `client_id` parameter MUST be omitted in unsigned requests defined in (#unsigned_request). The Wallet determines the effective Client Identifier from the origin as asserted by the Web Platform and/or app platform. The effective Client Identifier is composed of a synthetic Client Identifier Scheme of `web-origin` and the origin itself. For example, an origin of `https://verifier.example.com` would result in an effective Client Identifier of `web-origin:https://verifier.example.com`. The transport of the request and origin from the Web Platform and/or app platform to the Wallet is platform-specific and is out of scope of this profile.
 
@@ -2671,6 +2672,11 @@ The technology described in this specification was made available from contribut
 # Document History
 
    [[ To be removed from the final specification ]]
+
+   -23
+
+   * add `transaction_data` to list of allowed parameters in W3C Digital Credentials API appendix
+
 
    -22
 
