@@ -2676,7 +2676,7 @@ The technology described in this specification was made available from contribut
 
    -23
 
-   * add `transaction_data` to list of allowed parameters in W3C Digital Credentials API appendix
+   * add `transaction_data` & `dcql_query` to list of allowed parameters in W3C Digital Credentials API appendix
 
 
    -22
