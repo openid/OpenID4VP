@@ -2001,6 +2001,7 @@ Out of the Authorization Request parameters defined in [@!RFC6749] and (#vp_toke
 * `client_metadata`
 * `request`
 * `transaction_data`
+* `dcql_query`
 
 The `client_id` parameter MUST be omitted in unsigned requests defined in (#unsigned_request). The Wallet determines the effective Client Identifier from the origin as asserted by the Web Platform and/or app platform. The effective Client Identifier is composed of a synthetic Client Identifier Scheme of `web-origin` and the origin itself. For example, an origin of `https://verifier.example.com` would result in an effective Client Identifier of `web-origin:https://verifier.example.com`. The transport of the request and origin from the Web Platform and/or app platform to the Wallet is platform-specific and is out of scope of this profile.
 
