@@ -2658,6 +2658,7 @@ The technology described in this specification was made available from contribut
 
    -22
 
+   * remove references to the openid4vci credential format section
    * Introduced the Digital Credentials Query Language
    * add transaction data mechanism
    * remove `client_id_scheme` and turn it into a prefix of the `client_id`; this addresses a security issue with the previous solution
