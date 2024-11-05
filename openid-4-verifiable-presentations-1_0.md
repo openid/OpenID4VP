@@ -2271,19 +2271,75 @@ The Verifier MAY send all the OpenID4VP request parameters as members in the req
 
 The Verifier MAY send a signed request, for example, when identification and authentication of the Verifier is required.
 
-The signed Request Object MAY contain all the parameters listed in (#dc_api_request), except `request`.
+The signed request allows the Wallet to authenticate the Verifier using one or more trust framework(s) other than the Web PKI utilized by the browser. An example of such a trust framework is the Verifier (RP) management infrastructure set up in the context of the eIDAS regulation in the European Union, in which case, the Wallet can no longer rely only on the web origin of the Verifier. This web origin MAY still be used to further strengthen the security of the flow. The external trust framework could, for example, map the Client Identifier to registered web origins.
 
-Below is a non-normative example of such a request sent over the Digital Credentials API (DC API):
+The signed Request Object MAY contain all the parameters listed in (#browser_api_request), except `request`.
+
+The signed Request MUST use the JWS Serialization [@!RFC7515]). This allows the Verifier multiple Client Identifiers and corresponding key material and metadata when invoking a wallet. This is to serve use cases where the Verifier requests credentials belong to different transt framework and thus must authenticate in the context of those trust frameworks.
+
+The following request parameter MUST be placed in the protect header of the respective signature object: 
+
+* `client_id`
+* `client_metadata`
+
+Below is a non-normative example of such a request:
 
 ```js
-{ request: "eyJhbGciOiJF..." }
+const credential = await navigator.identity.get({
+  digital: {
+    providers: [{
+      protocol: "openid4vp",
+      request: {
+        "payload": "eyAiaXNzIjogImh0dHBzOi8...NzY4Mzc4MzYiIF0gfQ",
+        "signatures": [
+        {
+          "protected": "eyJhbGciOiJFUzI1NiJ9",
+          "signature": "PFwem0Ajp2Sag...T2z784h8TQqgTR9tXcif0jw"
+        },
+        {
+          "protected": "eyJhbGciOiJFUzI1NiJ9",
+          "signature": "irgtXbJGwE2wN4Lc...2TvUodsE0vaC-NXpB9G39cMXZ9A"
+        }
+      ]
+     }
+    }]
+  }
+});
+```
+
+Every `signature` object in the structure contains the parameters and signature specific to a particular Client Identifier.
+
+This is an example of a protected header:
+
+```
+{
+  "alg": "ES256",
+  "kid": "k2bdc",
+  "x5c": [
+    "MIICOjCCAeG...djzH7lA==",
+    "MIICLTCCAdS...koAmhWVKe"
+  ],
+  "client_id": "x509_san_dns:rp.example.com",
+  "client_metadata": {
+    "jwks": {
+      "keys": [
+        {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "MKBCTNIcKUSDii11ySs3526iDZ8AiTo7Tu6KPAqv7D4",
+          "y": "4Etl6SRW2YiLUrN5vfvVHuhp7x8PxltmWWlbbM4IFyM",
+          "use": "enc",
+          "kid": "1"
+        }
+      ]
+    }
+  }
+}
 ```
 
 This is an example of the payload of a signed OpenID4VP request used with the DC API:
 
-<{{examples/digital_credentials_api/signed_request_payload.json}}
-
-The signed request allows the Wallet to authenticate the Verifier using a trust framework other than the Web PKI utilized by the browser. An example of such a trust framework is the Verifier (RP) management infrastructure set up in the context of the eIDAS regulation in the European Union, in which case, the Wallet can no longer rely only on the Origin of the Verifier. This Origin MAY still be used to further strengthen the security of the flow. The external trust framework could, for example, map the Client Identifier to registered Origins.
+<{{examples/digital_credentials_api/signed_request_payload.json}} 
 
 ## Response {#dc_api_response}
 
