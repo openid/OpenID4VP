@@ -118,6 +118,9 @@ VP Token:
 Wallet:
 :  An entity used by the Holder to receive, store, present, and manage Verifiable Credentials and key material. There is no single deployment model of a Wallet: Verifiable Credentials and keys can both be stored/managed locally, or by using a remote self-hosted service, or a remote third-party service. In the context of this specification, the Wallet acts as an OAuth 2.0 Authorization Server (see [@!RFC6749]) towards the Credential Verifier which acts as the OAuth 2.0 Client.
 
+Wallet Attestation:
+: An attestation designed to prove authenticity of the wallet towards parties it is interacting with, in the context of this specification, the Verifier. The overall concept, format and data structure of a Wallet Attestation is defined in [@!OpenID.VCI].
+
 # Overview 
 
 This specification defines a mechanism on top of OAuth 2.0 to request and present Verifiable Credentials as Verifiable Presentations.
@@ -309,6 +312,9 @@ The following is a non-normative example of a transaction data content, after ba
   // other transaction data type specific parameters
 }
 ```
+
+`wallet_attestation`:
+: OPTIONAL. A boolean value that indicates whether or not a wallet attestation is requested by the Verifier. If the parameter is not present, the default value is `false`. If the value is `true`, a wallet attestation is expected to be part of the response (see `wallet_attestation` in (#response-parameters)).
 
 ## Existing Parameters
 
@@ -610,6 +616,7 @@ The following is a non-normative example of a request object:
   "presentation_definition": {...},
   "nonce": "n-0S6_WzA2Mj",
   "wallet_nonce": "qPmxiNFCR3QTm19POc8u",
+  "wallet_attestation": true,
   "state" : "eyJhb...6-sVA"
 }
 ```
@@ -978,6 +985,9 @@ If Presentation Exchange was used for the request, the `presentation_submission`
 
 Including the `presentation_submission` parameter as a separate response parameter allows the Wallet to provide the Verifier with additional information about the format and structure in advance of the processing of the VP Token, and can be used even with the Credential formats that do not allow for the direct inclusion of `presentation_submission` parameters inside a Credential itself.
 
+`wallet_attestation`:
+: REQUIRED if the `wallet_attestation` parameter was present and its value `true` in the Authorization Request (see (#vp_token_request) for more details). The Wallet Attestation presentation MUST be bound to the nonce that was provided in the Authorization Request. The expected format of a Wallet Attestation and validation rules are defined in section TODO of [@!OpenID.VCI]. If the validation of the Wallet Attestation fails, the response is rejected. Additional claims for individual implementations and ecosystems can be added to a Wallet Attestation.
+
 Additional response parameters MAY be defined and used,
 as described in [@!RFC6749].
 The Client MUST ignore any unrecognized parameters.
@@ -989,6 +999,7 @@ HTTP/1.1 302 Found
 Location: https://client.example.org/cb#
   presentation_submission=...
   &vp_token=...
+  &wallet_attestation=...
 ```
 
 ### Examples (DCQL) {#response_dcql_query}
@@ -1495,7 +1506,7 @@ Note: If the Verifier's Response URI did not return a `redirect_uri` in step (6)
 
 ## Preventing Replay of the VP Token {#preventing-replay} 
 
-An attacker could try to inject a VP Token (or an individual Verifiable Presentation), that was obtained from a previous Authorization Response, into another Authorization Response thus impersonating the End-User that originally presented that VP Token or the respective Verifiable Presentation.
+An attacker could try to inject a VP Token (or an individual Verifiable Presentation, or Wallet Attestation), that was obtained from a previous Authorization Response, into another Authorization Response thus impersonating the End-User that originally presented that VP Token or the respective Verifiable Presentation.
 
 Implementers of this specification MUST implement the controls as defined in this section to detect such an attack. 
 
@@ -1631,11 +1642,15 @@ If no End-User interaction is required before sending the request, it is easy to
 
 Mandatory End-User interaction before sending the request, like clicking a button, unlocking the wallet or even just showing a screen of the app, can make this less attractive/likely to being exploited.
 
-Requests from the Wallet to the Verifier SHOULD be sent with the minimal amount of information possible, and in particular, without any HTTP headers identifying the software used for the request (e.g., HTTP libraries or their versions). The Wallet MUST NOT send PII or any other data that could be used for fingerprinting to the Request URI in order to prevent End-User tracking. 
+Requests from the Wallet to the Verifier SHOULD be sent with the minimal amount of information possible, and in particular, without any HTTP headers identifying the software used for the request (e.g., HTTP libraries or their versions). The Wallet MUST NOT send PII or any other data that could be used for fingerprinting to the Request URI in order to prevent End-User tracking.
 
 ## Authorization Error Response with the `wallet_unavailable` error code
 
 In the event that another component is invoked instead of the Wallet, the End-User MUST be informed and give consent before the invoked component returns the `wallet_unavailable` Authorization Error Response to the Verifier.
+
+## Wallet Attestation
+
+Wallet Attestations could be an additional correlation factor that could allow End-User tracking. Wallet Attestations SHOULD use privacy-preserving mechanisms similar to the ones that are applied to credentials in an ecosystem, e.g., use of one-time usage Wallet Attestations if the same applies for credentials.
 
 {backmatter}
 
@@ -2671,6 +2686,9 @@ The technology described in this specification was made available from contribut
 # Document History
 
    [[ To be removed from the final specification ]]
+
+   -23
+   * Added `wallet_attestation` parameter to Authorization Request and Response
 
    -22
 
