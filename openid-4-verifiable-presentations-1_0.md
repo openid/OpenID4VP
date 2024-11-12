@@ -2352,7 +2352,7 @@ GET /authorize?
   response_type=vp_token%20id_token
   &scope=openid
   &id_token_type=subject_signed
-  &client_id=https%3A%2F%2Fclient.example.org%2Fcb
+  &client_id=x509_san_uri%3Ahttps%3A%2F%2Fclient.example.org%2Fcb
   &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
   &presentation_definition=...
   &nonce=n-0S6_WzA2Mj HTTP/1.1
