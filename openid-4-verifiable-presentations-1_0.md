@@ -523,7 +523,7 @@ The following is a non-normative example of a request with this Client Identifie
 
 ```
 HTTP/1.1 302 Found
-Location: https://client.example.org/universal-link?
+Location: https://wallet.example.org/universal-link?
   response_type=vp_token
   &client_id=redirect_uri:https%3A%2F%2Fclient.example.org%2Fcb
   &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
