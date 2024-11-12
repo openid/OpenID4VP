@@ -1,12 +1,15 @@
 {
-  "id": "example_jwt_vc",
+  "id": "example_di_vc",
   "input_descriptors": [
     {
       "id": "id_credential",
       "format": {
-        "jwt_vc_json": {
+        "di_vc": {
           "proof_type": [
-            "JsonWebSignature2020"
+            "DataIntegrityProof"
+          ],
+          "cryptosuite": [
+            "eddsa-rdfc-2022"
           ]
         }
       },
@@ -14,7 +17,7 @@
         "fields": [
           {
             "path": [
-              "$.vc.type"
+              "$.type"
             ],
             "filter": {
               "type": "array",

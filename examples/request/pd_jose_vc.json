@@ -1,12 +1,14 @@
 {
-  "id": "example_ldp_vc",
+  "id": "example_jose_vc",
   "input_descriptors": [
     {
       "id": "id_credential",
       "format": {
-        "ldp_vc": {
-          "proof_type": [
-            "Ed25519Signature2018"
+        "jose_vc_json": {
+          "alg": [
+            "EdDSA",
+            "ES256K",
+            "ES384"
           ]
         }
       },
