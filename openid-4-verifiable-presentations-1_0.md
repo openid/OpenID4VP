@@ -2275,7 +2275,7 @@ The signed request allows the Wallet to authenticate the Verifier using one or m
 
 The signed Request Object MAY contain all the parameters listed in (#browser_api_request), except `request`.
 
-The signed Request MUST use the JWS Serialization [@!RFC7515]). This allows the Verifier multiple Client Identifiers and corresponding key material and metadata when invoking a wallet. This is to serve use cases where the Verifier requests credentials belonging to different trust frameworks and thus must authenticate in the context of those trust frameworks.
+The signed Request MUST use the JWS Serialization [@!RFC7515]). This allows the Verifier multiple Client Identifiers and corresponding key material and metadata when invoking a Wallet. This is to serve use cases where the Verifier requests credentials belonging to different trust frameworks and thus must authenticate in the context of those trust frameworks.
 
 The following request parameters MUST be present in the protected header of the respective signature object: 
 
