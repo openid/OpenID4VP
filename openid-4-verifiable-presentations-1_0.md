@@ -2307,7 +2307,7 @@ const credential = await navigator.identity.get({
 });
 ```
 
-Every `signature` object in the structure contains the parameters and signature specific to a particular Client Identifier.
+Every `signature` object in the structure contains the parameters and signature specific to a particular Client Identifier. The signature is calculated as specified in section 5.1 of [@!RFC7515].
 
 This is an example of a protected header:
 
