@@ -929,7 +929,7 @@ claims:
 ## DCQL Examples {#dcql_query_example}
 
 The following is a non-normative example of a DCQL query that requests a Verifiable
-Credential of the format `vc+sd-jwt` with a type value of
+Credential of the format `dc+sd-jwt` with a type value of
 `https://credentials.example.com/identity_credential` and the claims `last_name`,
 `first_name`, and `address.street_address`:
 
@@ -2242,7 +2242,7 @@ This section defines how Credentials complying with [@!I-D.ietf-oauth-sd-jwt-vc]
 
 ### Format Identifier
 
-The Credential format identifier is `vc+sd-jwt`.
+The Credential format identifier is `dc+sd-jwt`.
 
 #### Example Credential
 
@@ -2287,7 +2287,7 @@ __Claim `birthdate`__:
 
 ### Verifier Metadata
 
-The `format` value in the `vp_formats` parameter of the Verifier metadata MUST have the key `vc+sd-jwt`, and the value is an object consisting of the following name/value pairs:
+The `format` value in the `vp_formats` parameter of the Verifier metadata MUST have the key `dc+sd-jwt`, and the value is an object consisting of the following name/value pairs:
 
 * `sd-jwt_alg_values`: OPTIONAL. A JSON array containing identifiers of cryptographic algorithms the Verifier supports for signing of an Issuer-signed JWT of an SD-JWT. If present, the `alg` JOSE header (as defined in [@!RFC7515]) of the Issuer-signed JWT of the presented SD-JWT MUST match one of the array values.
 * `kb-jwt_alg_values`: OPTIONAL. A JSON array containing identifiers of cryptographic algorithms the Verifier supports for signing of a Key Binding JWT (KB-JWT). If present, the `alg` JOSE header (as defined in [@!RFC7515]) of the presented KB-JWT MUST match one of the array values.
@@ -2313,7 +2313,7 @@ The following is a non-normative example of the contents of a `presentation_defi
 
 <{{examples/request/pd_sd_jwt_vc.json}}
 
-The presentation of an IETF SD-JWT VC is requested by adding an object named `vc+sd-jwt` to the `format` object of an `input_descriptor`. The `input_descriptor` value is applied to the unsecured payload of the IETF SD-JWT VC which correspond to the disclosures of the presented SD-JWT VC.
+The presentation of an IETF SD-JWT VC is requested by adding an object named `dc+sd-jwt` to the `format` object of an `input_descriptor`. The `input_descriptor` value is applied to the unsecured payload of the IETF SD-JWT VC which correspond to the disclosures of the presented SD-JWT VC.
 
 Setting `limit_disclosure` property defined in [@!DIF.PresentationExchange] to `required` enables selective release by instructing the Wallet to submit only the disclosures for the matching claims specified in the fields array. The unsecured payload of an IETF SD-JWT VC is used to perform the matching.
 
@@ -2677,6 +2677,7 @@ The technology described in this specification was made available from contribut
    -23
 
    * add `transaction_data` & `dcql_query` to list of allowed parameters in W3C Digital Credentials API appendix
+   * change media type `vc+sd-jwt` to `dc+sd-jwt` to align with draft 06 of [@!I-D.ietf-oauth-sd-jwt-vc]
 
 
    -22

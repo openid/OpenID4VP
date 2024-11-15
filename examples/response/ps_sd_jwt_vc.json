@@ -5,7 +5,7 @@
     {
       "id": "identity_credential",
       "path": "$",
-      "format": "vc+sd-jwt"
+      "format": "dc+sd-jwt"
     }
   ]
 }
