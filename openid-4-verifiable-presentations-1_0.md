@@ -119,7 +119,7 @@ Wallet:
 :  An entity used by the Holder to receive, store, present, and manage Verifiable Credentials and key material. There is no single deployment model of a Wallet: Verifiable Credentials and keys can both be stored/managed locally, or by using a remote self-hosted service, or a remote third-party service. In the context of this specification, the Wallet acts as an OAuth 2.0 Authorization Server (see [@!RFC6749]) towards the Credential Verifier which acts as the OAuth 2.0 Client.
 
 Wallet Attestation:
-: An attestation designed to prove authenticity of the wallet towards parties it is interacting with, in the context of this specification, the Verifier. The overall concept, format and data structure of a Wallet Attestation is defined in [@!OpenID.VCI].
+: An attestation designed to prove authenticity of the wallet towards parties it is interacting with, in the context of this specification, the Verifier. The overall concept, default format and data structure of a Wallet Attestation is defined in [@!OpenID.VCI].
 
 # Overview 
 
@@ -314,7 +314,7 @@ The following is a non-normative example of a transaction data content, after ba
 ```
 
 `wallet_attestation`:
-: OPTIONAL. A boolean value that indicates whether or not a wallet attestation is requested by the Verifier. If the parameter is not present, the default value is `false`. If the value is `true`, a wallet attestation is expected to be part of the response (see `wallet_attestation` in (#response-parameters)).
+: OPTIONAL. An array of Strings, where the individual values MUST match the `id` of an entry in `credentials` for a DCQL query or the `id` of an entry in `input_descriptors` in a Presentation Definition. The Credentials identified via `id` are Wallet Attestation options requested by the Verifier. If the parameter is not present, the default value is an empty array, indicating that no Wallet Attestation was requested.
 
 ## Existing Parameters
 
@@ -616,7 +616,7 @@ The following is a non-normative example of a request object:
   "presentation_definition": {...},
   "nonce": "n-0S6_WzA2Mj",
   "wallet_nonce": "qPmxiNFCR3QTm19POc8u",
-  "wallet_attestation": true,
+  "wallet_attestation": [ "my_credential" ],
   "state" : "eyJhb...6-sVA"
 }
 ```
@@ -984,9 +984,6 @@ Other parameters, such as `state` or `code` (from [@!RFC6749]), or `id_token` (f
 If Presentation Exchange was used for the request, the `presentation_submission` element MUST be included as a separate response parameter alongside the VP token. Clients MUST ignore any `presentation_submission` element included inside a Verifiable Presentation.
 
 Including the `presentation_submission` parameter as a separate response parameter allows the Wallet to provide the Verifier with additional information about the format and structure in advance of the processing of the VP Token, and can be used even with the Credential formats that do not allow for the direct inclusion of `presentation_submission` parameters inside a Credential itself.
-
-`wallet_attestation`:
-: REQUIRED if the `wallet_attestation` parameter was present and its value `true` in the Authorization Request (see (#vp_token_request) for more details). The Wallet Attestation presentation MUST be bound to the nonce that was provided in the Authorization Request. The expected format of a Wallet Attestation and validation rules are defined in section TODO of [@!OpenID.VCI]. If the validation of the Wallet Attestation fails, the response is rejected. Additional claims for individual implementations and ecosystems can be added to a Wallet Attestation.
 
 Additional response parameters MAY be defined and used,
 as described in [@!RFC6749].
