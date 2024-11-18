@@ -314,7 +314,7 @@ The following is a non-normative example of a transaction data content, after ba
 ```
 
 `wallet_attestation`:
-: OPTIONAL. An array of Strings, where the individual values MUST match the `id` of an entry in `credentials` for a DCQL query or the `id` of an entry in `input_descriptors` for a Presentation Definition. The corresponding Credentials identified via their ids are the options of Wallet Attestations requested by the Verifier and SHOULD be displayed to the End-User accordingly. If the parameter is not present, the default value is an empty array, indicating that no Wallet Attestation was requested.
+: OPTIONAL. An array of Strings, where the individual values MUST match the `id` of an entry in `credentials` for a DCQL query or the `id` of an entry in `input_descriptors` for a Presentation Definition. The corresponding Credentials identified via their ids are the options of Wallet Attestations requested by the Verifier and SHOULD be displayed to the End-User accordingly. If the parameter is not present, the default value is an empty array, indicating that no Wallet Attestation was requested. The default format for wallet attestations is described in (#wallet_attestation_format).
 
 ## Existing Parameters
 
@@ -616,7 +616,7 @@ The following is a non-normative example of a request object:
   "presentation_definition": {...},
   "nonce": "n-0S6_WzA2Mj",
   "wallet_nonce": "qPmxiNFCR3QTm19POc8u",
-  "wallet_attestation": [ "my_credential" ],
+  "wallet_attestation": [ "my_attestation" ],
   "state" : "eyJhb...6-sVA"
 }
 ```
@@ -2351,7 +2351,7 @@ The following is a non-normative example of the unsecured payload of the Key Bin
 
 Note: The Key Binding JWT `nonce` claim contains the value of the `nonce` from the authorization request, and the `aud` claim contains the Client Identifier of the Verifier.
 
-## Wallet Attestation
+## Wallet Attestation {#wallet_attestation_format}
 
 This section defines how Wallet Attestations complying with section TODO of [@!OpenID.VCI] can be presented to the Verifier using this specification. 
 
@@ -2369,7 +2369,7 @@ The following is a non-normative example of a request that requests a Credential
 {
   "credentials": [
     {
-      "id": "attestation",
+      "id": "my_attestation",
       "format": "wallet-attestation"
     },
     {
