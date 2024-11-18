@@ -7,7 +7,7 @@ keyword = ["security", "openid", "ssi"]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "openid-4-verifiable-presentations-1_0-22"
+value = "openid-4-verifiable-presentations-1_0-23"
 status = "standard"
 
 [[author]]
@@ -529,7 +529,7 @@ The following is a non-normative example of a request with this Client Identifie
 
 ```
 HTTP/1.1 302 Found
-Location: https://client.example.org/universal-link?
+Location: https://wallet.example.org/universal-link?
   response_type=vp_token
   &client_id=redirect_uri:https%3A%2F%2Fclient.example.org%2Fcb
   &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
@@ -2012,6 +2012,8 @@ Out of the Authorization Request parameters defined in [@!RFC6749] and (#vp_toke
 * `presentation_definition`
 * `client_metadata`
 * `request`
+* `transaction_data`
+* `dcql_query`
 
 The `client_id` parameter MUST be omitted in unsigned requests defined in (#unsigned_request). The Wallet determines the effective Client Identifier from the origin as asserted by the Web Platform and/or app platform. The effective Client Identifier is composed of a synthetic Client Identifier Scheme of `web-origin` and the origin itself. For example, an origin of `https://verifier.example.com` would result in an effective Client Identifier of `web-origin:https://verifier.example.com`. The transport of the request and origin from the Web Platform and/or app platform to the Wallet is platform-specific and is out of scope of this profile.
 
@@ -2362,7 +2364,7 @@ GET /authorize?
   response_type=vp_token%20id_token
   &scope=openid
   &id_token_type=subject_signed
-  &client_id=https%3A%2F%2Fclient.example.org%2Fcb
+  &client_id=x509_san_uri%3Ahttps%3A%2F%2Fclient.example.org%2Fcb
   &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
   &presentation_definition=...
   &nonce=n-0S6_WzA2Mj HTTP/1.1
@@ -2685,6 +2687,8 @@ The technology described in this specification was made available from contribut
    [[ To be removed from the final specification ]]
 
    -23
+
+   * add `transaction_data` & `dcql_query` to list of allowed parameters in W3C Digital Credentials API appendix
    * Added `wallet_attestation` parameter to Authorization Request and Response
 
    -22
