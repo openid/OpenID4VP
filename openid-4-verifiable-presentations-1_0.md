@@ -2351,6 +2351,44 @@ The following is a non-normative example of the unsecured payload of the Key Bin
 
 Note: The Key Binding JWT `nonce` claim contains the value of the `nonce` from the authorization request, and the `aud` claim contains the Client Identifier of the Verifier.
 
+## Wallet Attestation
+
+This section defines how Wallet Attestations complying with section TODO of [@!OpenID.VCI] can be presented to the Verifier using this specification. 
+
+### Format Identifier
+
+The Credential format identifier is `wallet-attestation`.
+
+### DCQL Query and Response
+
+A Wallet Attestation MUST always be requested in addition to another credential and MUST NOT be requested alone.
+
+The following is a non-normative example of a request that requests a Credential combined with a Wallet Attestation:
+
+```
+{
+  "credentials": [
+    {
+      "id": "attestation",
+      "format": "wallet-attestation"
+    },
+    {
+      "id": "my_credential",
+      ...
+    }
+  ]
+}
+```
+
+The following is a non-normative example of a response (VP Token):
+```
+{
+  "my_credential": "eyJhbGci...QMA",
+  "attestation": "eyJ..."
+}
+```
+
+
 ## Combining this specification with SIOPv2
 
 This section shows how SIOP and OpenID for Verifiable Presentations can be combined to present Verifiable Credentials and pseudonymously authenticate an End-User using subject controlled key material.
