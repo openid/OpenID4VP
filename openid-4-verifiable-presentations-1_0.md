@@ -314,7 +314,7 @@ The following is a non-normative example of a transaction data content, after ba
 ```
 
 `wallet_attestation`:
-: OPTIONAL. An array of Strings, where the individual values MUST match the `id` of an entry in `credentials` for a DCQL query or the `id` of an entry in `input_descriptors` for a Presentation Definition. The corresponding Credentials identified via their ids are the options of Wallet Attestations requested by the Verifier and SHOULD be displayed to the End-User accordingly. If the parameter is not present, the default value is an empty array, indicating that no Wallet Attestation was requested. The default format for wallet attestations is described in (#wallet_attestation_format).
+: OPTIONAL. An array of Strings, where the individual values MUST match the `id` of an entry in `credentials` for a DCQL query or the `id` of an entry in `input_descriptors` for a Presentation Definition. The corresponding Credentials identified via their ids are the options of Wallet Attestations requested by the Verifier and SHOULD be displayed to the End-User accordingly. If the parameter is not present, the default value is an empty array, indicating that no Wallet Attestation was requested. The default format for Wallet Attestations is described in (#wallet_attestation_format).
 
 ## Existing Parameters
 
