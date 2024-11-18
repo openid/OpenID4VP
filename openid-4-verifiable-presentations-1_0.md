@@ -119,7 +119,7 @@ Wallet:
 :  An entity used by the Holder to receive, store, present, and manage Verifiable Credentials and key material. There is no single deployment model of a Wallet: Verifiable Credentials and keys can both be stored/managed locally, or by using a remote self-hosted service, or a remote third-party service. In the context of this specification, the Wallet acts as an OAuth 2.0 Authorization Server (see [@!RFC6749]) towards the Credential Verifier which acts as the OAuth 2.0 Client.
 
 Wallet Attestation:
-: An attestation designed to prove authenticity of the wallet towards parties it is interacting with, in the context of this specification, the Verifier. The overall concept, format and data structure of a Wallet Attestation is defined in [@!OpenID.VCI].
+: A signed proof crafted to demonstrate the authenticity of the Wallet to the parties it interacts with, specifically the Verifier in this specification. The comprehensive concept, format, and data structure of a Wallet Attestation are outlined in [@!OpenID.VCI].
 
 # Overview 
 
@@ -314,7 +314,7 @@ The following is a non-normative example of a transaction data content, after ba
 ```
 
 `wallet_attestation`:
-: OPTIONAL. A boolean value that indicates whether or not a wallet attestation is requested by the Verifier. If the parameter is not present, the default value is `false`. If the value is `true`, a wallet attestation is expected to be part of the response (see `wallet_attestation` in (#response-parameters)).
+: OPTIONAL. A boolean value that indicates whether or not a Wallet Attestation is requested by the Verifier. If the parameter is not present, the default value is `false`. If the value is `true`, a Wallet Attestation is expected to be part of the response (see `wallet_attestation` in (#response-parameters)).
 
 ## Existing Parameters
 
@@ -1650,7 +1650,7 @@ In the event that another component is invoked instead of the Wallet, the End-Us
 
 ## Wallet Attestation
 
-Wallet Attestations could be an additional correlation factor that could allow End-User tracking. Wallet Attestations SHOULD use privacy-preserving mechanisms similar to the ones that are applied to credentials in an ecosystem, e.g., use of one-time usage Wallet Attestations if the same applies for credentials.
+Wallet Attestations could be an additional correlation factor that could allow End-User tracking. Wallet Attestations SHOULD use privacy-preserving mechanisms similar to the ones that are applied to Credentials in an ecosystem, e.g., use of one-time usage Wallet Attestations if the same applies for Credentials.
 
 {backmatter}
 
