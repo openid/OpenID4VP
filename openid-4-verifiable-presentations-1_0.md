@@ -2234,6 +2234,14 @@ See ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 Annex C [@ISO.
 
 The VP Token contains the base64url-encoded `DeviceResponse` CBOR structure as defined in ISO/IEC 18013-5 [@ISO.18013-5] or ISO/IEC 23220-4 [@ISO.23220-4]. Essentially, the `DeviceResponse` CBOR structure contains a signature or MAC over the `SessionTranscript` CBOR structure including the OpenID4VP-specific `Handover` CBOR structure.
 
+The `transaction_data_hashes` response parameter MUST be returned in DeviceSigned using the `transaction_data_hashes` DataElement defined below:
+
+| Namespace | Identifier | Description | Encoding format |
+| --------- | ---------- | ----------- | --------------- |
+| `net.openid.openid4vc` | `transaction_data_hashes` | as defined in Section 7.4 of this specification | [ tstr* ] |
+
+If KeyAuthorization for the requested transaction authorization is not present, the Wallet MUST return an error.
+
 See ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 Annex C [@ISO.23220-4] for the latest examples on how to use the `presentation_submission` parameter and how to generate the Authorizaton Response for presenting Credentials in the mdoc format.
 
 ## IETF SD-JWT VC
