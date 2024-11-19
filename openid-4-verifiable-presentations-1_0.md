@@ -2596,7 +2596,7 @@ established by [@!RFC7591].
 ### vp_formats
 
 * Client Metadata Name: `vp_formats`
-* Client Metadata Description: Boolean value specifying whether the Wallet supports the transfer of presentation_definition by reference
+* Client Metadata Description: An object defining the formats and proof types of Verifiable Presentations and Verifiable Credentials that a Verifier supports
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
 * Reference: (#client_metadata_parameters) of this specification
 
