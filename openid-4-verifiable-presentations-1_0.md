@@ -333,7 +333,7 @@ The following is a non-normative example of an Authorization Request:
 ```
 GET /authorize?
   response_type=vp_token
-  &client_id=redirect_uri:https%3A%2F%2Fclient.example.org%2Fcb
+  &client_id=redirect_uri%3Ahttps%3A%2F%2Fclient.example.org%2Fcb
   &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
   &presentation_definition=...
   &transaction_data=...
@@ -517,7 +517,7 @@ Confusing Verifiers using a Client Identifier Scheme with those using none can l
 
 This specification defines the following Client Identifier Schemes, followed by the examples where applicable: 
 
-* `redirect_uri`: This value indicates that the Client Identifier (without the prefix `redirect_uri:`) is the Verifier's Redirect URI (or Response URI when Response Mode `direct_post` is used). The Authorization Request MUST NOT be signed. The Verifier MAY omit the `redirect_uri` Authorization Request parameter (or `response_uri` when Response Mode `direct_post` is used). All Verifier metadata parameters MUST be passed using the `client_metadata` parameter defined in (#new_parameters). Example Client Identifier: `redirect_uri:https%3A%2F%2Fclient.example.org%2Fcb`.
+* `redirect_uri`: This value indicates that the Client Identifier (without the prefix `redirect_uri:`) is the Verifier's Redirect URI (or Response URI when Response Mode `direct_post` is used). The Authorization Request MUST NOT be signed. The Verifier MAY omit the `redirect_uri` Authorization Request parameter (or `response_uri` when Response Mode `direct_post` is used). All Verifier metadata parameters MUST be passed using the `client_metadata` parameter defined in (#new_parameters). Example Client Identifier value is `redirect_uri:https://client.example.org/cb`.
 
 The following is a non-normative example of a request with this Client Identifier Scheme:
 
@@ -525,14 +525,14 @@ The following is a non-normative example of a request with this Client Identifie
 HTTP/1.1 302 Found
 Location: https://wallet.example.org/universal-link?
   response_type=vp_token
-  &client_id=redirect_uri:https%3A%2F%2Fclient.example.org%2Fcb
+  &client_id=redirect_uri%3Ahttps%3A%2F%2Fclient.example.org%2Fcb
   &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
   &presentation_definition=...
   &nonce=n-0S6_WzA2Mj
-  &client_metadata=%7B%22vp_formats%22:%7B%22jwt_vp_json%22:%
-  7B%22alg%22:%5B%22EdDSA%22,%22ES256K%22%5D%7D,%22ldp
-  _vp%22:%7B%22proof_type%22:%5B%22Ed25519Signature201
-  8%22%5D%7D%7D%7D
+  &client_metadata=%7B%22vp_formats%22%3A%7B%22jwt_vp_json%22%3A%
+    7B%22alg%22%3A%5B%22EdDSA%22%2C%22ES256K%22%5D%7D%2C%22ldp_vp
+    %22%3A%7B%22proof_type%22%3A%5B%22Ed25519Signature2018%22%5D%
+    7D%7D%7D
 ```
 
 * `https`: This value indicates that the Client Identifier is an Entity Identifier defined in OpenID Federation [@!OpenID.Federation]. Since the Entity Identifier is already defined to start with `https:`, this Client Identifier Scheme MUST NOT be prefixed additionally. Processing rules given in [@!OpenID.Federation] MUST be followed. Automatic Registration as defined in [@!OpenID.Federation] MUST be used. The Authorization Request MAY also contain a `trust_chain` parameter. The final Verifier metadata is obtained from the Trust Chain after applying the policies, according to [@!OpenID.Federation]. The `client_metadata` parameter, if present in the Authorization Request, MUST be ignored when this Client Identifier scheme is used. Example Client Identifier: `https://federation-verifier.example.com`.
@@ -2676,6 +2676,7 @@ The technology described in this specification was made available from contribut
 
    -23
 
+   * fixed percent-encoding of URI examples
    * add `transaction_data` & `dcql_query` to list of allowed parameters in W3C Digital Credentials API appendix
 
 
