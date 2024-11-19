@@ -2678,7 +2678,7 @@ The technology described in this specification was made available from contribut
 
    * fixed percent-encoding of URI examples
    * add `transaction_data` & `dcql_query` to list of allowed parameters in W3C Digital Credentials API appendix
-   * change media type `vc+sd-jwt` to `dc+sd-jwt` to align with draft 06 of [@!I-D.ietf-oauth-sd-jwt-vc]
+   * change credential format identifier `vc+sd-jwt` to `dc+sd-jwt` to align with the media type in draft -06 of [@I-D.ietf-oauth-sd-jwt-vc] and update `typ` accordingly in examples 
 
 
    -22
