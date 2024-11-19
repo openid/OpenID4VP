@@ -2384,7 +2384,7 @@ The following is a non-normative example of a response (VP Token):
 ```
 {
   "my_credential": "eyJhbGci...QMA",
-  "attestation": "eyJ..."
+  "my_attestation": "eyJ..."
 }
 ```
 
