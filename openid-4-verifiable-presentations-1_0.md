@@ -136,6 +136,11 @@ Implementations can also be built on top of OpenID Connect Core, which is also b
 
 Any of the OAuth 2.0 related specifications, such as [@RFC9126] and [@RFC9101], and Best Current Practice (BCP) documents, such as [@RFC8252] and [@I-D.ietf-oauth-security-topics], can be implemented on top of this specification.
 
+In summary, OpenID for Verifiable Presentations is a framework that requires profiling
+to achieve interoperability within a certain ecosystem or a jurisdiction. Out of the
+features that are optional in this specification, a profile MUST select features that are
+mandatory and define a set of specific requirements.
+
 ## Same Device Flow {#same_device}
 
 Below is a diagram of a flow where the End-User presents a Credential to a Verifier interacting with the End-User on the same device that the device the Wallet resides on.
