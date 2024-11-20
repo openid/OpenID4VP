@@ -558,7 +558,7 @@ Body
 
 * `x509_san_uri`: When the Client Identifier Scheme is `x509_san_uri`, the Client Identifier MUST be a URI and match a `uniformResourceIdentifier` Subject Alternative Name (SAN) [@!RFC5280] entry in the leaf certificate passed with the request. The request MUST be signed with the private key corresponding to the public key in the leaf X.509 certificate of the certificate chain added to the request in the `x5c` JOSE header [@!RFC7515] of the signed request object. The Wallet MUST validate the signature and the trust chain of the X.509 certificate. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter. If the Wallet can establish trust in the Client Identifier authenticated through the certificate, e.g., because the Client Identifier is contained in a list of trusted Client Identifiers, it may allow the client to freely choose the `redirect_uri` value. If not, the `redirect_uri` value MUST match the Client Identifier without the prefix `x509_san_uri:`. Example Client Identifier: `x509_san_uri:https://client.example.org/cb`.
 
-* `web-origin`: This Client Identifier Scheme is defined in (#browser_api_request). It MUST NOT be used in the Authorization Request.
+* `web-origin`: This Client Identifier Scheme is defined in (#dc_api_request). It MUST NOT be used in the Authorization Request.
 
 To use the Client Identifier Schemes `https`, `did`, `verifier_attestation`, `x509_san_dns`, and `x509_san_uri`, Verifiers MUST be confidential clients. This might require changes to the technical design of native apps as such apps are typically public clients.
 
@@ -1984,7 +1984,7 @@ And lastly, as part of the request, the Wallet is provided with information abou
 
 For the profile defined in this section, the value of the exchange protocol used with the Digital Credentials API (DC API), is `openid4vp`.
 
-## Request {#browser_api_request}
+## Request {#dc_api_request}
 
 The Verifier MAY send all the OpenID4VP request parameters to the Digital Credentials API (DC API).
 
@@ -2036,7 +2036,7 @@ The Verifier MAY send all the OpenID4VP request parameters as members in the req
 
 The Verifier MAY send a signed request, for example, when identification and authentication of the Verifier is required.
 
-The signed Request Object MAY contain all the parameters listed in (#browser_api_request), except `request`.
+The signed Request Object MAY contain all the parameters listed in (#dc_api_request), except `request`.
 
 Below is a non-normative example of such a request sent over the Digital Credentials API (DC API):
 
@@ -2528,7 +2528,7 @@ established by [@!RFC6749].
 * Name: `expected_origins`
 * Parameter Usage Location: authorization request
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
-* Reference: (#browser_api_request) of this specification
+* Reference: (#dc_api_request) of this specification
 
 ## OAuth Extensions Error Registry
 
