@@ -740,6 +740,9 @@ in the mdoc, e.g., `first_name`.
 If the `values` property is present, the Wallet SHOULD return the claim only if the
 type and value of the claim both match for at least one of the elements in the array. Details of the processing rules are defined in (#selecting_claims).
 
+`intent_to_retain`
+: OPTIONAL. A boolean that indicates the Verifier intends to retain the Claim's data that is being requested.
+
 ### Selecting Claims and Credentials {#dcql_query_lang_processing_rules}
 
 The following section describes the logic that applies for selecting claims 
