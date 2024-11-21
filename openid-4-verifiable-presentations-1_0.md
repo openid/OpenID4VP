@@ -137,7 +137,7 @@ Implementations can also be built on top of OpenID Connect Core, which is also b
 Any of the OAuth 2.0 related specifications, such as [@RFC9126] and [@RFC9101], and Best Current Practice (BCP) documents, such as [@RFC8252] and [@I-D.ietf-oauth-security-topics], can be implemented on top of this specification.
 
 In summary, OpenID for Verifiable Presentations is a framework that requires profiling
-to achieve interoperability within a certain ecosystem or a jurisdiction. Out of the
+to achieve interoperability. Out of the
 features that are optional in this specification, a profile MUST select features that are
 mandatory and define a set of specific requirements.
 
@@ -826,7 +826,7 @@ these constraints. The Wallet is not controlled by the Verifier and the Verifier
 MUST perform its own security checks on the returned Credentials and
 presentations.
 
-## Credential Format specific Parameters {#format_specific_properties}
+## Credential Format Specific Parameters {#format_specific_properties}
 
 OpenID for Verifiable Presentations is Credential Format agnostic, i.e., it is designed to allow applications to request and receive Verifiable Presentations and Verifiable Credentials in any Credential Format. This section defines sets of Credential Format specific parameters for some of the known Credential Formats. Other specifications or deployments can define their own set of Credential Format specific parameters:
 
@@ -1363,12 +1363,13 @@ In the context of this specification, such a JWT MUST set the `typ` JOSE header 
 
 ## Static Configuration Values of the Wallets
 
-This document lists profiles of this specification that define static configuration values of the Wallets and defines one set of static configuration values that can be used by the Verifier when it is unable to perform Dynamic Discovery and is not using any of the profiles.
+This section lists profiles of this specification that define static configuration values for Wallets and defines one set of static configuration values that can be used by the Verifier when it is unable to perform Dynamic Discovery.
 
 ### Profiles that Define Static Configuration Values
 
 The following is a list of profiles that define static configuration values of Wallets:
 
+- [OpenID4VC High Assurance Interoperability Profile](https://openid.github.io/oid4vc-haip-sd-jwt-vc/openid4vc-high-assurance-interoperability-profile-sd-jwt-vc-wg-draft.html)
 - [JWT VC Presentation Profile](https://identity.foundation/jwt-vc-presentation-profile/)
 - [@ISO.18013-7]
 
@@ -2051,7 +2052,7 @@ The signed request allows the Wallet to authenticate the Verifier using a trust 
 
 Every OpenID4VP Authorization Request results in a response being provided through the W3C Digital Credentials API. The response is an instance of the `DigitalCredential` interface, as defined in [@!w3c.digital_credentials_api], and the OpenID4VP Authorization Response parameters as defined for the Response Type are represented as an object within the `data` attribute.
 
-# Credential Format specific Parameters {#format_specific_parameters}
+# Credential Format Specific Parameters {#format_specific_parameters}
 
 OpenID for Verifiable Presentations is Credential Format agnostic, i.e., it is designed to allow applications to request and receive Verifiable Presentations and Verifiable Credentials in any Credential Format. This section defines a set of Credential Format specific parameters for some of the known Credential Formats. For the Credential Formats that are not mentioned in this specification, other specifications or deployments can define their own set of Credential Format specific parameters.
 
