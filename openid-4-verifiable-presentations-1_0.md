@@ -741,7 +741,7 @@ If the `values` property is present, the Wallet SHOULD return the claim only if 
 type and value of the claim both match for at least one of the elements in the array. Details of the processing rules are defined in (#selecting_claims).
 
 `intent_to_retain`
-: OPTIONAL. A boolean that indicates the Verifier intends to retain the Claim's data that is being requested.
+: OPTIONAL. A boolean that indicates the Verifier intends to store the Claim's data that is being requested beyond the processing of the response. For example, to meet regulatory requirements of retaining records of transactions or to maintain user profiles. If omitted, the default value is `false`.
 
 ### Selecting Claims and Credentials {#dcql_query_lang_processing_rules}
 
