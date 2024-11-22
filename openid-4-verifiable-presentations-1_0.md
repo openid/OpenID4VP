@@ -2665,11 +2665,11 @@ The technology described in this specification was made available from contribut
    * fixed percent-encoding of URI examples
    * add `transaction_data` & `dcql_query` to list of allowed parameters in W3C Digital Credentials API appendix
    * change credential format identifier `vc+sd-jwt` to `dc+sd-jwt` to align with the media type in draft -06 of [@I-D.ietf-oauth-sd-jwt-vc] and update `typ` accordingly in examples 
+   * remove references to the openid4vci credential format section
 
 
    -22
 
-   * remove references to the openid4vci credential format section
    * Introduced the Digital Credentials Query Language
    * add transaction data mechanism
    * remove `client_id_scheme` and turn it into a prefix of the `client_id`; this addresses a security issue with the previous solution
