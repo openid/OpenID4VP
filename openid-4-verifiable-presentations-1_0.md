@@ -665,7 +665,7 @@ be present more than once.
 `format`:
 : REQUIRED. A string that specifies the format of the requested
 Verifiable Credential. Valid Credential Format Identifier values are defined in
-Appendix A of [@!OpenID.VCI].
+(#alternative_credential_formats).
 
 `meta`: 
 : OPTIONAL. An object defining additional properties requested by the Verifier that
@@ -966,8 +966,8 @@ When a VP Token is returned, the respective response includes the following para
 
 `vp_token`:
 : REQUIRED. The structure of this parameter depends on the query language used to request the presentations in the Authorization Request:
- * If DCQL was used, this is a JSON-encoded object; the keys are the `id` values used for the Credential Queries in the DCQL query, and the values are the Verifiable Presentations that match the respective Credential Query. The Verifiable Presentations are represented as strings or objects depending on the format as defined in Appendix A of [@!OpenID.VCI]. The same rules as above apply for encoding the Verifiable Presentations.
- * In case Presentation Exchange was used, it is a JSON String or JSON object that MUST contain a single Verifiable Presentation or an array of JSON Strings and JSON objects each of them containing a Verifiable Presentations. Each Verifiable Presentation MUST be represented as a JSON string (that is a base64url-encoded value) or a JSON object depending on a format as defined in Appendix A of [@!OpenID.VCI].  When a single Verifiable Presentation is returned, the array syntax MUST NOT be used.  If Appendix A of [@!OpenID.VCI] defines a rule for encoding the respective Credential format in the Credential Response, this rules MUST also be followed when encoding Credentials of this format in the `vp_token` response parameter. Otherwise, this specification does not require any additional encoding when a Credential format is already represented as a JSON object or a JSON string.
+ * If DCQL was used, this is a JSON-encoded object; the keys are the `id` values used for the Credential Queries in the DCQL query, and the values are the Verifiable Presentations that match the respective Credential Query. The Verifiable Presentations are represented as strings or objects depending on the format as defined in (#alternative_credential_formats). The same rules as above apply for encoding the Verifiable Presentations.
+ * In case Presentation Exchange was used, it is a JSON String or JSON object that MUST contain a single Verifiable Presentation or an array of JSON Strings and JSON objects each of them containing a Verifiable Presentations. Each Verifiable Presentation MUST be represented as a JSON string (that is a base64url-encoded value) or a JSON object depending on a format as defined in (#alternative_credential_formats).  When a single Verifiable Presentation is returned, the array syntax MUST NOT be used.  If (#alternative_credential_formats) defines a rule for encoding the respective Credential format in the Credential Response, this rules MUST also be followed when encoding Credentials of this format in the `vp_token` response parameter. Otherwise, this specification does not require any additional encoding when a Credential format is already represented as a JSON object or a JSON string.
 
 `presentation_submission`:
 : REQUIRED if Presentation Exchange was used for the request; MUST NOT be used otherwise. The `presentation_submission` element as defined in [@!DIF.PresentationExchange]. It contains mappings between the requested Verifiable Credentials and where to find them within the returned VP Token. This is expressed via elements in the `descriptor_map` array, known as Input Descriptor Mapping Objects. These objects contain a field called `path`, which, for this specification, MUST have the value `$` (top level root path) when only one Verifiable Presentation is contained in the VP Token, and MUST have the value `$[n]` (indexed path from root) when there are multiple Verifiable Presentations, where `n` is the index to select. Additional parameters can be defined by Credential Formats, see (#alternative_credential_formats) for details.
@@ -1273,7 +1273,7 @@ This specification defines how the Verifier can determine Credential formats, pr
 This specification defines new metadata parameters according to [@!RFC8414].
 
 * `presentation_definition_uri_supported`: OPTIONAL. Boolean value specifying whether the Wallet supports the transfer of `presentation_definition` by reference, with true indicating support. If omitted, the default value is true.
-* `vp_formats_supported`: REQUIRED. An object containing a list of name/value pairs, where the name is a string identifying a Credential format supported by the Wallet. Valid Credential format identifier values are defined in Appendix A of [@!OpenID.VCI]. Other values may be used when defined in the profiles of this specification. The value is an object containing a parameter defined below:
+* `vp_formats_supported`: REQUIRED. An object containing a list of name/value pairs, where the name is a string identifying a Credential format supported by the Wallet. Valid Credential format identifier values are defined in (#alternative_credential_formats). Other values may be used when defined in the profiles of this specification. The value is an object containing a parameter defined below:
     * `alg_values_supported`: OPTIONAL. An object where the value is an array of case sensitive strings that identify the cryptographic suites that are supported. Parties will need to agree upon the meanings of the values used, which may be context-specific. For specific values that can be used depending on the Credential format, see (#alternative_credential_formats). If `alg_values_supported` is omitted, it is unknown what cryptographic suites the wallet supports.
 
 The following is a non-normative example of a `vp_formats_supported` parameter:
@@ -1847,22 +1847,6 @@ In the event that another component is invoked instead of the Wallet, the End-Us
             <organization>Microsoft</organization>
         </author>
         <date day="25" month="Feb" year="2014"/>
-        </front>
-</reference>
-
-<reference anchor="OpenID.VCI" target="https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html">
-        <front>
-          <title>OpenID for Verifiable Credential Issuance</title>
-          <author initials="T." surname="Lodderstedt" fullname="Torsten Lodderstedt">
-            <organization>German Federal Agency for Disruptive Innovation (SPRIND)</organization>
-          </author>
-          <author initials="K." surname="Yasuda" fullname="Kristina Yasuda">
-            <organization>German Federal Agency for Disruptive Innovation (SPRIND)</organization>
-          </author>
-          <author initials="T." surname="Looker" fullname="Tobias Looker">
-            <organization>Mattr</organization>
-          </author>
-          <date day="3" month="February" year="2023"/>
         </front>
 </reference>
 
@@ -2681,6 +2665,7 @@ The technology described in this specification was made available from contribut
    * fixed percent-encoding of URI examples
    * add `transaction_data` & `dcql_query` to list of allowed parameters in W3C Digital Credentials API appendix
    * change credential format identifier `vc+sd-jwt` to `dc+sd-jwt` to align with the media type in draft -06 of [@I-D.ietf-oauth-sd-jwt-vc] and update `typ` accordingly in examples 
+   * remove references to the openid4vci credential format section
 
 
    -22
