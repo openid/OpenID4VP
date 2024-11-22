@@ -1155,6 +1155,8 @@ To obtain Verifier's public key for the input to the key agreement to encrypt th
 
 To sign the Authorization Response, the Wallet MUST use a private key that corresponds to a public key made available in its metadata.
 
+Note: For encryption, implementers have a variety of options available through JOSE, including the use of Hybrid Public Key Encryption (HPKE) as detailed in [@I-D.ietf-jose-hpke-encrypt]. 
+
 ### Response Mode "direct_post.jwt" {#direct_post_jwt}
 
 This specification also defines a new Response Mode `direct_post.jwt`, which allows for JARM to be used with Response Mode `direct_post` defined in (#response_mode_post).
