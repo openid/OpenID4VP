@@ -2285,11 +2285,11 @@ The following request parameters MUST be present in the protected header of the 
 Below is a non-normative example of such a request:
 
 ```js
-const credential = await navigator.identity.get({
+const credential = await navigator.credentials.get({
   digital: {
     providers: [{
       protocol: "openid4vp",
-      request: {
+      data: {
         "payload": "eyAiaXNzIjogImh0dHBzOi8...NzY4Mzc4MzYiIF0gfQ",
         "signatures": [
         {
