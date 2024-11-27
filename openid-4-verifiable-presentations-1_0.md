@@ -1964,7 +1964,7 @@ This section defines a profile of OpenID4VP for use with the Digital Credentials
 The name "Digital Credentials API" (DC API) encomposes the W3C Digital Credentials API [@!W3C.Digital_Credentials_API]
 as well as its native App Platform equivalents in operating systems (such as [Credential Manager on Android](https://developer.android.com/jetpack/androidx/releases/credentials)).
 The DC API allows web sites and native apps acting as Verifiers to request the presentation of verifiable credentials.
-The API itself does not define a Credential exchange protocol but can be used with multiple protocols.
+The API itself is agnostic to the Credential exchange protocol and can be used with different protocols.
 The Web Platform, working in conjunction with other layers, such as the app platform/operating system, and based on the permission of the End-User, will send the request data along with the web or app origin of the Verifier to the End-User's chosen Wallet.
 
 This OpenID4VP profile utilizes the mechanisms of the DC API while also allowing to leverage advanced security features of OpenID4VP, if needed. 
