@@ -823,26 +823,6 @@ these constraints. The Wallet is not controlled by the Verifier and the Verifier
 MUST perform its own security checks on the returned Credentials and
 presentations.
 
-## Credential Format Specific Parameters {#format_specific_properties}
-
-OpenID for Verifiable Presentations is Credential Format agnostic, i.e., it is designed to allow applications to request and receive Verifiable Presentations and Verifiable Credentials in any Credential Format. This section defines sets of Credential Format specific parameters for some of the known Credential Formats. Other specifications or deployments can define their own set of Credential Format specific parameters:
-
-### IETF SD-JWT VC {#format_vc_sd_jwt}
-
-`vct_values`:
-: OPTIONAL. An array of strings that specifies allowed values for
-the type of the requested Verifiable Credential. All elements in the array MUST
-be valid type identifiers as defined in [@!I-D.ietf-oauth-sd-jwt-vc]. The Wallet
-MAY return credentials that inherit from any of the specified types, following
-the inheritance logic defined in [@!I-D.ietf-oauth-sd-jwt-vc].
-
-### Mobile Documents or mdocs (ISO/IEC 18013 and ISO/IEC 23220 series) {#format_mso_mdoc}
-
-`doctype_value`:
-: OPTIONAL. String that specifies an allowed value for the
-doctype of the requested Verifiable Credential. It MUST
-be a valid doctype identifier as defined in [@ISO.18013-5].
-
 ## Claims Path Pointer {#claims_path_pointer}
 
 A claims path pointer is a pointer into the JSON structure of the Verifiable
