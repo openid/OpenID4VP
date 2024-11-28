@@ -2698,6 +2698,10 @@ The technology described in this specification was made available from contribut
    * add `transaction_data` & `dcql_query` to list of allowed parameters in W3C Digital Credentials API appendix
    * change credential format identifier `vc+sd-jwt` to `dc+sd-jwt` to align with the media type in draft -06 of [@I-D.ietf-oauth-sd-jwt-vc] and update `typ` accordingly in examples 
    * remove references to the openid4vci credential format section
+   * clarified what profiling OID4VP means
+   * moved credential format specific DCQL parameters to the annex
+   * generalized W3C Digital Credentials API references
+   * changed response mode value for the OID4VP over the DC API
 
 
    -22
