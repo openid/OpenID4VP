@@ -1349,7 +1349,7 @@ The following is a list of profiles that define static configuration values of W
 
 - [OpenID4VC High Assurance Interoperability Profile](https://openid.github.io/oid4vc-haip-sd-jwt-vc/openid4vc-high-assurance-interoperability-profile-sd-jwt-vc-wg-draft.html)
 - [JWT VC Presentation Profile](https://identity.foundation/jwt-vc-presentation-profile/)
-- [@ISO.18013-7]
+- [@ISO.18013-7](https://www.iso.org/standard/82772.html)
 
 ### A Set of Static Configuration Values bound to `openid4vp://` {#openid4vp-scheme}
 
@@ -1925,7 +1925,7 @@ In the event that another component is invoked instead of the Wallet, the End-Us
 
 # OpenID4VP over the Digital Credentials API
 
-This section defines a profile of OpenID4VP for use with the Digital Credentials API.
+This section defines how to use OpenID4VP with the Digital Credentials API.
 
 The name "Digital Credentials API" (DC API) encomposes the W3C Digital Credentials API [@!W3C.Digital_Credentials_API]
 as well as its native App Platform equivalents in operating systems (such as [Credential Manager on Android](https://developer.android.com/jetpack/androidx/releases/credentials)).
