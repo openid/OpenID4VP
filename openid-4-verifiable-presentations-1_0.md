@@ -137,9 +137,11 @@ Implementations can also be built on top of OpenID Connect Core, which is also b
 Any of the OAuth 2.0 related specifications, such as [@RFC9126] and [@RFC9101], and Best Current Practice (BCP) documents, such as [@RFC8252] and [@I-D.ietf-oauth-security-topics], can be implemented on top of this specification.
 
 In summary, OpenID for Verifiable Presentations is a framework that requires profiling
-to achieve interoperability. Out of the
-features that are optional in this specification, a profile MUST select features that are
-mandatory and define a set of specific requirements.
+to achieve interoperability. Profiling means defining:
+
+* what optional features are used or mandatory to implement, e.g., response encryption;
+* which values are permitted for parameters, e.g., credential format identifiers;
+* optionally, extensions for new features.
 
 ## Same Device Flow {#same_device}
 
