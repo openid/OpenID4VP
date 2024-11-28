@@ -670,7 +670,7 @@ Appendix A of [@!OpenID.VCI].
 `meta`: 
 : OPTIONAL. An object defining additional properties requested by the Verifier that
 apply to the metadata and validity data of the Credential. The properties of
-this object are defined per Credential Format in (#sd_jwt_vc_meta_parameter) and (#mdoc_meta_parameter). If omitted,
+this object are defined per Credential Format. Examples of those are in (#sd_jwt_vc_meta_parameter) and (#mdocs_meta_parameter). If omitted,
 no specific constraints are placed on the metadata or validity of the requested
 Credential.
 
@@ -721,7 +721,7 @@ Within the particular `claims` array, the same `id` MUST NOT
 be present more than once.
 
 `path`:
-: REQUIRED if the Credential Format uses a JSON-based claims structure (e.g., IETF SD-JWT VC, W3C Verifiable Credentials and Anon Creds); MUST NOT
+: REQUIRED if the Credential Format uses a JSON-based claims structure (e.g., IETF SD-JWT VC and W3C Verifiable Credentials); MUST NOT
 be present otherwise. The value MUST be a non-empty array representing a claims path pointer that specifies the path to a claim
 within the Verifiable Credential, as defined in (#claims_path_pointer).
 
@@ -730,7 +730,7 @@ within the Verifiable Credential, as defined in (#claims_path_pointer).
 If the `values` property is present, the Wallet SHOULD return the claim only if the
 type and value of the claim both match for at least one of the elements in the array. Details of the processing rules are defined in (#selecting_claims).
 
-The ISO mdoc specific parameters to be used in Claims Query are defined in (#mdocs_claims_query).
+The ISO mdoc specific parameters to be used in the Claims Query are defined in (#mdocs_claims_query).
 
 ### Selecting Claims and Credentials {#dcql_query_lang_processing_rules}
 
@@ -2191,18 +2191,18 @@ ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 [@ISO.23220-4] Ann
 
 This section defines ISO mdoc specific DCQL Query and Response parameters.
 
-#### mdoc specific Parameters in the `meta` parameter in Credential Query {#mdocs_meta_parameter}
+#### Parameters in the `meta` parameter in Credential Query {#mdocs_meta_parameter}
 
-The following is an ISO mdoc specific parameter in the `meta` parameter in Credential Query defined in (#credential_query).
+The following is an ISO mdoc specific parameter in the `meta` parameter in a Credential Query as defined in (#credential_query).
 
 `doctype_value`:
 : OPTIONAL. String that specifies an allowed value for the
 doctype of the requested Verifiable Credential. It MUST
 be a valid doctype identifier as defined in [@ISO.18013-5].
 
-#### mdoc specific Parameters in Claims Query {#mdocs_claims_query}
+#### Parameters in the Claims Query {#mdocs_claims_query}
 
-The following are ISO mdoc specific parameters to be used in Claims Query defined in (#claims_query).
+The following are ISO mdoc specific parameters to be used in a Claims Query as defined in (#claims_query).
 
 `namespace`:
 : REQUIRED if the Credential Format is based on the mdoc format defined in [@ISO.18013-5]; MUST NOT be present otherwise. 
@@ -2298,9 +2298,9 @@ The following is a non-normative example of `client_metadata` request parameter 
 
 This section defines SD-JWT VC specific DCQL Query and Response parameters.
 
-#### SD-JWT VC specific Parameters in the `meta` parameter in Credential Query {#sd_jwt_vc_meta_parameter}
+#### Parameters in the `meta` parameter in Credential Query {#sd_jwt_vc_meta_parameter}
 
-The following is an SD-JWT VC specific parameter in the `meta` parameter in Credential Query defined in (#credential_query).
+The following is an SD-JWT VC specific parameter in the `meta` parameter in a Credential Query as defined in (#credential_query).
 
 `vct_values`:
 : OPTIONAL. An array of strings that specifies allowed values for
