@@ -73,6 +73,9 @@ This specification also defines the following terms. In the case where a term ha
 Credential:
 :  A set of one or more claims about a subject made by a Credential Issuer. Note that the definition of the term "Credential" in this specification is different from that in [@!OpenID.Core].
 
+Digital Credentials API:
+:  The Digital Credentials API (DC API) refers to the W3C Digital Credentials API [@!W3C.Digital_Credentials_API] on the Web Platform and its equivalent native APIs on App Platforms (such as [Credential Manager on Android](https://developer.android.com/jetpack/androidx/releases/credentials)).
+
 Verifiable Credential (VC):
 :  An Issuer-signed Credential whose authenticity can be cryptographically verified. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA] (VCDM), [@ISO.18013-5] (mdoc), [@!I-D.ietf-oauth-sd-jwt-vc] (SD-JWT VC), and [@Hyperledger.Indy] (AnonCreds).
 
@@ -555,7 +558,7 @@ Body
 
 * `x509_san_uri`: When the Client Identifier Scheme is `x509_san_uri`, the Client Identifier MUST be a URI and match a `uniformResourceIdentifier` Subject Alternative Name (SAN) [@!RFC5280] entry in the leaf certificate passed with the request. The request MUST be signed with the private key corresponding to the public key in the leaf X.509 certificate of the certificate chain added to the request in the `x5c` JOSE header [@!RFC7515] of the signed request object. The Wallet MUST validate the signature and the trust chain of the X.509 certificate. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter. If the Wallet can establish trust in the Client Identifier authenticated through the certificate, e.g., because the Client Identifier is contained in a list of trusted Client Identifiers, it may allow the client to freely choose the `redirect_uri` value. If not, the `redirect_uri` value MUST match the Client Identifier without the prefix `x509_san_uri:`. Example Client Identifier: `x509_san_uri:https://client.example.org/cb`.
 
-* `web-origin`: This Client Identifier Scheme is defined in (#browser_api_request). It MUST NOT be used in the Authorization Request.
+* `web-origin`: This Client Identifier Scheme is defined in (#dc_api_request). It MUST NOT be used in the Authorization Request.
 
 To use the Client Identifier Schemes `https`, `did`, `verifier_attestation`, `x509_san_dns`, and `x509_san_uri`, Verifiers MUST be confidential clients. This might require changes to the technical design of native apps as such apps are typically public clients.
 
@@ -1875,11 +1878,14 @@ In the event that another component is invoked instead of the Wallet, the End-Us
         </front>
 </reference>
 
-<reference anchor="w3c.digital_credentials_api" target="https://wicg.github.io/digital-credentials/">
+<reference anchor="W3C.Digital_Credentials_API" target="https://wicg.github.io/digital-credentials/">
         <front>
           <title>Digital Credentials API</title>
 		  <author fullname="Marcos Caceres">
             <organization>Apple Inc.</organization>
+          </author>
+          <author fullname="Tim Cappalli">
+            <organization>Okta</organization>
           </author>
           <author fullname="Sam Goto">
             <organization>Google</organization>
@@ -1937,19 +1943,22 @@ In the event that another component is invoked instead of the Wallet, the End-Us
         </front>
 </reference>
 
-# OpenID4VP profile for the W3C Digital Credentials API
+# OpenID4VP profile for the Digital Credentials API
 
-This section defines a profile of OpenID4VP for use with the W3C Digital Credentials API [@!w3c.digital_credentials_api].
+This section defines a profile of OpenID4VP for use with the Digital Credentials API.
 
-The W3C Digital Credentials API defines a Web Platform API which allows web sites acting as Verifiers
-to request the presentation of Verifiable Credentials. The API itself does not define a Credential exchange protocol
-but can be used with multiple protocols. The Web Platform, working in conjunction with other layers, such as the app platform/operating system, and based on the permission of the End-User, will send the request data along with the web origin of the Verifier to the End-User's chosen Wallet.
+The name "Digital Credentials API" (DC API) encomposes the W3C Digital Credentials API [@!W3C.Digital_Credentials_API]
+as well as its native App Platform equivalents in operating systems (such as [Credential Manager on Android](https://developer.android.com/jetpack/androidx/releases/credentials)).
+The DC API allows web sites and native apps acting as Verifiers to request the presentation of verifiable credentials.
+The API itself is agnostic to the Credential exchange protocol and can be used with different protocols.
+The Web Platform, working in conjunction with other layers, such as the app platform/operating system, and based on the permission of the End-User, will send the request data along with the web or app origin of the Verifier to the End-User's chosen Wallet.
 
-This OpenID4VP profile utilizes the mechanisms of the W3C Digital Credentials API while also allowing to leverage advanced security features of OpenID4VP, if needed. It also defines the OpenID4VP request parameters that MAY be used with the W3C Digital Credentials API.
+This OpenID4VP profile utilizes the mechanisms of the DC API while also allowing to leverage advanced security features of OpenID4VP, if needed. 
+It also defines the OpenID4VP request parameters that MAY be used with the DC API.
 
-The Digital Credentials API offers several advantages for implementers of both Verifiers and Wallets. 
+The DC API offers several advantages for implementers of both Verifiers and Wallets.
 
-Firstly, the API serves as a privacy-preserving alternative to invoking Wallets via URLs, particularly custom URL schemes. The underlying app platform will only invoke a Wallet if the End-User confirms the request based on contextual information about the Credential Request and the requestor (Verifier). 
+Firstly, the API serves as a privacy-preserving alternative to invoking Wallets via URLs, particularly custom URL schemes. The underlying app platform will only invoke a Wallet if the End-User confirms the request based on contextual information about the Credential Request and the requestor (Verifier).
 
 Secondly, the session with the End-User will always continue in the initial context, typically a web browser tab, when the request has been fulfilled (or aborted), which results in an improved user experience.
 
@@ -1959,18 +1968,18 @@ And lastly, as part of the request, the Wallet is provided with information abou
 
 ## Protocol
 
-For the profile defined in this section, the value of the exchange protocol used with the W3C Digital Credentials API [@!w3c.digital_credentials_api], is `openid4vp`.
+For the profile defined in this section, the value of the exchange protocol used with the Digital Credentials API (DC API), is `openid4vp`.
 
-## Request {#browser_api_request}
+## Request {#dc_api_request}
 
-The Verifier MAY send all the OpenID4VP request parameters to the W3C Digital Credentials API as defined in [@!w3c.digital_credentials_api].
+The Verifier MAY send all the OpenID4VP request parameters to the Digital Credentials API (DC API).
 
-The following is a non-normative example of an unsigned OpenID4VP request (when advanced security features of OpenID4VP are not used) that can be sent over the W3C Digital Credentials API :
+The following is a non-normative example of an unsigned OpenID4VP request (when advanced security features of OpenID4VP are not used) that can be sent over the DC API :
 
 ```js
 {
   response_type: "vp_token",
-  response_mode: "w3c_dc_api",
+  response_mode: "dc_api",
   nonce: "n-0S6_WzA2Mj",
   client_metadata: {...},
   dcql_query: {...}
@@ -1991,18 +2000,18 @@ Out of the Authorization Request parameters defined in [@!RFC6749] and (#vp_toke
 
 The `client_id` parameter MUST be omitted in unsigned requests defined in (#unsigned_request). The Wallet determines the effective Client Identifier from the origin as asserted by the Web Platform and/or app platform. The effective Client Identifier is composed of a synthetic Client Identifier Scheme of `web-origin` and the origin itself. For example, an origin of `https://verifier.example.com` would result in an effective Client Identifier of `web-origin:https://verifier.example.com`. The transport of the request and origin from the Web Platform and/or app platform to the Wallet is platform-specific and is out of scope of this profile.
 
-The value of the `response_mode` parameter MUST be `w3c_dc_api` when the response is neither signed nor encrypted and `w3c_dc_api.jwt` when the response is signed and/or encrypted as defined in (#jarm).
+The value of the `response_mode` parameter MUST be `dc_api` when the response is neither signed nor encrypted and `dc_api.jwt` when the response is signed and/or encrypted as defined in (#jarm).
 
 In addition to the above-mentioned parameters, this profile introduces a new parameter:
 
-* `expected_origins`: REQUIRED when signed requests defined in (#signed_request) are used with the W3C Digital Credentials API [@!w3c.digital_credentials_api]. An array of strings, each string representing an origin of the Verifier that is making the request. The Wallet can detect replay of the request from a malicious Verifier by comparing values in this parameter to the origin asserted by the Web Platform.
+* `expected_origins`: REQUIRED when signed requests defined in (#signed_request) are used with the Digital Credentials API (DC API). An array of strings, each string representing an origin of the Verifier that is making the request. The Wallet can detect replay of the request from a malicious Verifier by comparing values in this parameter to the origin asserted by the Web Platform.
 
-Additional request parameters MAY be defined and used with this profile for the W3C Digital Credentials API.
+Additional request parameters MAY be defined and used with this profile for the DC API.
 The Wallet MUST ignore any unrecognized parameters.
 
 ## Signed and Unsigned Requests
 
-Any OpenID4VP request compliant to this section of this specification can be used with the W3C Digital Credentials API [@!w3c.digital_credentials_api]. Depending on the mechanism used to identify and authenticate the Verifier, the request can be signed or unsigned. This section defines signed and unsigned OpenID4VP requests for use with the W3C Digital Credentials API.
+Any OpenID4VP request compliant to this section of this specification can be used with the Digital Credentials API (DC API). Depending on the mechanism used to identify and authenticate the Verifier, the request can be signed or unsigned. This section defines signed and unsigned OpenID4VP requests for use with the DC API.
 
 ### Unsigned Request {#unsigned_request}
 
@@ -2013,15 +2022,15 @@ The Verifier MAY send all the OpenID4VP request parameters as members in the req
 
 The Verifier MAY send a signed request, for example, when identification and authentication of the Verifier is required.
 
-The signed Request Object MAY contain all the parameters listed in (#browser_api_request), except `request`.
+The signed Request Object MAY contain all the parameters listed in (#dc_api_request), except `request`.
 
-Below is a non-normative example of such a request sent over the W3C Digital Credentials API:
+Below is a non-normative example of such a request sent over the Digital Credentials API (DC API):
 
 ```js
 { request: "eyJhbGciOiJF..." }
 ```
 
-This is an example of the payload of a signed OpenID4VP request used with the W3C Digital Credentials API:
+This is an example of the payload of a signed OpenID4VP request used with the DC API:
 
 <{{examples/digital_credentials_api/signed_request_payload.json}}
 
@@ -2029,7 +2038,7 @@ The signed request allows the Wallet to authenticate the Verifier using a trust 
 
 ## Response
 
-Every OpenID4VP Authorization Request results in a response being provided through the W3C Digital Credentials API. The response is an instance of the `DigitalCredential` interface, as defined in [@!w3c.digital_credentials_api], and the OpenID4VP Authorization Response parameters as defined for the Response Type are represented as an object within the `data` attribute.
+Every OpenID4VP Authorization Request results in a response being provided through the Digital Credentials API (DC API). The response is an instance of the `DigitalCredential` interface, as defined in [@!W3C.Digital_Credentials_API], and the OpenID4VP Authorization Response parameters as defined for the Response Type are represented as an object within the `data` attribute.
 
 # Credential Format Profiles {#alternative_credential_formats}
 
@@ -2059,13 +2068,13 @@ The following is a non-normative example of an Authorization Request:
 
 <{{examples/request/request.txt}}
 
-The requirements regarding the Credential to be presented are conveyed in the `presentation_definition` parameter. 
+The requirements regarding the Credential to be presented are conveyed in the `presentation_definition` parameter.
 
 The following is a non-normative example of the contents of a `presentation_definition` parameter:
 
 <{{examples/request/pd_jwt_vc.json}}
 
-This `presentation_definition` parameter contains a single `input_descriptor` element, which sets the desired format to JWT VC and defines a constraint over the `vc.type` parameter to select Verifiable Credentials of type `IDCredential`. 
+This `presentation_definition` parameter contains a single `input_descriptor` element, which sets the desired format to JWT VC and defines a constraint over the `vc.type` parameter to select Verifiable Credentials of type `IDCredential`.
 
 #### Presentation Response
 
@@ -2073,7 +2082,7 @@ The following is a non-normative example of an Authorization Response:
 
 <{{examples/response/response.txt}}
 
-The following is a non-normative example of the content of the `presentation_submission` parameter: 
+The following is a non-normative example of the content of the `presentation_submission` parameter:
 
 <{{examples/response/ps_jwt_vc.json}}
 
@@ -2505,7 +2514,7 @@ established by [@!RFC6749].
 * Name: `expected_origins`
 * Parameter Usage Location: authorization request
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
-* Reference: (#browser_api_request) of this specification
+* Reference: (#dc_api_request) of this specification
 
 ## OAuth Extensions Error Registry
 
