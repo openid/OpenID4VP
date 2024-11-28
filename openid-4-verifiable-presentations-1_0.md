@@ -2663,7 +2663,7 @@ The technology described in this specification was made available from contribut
    -23
 
    * fixed percent-encoding of URI examples
-   * fixed an example that used a client hostname where a wallet one would be more appropriate
+   * fixed an example that used 'client' where 'wallet' is more appropriate
    * make SIOP example request/response consistent with each other
    * make example request and example SD-JWT key binding JWT consistent
    * add note that there are a choice of encryption JWE algorithms available, including the HPKE draft
