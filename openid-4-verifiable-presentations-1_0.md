@@ -680,7 +680,7 @@ Verifiable Credential. Valid Credential Format Identifier values are defined in
 `meta`: 
 : OPTIONAL. An object defining additional properties requested by the Verifier that
 apply to the metadata and validity data of the Credential. The properties of
-this object are defined per Credential Format in (#format_specific_properties). If omitted,
+this object are defined per Credential Format. Examples of those are in (#sd_jwt_vc_meta_parameter) and (#mdocs_meta_parameter). If omitted,
 no specific constraints are placed on the metadata or validity of the requested
 Credential.
 
@@ -731,24 +731,16 @@ Within the particular `claims` array, the same `id` MUST NOT
 be present more than once.
 
 `path`:
-: REQUIRED if the Credential Format uses a JSON-based claims structure; MUST NOT
+: REQUIRED if the Credential Format uses a JSON-based claims structure (e.g., IETF SD-JWT VC and W3C Verifiable Credentials); MUST NOT
 be present otherwise. The value MUST be a non-empty array representing a claims path pointer that specifies the path to a claim
 within the Verifiable Credential, as defined in (#claims_path_pointer).
-
-`namespace`:
-: REQUIRED if the Credential Format is based on the mdoc format defined in ISO 18013-5; MUST NOT be present otherwise. 
-The value MUST be a string that specifies the namespace of the data element
-within the mdoc, e.g., `org.iso.18013.5.1`.
-
-`claim_name`:
-: REQUIRED if the Credential Format is based on mdoc format defined in ISO 18013-5; MUST NOT be present otherwise. 
-The value MUST be a string that specifies the data element identifier of the data element within the provided namespace
-in the mdoc, e.g., `first_name`.
 
 `values`:
 : OPTIONAL. An array of strings, integers or boolean values that specifies the expected values of the claim.
 If the `values` property is present, the Wallet SHOULD return the claim only if the
 type and value of the claim both match for at least one of the elements in the array. Details of the processing rules are defined in (#selecting_claims).
+
+The ISO mdoc specific parameters to be used in the Claims Query are defined in (#mdocs_claims_query).
 
 ### Selecting Claims and Credentials {#dcql_query_lang_processing_rules}
 
@@ -850,7 +842,6 @@ the inheritance logic defined in [@!I-D.ietf-oauth-sd-jwt-vc].
 : OPTIONAL. String that specifies an allowed value for the
 doctype of the requested Verifiable Credential. It MUST
 be a valid doctype identifier as defined in [@ISO.18013-5].
-
 
 ## Claims Path Pointer {#claims_path_pointer}
 
@@ -2212,7 +2203,7 @@ The Credential format identifier for Credentials in the mdoc format is `mso_mdoc
 
 ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 [@ISO.23220-4] Annex C define a profile of OpenID4VP for requesting and presenting Credentials in the mdoc format.
 
-The profile includes the following elements:
+[@ISO.18013-7] defines the following elements:
 
 * Rules for the `presentation_definition` Authorization Request parameter.
 * Rules for the `presentation_submission` Authorization Response parameter.
@@ -2222,6 +2213,33 @@ The profile includes the following elements:
 * Additional restrictions on Authorization Request and Authorization Response parameters to ensure compliance with ISO/IEC TS 18013-7 [@ISO.18013-7] and ISO/IEC 23220-4 [@ISO.23220-4]. For instance, to comply with ISO/IEC TS 18013-7 [@ISO.18013-7], only the same-device flow is supported, the `request_uri` Authorization Request parameter is required, and the Authorization Response has to be encrypted.
 
 ### DCQL Query and Response
+
+This section defines ISO mdoc specific DCQL Query and Response parameters.
+
+#### Parameters in the `meta` parameter in Credential Query {#mdocs_meta_parameter}
+
+The following is an ISO mdoc specific parameter in the `meta` parameter in a Credential Query as defined in (#credential_query).
+
+`doctype_value`:
+: OPTIONAL. String that specifies an allowed value for the
+doctype of the requested Verifiable Credential. It MUST
+be a valid doctype identifier as defined in [@ISO.18013-5].
+
+#### Parameters in the Claims Query {#mdocs_claims_query}
+
+The following are ISO mdoc specific parameters to be used in a Claims Query as defined in (#claims_query).
+
+`namespace`:
+: REQUIRED if the Credential Format is based on the mdoc format defined in [@ISO.18013-5]; MUST NOT be present otherwise. 
+The value MUST be a string that specifies the namespace of the data element
+within the mdoc, e.g., `org.iso.18013.5.1`.
+
+`claim_name`:
+: REQUIRED if the Credential Format is based on mdoc format defined in [@ISO.18013-5]; MUST NOT be present otherwise. 
+The value MUST be a string that specifies the data element identifier of the data element within the provided namespace
+in the mdoc, e.g., `first_name`.
+
+#### mdoc DCQL Query example
 
 An example DCQL query using the mdoc format is shown in (#more_dcql_query_examples). The following is a non-normative example for a VP Token in the response:
 
@@ -2302,6 +2320,21 @@ The following is a non-normative example of `client_metadata` request parameter 
 <{{examples/client_metadata/sd_jwt_vc_verifier_metadata.json}}
 
 ### DCQL Query and Response
+
+This section defines SD-JWT VC specific DCQL Query and Response parameters.
+
+#### Parameters in the `meta` parameter in Credential Query {#sd_jwt_vc_meta_parameter}
+
+The following is an SD-JWT VC specific parameter in the `meta` parameter in a Credential Query as defined in (#credential_query).
+
+`vct_values`:
+: OPTIONAL. An array of strings that specifies allowed values for
+the type of the requested Verifiable Credential. All elements in the array MUST
+be valid type identifiers as defined in [@!I-D.ietf-oauth-sd-jwt-vc]. The Wallet
+MAY return credentials that inherit from any of the specified types, following
+the inheritance logic defined in [@!I-D.ietf-oauth-sd-jwt-vc].
+
+#### SD-JWT VC DCQL Query example
 
 A non-normative example DCQL query using the SD-JWT VC format is shown in (#dcql_query_example).
 The respective response is shown in (#response_dcql_query).
