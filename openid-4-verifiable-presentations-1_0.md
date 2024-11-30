@@ -2695,14 +2695,17 @@ The technology described in this specification was made available from contribut
    -23
 
    * fixed percent-encoding of URI examples
+   * fixed an example that used 'client' where 'wallet' is more appropriate
+   * make SIOP example request/response consistent with each other
+   * make example request and example SD-JWT key binding JWT consistent
+   * add note that there are a choice of encryption JWE algorithms available, including the HPKE draft
    * add `transaction_data` & `dcql_query` to list of allowed parameters in W3C Digital Credentials API appendix
-   * change credential format identifier `vc+sd-jwt` to `dc+sd-jwt` to align with the media type in draft -06 of [@I-D.ietf-oauth-sd-jwt-vc] and update `typ` accordingly in examples 
+   * change credential format identifier `vc+sd-jwt` to `dc+sd-jwt` to align with the media type in draft -06 of [@I-D.ietf-oauth-sd-jwt-vc] and update `typ` accordingly in examples
    * remove references to the openid4vci credential format section
    * clarified what profiling OID4VP means
    * moved credential format specific DCQL parameters to the annex
    * generalized W3C Digital Credentials API references
    * changed response mode value for the OID4VP over the DC API
-
 
    -22
 
