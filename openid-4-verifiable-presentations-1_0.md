@@ -1242,8 +1242,11 @@ Note: Some of the processing rules of the Presentation Definition and the Presen
 The Verifier can use one of the following mechanisms to invoke a Wallet:
 
 - Custom URL scheme as an `authorization_endpoint` (for example, `openid4vp://` as defined in (#openid4vp-scheme))
-- Domain-bound Universal Links/App link as an `authorization_endpoint`
-- no specific `authorization_endpoint`, End-User scanning a QR code with Authorization Request using a manually opened Wallet, instead of an arbitrary camera application on a user-device (neither custom URL scheme nor Universal/App link is used)
+- URL (including Domain-bound Universal Links/App link) as an `authorization_endpoint`
+
+For a cross device flow, either of the URL options MAY be presented as a QR code for the End-User to scan using a wallet or an arbitrary camera application on a user-device.
+
+The Wallet can also be invoked from the web or a native app using the Digital Credentials API as described in (#dc_api).
 
 # Wallet Metadata (Authorization Server Metadata) {#as_metadata_parameters}
 
@@ -1553,11 +1556,12 @@ However, the Response Mode `direct_post` is susceptible to such an attack as the
 This kind of attack can be detected if the Response Mode `direct_post` is used in conjunction with the redirect URI, which causes the Wallet to redirect the flow to the Verifier's frontend at the device where the transaction was concluded. The Verifier's Response URI MUST include a fresh secret (Response Code) into the redirect URI returned to the Wallet and the Verifier's Response URI MUST require the frontend to pass the respective Response Code when fetching the Authorization Response. That stops session fixation attacks as long as the attacker is unable to get access to the Response Code.
 
 Note that this protection technique is not applicable to cross-device scenarios because the browser used by the wallet will not have the original session.
-It is also not applicable in same-device scenarios if the wallet uses a browser different from the one used on the presentation request (e.g. device with multiple installed browsers), because the original session will also not be available there.
+It is also not applicable in same-device scenarios if the Wallet uses a browser different from the one used on the presentation request (e.g. device with multiple installed browsers), because the original session will also not be available there. (#dc_api) provides an alternative Wallet invocation method using web/appplatform APIs that avoids many of these issues.
 
 See (#implementation_considerations_direct_post) for more implementation considerations.
 
 When using the Response Mode `direct_post` without the further protection provided by the redirect URI, there is no session context for the Verifier to detect session fixation attempts. It is RECOMMENDED for the Verifiers to implement mechanisms to strengthen the security of the flow. For more details on possible attacks and mitigations see [@I-D.ietf-oauth-cross-device-security].
+
 
 ## Response Mode "direct_post" {#security_considerations_direct_post}
 
@@ -1923,7 +1927,7 @@ In the event that another component is invoked instead of the Wallet, the End-Us
         </front>
 </reference>
 
-# OpenID4VP over the Digital Credentials API
+# OpenID4VP over the Digital Credentials API {#dc_api}
 
 This section defines how to use OpenID4VP with the Digital Credentials API.
 
