@@ -1244,7 +1244,7 @@ The Verifier can use one of the following mechanisms to invoke a Wallet:
 - Custom URL scheme as an `authorization_endpoint` (for example, `openid4vp://` as defined in (#openid4vp-scheme))
 - URL (including Domain-bound Universal Links/App link) as an `authorization_endpoint`
 
-For a cross device flow, either of the URL options MAY be presented as a QR code for the End-User to scan using a wallet or an arbitrary camera application on a user-device.
+For a cross device flow, either of the above options MAY be presented as a QR code for the End-User to scan using a wallet or an arbitrary camera application on a user-device.
 
 The Wallet can also be invoked from the web or a native app using the Digital Credentials API as described in (#dc_api), which provides security benefits over custom schemes (see (#session_fixation)) whilst also having privacy and user experience benefits (particularly in the cases where a user has multiple wallets).
 
