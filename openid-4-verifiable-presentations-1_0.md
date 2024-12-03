@@ -1246,7 +1246,7 @@ The Verifier can use one of the following mechanisms to invoke a Wallet:
 
 For a cross device flow, either of the above options MAY be presented as a QR code for the End-User to scan using a wallet or an arbitrary camera application on a user-device.
 
-The Wallet can also be invoked from the web or a native app using the Digital Credentials API as described in (#dc_api), which provides security benefits over custom schemes (see (#session_fixation)) whilst also having privacy and user experience benefits (particularly in the cases where a user has multiple wallets).
+The Wallet can also be invoked from the web or a native app using the Digital Credentials API as described in (#dc_api). As described in detail in (#dc_api), DC API provides privacy, security (see (#session_fixation)), and user experience benefits (particularly in the cases where a user has multiple wallets).
 
 # Wallet Metadata (Authorization Server Metadata) {#as_metadata_parameters}
 
