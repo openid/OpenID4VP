@@ -2275,12 +2275,39 @@ The signed request allows the Wallet to authenticate the Verifier using one or m
 
 The signed Request Object MAY contain all the parameters listed in (#browser_api_request), except `request`.
 
-The signed Request MUST use the JWS Serialization [@!RFC7515]). This allows the Verifier multiple Client Identifiers and corresponding key material and metadata when invoking a Wallet. This is to serve use cases where the Verifier requests credentials belonging to different trust frameworks and thus must authenticate in the context of those trust frameworks.
+Verifiers can format signed Requests either using JWS Compact Serialization or JWS Serialization [@!RFC7515]). 
 
-The following request parameters MUST be present in the protected header of the respective signature object: 
+#### JWS Compact Serialization
+
+In case of the JWS Compact Serialization, all request parameters are encoded in a request object as defined in (#vp_token_request) and the JWS object is used as value of the `request` claim in the `data` element of the API call. This is illustated in the following example.
+
+```js
+const credential = await navigator.credentials.get({
+  digital: {
+    providers: [{
+      protocol: "openid4vp",
+      data: {
+        { request: "eyJhbGciOiJF..." }
+     }
+    }]
+  }
+});
+```
+
+This is an example of the payload of a signed OpenID4VP request used with the W3C Digital Credentials API in conjunction with JWS Compact Serialization:
+
+<{{examples/digital_credentials_api/signed_request_payload_compact.json}} 
+
+#### JWS JSON Serialization
+
+The JWS JSON Serialization [@!RFC7515]) allows the Verifier to use multiple Client Identifiers and corresponding key material and metadata for the same request. This is to serve use cases where the Verifier requests credentials belonging to different trust frameworks and thus must authenticate in the context of those trust frameworks.
+
+In this case, the following request parameters MUST be present in the protected header of the respective signature object: 
 
 * `client_id`
 * `client_metadata`
+
+All other request parameters MUST be present in the `payload` element of the JWS object.
 
 Below is a non-normative example of such a request:
 
@@ -2293,11 +2320,11 @@ const credential = await navigator.credentials.get({
         "payload": "eyAiaXNzIjogImh0dHBzOi8...NzY4Mzc4MzYiIF0gfQ",
         "signatures": [
         {
-          "protected": "eyJhbGciOiJFUzI1NiJ9",
+          "protected": "eyJhbGciOiAiRVMyNT..MiLCJraWQiOiAiMSJ9XX19fQ",
           "signature": "PFwem0Ajp2Sag...T2z784h8TQqgTR9tXcif0jw"
         },
         {
-          "protected": "eyJhbGciOiJFUzI1NiJ9",
+          "protected": "eyJhbGciOiAiRVMyNTY...tpZCI6ICIxIn1dfX19",
           "signature": "irgtXbJGwE2wN4Lc...2TvUodsE0vaC-NXpB9G39cMXZ9A"
         }
       ]
@@ -2337,7 +2364,7 @@ This is an example of a protected header:
 }
 ```
 
-This is an example of the payload of a signed OpenID4VP request used with the DC API:
+This is an example of the payload of a signed OpenID4VP request used with the W3C Digital Credentials API in conjunction with JWS JSON Serialization:
 
 <{{examples/digital_credentials_api/signed_request_payload.json}} 
 
