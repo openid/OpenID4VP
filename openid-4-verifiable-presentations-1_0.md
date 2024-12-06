@@ -237,7 +237,7 @@ OpenID for Verifiable Presentations extends existing OAuth 2.0 mechanisms as fol
 * A new `vp_token` response parameter is defined to return Verifiable Presentations to the Verifier in either Authorization or Token Response depending on the Response Type. See (#response) for more details. 
 * New Response Types `vp_token` and `vp_token id_token` are defined to request Verifiable Credentials to be returned in the Authorization Response (standalone or along with a Self-Issued ID Token [@!SIOPv2]). See (#response) for more details.
 * A new OAuth 2.0 Response Mode `direct_post` is defined to support sending the response across devices, or when the size of the response exceeds the redirect URL character size limitation. See (#response_mode_post) for more details.
-* The [@!DIF.PresentationExchange] `format` parameter is used throughout the protocol in order to enable customization according to the specific needs of a particular Credential format. Examples in (#format_specific_parameters) are given for Credential formats as specified in [@VC_DATA], [@ISO.18013-5], [@!I-D.ietf-oauth-sd-jwt-vc], and [@Hyperledger.Indy].
+* The `format` parameter is used throughout the protocol in order to enable customization according to the specific needs of a particular Credential format. Examples in (#format_specific_parameters) are given for Credential formats as specified in [@VC_DATA], [@ISO.18013-5], [@!I-D.ietf-oauth-sd-jwt-vc], and [@Hyperledger.Indy].
 * The concept of a Client Identifier Scheme to enable deployments of this specification to use different mechanisms to obtain and validate metadata of the Verifier beyond the scope of [@!RFC6749].
 
 Presentation of Verifiable Credentials using OpenID for Verifiable Presentations can be combined with the End-User authentication using [@SIOPv2], and the issuance of OAuth 2.0 Access Tokens.
@@ -304,7 +304,7 @@ This enables the Wallet to assess the Verifier's capabilities, allowing it to tr
 : OPTIONAL. Array of strings, where each string is a base64url encoded JSON object that contains a typed parameter set with details about the transaction that the Verifier is requesting the End-User to authorize. See (#transaction_data) for details. The Wallet MUST return an error if a request contains even one unrecognized transaction data type or transaction data not conforming to the respective type definition. In addition to the parameters determined by the type of transaction data, each `transaction_data` object consists of the following parameters defined by this specification:
 
     * `type`: REQUIRED. String that identifies the type of transaction data . This value determines parameters that can be included in the `transaction_data` object. The specific values are out of scope of this specification. It is RECOMMENDED to use collision-resistant names for `type` values.
-    * `credential_ids`: REQUIRED. Array of strings each referencing a Credential requested by the Verifier that can be used to authorize this transaction. In Presentation Exchange, the string matches the `id` field in the Input Descriptor. In the Digital Credentials Query Language, the string matches the `id` field in the Credential Query. If there is more than one element in the array, the Wallet MUST use only one of the referenced Credentials for transaction authorization.
+    * `credential_ids`: REQUIRED. Array of strings each referencing a Credential requested by the Verifier that can be used to authorize this transaction. In [@!DIF.PresentationExchange], the string matches the `id` field in the Input Descriptor. In the Digital Credentials Query Language, the string matches the `id` field in the Credential Query. If there is more than one element in the array, the Wallet MUST use only one of the referenced Credentials for transaction authorization.
     * `transaction_data_hashes_alg`: OPTIONAL. Array of strings each representing a hash algorithm identifier, one of which MUST be used to calculate hashes in `transaction_data_hashes` response parameter. The value of the identifier MUST be a hash algorithm value from the "Hash Name String" column in the IANA "Named Information Hash Algorithm" registry [@IANA.Hash.Algorithms] or a value defined in another specification and/or profile of this specification. If this parameter is not present, a default value of `sha-256` MUST be used. To promote interoperability, implementations MUST support the sha-256 hash algorithm.
 
 Each document specifying details of a transaction data type defines what Credential(s) can be used to authorize those transactions. Those Credential(s) can be issued specifically for the transaction authorization use case or re-use existing Credential(s) used for user identification. A mechanism for Credential Issuers to express that a particular Credential can be used for authorization of transaction data is out of scope for this specification.
@@ -438,7 +438,7 @@ Wallets MAY support requesting presentation of Verifiable Credentials using OAut
 
 Such a scope value MUST be an alias for 
 - a well-defined DCQL query, or
-- a well-defined Presentation Definition (for Presentation Exchange) that will be referred to in the `presentation_submission` response parameter. 
+- a well-defined Presentation Definition (for [@!DIF.PresentationExchange]) that will be referred to in the `presentation_submission` response parameter. 
 
 The specific scope values, and the mapping between a certain scope value and the respective 
 DCQL query or Presentation Definition is out of scope of this specification. 
@@ -447,7 +447,7 @@ Possible options include normative text in a separate specification defining sco
 semantics or machine-readable definitions in the Wallet's server metadata, mapping a scope value to an equivalent 
 Presentation Definition JSON object. 
 
-If Presentation Exchange is used, the definition of the scope value MUST allow the Verifier to determine the identifiers of the Presentation Definition and Input Descriptor(s) in the `presentation_submission` response parameter (`definition_id` and `descriptor_map.id` respectively) as well as the Credential formats and types in the `vp_token` response parameter defined in (#response-parameters).  
+If [@!DIF.PresentationExchange] is used, the definition of the scope value MUST allow the Verifier to determine the identifiers of the Presentation Definition and Input Descriptor(s) in the `presentation_submission` response parameter (`definition_id` and `descriptor_map.id` respectively) as well as the Credential formats and types in the `vp_token` response parameter defined in (#response-parameters).  
 
 It is RECOMMENDED to use collision-resistant scopes values.
 
@@ -948,14 +948,14 @@ When a VP Token is returned, the respective response includes the following para
 `vp_token`:
 : REQUIRED. The structure of this parameter depends on the query language used to request the presentations in the Authorization Request:
  * If DCQL was used, this is a JSON-encoded object; the keys are the `id` values used for the Credential Queries in the DCQL query, and the values are the Verifiable Presentations that match the respective Credential Query. The Verifiable Presentations are represented as strings or objects depending on the format as defined in (#format_specific_parameters). The same rules as above apply for encoding the Verifiable Presentations.
- * In case Presentation Exchange was used, it is a JSON String or JSON object that MUST contain a single Verifiable Presentation or an array of JSON Strings and JSON objects each of them containing a Verifiable Presentations. Each Verifiable Presentation MUST be represented as a JSON string (that is a base64url-encoded value) or a JSON object depending on a format as defined in (#format_specific_parameters).  When a single Verifiable Presentation is returned, the array syntax MUST NOT be used.  If (#format_specific_parameters) defines a rule for encoding the respective Credential format in the Credential Response, this rules MUST also be followed when encoding Credentials of this format in the `vp_token` response parameter. Otherwise, this specification does not require any additional encoding when a Credential format is already represented as a JSON object or a JSON string.
+ * In case [@!DIF.PresentationExchange] was used, it is a JSON String or JSON object that MUST contain a single Verifiable Presentation or an array of JSON Strings and JSON objects each of them containing a Verifiable Presentation. Each Verifiable Presentation MUST be represented as a JSON string (that is a base64url-encoded value) or a JSON object depending on a format as defined in (#format_specific_parameters).  When a single Verifiable Presentation is returned, the array syntax MUST NOT be used.  If (#format_specific_parameters) defines a rule for encoding the respective Credential format in the Credential Response, this rules MUST also be followed when encoding Credentials of this format in the `vp_token` response parameter. Otherwise, this specification does not require any additional encoding when a Credential format is already represented as a JSON object or a JSON string.
 
 `presentation_submission`:
-: REQUIRED if Presentation Exchange was used for the request; MUST NOT be used otherwise. The `presentation_submission` element as defined in [@!DIF.PresentationExchange]. It contains mappings between the requested Verifiable Credentials and where to find them within the returned VP Token. This is expressed via elements in the `descriptor_map` array, known as Input Descriptor Mapping Objects. These objects contain a field called `path`, which, for this specification, MUST have the value `$` (top level root path) when only one Verifiable Presentation is contained in the VP Token, and MUST have the value `$[n]` (indexed path from root) when there are multiple Verifiable Presentations, where `n` is the index to select. Additional parameters can be defined by Credential Formats, see (#format_specific_parameters) for details.
+: REQUIRED if [@!DIF.PresentationExchange] was used for the request; MUST NOT be used otherwise. The `presentation_submission` element as defined in [@!DIF.PresentationExchange]. It contains mappings between the requested Verifiable Credentials and where to find them within the returned VP Token. This is expressed via elements in the `descriptor_map` array, known as Input Descriptor Mapping Objects. These objects contain a field called `path`, which, for this specification, MUST have the value `$` (top level root path) when only one Verifiable Presentation is contained in the VP Token, and MUST have the value `$[n]` (indexed path from root) when there are multiple Verifiable Presentations, where `n` is the index to select. Additional parameters can be defined by Credential Formats, see (#format_specific_parameters) for details.
 
 Other parameters, such as `state` or `code` (from [@!RFC6749]), or `id_token` (from [@!OpenID.Core]), and `iss` (from [@RFC9207]) can be included in the response as defined in the respective specifications. `state` values MUST only contain ASCII URL safe characters (uppercase and lowercase letters, decimal digits, hyphen, period, underscore, and tilde). For the implementation considerations of a `state` parameter, see (#state_management).
 
-If Presentation Exchange was used for the request, the `presentation_submission` element MUST be included as a separate response parameter alongside the VP token. Clients MUST ignore any `presentation_submission` element included inside a Verifiable Presentation.
+If [@!DIF.PresentationExchange] was used for the request, the `presentation_submission` element MUST be included as a separate response parameter alongside the VP token. Clients MUST ignore any `presentation_submission` element included inside a Verifiable Presentation.
 
 Including the `presentation_submission` parameter as a separate response parameter allows the Wallet to provide the Verifier with additional information about the format and structure in advance of the processing of the VP Token, and can be used even with the Credential formats that do not allow for the direct inclusion of `presentation_submission` parameters inside a Credential itself.
 
@@ -987,7 +987,7 @@ brevity):
 
 ### Examples (Presentation Exchange) {#response_presentation_exchange}
 
-The following is a non-normative example of a VP Token containing a single Verifiable Presentation after a request using Presentation Exchange:
+The following is a non-normative example of a VP Token containing a single Verifiable Presentation after a request using [@!DIF.PresentationExchange]:
 
 <{{examples/response/vp_token_raw_ldp_vp.json}}
 
@@ -1128,7 +1128,7 @@ The following is a non-normative example of the payload of a JWT used in an Auth
 
 <{{examples/response/jarm_jwt_enc_only_vc_json_body.json}}
 
-The JWT response document MUST include the `vp_token` and, if Presentation Exchange was used in the request, the `presentation_submission` parameters as defined in (#response-parameters).
+The JWT response document MUST include the `vp_token` and, if [@!DIF.PresentationExchange] was used in the request, the `presentation_submission` parameters as defined in (#response-parameters).
 
 The key material used for encryption and signing SHOULD be determined using existing metadata mechanisms. 
 
@@ -1229,7 +1229,7 @@ Verifiers MUST validate the VP Token in the following manner:
 
 1. Validate the format of the VP Token as defined in (#response-parameters) and verify the contents depending on the language used in the Authorization Request:
    1. If DCQL was used, ensure that the set of VPs returned satisfies all required Credential Sets (and optionally other Credential Sets).
-   1. If Presentation Exchange was used, determine the number of VPs returned in the VP Token and identify in which VP which requested VC is included, using the Input Descriptor Mapping Object(s) in the Presentation Submission.
+   1. If [@!DIF.PresentationExchange] was used, determine the number of VPs returned in the VP Token and identify in which VP which requested VC is included, using the Input Descriptor Mapping Object(s) in the Presentation Submission.
 1. Validate the integrity, authenticity, and Holder Binding of any Verifiable Presentation provided in the VP Token according to the rules of the respective Presentation format. See (#preventing-replay) for the checks required to prevent replay of a VP.
 1. Perform the checks on the Credential(s) specific to the Credential Format (i.e., validation of the signature(s) on each VC).
 1. Confirm that the returned Credential(s) meet all criteria defined in the query in the Authorization Request (e.g., Claims included in the presentation).
@@ -1494,7 +1494,7 @@ The Verifier MUST validate every individual Verifiable Presentation in an Author
 
 The `client_id` is used to detect the presentation of Verifiable Credentials to a party other than the one intended. This allows Verifiers take appropriate action in that case, such as not accepting the Verifiable Presentation. The `nonce` value binds the Presentation to a certain authentication transaction and allows the Verifier to detect injection of a Presentation in the flow, which is especially important in the flows where the Presentation is passed through the front-channel.
 
-Note: Different formats for Verifiable Presentations and signature/proof schemes use different ways to represent the intended audience and the session binding. Some use claims to directly represent those values, others include the values into the calculation of cryptographic proofs. There are also different naming conventions across the different formats. In case Presentation Exchange is used in the Authorization Request, the format of the respective presentation is determined from the format information in the presentation submission in the Authorization Response. If DCQL was used, the format was defined by the Verifier in the request.
+Note: Different formats for Verifiable Presentations and signature/proof schemes use different ways to represent the intended audience and the session binding. Some use claims to directly represent those values, others include the values into the calculation of cryptographic proofs. There are also different naming conventions across the different formats. In case [@!DIF.PresentationExchange] is used in the Authorization Request, the format of the respective presentation is determined from the format information in the presentation submission in the Authorization Response. If DCQL was used, the format was defined by the Verifier in the request.
 
 The following is a non-normative example of the payload of a Verifiable Presentation of a format identifier `jwt_vp_json`:
 
@@ -1586,7 +1586,7 @@ Clients intending to authenticate the End-User utilizing a claim in a Verifiable
 
 If an encrypted Authorization Response has no additional integrity protection, an attacker might be able to alter Authorization Response parameters such as `presentation_submission` and generate a new encrypted Authorization Response for the Verifier, as encryption is performed using the public key of the Verifier which is likely to be widely known. Note this includes injecting a new VP Token. Since the contents of the VP Token are integrity protected, tampering the VP Token is detectable by the Verifier. For details, see (#preventing-replay).
 
-## DIF Presentation Exchange 2.0.0
+## DIF Presentation Exchange
 
 ### Fetching Presentation Definitions by Reference
 
@@ -1687,9 +1687,9 @@ In the event that another component is invoked instead of the Wallet, the End-Us
   </front>
 </reference>
 
-<reference anchor="DIF.PresentationExchange" target="https://identity.foundation/presentation-exchange/spec/v2.0.0/">
+<reference anchor="DIF.PresentationExchange" target="https://identity.foundation/presentation-exchange/spec/v2.1.1/">
         <front>
-          <title>Presentation Exchange 2.0.0</title>
+          <title>Presentation Exchange 2.1.1</title>
 		  <author fullname="Daniel Buchner">
             <organization>Microsoft</organization>
           </author>
@@ -2709,6 +2709,7 @@ The technology described in this specification was made available from contribut
    * moved credential format specific DCQL parameters to the annex
    * generalized W3C Digital Credentials API references
    * changed response mode value for the OID4VP over the DC API
+   * updated to PE ver 2.1.1 (used to be 2.0.0)
 
    -22
 
