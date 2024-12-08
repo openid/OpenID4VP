@@ -2339,6 +2339,8 @@ Setting `limit_disclosure` property defined in [@!DIF.PresentationExchange] to `
 
 A non-normative example of the Authorization Response would look the same as in the examples of other Credential formats in this Annex.
 
+The Key Binding JWT `nonce` claim MUST be the value of `nonce` from the authorization request, and the `aud` claim MUST be the Client Identifier of the Verifier.
+
 The `transaction_data_hashes` response parameter defined in (#transaction_data) MUST be included in the Key Binding JWT as a top level claim. This means that transaction data mechanism cannot be used with SD-JWT VCs without cryptographic key binding and, therefore, do not use KB JWT.
 
 The following is a non-normative example of the content of the `presentation_submission` parameter:
@@ -2354,8 +2356,6 @@ In this example the `vp_token` contains only the disclosures for the claims spec
 The following is a non-normative example of the unsecured payload of the Key Binding JWT.
 
 <{{examples/response/kb_jwt_unsecured.json}}
-
-Note: The Key Binding JWT `nonce` claim contains the value of the `nonce` from the authorization request, and the `aud` claim contains the Client Identifier of the Verifier.
 
 ## Combining this specification with SIOPv2
 
