@@ -4,27 +4,6 @@
 
 The current WG-Draft version is built automatically from the master branch and can be accessed at: https://openid.github.io/OpenID4VP/openid-4-verifiable-presentations-wg-draft.html
 
-### Running Tests ###
-This repository contains examples from the specifications and the JSON
-schema definitions extracted as separate files in the directories
-`examples` and `schema`, respectively. The directory `tests` contains
-tests (written in python) that check if the examples comply to the
-schema files.
-
-To run the tests, follow these instructions:
-
-* Build the test command using docker: 
-
-```
-docker build -t openid.net/tests-oidc4vp tests
-```
-
-* Run the tests: 
-
-```
-docker run -v `pwd`:/data openid.net/tests-oidc4vp
-```
-
 ### Building the HTML
 
 ```
