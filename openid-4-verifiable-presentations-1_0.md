@@ -80,10 +80,8 @@ Credential:
 : A set of one or more claims about a subject made by a Credential Issuer. Note that the definition of the term “Credential” in this specification is different from that in [@!OpenID.Core].
 
 Credential Format Identifier:
-: An identifier to denote a specific Credential Format in the context of this specification. This identifier implies the use of parameters specific to the respective Credential Format Profile.
+: An identifier to denote a specific Credential Format in the context of this specification. This identifier implies the use of parameters specific to the respective Credential Format.
 
-Credential Format Profile:
-: Set of parameters specific to individual Credential Formats. This specification provides Credential Format Profiles for IETF SD-JWT VC [@I-D.ietf-oauth-sd-jwt-vc], ISO mDL [@ISO.18013-5], and W3C VCDM [@VC_DATA], which can be found in section (#format-profiles). Additionally, other specifications or deployments can define their own Credential Format Profiles by utilizing the extension points defined in this specification.
 
 Credential Issuer:
 : An entity that issues Verifiable Credentials. Also called Issuer.
