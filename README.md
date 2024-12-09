@@ -10,6 +10,13 @@ The current WG-Draft version is built automatically from the master branch and c
 docker run -v `pwd`:/data danielfett/markdown2rfc openid-4-verifiable-presentations-1_0.md
 ```
 
+### Conformance tests
+
+Conformance tests are available for testing whether both Wallets and
+Verifiers are compliant with this specification, see:
+
+https://openid.net/certification/conformance-testing-for-openid-for-verifiable-presentations/
+
 ### Contribution guidelines ###
 
 * There are two ways to contribute, creating issues and pull requests
