@@ -1354,7 +1354,7 @@ This section lists profiles of this specification that define static configurati
 
 The following is a list of profiles that define static configuration values of Wallets:
 
-- [OpenID4VC High Assurance Interoperability Profile](https://openid.github.io/oid4vc-haip-sd-jwt-vc/openid4vc-high-assurance-interoperability-profile-sd-jwt-vc-wg-draft.html)
+- [OpenID4VC High Assurance Interoperability Profile](https://openid.net/specs/openid4vc-high-assurance-interoperability-profile-1_0.html)
 - [JWT VC Presentation Profile](https://identity.foundation/jwt-vc-presentation-profile/)
 - [@ISO.18013-7](https://www.iso.org/standard/82772.html)
 
