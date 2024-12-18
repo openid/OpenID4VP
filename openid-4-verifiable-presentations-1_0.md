@@ -324,7 +324,7 @@ The following is a non-normative example of a transaction data content, after ba
 ```
 
 `wallet_attestation`:
-: OPTIONAL. A boolean value that indicates whether or not a Wallet Attestation is requested by the Verifier. If the parameter is not present, the default value is `false`. If the value is `true`, a Wallet Attestation is expected to be part of the response (see `wallet_attestation` in (#response-parameters)).
+: OPTIONAL. A value that indicates whether or not a Wallet Attestation is requested by the Verifier. If the parameter is not present, or is `false`, no Wallet Attestation is requested. Otherwise, a Wallet Attestation is expected to be part of the response (see `wallet_attestation` in (#response-parameters)).
 
 ## Existing Parameters
 
@@ -967,7 +967,7 @@ If Presentation Exchange was used for the request, the `presentation_submission`
 Including the `presentation_submission` parameter as a separate response parameter allows the Wallet to provide the Verifier with additional information about the format and structure in advance of the processing of the VP Token, and can be used even with the Credential formats that do not allow for the direct inclusion of `presentation_submission` parameters inside a Credential itself.
 
 `wallet_attestation`:
-: REQUIRED if the `wallet_attestation` parameter was present and its value `true` in the Authorization Request (see (#vp_token_request) for more details). The Wallet Attestation presentation MUST be bound to the nonce that was provided in the Authorization Request. The expected format of a Wallet Attestation and validation rules are defined in section TODO of [@!OpenID.VCI]. If the validation of the Wallet Attestation fails, the response is rejected. Additional claims for individual implementations and ecosystems can be added to a Wallet Attestation.
+: REQUIRED if the `wallet_attestation` parameter was requested in the Authorization Request (see (#vp_token_request) for more details). The Wallet Attestation presentation MUST be bound to the nonce that was provided in the Authorization Request. The expected format of a Wallet Attestation and validation rules are defined in section TODO of [@!OpenID.VCI]. If the validation of the Wallet Attestation fails, the response MUST be rejected. Additional claims for individual implementations and ecosystems can be added to a Wallet Attestation.
 
 Additional response parameters MAY be defined and used,
 as described in [@!RFC6749].
