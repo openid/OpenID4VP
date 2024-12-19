@@ -2709,6 +2709,7 @@ The technology described in this specification was made available from contribut
 
    -24
 
+   * require `typ` value in request object to be `oauth-authz-req+jwt`
 
    -23
 
