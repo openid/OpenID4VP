@@ -9,15 +9,15 @@
       "claims": [
         {
           "id": "given_name",
-          "path": ["org.iso.18013.5.1","given_name"]
+          "path": ["org.iso.18013.5.1", "given_name"]
         },
         {
           "id": "family_name",
-          "path": ["org.iso.18013.5.1","family_name"]
+          "path": ["org.iso.18013.5.1", "family_name"]
         },
         {
           "id": "portrait",
-          "path": ["org.iso.18013.5.1","portrait"]
+          "path": ["org.iso.18013.5.1", "portrait"]
         }
       ]
     },
@@ -30,11 +30,11 @@
       "claims": [
         {
           "id": "resident_address",
-          "path": ["org.iso.18013.5.1","resident_address"]
+          "path": ["org.iso.18013.5.1", "resident_address"]
         },
         {
           "id": "resident_country",
-          "path": ["org.iso.18013.5.1","resident_country"]
+          "path": ["org.iso.18013.5.1", "resident_country"]
         }
       ]
     },
@@ -47,15 +47,15 @@
       "claims": [
         {
           "id": "given_name",
-          "path": ["org.iso.18013.5.1","given_name"]
+          "path": ["org.iso.18013.5.1", "given_name"]
         },
         {
           "id": "family_name",
-          "path": ["org.iso.18013.5.1","family_name"]
+          "path": ["org.iso.18013.5.1", "family_name"]
         },
         {
           "id": "portrait",
-          "path": ["org.iso.18013.5.1","portrait"]
+          "path": ["org.iso.18013.5.1", "portrait"]
         }
       ]
     },
@@ -68,11 +68,11 @@
       "claims": [
         {
           "id": "resident_address",
-          "path": ["org.iso.18013.5.1","resident_address"]
+          "path": ["org.iso.18013.5.1", "resident_address"]
         },
         {
           "id": "resident_country",
-          "path": ["org.iso.18013.5.1","resident_country"]
+          "path": ["org.iso.18013.5.1", "resident_country"]
         }
       ]
     }
