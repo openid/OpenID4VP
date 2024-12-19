@@ -1883,7 +1883,32 @@ In the event that another component is invoked instead of the Wallet, the End-Us
         </front>
 </reference>
 
-
+<reference anchor="W3C.SRI" target="https://www.w3.org/TR/SRI/">
+    <front>
+        <author initials="D." surname="Akhawe" fullname="Devdatta Akhawe">
+            <organization>
+                <organizationName>Dropbox, Inc.</organizationName>
+            </organization>
+        </author>
+        <author initials="F." surname="Braun" fullname="Frederik Braun">
+            <organization>
+                <organizationName>Mozilla</organizationName>
+            </organization>
+        </author>
+        <author initials="F." surname="Marier" fullname="François Marier">
+            <organization>
+                <organizationName>Mozilla</organizationName>
+            </organization>
+        </author>
+        <author initials="J." surname="Weinberger" fullname="Joel Weinberger">
+            <organization>
+                <organizationName>Google, Inc.</organizationName>
+            </organization>
+        </author>
+        <title>Subresource Integrity</title>
+        <date day="23" month="June" year="2016"/>
+    </front>
+</reference>
 
 <reference anchor="IANA.OAuth.Parameters" target="https://www.iana.org/assignments/oauth-parameters">
   <front>
@@ -2198,8 +2223,7 @@ ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 [@ISO.23220-4] Ann
 * Rules for the `presentation_definition` Authorization Request parameter.
 * Rules for the `presentation_submission` Authorization Response parameter.
 * Wallet invocation using the `mdoc-openid4vp://` custom URI scheme.
-* Defines the OpenID4VP-specific `Handover` CBOR structure and how OpenID4VP Authorization Request and Request Object parameters apply to the `SessionTranscript` CBOR structure and `DeviceResponse` CBOR structure as specified in ISO/IEC 18013-5 [@ISO.18013-5] and ISO/IEC 23220-4 [@ISO.23220-4].
-* Required Wallet and Verifier Metadata parameters and their values.
+* Required Wallet and Verifier Metadata parameters and their values when OpenID4VP is used with the `mdoc-oid4vp://` custom URI scheme.
 * Additional restrictions on Authorization Request and Authorization Response parameters to ensure compliance with ISO/IEC TS 18013-7 [@ISO.18013-7] and ISO/IEC 23220-4 [@ISO.23220-4]. For instance, to comply with ISO/IEC TS 18013-7 [@ISO.18013-7], only the same-device flow is supported, the `request_uri` Authorization Request parameter is required, and the Authorization Response has to be encrypted.
 
 ### DCQL Query and Response
@@ -2248,6 +2272,42 @@ See ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 Annex C [@ISO.
 The VP Token contains the base64url-encoded `DeviceResponse` CBOR structure as defined in ISO/IEC 18013-5 [@ISO.18013-5] or ISO/IEC 23220-4 [@ISO.23220-4]. Essentially, the `DeviceResponse` CBOR structure contains a signature or MAC over the `SessionTranscript` CBOR structure including the OpenID4VP-specific `Handover` CBOR structure.
 
 See ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 Annex C [@ISO.23220-4] for the latest examples on how to use the `presentation_submission` parameter and how to generate the Authorizaton Response for presenting Credentials in the mdoc format.
+
+### `Handover` and `SessionTranscript` Definitions
+
+#### Invocation via the Digital Credentials API
+
+If the presentation request is invoked using the Digital Credentials API, the `SessionTranscript` CBOR structure as defined in Section 9.1.5.1 in [ISO.18013-5] MUST be used with the following changes:
+
+* `DeviceEngagementBytes` MUST be `null`.
+* `EReaderKeyBytes` MUST be `null`.
+* `Handover` MUST be the `OID4VPDCAPIHandover` CBOR structure as defined below.
+
+```cddl
+OID4VPDCAPIHandover = [
+  "OID4VPDCAPIHandover", ; A fixed identifier for this handover type
+  OID4VPDCAPIHandoverInfoHash ; Integrity hash of OID4VPDCAPIHandoverInfo
+]
+client_id = tstr  ; UTF-8 encoded string
+origin = tstr    ; UTF-8 encoded string
+nonce = tstr     ; UTF-8 encoded string
+OID4VPDCAPIHandoverInfo = [ origin, client_id, nonce ] ; Array containing handover parameters
+OID4VPDCAPIHandoverInfoHash = tstr  ; UTF-8 encoded string for the integrity hash of OID4VPDCAPIHandoverInfo
+```
+
+`OID4VPDCAPIHandover` CBOR structure elements:
+
+- The first element MUST be the fixed UTF-8 encoded string `"OID4VPDCAPIHandover"`. This serves as a unique identifier for the handover structure to prevent misinterpretation or confusion.
+- The second element MUST be the `OID4VPDCAPIHandoverInfoHash` encoded as a UTF-8 string representing the integrity hash of the `OID4VPDCAPIHandoverInfo` CBOR array.
+- The value of `OID4VPDCAPIHandoverInfoHash` MUST comply with the W3C Subresource integrity format as defined in [!W3C.SRI] (see below), e.g., `sha256-H8BRh8j48O9oYatfu5AZzq6A9RINhZO5H16dQZngK7T62em8MUt1FLm52t+eX6xO`.
+- The `OID4VPDCAPIHandoverInfo` has the following elements:
+  - The first element MUST be the UTF-8 encoded string representing the `origin` of the Verifier to protect against MITM attacks. The value for `origin` MUST be obtained from the web platform or app platform being used.
+  - The second element MUST be the UTF-8 encoded string value of the `client_id` request parameter if the request was signed for audience binding. For unsigned requests the value for the `client_id` MUST be derived from the `origin` value.
+  - The third element MUST be the UTF-8 encoded string value of the `nonce` request parameter to enable session binding.
+
+#### Invocation via other methods
+
+If the presentation request is invoked via other methods, the rules for generating the `SessionTranscript` and `Handover` CBOR structure are specified in ISO/IEC 18013-5 [ISO.18013-5] and ISO/IEC 23220-4 [ISO.23220-4].
 
 ## IETF SD-JWT VC
 
