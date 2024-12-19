@@ -2307,7 +2307,7 @@ OID4VPDCAPIHandoverInfoHash = tstr  ; UTF-8 encoded string for the integrity has
 
 #### Invocation via other methods
 
-If the DC API is not used, the rules for generating the `SessionTranscript` and `Handover` CBOR structure are specified in ISO/IEC 18013-5 [ISO.18013-5] and ISO/IEC 23220-4 [ISO.23220-4].
+If the presentation request is invoked via other methods, the rules for generating the `SessionTranscript` and `Handover` CBOR structure are specified in ISO/IEC 18013-5 [ISO.18013-5] and ISO/IEC 23220-4 [ISO.23220-4].
 
 ## IETF SD-JWT VC
 
