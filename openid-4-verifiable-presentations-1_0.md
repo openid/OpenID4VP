@@ -2275,7 +2275,7 @@ See ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 Annex C [@ISO.
 
 ### `Handover` and `SessionTranscript` Definitions
 
-#### DC API
+#### Invocation via the Digital Credentials API
 
 If the presentation request is invoked using the Digital Credentials API, the `SessionTranscript` CBOR structure as defined in Section 9.1.5.1 in [ISO.18013-5] MUST be used with the following changes:
 
