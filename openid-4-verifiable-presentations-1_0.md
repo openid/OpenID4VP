@@ -2305,7 +2305,7 @@ OID4VPDCAPIHandoverInfoHash = tstr  ; UTF-8 encoded string for the integrity has
   - The second element MUST be the UTF-8 encoded string value of the `client_id` request parameter if the request was signed for audience binding. For unsigned requests the value for the `client_id` MUST be derived from the `origin` value.
   - The third element MUST be the UTF-8 encoded string value of the `nonce` request parameter to enable session binding.
 
-#### Invocation via other methods
+#### Invocation via other methods {#non-dc-api-invocation}
 
 If the presentation request is invoked via other methods, the rules for generating the `SessionTranscript` and `Handover` CBOR structure are specified in ISO/IEC 18013-5 [ISO.18013-5] and ISO/IEC 23220-4 [ISO.23220-4].
 
