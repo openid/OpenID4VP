@@ -1,6 +1,7 @@
 {
   "nonce": "n-0S6_WzA2Mj",
-  "aud": "https://example.com/verifier",
+  "aud": "x509_san_dns:client.example.org",
   "iat": 1709838604,
-  "sd_hash": "Dy-RYwZfaaoC3inJbLslgPvMp09bH-clYP_3qbRqtW4"
+  "sd_hash": "Dy-RYwZfaaoC3inJbLslgPvMp09bH-clYP_3qbRqtW4",
+  "transaction_data_hashes": [ "fOBUSQvo46yQO-wRwXBcGqvnbKIueISEL961_Sjd4do" ]
 }

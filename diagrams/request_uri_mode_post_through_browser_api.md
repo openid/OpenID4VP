@@ -14,14 +14,10 @@ participant "App Platform" as ap
 participant "Wallet" as w
 
 u --> r : use
-activate r
 
-r -> wp: navigator.identity.get(\nprotocol="openid4vp",\nrequest="client_id,[client_id_scheme,] \nrequest_uri, request_uri_method=post, \npresentation_definition")
-
-deactivate r
 activate wp
 
-wp -> ap: forward request (\norigin="example.verifier.com",\nprotocol="openid4vp",\nrequest="client_id,[client_id_scheme,] \nrequest_uri, request_uri_method=post,\n presentation_definition")
+wp -> ap: forward request (\norigin="example.verifier.com",\nprotocol="openid4vp",\nrequest="client_id, \nrequest_uri, request_uri_method=post,\n presentation_definition")
 deactivate wp
 activate ap
 
@@ -29,7 +25,7 @@ ap -> ap: match wallet
 ap -> u: use this wallet?
 u -> ap: confirmation
 
-ap -> w: forward request (\norigin="example.verifier.com",\nprotocol="openid4vp",\nrequest="client_id,[client_id_scheme,] \nrequest_uri, request_uri_method=post,\n presentation_definition")
+ap -> w: forward request (\norigin="example.verifier.com",\nprotocol="openid4vp",\nrequest="client_id, \nrequest_uri, request_uri_method=post,\n presentation_definition")
 deactivate ap
 
 activate w
@@ -40,7 +36,7 @@ note over r,w
 end note
 w --> r: POST **request_uri** ([wallet_metadata][, wallet_nonce])
 r -> r: create and sign (and optionally encrypt) request object 
-r --> w: **signed (optionally encrypted) request object** (client_id, client_id_scheme, wallet_nonce, nonce, \npresentation_definition, state)
+r --> w: **signed (optionally encrypted) request object** (client_id, wallet_nonce, nonce, \npresentation_definition, state)
 w -> w: authenticate and\n authorize Verifier
 
 note over u, w: User authentication and Credential selection/confirmation

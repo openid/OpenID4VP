@@ -1,0 +1,21 @@
+{
+  "credentials": [
+    {
+      "id": "my_credential",
+      "format": "mso_mdoc",
+      "meta": {
+        "doctype_value": "org.iso.7367.1.mVRC"
+      },
+      "claims": [
+        {
+          "namespace": "org.iso.7367.1",
+          "claim_name": "vehicle_holder"
+        },
+        {
+          "namespace": "org.iso.18013.5.1",
+          "claim_name": "first_name"
+        }
+      ]
+    }
+  ]
+}

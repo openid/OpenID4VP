@@ -19,12 +19,11 @@ activate r
 note over r,wp
     Note that the signed request object contains the Verifier's origin.
 end note
-r -> wp: navigator.identity.get(\nprotocol="openid4vp",\nrequest="client_id,[client_id_scheme,] request")
 
 deactivate r
 activate wp
 
-wp -> ap: forward request (\norigin="example.verifier.com",\nprotocol="openid4vp",\nrequest="client_id,[client_id_scheme,] request")
+wp -> ap: forward request (\norigin="example.verifier.com",\nprotocol="openid4vp",\nrequest="client_id, request")
 deactivate wp
 activate ap
 
@@ -32,7 +31,7 @@ ap -> ap: match wallet
 ap -> u: use this wallet?
 u -> ap: confirmation
 
-ap -> w: forward request (\norigin="example.verifier.com",\nprotocol="openid4vp",\nrequest="client_id,[client_id_scheme,] request")
+ap -> w: forward request (\norigin="example.verifier.com",\nprotocol="openid4vp",\nrequest="client_id, request")
 deactivate ap
 
 activate w
