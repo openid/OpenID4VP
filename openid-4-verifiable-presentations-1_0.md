@@ -2302,7 +2302,7 @@ OID4VPDCAPIHandoverInfoHash = tstr  ; UTF-8 encoded string for the integrity has
 - The second element MUST be the `OID4VPDCAPIHandoverInfoHash` encoded as a UTF-8 string representing the integrity hash of the `OID4VPDCAPIHandoverInfo` CBOR array.
 - The value of `OID4VPDCAPIHandoverInfoHash` MUST comply with the W3C Subresource integrity format as defined in [!W3C.SRI] (see below), e.g., `sha256-H8BRh8j48O9oYatfu5AZzq6A9RINhZO5H16dQZngK7T62em8MUt1FLm52t+eX6xO`.
 - The `OID4VPDCAPIHandoverInfo` has the following elements:
-  - The first element MUST be the UTF-8 encoded string representing the `origin` of the Verifier to protect against MITM attacks. The value for `origin` MUST be obtained from the web platform or app platform being used.
+  - The first element MUST be the UTF-8 encoded string representing the `origin` of the Verifier to protect against MITM attacks. The value for `origin` MUST be the one the web platform or app platform asserted the request was made by.
   - The second element MUST be the UTF-8 encoded string value of the `client_id` request parameter if the request was signed for audience binding. For unsigned requests the value for the `client_id` MUST be derived from the `origin` value.
   - The third element MUST be the UTF-8 encoded string value of the `nonce` request parameter to enable session binding.
 
