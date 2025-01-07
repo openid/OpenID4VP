@@ -2292,7 +2292,11 @@ OID4VPDCAPIHandover = [
 client_id = tstr  ; UTF-8 encoded string
 origin = tstr    ; UTF-8 encoded string
 nonce = tstr     ; UTF-8 encoded string
-OID4VPDCAPIHandoverInfo = [ origin, client_id, nonce ] ; Array containing handover parameters
+OID4VPDCAPIHandoverInfo = [
+  origin,
+  client_id,
+  nonce
+] ; Array containing handover parameters
 OID4VPDCAPIHandoverInfoHash = tstr  ; UTF-8 encoded string for the integrity hash of OID4VPDCAPIHandoverInfo
 ```
 
