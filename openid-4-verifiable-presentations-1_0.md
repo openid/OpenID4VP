@@ -2774,6 +2774,7 @@ The technology described in this specification was made available from contribut
 
    -24
 
+   * add `SessionTranscript` requirements 
 
    -23
 
