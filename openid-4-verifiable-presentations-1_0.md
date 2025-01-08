@@ -2287,9 +2287,9 @@ If the presentation request is invoked using the Digital Credentials API, the `S
 ```cddl
 OID4VPDCAPIHandover = [
   "OID4VPDCAPIHandover", ; A fixed identifier for this handover type
-  OID4VPDCAPIHandoverInfoHash ; Integrity hash of OID4VPDCAPIHandoverInfo
+  OID4VPDCAPIHandoverInfoHash ; Hash of OID4VPDCAPIHandoverInfo
 ]
-OID4VPDCAPIHandoverInfoHash = tstr  ; UTF-8 encoded string for the integrity hash of OID4VPDCAPIHandoverInfo
+OID4VPDCAPIHandoverInfoHash = tstr  ; UTF-8 encoded string for the hash of OID4VPDCAPIHandoverInfo
 OID4VPDCAPIHandoverInfo = [
   origin,
   client_id,
@@ -2303,7 +2303,7 @@ nonce = tstr     ; UTF-8 encoded string
 The `OID4VPDCAPIHandover` structure has the following elements:
 
 - The first element MUST be the fixed UTF-8 encoded string `"OID4VPDCAPIHandover"`. This serves as a unique identifier for the handover structure to prevent misinterpretation or confusion.
-- The second element MUST be the `OID4VPDCAPIHandoverInfoHash` encoded as a UTF-8 string representing the integrity hash of the `OID4VPDCAPIHandoverInfo` CBOR array.
+- The second element MUST be the `OID4VPDCAPIHandoverInfoHash` encoded as a UTF-8 string representing the hash of the `OID4VPDCAPIHandoverInfo` CBOR array.
 - The value of `OID4VPDCAPIHandoverInfoHash` MUST comply with the W3C Subresource integrity format as defined in [!W3C.SRI] (see below), e.g., `sha256-H8BRh8j48O9oYatfu5AZzq6A9RINhZO5H16dQZngK7T62em8MUt1FLm52t+eX6xO`.
 - The `OID4VPDCAPIHandoverInfo` has the following elements:
   - The first element MUST be the UTF-8 encoded string representing the `origin` of the Verifier to protect against MITM attacks. The value for `origin` MUST be the one the web platform or app platform asserted the request was made by.
