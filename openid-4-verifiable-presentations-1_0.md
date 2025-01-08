@@ -2300,7 +2300,7 @@ origin = tstr    ; UTF-8 encoded string
 nonce = tstr     ; UTF-8 encoded string
 ```
 
-`OID4VPDCAPIHandover` CBOR structure elements:
+The `OID4VPDCAPIHandover` structure has the following elements:
 
 - The first element MUST be the fixed UTF-8 encoded string `"OID4VPDCAPIHandover"`. This serves as a unique identifier for the handover structure to prevent misinterpretation or confusion.
 - The second element MUST be the `OID4VPDCAPIHandoverInfoHash` encoded as a UTF-8 string representing the integrity hash of the `OID4VPDCAPIHandoverInfo` CBOR array.
