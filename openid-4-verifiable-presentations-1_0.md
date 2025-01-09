@@ -1883,33 +1883,6 @@ In the event that another component is invoked instead of the Wallet, the End-Us
         </front>
 </reference>
 
-<reference anchor="W3C.SRI" target="https://www.w3.org/TR/SRI/">
-    <front>
-        <author initials="D." surname="Akhawe" fullname="Devdatta Akhawe">
-            <organization>
-                <organizationName>Dropbox, Inc.</organizationName>
-            </organization>
-        </author>
-        <author initials="F." surname="Braun" fullname="Frederik Braun">
-            <organization>
-                <organizationName>Mozilla</organizationName>
-            </organization>
-        </author>
-        <author initials="F." surname="Marier" fullname="François Marier">
-            <organization>
-                <organizationName>Mozilla</organizationName>
-            </organization>
-        </author>
-        <author initials="J." surname="Weinberger" fullname="Joel Weinberger">
-            <organization>
-                <organizationName>Google, Inc.</organizationName>
-            </organization>
-        </author>
-        <title>Subresource Integrity</title>
-        <date day="23" month="June" year="2016"/>
-    </front>
-</reference>
-
 <reference anchor="IANA.OAuth.Parameters" target="https://www.iana.org/assignments/oauth-parameters">
   <front>
     <title>OAuth Parameters</title>
@@ -2289,7 +2262,7 @@ OID4VPDCAPIHandover = [
   "OID4VPDCAPIHandover", ; A fixed identifier for this handover type
   OID4VPDCAPIHandoverInfoHash ; A cryptographic hash of OID4VPDCAPIHandoverInfo
 ]
-OID4VPDCAPIHandoverInfoHash = tstr  ; UTF-8 encoded string for the hash of OID4VPDCAPIHandoverInfo
+OID4VPDCAPIHandoverInfoHash = tstr  ; UTF-8 encoded string for the base64-encoded sha-256 hash of OID4VPDCAPIHandoverInfo
 OID4VPDCAPIHandoverInfo = [
   origin,
   client_id,
@@ -2303,10 +2276,10 @@ nonce = tstr     ; UTF-8 encoded string
 The `OID4VPDCAPIHandover` structure has the following elements:
 
 - The first element MUST be the fixed UTF-8 encoded string `"OID4VPDCAPIHandover"`. This serves as a unique identifier for the handover structure to prevent misinterpretation or confusion.
-- The second element MUST be the `OID4VPDCAPIHandoverInfoHash`, represented as a UTF-8 string. This string encodes the cryptographic hash of the `OID4VPDCAPIHandoverInfo` CBOR array, formatted according to the W3C Subresource Integrity (SRI) specification [!W3C.SRI], e.g., `sha256-H8BRh8j48O9oYatfu5AZzq6A9RINhZO5H16dQZngK7T62em8MUt1FLm52t+eX6xO`.
+- The second element MUST be the `OID4VPDCAPIHandoverInfoHash`, represented as a UTF-8 string. This string encodes the base64-encoded (as defined in Section 4 of [@!RFC4648] -- not base64url-encoded) sha-256 hash of the `OID4VPDCAPIHandoverInfo` CBOR array, e.g., `H8BRh8j48O9oYatfu5AZzq6A9RINhZO5H16dQZngK7T62em8MUt1FLm52t+eX6xO`.
 - The `OID4VPDCAPIHandoverInfo` has the following elements:
   - The first element MUST be the UTF-8 encoded string representing the `origin` of the Verifier to protect against MITM attacks. The value for `origin` MUST be the one the web platform or app platform asserted the request was made by.
-  - The second element MUST be the UTF-8 encoded string value of the `client_id` request parameter if the request was signed for audience binding. For unsigned requests, the value for the `client_id` MUST be derived from the `origin` value.
+  - The second element MUST be the UTF-8 encoded string value of the `client_id` request parameter if the request was signed for audience binding. For unsigned requests, the value for the `client_id` MUST be derived from the `origin` value as defined in (#dc_api_request), e.g., `web-origin:https://verifier.example.com`.
   - The third element MUST be the UTF-8 encoded string value of the `nonce` request parameter to enable session binding.
 
 #### Invocation via other methods {#non-dc-api-invocation}
