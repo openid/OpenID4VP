@@ -2278,9 +2278,9 @@ The `OID4VPDCAPIHandover` structure has the following elements:
 - The first element MUST be the fixed UTF-8 encoded string `"OID4VPDCAPIHandover"`. This serves as a unique identifier for the handover structure to prevent misinterpretation or confusion.
 - The second element MUST be the `OID4VPDCAPIHandoverInfoHash`, represented as a CBOR byte string which encodes the sha-256 hash of the `OID4VPDCAPIHandoverInfo` CBOR array.
 - The `OID4VPDCAPIHandoverInfo` has the following elements:
-  - The first element MUST be the UTF-8 encoded string representing the `origin` of the Verifier to protect against MITM attacks. The value for `origin` MUST be the one the web platform or app platform asserted the request was made by.
-  - The second element MUST be the UTF-8 encoded string value of the `client_id` request parameter if the request was signed for audience binding. For unsigned requests, the value for the `client_id` MUST be derived from the `origin` value as defined in (#dc_api_request), e.g., `web-origin:https://verifier.example.com`.
-  - The third element MUST be the UTF-8 encoded string value of the `nonce` request parameter to enable session binding.
+  - The first element MUST be the UTF-8 encoded string representing the `origin` of the Verifier. The value for `origin` MUST be the one the web platform or app platform asserted the request was made by.
+  - The second element MUST be the UTF-8 encoded string value of the `client_id` request parameter.
+  - The third element MUST be the UTF-8 encoded string value of the `nonce` request parameter.
 
 #### Invocation via other methods {#non-dc-api-invocation}
 
