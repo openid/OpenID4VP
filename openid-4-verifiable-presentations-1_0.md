@@ -2282,16 +2282,7 @@ Verifiers can format signed Requests either using JWS Compact Serialization or J
 In case of the JWS Compact Serialization, all request parameters are encoded in a request object as defined in (#vp_token_request) and the JWS object is used as the value of the `request` claim in the `data` element of the API call. This is illustated in the following example.
 
 ```js
-const credential = await navigator.credentials.get({
-  digital: {
-    providers: [{
-      protocol: "openid4vp",
-      data: {
-        { request: "eyJhbGciOiJF..." }
-     }
-    }]
-  }
-});
+{ request: "eyJhbGciOiJF..." }
 ```
 
 This is an example of the payload of a signed OpenID4VP request used with the W3C Digital Credentials API in conjunction with JWS Compact Serialization:
