@@ -1119,7 +1119,7 @@ This section defines how an Authorization Response containing a VP Token can be 
 
 To sign, encrypt, or both sign and encrypt the Authorization Response, implementations MUST use the JWT Secured Authorization Response Mode for OAuth 2.0 (JARM) [@!JARM], and when only encrypting, the JARM extension described below.
 
-This specification also defines how to encrypt an unsigned Authorization Response by extending the mechanisms defined in [@!JARM]. The JSON containing the Authorization Response parameters can be encrypted as the payload of the JWE.
+This specification also defines how to encrypt an unsigned Authorization Response by adapting the mechanisms defined in [@!JARM]. The JSON containing the Authorization Response parameters can be encrypted as the payload of the JWE.
 
 The advantage of an encrypted but not signed Authorization Response is that it prevents the signing key from being used as a correlation factor. It can also be a challenge to establish trust in the signing key to ensure authenticity. For security considerations with encrypted but unsigned responses, see (#encrypting_unsigned_response).
 
@@ -1127,6 +1127,14 @@ If the JWT is only a JWE, the following processing rules MUST be followed:
 
 - `iss`, `exp` and `aud` MUST be omitted in the JWT Claims Set of the JWE, and the processing rules as per [@!JARM] Section 2.4 related to these claims do not apply.
 - The processing rules as per [@!JARM] Section 2.4 related to JWS processing MUST be ignored.
+
+Whenever the response is encrypted, the following additional processing directives apply to bind the Verifier's identifier and its respective transaction with the End-User into the JWE:
+
+- The `apu` (Agreement PartyUInfo) header parameter MUST be set to the value of the `nonce` from the Authorization Request.
+- The `apv` (Agreement PartyVInfo) header parameter MUST be set to the value of the `client_id` of the Verifier.
+
+Note that for the ECDH JWE algorithms (from section 4.6 of [@!RFC7518]), the `apu` and `apv` values are inputs
+into the key derivation process that is used to derive the content encryption key. However, regardless of algorithm used, the values are always part of the AEAD tag computation so will still be bound to the encrypted response.
 
 The following is a non-normative example of the payload of a JWT used in an Authorization Response that is encrypted and not signed:
 
@@ -2709,6 +2717,7 @@ The technology described in this specification was made available from contribut
 
    -24
 
+   * Mandate the use of apu/apv in the JWE header of encrypted responses
 
    -23
 
