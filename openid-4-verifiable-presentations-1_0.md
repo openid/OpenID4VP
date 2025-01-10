@@ -2300,7 +2300,7 @@ This is an example of the payload of a signed OpenID4VP request used with the W3
 
 #### JWS JSON Serialization
 
-The JWS JSON Serialization [@!RFC7515]) allows the Verifier to use multiple Client Identifiers and corresponding key material and metadata for the same request. This is to serve use cases where the Verifier requests credentials belonging to different trust frameworks and thus must authenticate in the context of those trust frameworks.
+The JWS JSON Serialization [@!RFC7515]) allows the Verifier to use multiple Client Identifiers and corresponding key material and metadata to protect the same request. This serves use cases where the Verifier requests credentials belonging to different trust frameworks and, therefore, needs to authenticate in the context of those trust frameworks.
 
 In this case, the following request parameters MUST be present in the protected header of the respective signature object: 
 
