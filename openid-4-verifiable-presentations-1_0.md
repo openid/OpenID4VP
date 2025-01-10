@@ -1960,7 +1960,7 @@ And lastly, as part of the request, the Wallet is provided with information abou
 
 To use OpenID4VP with the Digital Credentials API (DC API), the exchange protocol value has the following format: `urn:openid:protocol:oid4vp:<version>:<request-type>`. The `<version>` field adheres to semantic versioning, and `<request-type>` explicitly specifies the type of request. This approach eliminates the need for wallets to perform implicit parameter matching to accurately identify the version and the expected request and response parameters.
 
-This specification defines `1.0` as the value for the `<version>` field. For `<request-type>`, unsigned requests, as defined in (#unsigned_request), use `unsigned`, and signed requests, as defined in (#signed_request), use `signed`.
+The value `1.0` MUST be used for the `<version>` field to indicate the request and response conform to this version of the specification. For `<request-type>`, unsigned requests, as defined in (#unsigned_request), MUST use `unsigned`, and signed requests, as defined in (#signed_request), MUST use `signed`.
 
 The following exchange protocol values are defined by this specification:
 
