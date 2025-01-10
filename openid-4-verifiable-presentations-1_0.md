@@ -2284,7 +2284,7 @@ The `OID4VPDCAPIHandover` structure has the following elements:
 
 #### Invocation via other methods {#non-dc-api-invocation}
 
-If the presentation request is invoked via other methods, the rules for generating the `SessionTranscript` and `Handover` CBOR structure are specified in ISO/IEC 18013-5 [ISO.18013-5] and ISO/IEC 23220-4 [ISO.23220-4].
+If the presentation request is invoked via other methods, the rules for generating the `SessionTranscript` and `Handover` CBOR structure are specified in ISO/IEC 18013-7 [ISO.18013-7], ISO/IEC 18013-5 [ISO.18013-5] and ISO/IEC 23220-4 [ISO.23220-4].
 
 ## IETF SD-JWT VC
 
