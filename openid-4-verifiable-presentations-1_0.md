@@ -2303,26 +2303,19 @@ All other request parameters MUST be present in the `payload` element of the JWS
 Below is a non-normative example of such a request:
 
 ```js
-const credential = await navigator.credentials.get({
-  digital: {
-    providers: [{
-      protocol: "openid4vp",
-      data: {
-        "payload": "eyAiaXNzIjogImh0dHBzOi8...NzY4Mzc4MzYiIF0gfQ",
-        "signatures": [
-        {
-          "protected": "eyJhbGciOiAiRVMyNT..MiLCJraWQiOiAiMSJ9XX19fQ",
-          "signature": "PFwem0Ajp2Sag...T2z784h8TQqgTR9tXcif0jw"
-        },
-        {
-          "protected": "eyJhbGciOiAiRVMyNTY...tpZCI6ICIxIn1dfX19",
-          "signature": "irgtXbJGwE2wN4Lc...2TvUodsE0vaC-NXpB9G39cMXZ9A"
-        }
-      ]
-     }
-    }]
-  }
-});
+{
+  "payload": "eyAiaXNzIjogImh0dHBzOi8...NzY4Mzc4MzYiIF0gfQ",
+  "signatures": [
+    {
+      "protected": "eyJhbGciOiAiRVMyNT..MiLCJraWQiOiAiMSJ9XX19fQ",
+      "signature": "PFwem0Ajp2Sag...T2z784h8TQqgTR9tXcif0jw"
+    },
+    {
+      "protected": "eyJhbGciOiAiRVMyNTY...tpZCI6ICIxIn1dfX19",
+      "signature": "irgtXbJGwE2wN4Lc...2TvUodsE0vaC-NXpB9G39cMXZ9A"
+    }
+  ]
+}
 ```
 
 Every `signature` object in the structure contains the parameters and signature specific to a particular Client Identifier. The signature is calculated as specified in section 5.1 of [@!RFC7515].
