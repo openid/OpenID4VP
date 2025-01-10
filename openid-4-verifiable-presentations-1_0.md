@@ -3079,6 +3079,22 @@ established by [@!RFC7515].
 * Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Specification Document(s): (#verifier_attestation_jwt) of this specification
 
+### client_id
+
+* Header Parameter Name: `client_id`
+* Header Parameter Description: This header contains a Client Identifier. 
+* Header Parameter Usage Location: JWS
+* Change Controller: IETF
+* Specification Document(s): [@!RFC6749]
+
+### client_metadata
+
+* Header Parameter Name: `jwt`
+* Header Parameter Description: This header contains a JWT. Processing rules MAY depend on the `typ` header value of the respective JWT. 
+* Header Parameter Usage Location: JWS
+* Change Controller: OpenID Foundation Digital Credentials Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
+* Reference: (#vp_token_request) of this specification
+
 ## Uniform Resource Identifier (URI) Schemes Registry
 
 This specification registers the following URI scheme
