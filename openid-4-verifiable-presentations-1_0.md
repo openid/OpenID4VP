@@ -2251,7 +2251,7 @@ See ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 Annex C [@ISO.
 
 #### Invocation via the Digital Credentials API
 
-If the presentation request is invoked using the Digital Credentials API, the `SessionTranscript` CBOR structure as defined in Section 9.1.5.1 in [ISO.18013-5] MUST be used with the following changes:
+If the presentation request is invoked using the Digital Credentials API, the `SessionTranscript` CBOR structure as defined in Section 9.1.5.1 in [@ISO.18013-5] MUST be used with the following changes:
 
 * `DeviceEngagementBytes` MUST be `null`.
 * `EReaderKeyBytes` MUST be `null`.
@@ -2284,7 +2284,7 @@ The `OID4VPDCAPIHandover` structure has the following elements:
 
 #### Invocation via other methods {#non-dc-api-invocation}
 
-If the presentation request is invoked via other methods, the rules for generating the `SessionTranscript` and `Handover` CBOR structure are specified in ISO/IEC 18013-7 [ISO.18013-7], ISO/IEC 18013-5 [ISO.18013-5] and ISO/IEC 23220-4 [ISO.23220-4].
+If the presentation request is invoked via other methods, the rules for generating the `SessionTranscript` and `Handover` CBOR structure are specified in ISO/IEC 18013-7 [@ISO.18013-7], ISO/IEC 18013-5 [@ISO.18013-5] and ISO/IEC 23220-4 [@ISO.23220-4].
 
 ## IETF SD-JWT VC
 
