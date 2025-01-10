@@ -2279,7 +2279,7 @@ The `OID4VPDCAPIHandover` structure has the following elements:
 - The second element MUST be the `OID4VPDCAPIHandoverInfoHash`, represented as a CBOR byte string which encodes the sha-256 hash of the `OID4VPDCAPIHandoverInfo` CBOR array.
 - The `OID4VPDCAPIHandoverInfo` has the following elements:
   - The first element MUST be the UTF-8 encoded string representing the origin of the request as described in (#dc_api_request).
-  - The second element MUST be the UTF-8 encoded string value of the `client_id` request parameter.
+  - The second element MUST be the UTF-8 encoded string value of the effective Client Identifier as defined in (#dc_api_request).
   - The third element MUST be the UTF-8 encoded string value of the `nonce` request parameter.
 
 #### Invocation via other methods {#non-dc-api-invocation}
