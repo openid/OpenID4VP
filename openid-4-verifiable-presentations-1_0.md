@@ -101,6 +101,11 @@ Holder Binding:
 Issuer-Holder-Verifier Model:
 : A model for exchanging claims, where claims are issued in the form of Verifiable Credentials independent of the process of presenting them as Verifiable Presentation to the Verifiers. An issued Verifiable Credential can (but must not necessarily) be used multiple times.
 
+Origin:
+: An identifier for the calling website or native application, derived by the web or app platform. A web origin is the combination of a scheme/protocol, host, and port, with port being ommitted when it matches the default port of the scheme. An app platform may use a linked web origin, or use a platform-specific URI for the app origin.
+
+For example, the verifier for the organization MyExampleOrg is served from https://verify.example.com. The web origin is `https://verify.example.com` with `https` being the scheme, `verify.example.com` being the host, and the port is not explicitly included as `443` is the default port for the protocol `https`. The native applications origin on some platforms will also be `https://verify.example.com` and on other platforms, may be `platform:pkg-key-hash:Z4OFzVVSZrzTRa3eg79hUuHy12MVW0vzPDf4q4zaPs0`.
+
 Presentation:
 : Data that is presented to a specific Verifier, derived from one or more Verifiable Credentials that can be from the same or different Credential Issuers.
 
