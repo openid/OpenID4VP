@@ -3055,14 +3055,6 @@ established by [@!RFC7515].
 * Change Controller: IETF
 * Specification Document(s): [@!RFC6749]
 
-### client_metadata
-
-* Header Parameter Name: `client_metadata`
-* Header Parameter Description: A JSON object containing the Verifier metadata values as defined in (#new_parameters).
-* Header Parameter Usage Location: JWS
-* Change Controller: OpenID Foundation Digital Credentials Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
-* Specification Document(s): (#vp_token_request) of this specification
-
 ## Uniform Resource Identifier (URI) Schemes Registry
 
 This specification registers the following URI scheme
