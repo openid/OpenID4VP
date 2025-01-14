@@ -2275,7 +2275,7 @@ nonce = tstr     ; UTF-8 encoded string
 
 The `OID4VPDCAPIHandover` structure has the following elements:
 
-- The first element MUST be the fixed UTF-8 encoded string `"OID4VPDCAPIHandover"`. This serves as a unique identifier for the handover structure to prevent misinterpretation or confusion.
+- The first element MUST be the fixed UTF-8 encoded string `OID4VPDCAPIHandover`. This serves as a unique identifier for the handover structure to prevent misinterpretation or confusion.
 - The second element MUST be the `OID4VPDCAPIHandoverInfoHash`, represented as a CBOR byte string which encodes the sha-256 hash of the `OID4VPDCAPIHandoverInfo` CBOR array.
 - The `OID4VPDCAPIHandoverInfo` has the following elements:
   - The first element MUST be the UTF-8 encoded string representing the origin of the request as described in (#dc_api_request).
