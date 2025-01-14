@@ -2272,8 +2272,11 @@ OID4VPDCAPIHandoverInfo = [
   client_id,
   nonce
 ] ; Array containing handover parameters
+
 client_id = tstr  ; UTF-8 encoded string
+
 origin = tstr    ; UTF-8 encoded string
+
 nonce = tstr     ; UTF-8 encoded string
 ```
 
