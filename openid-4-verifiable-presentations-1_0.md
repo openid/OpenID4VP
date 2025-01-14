@@ -2021,19 +2021,70 @@ The Verifier MAY send all the OpenID4VP request parameters as members in the req
 
 The Verifier MAY send a signed request, for example, when identification and authentication of the Verifier is required.
 
+The signed request allows the Wallet to authenticate the Verifier using one or more trust framework(s) in addition to the Web PKI utilized by the browser. An example of such a trust framework is the Verifier (RP) management infrastructure set up in the context of the eIDAS regulation in the European Union, in which case, the Wallet can no longer rely only on the web origin of the Verifier. This web origin MAY still be used to further strengthen the security of the flow. The external trust framework could, for example, map the Client Identifier to registered web origins.
+
 The signed Request Object MAY contain all the parameters listed in (#dc_api_request), except `request`.
 
-Below is a non-normative example of such a request sent over the Digital Credentials API (DC API):
+Verifiers can format signed Requests either using JWS Compact Serialization or JWS Serialization [@!RFC7515]). 
+
+#### JWS Compact Serialization
+
+In case of the JWS Compact Serialization, all request parameters are encoded in a request object as defined in (#vp_token_request) and the JWS object is used as the value of the `request` claim in the `data` element of the API call. This is illustated in the following example.
 
 ```js
 { request: "eyJhbGciOiJF..." }
 ```
 
-This is an example of the payload of a signed OpenID4VP request used with the DC API:
+This is an example of the payload of a signed OpenID4VP request used with the W3C Digital Credentials API in conjunction with JWS Compact Serialization:
 
-<{{examples/digital_credentials_api/signed_request_payload.json}}
+<{{examples/digital_credentials_api/signed_request_payload_compact.json}} 
 
-The signed request allows the Wallet to authenticate the Verifier using a trust framework other than the Web PKI utilized by the browser. An example of such a trust framework is the Verifier (RP) management infrastructure set up in the context of the eIDAS regulation in the European Union, in which case, the Wallet can no longer rely only on the web origin of the Verifier. This web origin MAY still be used to further strengthen the security of the flow. The external trust framework could, for example, map the Client Identifier to registered web origins.
+#### JWS JSON Serialization
+
+The JWS JSON Serialization [@!RFC7515]) allows the Verifier to use multiple Client Identifiers and corresponding key material and metadata to protect the same request. This serves use cases where the Verifier requests credentials belonging to different trust frameworks and, therefore, needs to authenticate in the context of those trust frameworks.
+
+In this case, the following request parameters MUST be present in the protected header of the respective `signature` object in the `signatures` array defined in [@!RFC7515, section 7.2.1]:
+
+* `client_id`
+
+All other request parameters MUST be present in the `payload` element of the JWS object.
+
+Below is a non-normative example of such a request:
+
+```js
+{
+  "payload": "eyAiaXNzIjogImh0dHBzOi8...NzY4Mzc4MzYiIF0gfQ",
+  "signatures": [
+    {
+      "protected": "eyJhbGciOiAiRVMyNT..MiLCJraWQiOiAiMSJ9XX19fQ",
+      "signature": "PFwem0Ajp2Sag...T2z784h8TQqgTR9tXcif0jw"
+    },
+    {
+      "protected": "eyJhbGciOiAiRVMyNTY...tpZCI6ICIxIn1dfX19",
+      "signature": "irgtXbJGwE2wN4Lc...2TvUodsE0vaC-NXpB9G39cMXZ9A"
+    }
+  ]
+}
+```
+
+Every object in the `signatures` structure contains the parameters and the signature specific to a particular Client Identifier. The signature is calculated as specified in section 5.1 of [@!RFC7515].
+
+This is an example of a protected header:
+
+```
+{
+  "alg": "ES256",
+  "x5c": [
+    "MIICOjCCAeG...djzH7lA==",
+    "MIICLTCCAdS...koAmhWVKe"
+  ],
+  "client_id": "x509_san_dns:rp.example.com"
+}
+```
+
+This is an example of the payload of a signed OpenID4VP request used with the W3C Digital Credentials API in conjunction with JWS JSON Serialization:
+
+<{{examples/digital_credentials_api/signed_request_payload.json}} 
 
 ## Response
 
@@ -2685,6 +2736,14 @@ established by [@!RFC7515].
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
 * Specification Document(s): (#verifier_attestation_jwt) of this specification
 
+### client_id
+
+* Header Parameter Name: `client_id`
+* Header Parameter Description: This header contains a Client Identifier. 
+* Header Parameter Usage Location: JWS
+* Change Controller: IETF
+* Specification Document(s): [@!RFC6749]
+
 ## Uniform Resource Identifier (URI) Schemes Registry
 
 This specification registers the following URI scheme
@@ -2717,6 +2776,7 @@ The technology described in this specification was made available from contribut
 
    -24
 
+   * Added support for multiple Client Identifiers and corresponding Request Signature to the DC API profile
 
    -23
 
