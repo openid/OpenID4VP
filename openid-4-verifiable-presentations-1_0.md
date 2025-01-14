@@ -2196,7 +2196,7 @@ ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 [@ISO.23220-4] Ann
 * Rules for the `presentation_definition` Authorization Request parameter.
 * Rules for the `presentation_submission` Authorization Response parameter.
 * Wallet invocation using the `mdoc-openid4vp://` custom URI scheme.
-* Required Wallet and Verifier Metadata parameters and their values when OpenID4VP is used with the `mdoc-oid4vp://` custom URI scheme.
+* Required Wallet and Verifier Metadata parameters and their values when OpenID4VP is used with the `mdoc-openid4vp://` custom URI scheme.
 The `SessionTranscript` and `Handover` CBOR structure when the invocation does not use the DC API. Also see (#non-dc-api-invocation).
 * Additional restrictions on Authorization Request and Authorization Response parameters to ensure compliance with ISO/IEC TS 18013-7 [@ISO.18013-7] and ISO/IEC 23220-4 [@ISO.23220-4]. For instance, to comply with ISO/IEC TS 18013-7 [@ISO.18013-7], only the same-device flow is supported, the `request_uri` Authorization Request parameter is required, and the Authorization Response has to be encrypted.
 
