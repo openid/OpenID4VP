@@ -3089,11 +3089,11 @@ established by [@!RFC7515].
 
 ### client_metadata
 
-* Header Parameter Name: `jwt`
-* Header Parameter Description: This header contains a JWT. Processing rules MAY depend on the `typ` header value of the respective JWT. 
+* Header Parameter Name: `client_metadata`
+* Header Parameter Description: A JSON object containing the Verifier metadata values as defined in (#new_parameters).
 * Header Parameter Usage Location: JWS
 * Change Controller: OpenID Foundation Digital Credentials Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
-* Reference: (#vp_token_request) of this specification
+* Specification Document(s): (#vp_token_request) of this specification
 
 ## Uniform Resource Identifier (URI) Schemes Registry
 
