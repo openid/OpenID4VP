@@ -2265,6 +2265,8 @@ OID4VPDCAPIHandover = [
 
 OID4VPDCAPIHandoverInfoHash = bstr  ; sha-256 hash of OID4VPDCAPIHandoverInfo
 
+OID4VPDCAPIHandoverInfoHash = bstr  ; sha-256 hash of OID4VPDCAPIHandoverInfo
+
 OID4VPDCAPIHandoverInfo = [
   origin,
   client_id,
