@@ -2255,19 +2255,19 @@ If the presentation request is invoked using the Digital Credentials API, the `S
 
 * `DeviceEngagementBytes` MUST be `null`.
 * `EReaderKeyBytes` MUST be `null`.
-* `Handover` MUST be the `OID4VPDCAPIHandover` CBOR structure as defined below.
+* `Handover` MUST be the `OpenID4VPDCAPIHandover` CBOR structure as defined below.
 
 ```cddl
-OID4VPDCAPIHandover = [
-  "OID4VPDCAPIHandover", ; A fixed identifier for this handover type
-  OID4VPDCAPIHandoverInfoHash ; A cryptographic hash of OID4VPDCAPIHandoverInfo
+OpenID4VPDCAPIHandover = [
+  "OpenID4VPDCAPIHandover", ; A fixed identifier for this handover type
+  OpenID4VPDCAPIHandoverInfoHash ; A cryptographic hash of OpenID4VPDCAPIHandoverInfo
 ]
 
-OID4VPDCAPIHandoverInfoHash = bstr  ; sha-256 hash of OID4VPDCAPIHandoverInfo
+OpenID4VPDCAPIHandoverInfoHash = bstr  ; sha-256 hash of OpenID4VPDCAPIHandoverInfo
 
-OID4VPDCAPIHandoverInfoHash = bstr  ; sha-256 hash of OID4VPDCAPIHandoverInfo
+OpenID4VPDCAPIHandoverInfoHash = bstr  ; sha-256 hash of OpenID4VPDCAPIHandoverInfo
 
-OID4VPDCAPIHandoverInfo = [
+OpenID4VPDCAPIHandoverInfo = [
   origin,
   client_id,
   nonce
@@ -2280,11 +2280,11 @@ origin = tstr    ; UTF-8 encoded string
 nonce = tstr     ; UTF-8 encoded string
 ```
 
-The `OID4VPDCAPIHandover` structure has the following elements:
+The `OpenID4VPDCAPIHandover` structure has the following elements:
 
-* The first element MUST be the fixed UTF-8 encoded string `OID4VPDCAPIHandover`. This serves as a unique identifier for the handover structure to prevent misinterpretation or confusion.
-* The second element MUST be the `OID4VPDCAPIHandoverInfoHash`, represented as a CBOR byte string which encodes the sha-256 hash of the `OID4VPDCAPIHandoverInfo` CBOR array.
-* The `OID4VPDCAPIHandoverInfo` has the following elements:
+* The first element MUST be the fixed UTF-8 encoded string `OpenID4VPDCAPIHandover`. This serves as a unique identifier for the handover structure to prevent misinterpretation or confusion.
+* The second element MUST be the `OpenID4VPDCAPIHandoverInfoHash`, represented as a CBOR byte string which encodes the sha-256 hash of the `OpenID4VPDCAPIHandoverInfo` CBOR array.
+* The `OpenID4VPDCAPIHandoverInfo` has the following elements:
   * The first element MUST be the UTF-8 encoded string representing the origin of the request as described in (#dc_api_request).
   * The second element MUST be the UTF-8 encoded string value of the effective Client Identifier as defined in (#dc_api_request).
   * The third element MUST be the UTF-8 encoded string value of the `nonce` request parameter.
