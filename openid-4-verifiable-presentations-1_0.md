@@ -2791,6 +2791,7 @@ The technology described in this specification was made available from contribut
 
    -24
 
+   * Added support for multiple Client Identifiers and corresponding Request Signature to the DC API profile
 
    -23
 
