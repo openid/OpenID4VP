@@ -2296,7 +2296,6 @@ The JWS JSON Serialization [@!RFC7515]) allows the Verifier to use multiple Clie
 In this case, the following request parameters MUST be present in the protected header of the respective `signature` object in the `signatures` array defined in [@!RFC7515, section 7.2.1]:
 
 * `client_id`
-* `client_metadata`
 
 All other request parameters MUST be present in the `payload` element of the JWS object.
 
@@ -2329,21 +2328,7 @@ This is an example of a protected header:
     "MIICOjCCAeG...djzH7lA==",
     "MIICLTCCAdS...koAmhWVKe"
   ],
-  "client_id": "x509_san_dns:rp.example.com",
-  "client_metadata": {
-    "jwks": {
-      "keys": [
-        {
-          "kty": "EC",
-          "crv": "P-256",
-          "x": "MKBCTNIcKUSDii11ySs3526iDZ8AiTo7Tu6KPAqv7D4",
-          "y": "4Etl6SRW2YiLUrN5vfvVHuhp7x8PxltmWWlbbM4IFyM",
-          "use": "enc",
-          "kid": "1"
-        }
-      ]
-    }
-  }
+  "client_id": "x509_san_dns:rp.example.com"
 }
 ```
 
