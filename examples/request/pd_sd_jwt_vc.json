@@ -4,7 +4,7 @@
     {
       "id": "identity_credential",
       "format": {
-        "vc+sd-jwt": {
+        "dc+sd-jwt": {
           "sd-jwt_alg_values": ["ES256", "ES384"],
           "kb-jwt_alg_values": ["ES256", "ES384"]
         }
