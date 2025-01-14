@@ -1614,9 +1614,9 @@ Implementations MUST follow [@!BCP195].
 
 Whenever TLS is used, a TLS server certificate check MUST be performed, per [@!RFC6125].
 
-## Incomplete or Incorrect Implementation of the Specifications and Conformance Testing
+## Incomplete or Incorrect Implementations of the Specifications and Conformance Testing
 
-To achieve the full security benefits, it is important the implementation of this specification, and the underlying specifications, are both complete and correct.
+To achieve the full security benefits, it is important that the implementation of this specification, and the underlying specifications, are both complete and correct.
 
 The OpenID Foundation provides tools that can be used to confirm that an implementation is correct and conformant:
 
