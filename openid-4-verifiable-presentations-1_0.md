@@ -1128,7 +1128,7 @@ If the JWT is only a JWE, the following processing rules MUST be followed:
 - `iss`, `exp` and `aud` MUST be omitted in the JWT Claims Set of the JWE, and the processing rules as per [@!JARM] Section 2.4 related to these claims do not apply.
 - The processing rules as per [@!JARM] Section 2.4 related to JWS processing MUST be ignored.
 
-Whenever the response is encrypted, the following additional processing directives apply to bind the Verifier's identifier and its respective transaction with the End-User into the JWE:
+Whenever the response is encrypted, the following additional processing directives apply to JWE. This enables binding response encryption to the Verifier's identifier and its respective transaction with the End-User:
 
 - The `apu` (Agreement PartyUInfo) header parameter MUST be set to the value of the `nonce` from the Authorization Request.
 - The `apv` (Agreement PartyVInfo) header parameter MUST be set to the value of the `client_id` of the Verifier.
