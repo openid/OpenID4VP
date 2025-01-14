@@ -2325,7 +2325,6 @@ This is an example of a protected header:
 ```
 {
   "alg": "ES256",
-  "kid": "k2bdc",
   "x5c": [
     "MIICOjCCAeG...djzH7lA==",
     "MIICLTCCAdS...koAmhWVKe"
