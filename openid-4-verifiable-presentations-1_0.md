@@ -2273,7 +2273,7 @@ The Verifier MAY send a signed request, for example, when identification and aut
 
 The signed request allows the Wallet to authenticate the Verifier using one or more trust framework(s) in addition to the Web PKI utilized by the browser. An example of such a trust framework is the Verifier (RP) management infrastructure set up in the context of the eIDAS regulation in the European Union, in which case, the Wallet can no longer rely only on the web origin of the Verifier. This web origin MAY still be used to further strengthen the security of the flow. The external trust framework could, for example, map the Client Identifier to registered web origins.
 
-The signed Request Object MAY contain all the parameters listed in (#browser_api_request), except `request`.
+The signed Request Object MAY contain all the parameters listed in (#dc_api_request), except `request`.
 
 Verifiers can format signed Requests either using JWS Compact Serialization or JWS Serialization [@!RFC7515]). 
 
