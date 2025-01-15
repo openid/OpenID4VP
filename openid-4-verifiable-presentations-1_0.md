@@ -1913,8 +1913,6 @@ In the event that another component is invoked instead of the Wallet, the End-Us
         </front>
 </reference>
 
-
-
 <reference anchor="IANA.OAuth.Parameters" target="https://www.iana.org/assignments/oauth-parameters">
   <front>
     <title>OAuth Parameters</title>
@@ -2228,8 +2226,8 @@ ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 [@ISO.23220-4] Ann
 * Rules for the `presentation_definition` Authorization Request parameter.
 * Rules for the `presentation_submission` Authorization Response parameter.
 * Wallet invocation using the `mdoc-openid4vp://` custom URI scheme.
-* Defines the OpenID4VP-specific `Handover` CBOR structure and how OpenID4VP Authorization Request and Request Object parameters apply to the `SessionTranscript` CBOR structure and `DeviceResponse` CBOR structure as specified in ISO/IEC 18013-5 [@ISO.18013-5] and ISO/IEC 23220-4 [@ISO.23220-4].
-* Required Wallet and Verifier Metadata parameters and their values.
+* Required Wallet and Verifier Metadata parameters and their values when OpenID4VP is used with the `mdoc-openid4vp://` custom URI scheme.
+The `SessionTranscript` and `Handover` CBOR structure when the invocation does not use the DC API. Also see (#non-dc-api-invocation).
 * Additional restrictions on Authorization Request and Authorization Response parameters to ensure compliance with ISO/IEC TS 18013-7 [@ISO.18013-7] and ISO/IEC 23220-4 [@ISO.23220-4]. For instance, to comply with ISO/IEC TS 18013-7 [@ISO.18013-7], only the same-device flow is supported, the `request_uri` Authorization Request parameter is required, and the Authorization Response has to be encrypted.
 
 ### DCQL Query and Response
@@ -2264,6 +2262,50 @@ See ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 Annex C [@ISO.
 The VP Token contains the base64url-encoded `DeviceResponse` CBOR structure as defined in ISO/IEC 18013-5 [@ISO.18013-5] or ISO/IEC 23220-4 [@ISO.23220-4]. Essentially, the `DeviceResponse` CBOR structure contains a signature or MAC over the `SessionTranscript` CBOR structure including the OpenID4VP-specific `Handover` CBOR structure.
 
 See ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 Annex C [@ISO.23220-4] for the latest examples on how to use the `presentation_submission` parameter and how to generate the Authorizaton Response for presenting Credentials in the mdoc format.
+
+### `Handover` and `SessionTranscript` Definitions
+
+#### Invocation via the Digital Credentials API
+
+If the presentation request is invoked using the Digital Credentials API, the `SessionTranscript` CBOR structure as defined in Section 9.1.5.1 in [@ISO.18013-5] MUST be used with the following changes:
+
+* `DeviceEngagementBytes` MUST be `null`.
+* `EReaderKeyBytes` MUST be `null`.
+* `Handover` MUST be the `OpenID4VPDCAPIHandover` CBOR structure as defined below.
+
+```cddl
+OpenID4VPDCAPIHandover = [
+  "OpenID4VPDCAPIHandover", ; A fixed identifier for this handover type
+  OpenID4VPDCAPIHandoverInfoHash ; A cryptographic hash of OpenID4VPDCAPIHandoverInfo
+]
+
+OpenID4VPDCAPIHandoverInfoHash = bstr  ; sha-256 hash of OpenID4VPDCAPIHandoverInfo
+
+OpenID4VPDCAPIHandoverInfo = [
+  origin,
+  client_id,
+  nonce
+] ; Array containing handover parameters
+
+client_id = tstr  ; UTF-8 encoded string
+
+origin = tstr    ; UTF-8 encoded string
+
+nonce = tstr     ; UTF-8 encoded string
+```
+
+The `OpenID4VPDCAPIHandover` structure has the following elements:
+
+* The first element MUST be the fixed UTF-8 encoded string `OpenID4VPDCAPIHandover`. This serves as a unique identifier for the handover structure to prevent misinterpretation or confusion.
+* The second element MUST be the `OpenID4VPDCAPIHandoverInfoHash`, represented as a CBOR byte string which encodes the sha-256 hash of the `OpenID4VPDCAPIHandoverInfo` CBOR array.
+* The `OpenID4VPDCAPIHandoverInfo` has the following elements:
+  * The first element MUST be the UTF-8 encoded string representing the origin of the request as described in (#dc_api_request).
+  * The second element MUST be the UTF-8 encoded string value of the effective Client Identifier as defined in (#dc_api_request).
+  * The third element MUST be the UTF-8 encoded string value of the `nonce` request parameter.
+
+#### Invocation via other methods {#non-dc-api-invocation}
+
+If the presentation request is invoked via other methods, the rules for generating the `SessionTranscript` and `Handover` CBOR structure are specified in ISO/IEC 18013-7 [@ISO.18013-7], ISO/IEC 18013-5 [@ISO.18013-5] and ISO/IEC 23220-4 [@ISO.23220-4].
 
 ## IETF SD-JWT VC
 
@@ -2724,6 +2766,8 @@ The technology described in this specification was made available from contribut
    [[ To be removed from the final specification ]]
 
    -24
+
+   * add `SessionTranscript` requirements 
    * use claims path pointer for mdoc based credentials
 
    -23
