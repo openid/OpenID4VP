@@ -250,7 +250,7 @@ Presentation of Verifiable Credentials using OpenID for Verifiable Presentations
 
 The Authorization Request follows the definition given in [@!RFC6749] taking into account the recommendations given in [@!I-D.ietf-oauth-security-topics].
 
-The Verifier MAY send an Authorization Request as a Request Object either by value or by reference, as defined in the JWT-Secured Authorization Request (JAR) [@RFC9101].
+The Verifier MAY send an Authorization Request as a Request Object either by value or by reference, as defined in the JWT-Secured Authorization Request (JAR) [@RFC9101]. Verifiers MUST include the `typ` Header Parameter in Request Objects with the value `oauth-authz-req+jwt`, as defined in [@RFC9101]. Wallets MUST NOT process Request Objects where the `typ` Header Parameter is not present or does not have the value `oauth-authz-req+jwt`.
 
 This specification defines a new mechanism for the cases when the Wallet wants to provide to the Verifier details about its technical capabilities to
 allow the Verifier to generate a request that matches the technical capabilities of that Wallet.
@@ -690,7 +690,8 @@ Credential.
 
 `claims`:
 : OPTIONAL. A non-empty array of objects as defined in (#claims_query) that specifies
-claims in the requested Credential.
+claims in the requested Credential. Verifiers MUST NOT point to the same claim more than
+once in a single query. Wallets SHOULD ignore such duplicate claim queries.
 
 `claim_sets`:
 : OPTIONAL. A non-empty array containing arrays of identifiers for
@@ -735,16 +736,13 @@ Within the particular `claims` array, the same `id` MUST NOT
 be present more than once.
 
 `path`:
-: REQUIRED if the Credential Format uses a JSON-based claims structure (e.g., IETF SD-JWT VC and W3C Verifiable Credentials); MUST NOT
-be present otherwise. The value MUST be a non-empty array representing a claims path pointer that specifies the path to a claim
+: REQUIRED The value MUST be a non-empty array representing a claims path pointer that specifies the path to a claim
 within the Verifiable Credential, as defined in (#claims_path_pointer).
 
 `values`:
 : OPTIONAL. An array of strings, integers or boolean values that specifies the expected values of the claim.
 If the `values` property is present, the Wallet SHOULD return the claim only if the
 type and value of the claim both match for at least one of the elements in the array. Details of the processing rules are defined in (#selecting_claims).
-
-The ISO mdoc specific parameters to be used in the Claims Query are defined in (#mdocs_claims_query).
 
 ### Selecting Claims and Credentials {#dcql_query_lang_processing_rules}
 
@@ -827,33 +825,36 @@ these constraints. The Wallet is not controlled by the Verifier and the Verifier
 MUST perform its own security checks on the returned Credentials and
 presentations.
 
-## Claims Path Pointer {#claims_path_pointer}
+# Claims Path Pointer {#claims_path_pointer}
 
-A claims path pointer is a pointer into the JSON structure of the Verifiable
-Credential, identifying one or more claims. A claims path pointer MUST be a
-non-empty array of strings and non-negative integers. A string value 
-indicates that the respective key is to be selected, a null value
+A claims path pointer is a pointer into the Verifiable Credential, identifying one or more claims.
+A claims path pointer MUST be a non-empty array of strings, nulls and non-negative integers.
+A claims path pointer can be processed, which means it is applied to a credential. The results of
+processing are the referenced claims.
+
+## Semantics for JSON-based credentials
+
+This section defines the semantics of a claims path pointer when applied to a JSON-based credential.
+
+A string value indicates that the respective key is to be selected, a null value
 indicates that all elements of the currently selected array(s) are to be selected;
 and a non-negative integer indicates that the respective index in an array is to be selected. The path
 is formed as follows:
 
-Start with an empty array and repeat the following until the full path is formed. 
+Start with an empty array and repeat the following until the full path is formed.
 
-  - To address a particular claim within an object, append the key (claim name)
-    to the array.
-  - To address an element within an array, append the index to the array (as a
-    non-negative, 0-based integer).
-  - To address all elements within an array, append a null value to the array.
-
-Verifiers MUST NOT point to the same claim more than once in a single query.
-Wallets SHOULD ignore such duplicate claim queries.
+- To address a particular claim within an object, append the key (claim name)
+  to the array.
+- To address an element within an array, append the index to the array (as a
+  non-negative, 0-based integer).
+- To address all elements within an array, append a null value to the array.
 
 ### Processing
 
-In detail, the array is processed by the Wallet from left to right as follows:
+In detail, the array is processed from left to right as follows:
 
- 1. Select the root element of the Credential, i.e., the top-level JSON object.
- 2. Process the query of the claims path pointer array from left to right:
+1. Select the root element of the Credential, i.e., the top-level JSON object.
+2. Process the query of the claims path pointer array from left to right:
     1. If the component is a string, select the element in the respective
        key in the currently selected element(s). If any of the currently
        selected element(s) is not an object, abort processing and return an
@@ -867,15 +868,36 @@ In detail, the array is processed by the Wallet from left to right as follows:
        currently selected element(s) is not an array, abort processing and
        return an error. If the index does not exist in a selected array, remove
        that array from the selection.
-  3. If the set of elements currently selected is empty, abort processing and
-     return an error.
+3. If the set of elements currently selected is empty, abort processing and
+   return an error.
 
-The result of the processing is the set of elements which is requested for
-presentation.
+The result of the processing is the set of selected JSON elements.
 
-### Claims Path Pointer Example {#claims_path_pointer_example}
+## Semantics for ISO mdoc-based credentials
 
-The following shows a non-normative, simplified example of a Credential:
+This section defines the semantics of a claims path pointer when applied to a
+credential in ISO mdoc format.
+
+A claims path pointer into an mdoc contains two elements of type string. The
+first element refers to a namespace and the second element refers to a data
+element identifier.
+
+### Processing
+
+In detail, the array is processed as follows:
+
+1. If the claims path pointer does not contain exactly two components or
+   one of the components is not a string abort processing and return an error.
+2. Select the namespace referenced by the first component. If the namespace does
+   not exist in the mdoc abort processing and return an error.
+3. Select the data element referenced by the second component. If the data element does not exist
+   in the credential abort processing and return an error.
+
+The result of the processing is the selected data element value as CBOR data item.
+
+## Claims Path Pointer Example {#claims_path_pointer_example}
+
+The following shows a non-normative, simplified example of a JSON-based Credential:
 
 ```json
 {
@@ -1624,6 +1646,14 @@ Implementations MUST follow [@!BCP195].
 
 Whenever TLS is used, a TLS server certificate check MUST be performed, per [@!RFC6125].
 
+## Incomplete or Incorrect Implementations of the Specifications and Conformance Testing
+
+To achieve the full security benefits, it is important that the implementation of this specification, and the underlying specifications, are both complete and correct.
+
+The OpenID Foundation provides tools that can be used to confirm that an implementation is correct and conformant:
+
+https://openid.net/certification/conformance-testing-for-openid-for-verifiable-presentations/
+
 # Privacy Considerations
 
 ## Authorization Requests with Request URI
@@ -1890,8 +1920,6 @@ In the event that another component is invoked instead of the Wallet, the End-Us
           </author>
         </front>
 </reference>
-
-
 
 <reference anchor="IANA.OAuth.Parameters" target="https://www.iana.org/assignments/oauth-parameters">
   <front>
@@ -2206,8 +2234,8 @@ ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 [@ISO.23220-4] Ann
 * Rules for the `presentation_definition` Authorization Request parameter.
 * Rules for the `presentation_submission` Authorization Response parameter.
 * Wallet invocation using the `mdoc-openid4vp://` custom URI scheme.
-* Defines the OpenID4VP-specific `Handover` CBOR structure and how OpenID4VP Authorization Request and Request Object parameters apply to the `SessionTranscript` CBOR structure and `DeviceResponse` CBOR structure as specified in ISO/IEC 18013-5 [@ISO.18013-5] and ISO/IEC 23220-4 [@ISO.23220-4].
-* Required Wallet and Verifier Metadata parameters and their values.
+* Required Wallet and Verifier Metadata parameters and their values when OpenID4VP is used with the `mdoc-openid4vp://` custom URI scheme.
+The `SessionTranscript` and `Handover` CBOR structure when the invocation does not use the DC API. Also see (#non-dc-api-invocation).
 * Additional restrictions on Authorization Request and Authorization Response parameters to ensure compliance with ISO/IEC TS 18013-7 [@ISO.18013-7] and ISO/IEC 23220-4 [@ISO.23220-4]. For instance, to comply with ISO/IEC TS 18013-7 [@ISO.18013-7], only the same-device flow is supported, the `request_uri` Authorization Request parameter is required, and the Authorization Response has to be encrypted.
 
 ### DCQL Query and Response
@@ -2222,20 +2250,6 @@ The following is an ISO mdoc specific parameter in the `meta` parameter in a Cre
 : OPTIONAL. String that specifies an allowed value for the
 doctype of the requested Verifiable Credential. It MUST
 be a valid doctype identifier as defined in [@ISO.18013-5].
-
-#### Parameters in the Claims Query {#mdocs_claims_query}
-
-The following are ISO mdoc specific parameters to be used in a Claims Query as defined in (#claims_query).
-
-`namespace`:
-: REQUIRED if the Credential Format is based on the mdoc format defined in [@ISO.18013-5]; MUST NOT be present otherwise. 
-The value MUST be a string that specifies the namespace of the data element
-within the mdoc, e.g., `org.iso.18013.5.1`.
-
-`claim_name`:
-: REQUIRED if the Credential Format is based on mdoc format defined in [@ISO.18013-5]; MUST NOT be present otherwise. 
-The value MUST be a string that specifies the data element identifier of the data element within the provided namespace
-in the mdoc, e.g., `first_name`.
 
 #### mdoc DCQL Query example
 
@@ -2256,6 +2270,50 @@ See ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 Annex C [@ISO.
 The VP Token contains the base64url-encoded `DeviceResponse` CBOR structure as defined in ISO/IEC 18013-5 [@ISO.18013-5] or ISO/IEC 23220-4 [@ISO.23220-4]. Essentially, the `DeviceResponse` CBOR structure contains a signature or MAC over the `SessionTranscript` CBOR structure including the OpenID4VP-specific `Handover` CBOR structure.
 
 See ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 Annex C [@ISO.23220-4] for the latest examples on how to use the `presentation_submission` parameter and how to generate the Authorizaton Response for presenting Credentials in the mdoc format.
+
+### `Handover` and `SessionTranscript` Definitions
+
+#### Invocation via the Digital Credentials API
+
+If the presentation request is invoked using the Digital Credentials API, the `SessionTranscript` CBOR structure as defined in Section 9.1.5.1 in [@ISO.18013-5] MUST be used with the following changes:
+
+* `DeviceEngagementBytes` MUST be `null`.
+* `EReaderKeyBytes` MUST be `null`.
+* `Handover` MUST be the `OpenID4VPDCAPIHandover` CBOR structure as defined below.
+
+```cddl
+OpenID4VPDCAPIHandover = [
+  "OpenID4VPDCAPIHandover", ; A fixed identifier for this handover type
+  OpenID4VPDCAPIHandoverInfoHash ; A cryptographic hash of OpenID4VPDCAPIHandoverInfo
+]
+
+OpenID4VPDCAPIHandoverInfoHash = bstr  ; sha-256 hash of OpenID4VPDCAPIHandoverInfo
+
+OpenID4VPDCAPIHandoverInfo = [
+  origin,
+  client_id,
+  nonce
+] ; Array containing handover parameters
+
+client_id = tstr  ; UTF-8 encoded string
+
+origin = tstr    ; UTF-8 encoded string
+
+nonce = tstr     ; UTF-8 encoded string
+```
+
+The `OpenID4VPDCAPIHandover` structure has the following elements:
+
+* The first element MUST be the fixed UTF-8 encoded string `OpenID4VPDCAPIHandover`. This serves as a unique identifier for the handover structure to prevent misinterpretation or confusion.
+* The second element MUST be the `OpenID4VPDCAPIHandoverInfoHash`, represented as a CBOR byte string which encodes the sha-256 hash of the `OpenID4VPDCAPIHandoverInfo` CBOR array.
+* The `OpenID4VPDCAPIHandoverInfo` has the following elements:
+  * The first element MUST be the UTF-8 encoded string representing the origin of the request as described in (#dc_api_request).
+  * The second element MUST be the UTF-8 encoded string value of the effective Client Identifier as defined in (#dc_api_request).
+  * The third element MUST be the UTF-8 encoded string value of the `nonce` request parameter.
+
+#### Invocation via other methods {#non-dc-api-invocation}
+
+If the presentation request is invoked via other methods, the rules for generating the `SessionTranscript` and `Handover` CBOR structure are specified in ISO/IEC 18013-7 [@ISO.18013-7], ISO/IEC 18013-5 [@ISO.18013-5] and ISO/IEC 23220-4 [@ISO.23220-4].
 
 ## IETF SD-JWT VC
 
@@ -2718,6 +2776,9 @@ The technology described in this specification was made available from contribut
    -24
 
    * Mandate the use of apu/apv in the JWE header of encrypted responses
+   * require `typ` value in request object to be `oauth-authz-req+jwt`
+   * add `SessionTranscript` requirements 
+   * use claims path pointer for mdoc based credentials
 
    -23
 
