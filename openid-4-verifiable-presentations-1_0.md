@@ -744,9 +744,6 @@ within the Verifiable Credential, as defined in (#claims_path_pointer).
 If the `values` property is present, the Wallet SHOULD return the claim only if the
 type and value of the claim both match for at least one of the elements in the array. Details of the processing rules are defined in (#selecting_claims).
 
-`intent_to_retain`
-: OPTIONAL. A boolean that indicates the Verifier intends to store the Claim's data that is being requested beyond the processing of the response. For example, to meet regulatory requirements of retaining records of transactions or to maintain user profiles. If omitted, the default value is `false`.
-
 The ISO mdoc specific parameters to be used in the Claims Query are defined in (#mdocs_claims_query).
 
 ### Selecting Claims and Credentials {#dcql_query_lang_processing_rules}
@@ -2231,6 +2228,9 @@ within the mdoc, e.g., `org.iso.18013.5.1`.
 : REQUIRED if the Credential Format is based on mdoc format defined in [@ISO.18013-5]; MUST NOT be present otherwise. 
 The value MUST be a string that specifies the data element identifier of the data element within the provided namespace
 in the mdoc, e.g., `first_name`.
+
+`intent_to_retain`
+: OPTIONAL. A boolean that is equivalent to `IntentToRetain` variable defined in Section 8.3.2.1.2.1 of [@ISO.18013-5].
 
 #### mdoc DCQL Query example
 
