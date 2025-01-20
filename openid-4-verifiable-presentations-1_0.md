@@ -2554,28 +2554,42 @@ established by [@!RFC6749].
 * Name: `presentation_definition`
 * Parameter Usage Location: authorization request
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
-* Reference: (#vp_token_request) of this specification
+* Reference: (#new_parameters) of this specification
 
 ### presentation_definition_uri
 
 * Name: `presentation_definition_uri`
 * Parameter Usage Location: authorization request
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
-* Reference: (#vp_token_request) of this specification
+* Reference: (#new_parameters) of this specification
+
+### dcql_query
+
+* Name: `dcql_query`
+* Parameter Usage Location: authorization request
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#new_parameters) of this specification
 
 ### client_metadata
 
 * Name: `client_metadata`
 * Parameter Usage Location: authorization request
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
-* Reference: (#vp_token_request) of this specification
+* Reference: (#new_parameters) of this specification
 
 ### request_uri_method
 
 * Name: `request_uri_method`
 * Parameter Usage Location: authorization request
 * Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
-* Reference: (#vp_token_request) of this specification
+* Reference: (#new_parameters) of this specification
+
+### transaction_data
+
+* Name: `transaction_data`
+* Parameter Usage Location: authorization request
+* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Reference: (#new_parameters) of this specification
 
 ### wallet_nonce
 
