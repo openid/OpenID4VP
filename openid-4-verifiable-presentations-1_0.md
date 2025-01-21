@@ -101,11 +101,6 @@ Holder Binding:
 Issuer-Holder-Verifier Model:
 : A model for exchanging claims, where claims are issued in the form of Verifiable Credentials independent of the process of presenting them as Verifiable Presentation to the Verifiers. An issued Verifiable Credential can (but must not necessarily) be used multiple times.
 
-Origin:
-: An identifier for the calling website or native application, asserted by the web or app platform. A web origin is the combination of a scheme/protocol, host, and port, with port being omitted when it matches the default port of the scheme. An app platform may use a linked web origin, or use a platform-specific URI for the app origin.
-
-For example, the verifier for the organization MyExampleOrg is served from https://verify.example.com. The web origin is `https://verify.example.com` with `https` being the scheme, `verify.example.com` being the host, and the port is not explicitly included as `443` is the default port for the protocol `https`. The native applications origin on some platforms will also be `https://verify.example.com` and on other platforms, may be `platform:pkg-key-hash:Z4OFzVVSZrzTRa3eg79hUuHy12MVW0vzPDf4q4zaPs0`.
-
 Presentation:
 : Data that is presented to a specific Verifier, derived from one or more Verifiable Credentials that can be from the same or different Credential Issuers.
 
@@ -574,7 +569,7 @@ Body
 
 * `x509_san_uri`: When the Client Identifier Scheme is `x509_san_uri`, the Client Identifier MUST be a URI and match a `uniformResourceIdentifier` Subject Alternative Name (SAN) [@!RFC5280] entry in the leaf certificate passed with the request. The request MUST be signed with the private key corresponding to the public key in the leaf X.509 certificate of the certificate chain added to the request in the `x5c` JOSE header [@!RFC7515] of the signed request object. The Wallet MUST validate the signature and the trust chain of the X.509 certificate. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter. If the Wallet can establish trust in the Client Identifier authenticated through the certificate, e.g., because the Client Identifier is contained in a list of trusted Client Identifiers, it may allow the client to freely choose the `redirect_uri` value. If not, the `redirect_uri` value MUST match the Client Identifier without the prefix `x509_san_uri:`. Example Client Identifier: `x509_san_uri:https://client.example.org/cb`.
 
-* `web-origin`: This Client Identifier Scheme is defined in (#dc_api_request). It MUST NOT be used in the Authorization Request.
+* `web-origin`: This Client Identifier Scheme is defined in (#dc_api_request). The Wallet MUST NOT accept this Client Identifier Scheme, if the request is not sent using the Digital Credentials API defined in (#dc_api).
 
 To use the Client Identifier Schemes `https`, `did`, `verifier_attestation`, `x509_san_dns`, and `x509_san_uri`, Verifiers MUST be confidential clients. This might require changes to the technical design of native apps as such apps are typically public clients.
 
@@ -1974,7 +1969,7 @@ The name "Digital Credentials API" (DC API) encomposes the W3C Digital Credentia
 as well as its native App Platform equivalents in operating systems (such as [Credential Manager on Android](https://developer.android.com/jetpack/androidx/releases/credentials)).
 The DC API allows web sites and native apps acting as Verifiers to request the presentation of verifiable credentials.
 The API itself is agnostic to the Credential exchange protocol and can be used with different protocols.
-The Web Platform, working in conjunction with other layers, such as the app platform/operating system, and based on the permission of the End-User, will send the request data along with the Origin of the Verifier to the End-User's chosen Wallet.
+The Web Platform, working in conjunction with other layers, such as the app platform/operating system, and based on the permission of the End-User, will send the request data along with the web or app origin of the Verifier to the End-User's chosen Wallet.
 
 OpenID4VP over the DC API utilizes the mechanisms of the DC API while also allowing to leverage advanced security features of OpenID4VP, if needed. 
 It also defines the OpenID4VP request parameters that MAY be used with the DC API.
@@ -1987,7 +1982,7 @@ Secondly, the session with the End-User will always continue in the initial cont
 
 Thirdly, cross-device requests benefit from the use of secure transports with proximity checks, which are handled by the OS platform, e.g., using FIDO CTAP 2.2 with hybrid transports.
 
-And lastly, as part of the request, the Wallet is provided with information about the Verifier's Origin as authenticated by the user agent, which is important for phishing resistance.
+And lastly, as part of the request, the Wallet is provided with information about the Verifier's origin as authenticated by the user agent, which is important for phishing resistance.
 
 ## Protocol
 
@@ -2021,13 +2016,13 @@ Out of the Authorization Request parameters defined in [@!RFC6749] and (#vp_toke
 * `transaction_data`
 * `dcql_query`
 
-The `client_id` parameter MUST be omitted in unsigned requests defined in (#unsigned_request). The Wallet determines the effective Client Identifier from the Origin. The effective Client Identifier is composed of a synthetic Client Identifier Scheme of `web-origin` and the Origin itself. For example, an Origin of `https://verifier.example.com` would result in an effective Client Identifier of `web-origin:https://verifier.example.com`. The transport of the request and Origin to the Wallet is platform-specific and is out of scope of OpenID4VP over the W3C Digital Credentials API. The Wallet MUST ignore any `client_id` parameter that is present in an unsigned request.
+The `client_id` parameter MUST be omitted in unsigned requests defined in (#unsigned_request). The Wallet determines the effective Client Identifier from the origin as asserted by the Web Platform and/or app platform. The effective Client Identifier is composed of a synthetic Client Identifier Scheme of `web-origin` and the origin itself. For example, an origin of `https://verifier.example.com` would result in an effective Client Identifier of `web-origin:https://verifier.example.com`. The transport of the request and origin from the Web Platform and/or app platform to the Wallet is platform-specific and is out of scope of OpenID4VP over the W3C Digital Credentials API. The Wallet MUST ignore any `client_id` parameter that is present in an unsigned request.
 
 The value of the `response_mode` parameter MUST be `dc_api` when the response is neither signed nor encrypted and `dc_api.jwt` when the response is signed and/or encrypted as defined in (#jarm).
 
 In addition to the above-mentioned parameters, a new parameter is introduced for OpenID4VP over the W3C Digital Credentials API:
 
-* `expected_origins`: REQUIRED when signed requests defined in (#signed_request) are used with the Digital Credentials API (DC API). An array of strings, each string representing an Origin of the Verifier that is making the request. The Wallet can detect replay of the request from a malicious Verifier by comparing values in this parameter to the Origin.
+* `expected_origins`: REQUIRED when signed requests defined in (#signed_request) are used with the Digital Credentials API (DC API). An array of strings, each string representing an origin of the Verifier that is making the request. The Wallet can detect replay of the request from a malicious Verifier by comparing values in this parameter to the origin asserted by the Web Platform.
 
 Additional request parameters MAY be defined and used with OpenID4VP over the DC API.
 
@@ -2039,7 +2034,7 @@ Any OpenID4VP request compliant to this section of this specification can be use
 
 ### Unsigned Request {#unsigned_request}
 
-The Verifier MAY send all the OpenID4VP request parameters as members in the request member passed to the API. In this case, the Wallet will use the Verifier's Origin to determine the Verifier's effective Client Identifier.
+The Verifier MAY send all the OpenID4VP request parameters as members in the request member passed to the API. In this case, the Wallet will use the Verifier's origin as asserted by the user agent to determine the Verifier's effective Client Identifier.
 
 
 ### Signed Request {#signed_request}
@@ -2058,7 +2053,7 @@ This is an example of the payload of a signed OpenID4VP request used with the DC
 
 <{{examples/digital_credentials_api/signed_request_payload.json}}
 
-The signed request allows the Wallet to authenticate the Verifier using a trust framework other than the Web PKI utilized by the browser. An example of such a trust framework is the Verifier (RP) management infrastructure set up in the context of the eIDAS regulation in the European Union, in which case, the Wallet can no longer rely only on the Origin of the Verifier. This Origin MAY still be used to further strengthen the security of the flow. The external trust framework could, for example, map the Client Identifier to registered Origins.
+The signed request allows the Wallet to authenticate the Verifier using a trust framework other than the Web PKI utilized by the browser. An example of such a trust framework is the Verifier (RP) management infrastructure set up in the context of the eIDAS regulation in the European Union, in which case, the Wallet can no longer rely only on the web origin of the Verifier. This web origin MAY still be used to further strengthen the security of the flow. The external trust framework could, for example, map the Client Identifier to registered web origins.
 
 ## Response
 
@@ -2417,7 +2412,7 @@ The following requirements apply to the `nonce` and `aud` claims in the Key Bind
 - the `nonce` claim MUST be the value of `nonce` from the Authorization Request;
 - the `aud` claim MUST be the value of the Client Identifier; 
 
-Note that for an unsigned Authorization Request over the DC API, the `client_id` parameter is not used. Instead, the effective Client Identifier is derived from the Origin, as described in (#dc_api_request).
+Note that for an unsigned Authorization Request over the DC API, the `client_id` parameter is not used. Instead, the effective Client Identifier is derived from the origin received from the platform, as described in (#dc_api_request).
 
 The `transaction_data_hashes` response parameter defined in (#transaction_data) MUST be included in the Key Binding JWT as a top level claim. This means that transaction data mechanism cannot be used with SD-JWT VCs without cryptographic key binding and, therefore, do not use KB JWT.
 
