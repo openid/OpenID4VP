@@ -2247,16 +2247,6 @@ be a valid doctype identifier as defined in [@ISO.18013-5].
 
 The following are ISO mdoc specific parameters to be used in a Claims Query as defined in (#claims_query).
 
-`namespace`:
-: REQUIRED if the Credential Format is based on the mdoc format defined in [@ISO.18013-5]; MUST NOT be present otherwise. 
-The value MUST be a string that specifies the namespace of the data element
-within the mdoc, e.g., `org.iso.18013.5.1`.
-
-`claim_name`:
-: REQUIRED if the Credential Format is based on mdoc format defined in [@ISO.18013-5]; MUST NOT be present otherwise. 
-The value MUST be a string that specifies the data element identifier of the data element within the provided namespace
-in the mdoc, e.g., `first_name`.
-
 `intent_to_retain`
 : OPTIONAL. A boolean that is equivalent to `IntentToRetain` variable defined in Section 8.3.2.1.2.1 of [@ISO.18013-5].
 
