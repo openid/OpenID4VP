@@ -2275,7 +2275,7 @@ The signed request allows the Wallet to authenticate the Verifier using one or m
 
 The signed Request Object MAY contain all the parameters listed in (#dc_api_request), except `request`.
 
-Verifiers can format signed Requests either using JWS Compact Serialization or JWS Serialization [@!RFC7515]). 
+Verifiers can format signed Requests either using JWS Compact Serialization or JWS JSON Serialization [@!RFC7515]). 
 
 #### JWS Compact Serialization
 
