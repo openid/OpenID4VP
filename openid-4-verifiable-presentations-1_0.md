@@ -2334,7 +2334,7 @@ The following is a non-normative example of a content of a decoded protected hea
 }
 ```
 
-This is an example of the payload of a signed OpenID4VP request used with the W3C Digital Credentials API in conjunction with JWS JSON Serialization:
+The following is a non-normative example of the payload of a signed OpenID4VP request used with the W3C Digital Credentials API in conjunction with JWS JSON Serialization:
 
 <{{examples/digital_credentials_api/signed_request_payload.json}} 
 
