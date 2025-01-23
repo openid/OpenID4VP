@@ -2321,7 +2321,7 @@ Below is a non-normative example of such a request:
 
 Every object in the `signatures` structure contains the parameters and the signature specific to a particular Client Identifier. The signature is calculated as specified in section 5.1 of [@!RFC7515].
 
-This is an example of a protected header:
+The following is a non-normative example of a content of a decoded protected header:
 
 ```
 {
