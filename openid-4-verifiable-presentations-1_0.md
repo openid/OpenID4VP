@@ -2247,6 +2247,13 @@ The following is an ISO mdoc specific parameter in the `meta` parameter in a Cre
 doctype of the requested Verifiable Credential. It MUST
 be a valid doctype identifier as defined in [@ISO.18013-5].
 
+#### Parameters in the Claims Query {#mdocs_claims_query}
+
+The following are ISO mdoc specific parameters to be used in a Claims Query as defined in (#claims_query).
+
+`intent_to_retain`
+: OPTIONAL. A boolean that is equivalent to `IntentToRetain` variable defined in Section 8.3.2.1.2.1 of [@ISO.18013-5].
+
 #### mdoc DCQL Query example
 
 An example DCQL query using the mdoc format is shown in (#more_dcql_query_examples). The following is a non-normative example for a VP Token in the response:
@@ -2771,6 +2778,7 @@ The technology described in this specification was made available from contribut
 
    -24
 
+   * add mdoc specific `intent_to_retain` mechanism, using the definition from 18013-5
    * require `typ` value in request object to be `oauth-authz-req+jwt`
    * add `SessionTranscript` requirements 
    * use claims path pointer for mdoc based credentials
