@@ -2279,7 +2279,9 @@ Verifiers can format signed Requests either using JWS Compact Serialization or J
 
 #### JWS Compact Serialization
 
-In case of the JWS Compact Serialization, all request parameters are encoded in a request object as defined in (#vp_token_request) and the JWS object is used as the value of the `request` claim in the `data` element of the API call. This is illustated in the following example.
+When the JWS Compact Serialization is used to send the request, the Verifier can convey only one Trust Framework, i.e., the Verifier should know which trust frameworks the wallet supports. All request parameters are encoded in a request object as defined in (#vp_token_request) and the JWS object is used as the value of the `request` claim in the `data` element of the API call. 
+
+This is illustrated in the following non-normative example.
 
 ```js
 { request: "eyJhbGciOiJF..." }
