@@ -688,6 +688,16 @@ this object are defined per Credential Format. Examples of those are in (#sd_jwt
 no specific constraints are placed on the metadata or validity of the requested
 Credential.
 
+`accepted_issuers`:
+: OPTIONAL. A non-empty array of objects as defined in (#dcql_accepted_issuers) that
+specifies expected issuers or trust frameworks that an issuer belongs to, that the
+Verifier will accept. Every Credential returned by the Wallet SHOULD match at least
+one of the conditions present in the corresponding `accepted_issuers` array if present.
+
+Note that Relying Parties must verify that the issuer of a received presentation is
+trusted on their own and this feature mainly aims to help data minimization by not
+revealing information that would likely be rejected.
+
 `claims`:
 : OPTIONAL. A non-empty array of objects as defined in (#claims_query) that specifies
 claims in the requested Credential. Verifiers MUST NOT point to the same claim more than
@@ -699,6 +709,127 @@ elements in `claims` that specifies which combinations of `claims` for the Crede
 The rules for selecting claims to send are defined in (#selecting_claims).
 
 Note that multiple Credential Queries in a request MAY request a presentation of the same Credential.
+
+### Accepted Issuer Query {#dcql_accepted_issuers}
+
+An Accepted Issuer Query is an object representing information that helps to identify an issuer
+or the trust framework that an issuer is belonging to. A Credential is identified as a match
+to an Accepted Issuer Query if it to matches with one of the provided values in one of the provided
+types. How exactly the matching works is defined for the different types below
+
+Note that explicit issuer matching can also be achieved using claim value matching for certain
+Credential formats (e.g., value matching the `iss` claim in an SD-JWT). The methods provided in
+accepted_issuers are more tailored towards matching trust frameworks and those that require more
+complex matching logic (e.g., certificate thumbprints).
+
+Each entry in `accepted_issuers` MUST be an object with the following properties:
+
+`type`:
+: REQUIRED. A string uniquely identifying the type of information about the issuer trust framework.
+Possible types are defined below.
+
+`values`:
+: REQUIRED. An array of strings, where each string (value) contains information specific to the
+used Accepted Issuer Query type that allows to identify an issuer or a trust ecosystem that an
+issuer belongs to.
+
+Below are descriptions for the different Type Identifiers (string), the description on how to interpret
+and perform the matching logic for each provided value.
+
+#### X.509 Thumbprint
+
+Type:
+: `"x5t#S256"`
+
+Value:
+: The base64url encoded SHA-256 digest (a.k.a. thumbprint, fingerprint) of the DER encoding of an X.509
+certificate as defined in Section 4.1.8 of [@!RFC7515]. This thumbprint MUST match with the thumbprint
+of an X.509 certificate in the trust chain of the Credential.
+
+Below is a non-normative example of such an entry of type `x5t#S256`:
+```json
+{
+  "type": "x5t#S256",
+  "values": ["TODO"]
+}
+```
+
+#### Authority Key Identifier
+
+Type:
+: `"aki"`
+
+Value:
+: The base64url encoded Authority Key Identifier element as defined in Section 4.2.1.1 of [@!RFC5280].
+The raw byte representation of this element MUST match with the AuthorityKeyIdentifier element of an X.509
+certificate in the trust chain of a matching Credential.
+
+Below is a non-normative example of such an entry of type `aki`:
+```json
+{
+  "type": "aki",
+  "values": ["TODO"]
+}
+```
+
+#### Verified Issuer Certificate Authority List (VICAL)
+
+Type:
+: `"vical"`
+
+Value:
+: The identifier (can also be a URL) of a Verified Issuer Certificate Authority List (VICAL) as specified in
+[@ISO.18013-5]. The VICAL contains a list of Issuing Authority Certificate Authorities (IACA), that provide
+DER encoded X.509 Certificates and corresponding allowed document types (an array of DocType identifiers).
+This Type MUST only be used in combination with Credentials of the Credential Format mdoc. The trust chain
+of a matching Credential MUST contain at last one X.509 Certificate entry in the IACAs and the allowed
+DocTypes of the corresponding IACA entry MUST match with the doctype of the Credential.
+
+Below is a non-normative example of such an entry of type `vical`:
+```json
+{
+  "type": "vical",
+  "values": ["https://vical.example.com"]
+}
+```
+
+#### ETSI Trusted List
+
+Type:
+: `"etsi_tl"`
+
+Value:
+: The identifier (can also be a URL) of a Trusted List as specified in ETSI TS 119 612.
+TODO: How to express restrictions within that TL? e.g., filtering by service type?
+
+Below is a non-normative example of such an entry of type  `etsi_tl`:
+```json
+{
+  "type": "etsi_tl",
+  "values": ["https://ec.europa.eu/tools/lotl/eu-lotl.xml"]
+}
+```
+
+#### OpenID Federation
+
+Type:
+: `"oidf"`
+
+Value:
+: The `Entity Identifier` as defined in Section 1 of [@!OpenID.Federation] that is bound to
+an entity in an OpenID Federation System. While this Entity Identifier could be any entity in
+that ecosystem, this entity would usually have the Entity Configuration of a Trust Anchor.
+The trust chain of a matching credential MUST contain the given Entity Identifier.
+
+TODO: Do we need to specify more like Entity Type for matching?
+
+Below is a non-normative example of such an entry of type `oidf`: 
+```json
+{
+  "type": "oidf",
+  "values": ["https://trustanchor.example.com"]
+}
+```
 
 ## Credential Set Query {#credential_set_query}
 
