@@ -805,7 +805,6 @@ for Trust Service Providers with corresponding service description and X.509 Cer
 of a matching Credential MUST contain at least one X.509 Certificate that matches one of the entires of the
 Trusted List or its cascading Trusted Lists.
 
-
 Below is a non-normative example of such an entry of type  `etsi_tl`:
 ```json
 {
@@ -824,8 +823,6 @@ Value:
 an entity in an OpenID Federation System. While this Entity Identifier could be any entity in
 that ecosystem, this entity would usually have the Entity Configuration of a Trust Anchor.
 The trust chain of a matching credential MUST contain the given Entity Identifier.
-
-TODO: Do we need to specify more like Entity Type for matching?
 
 Below is a non-normative example of such an entry of type `oidf`: 
 ```json
