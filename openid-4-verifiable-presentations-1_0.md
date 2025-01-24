@@ -750,7 +750,7 @@ Below is a non-normative example of such an entry of type `x5t#S256`:
 ```json
 {
   "type": "x5t#S256",
-  "values": ["TODO"]
+  "values": ["455943cf819425761d1f950263ebf54755d8d684c25535943976f488bc79d23b"]
 }
 ```
 
@@ -768,7 +768,7 @@ Below is a non-normative example of such an entry of type `aki`:
 ```json
 {
   "type": "aki",
-  "values": ["TODO"]
+  "values": ["s9tIpPmhxdiuNkHMEWNpYim8S8Y"]
 }
 ```
 
@@ -799,14 +799,18 @@ Type:
 : `"etsi_tl"`
 
 Value:
-: The identifier (can also be a URL) of a Trusted List as specified in ETSI TS 119 612.
-TODO: How to express restrictions within that TL? e.g., filtering by service type?
+: The identifier (can also be a URL) of a Trusted List as specified in ETSI TS 119 612 [@ETSI.TL].An ETSI
+Trusted List contains references to other Trusted Lists, creating a list of trustedf lists, or entries
+for Trust Service Providers with corresponding service description and X.509 Certificates. The trust chain
+of a matching Credential MUST contain at least one X.509 Certificate that matches one of the entires of the
+Trusted List or its cascading Trusted Lists.
+
 
 Below is a non-normative example of such an entry of type  `etsi_tl`:
 ```json
 {
   "type": "etsi_tl",
-  "values": ["https://ec.europa.eu/tools/lotl/eu-lotl.xml"]
+  "values": ["https://lotl.example.com"]
 }
 ```
 
@@ -1972,6 +1976,16 @@ In the event that another component is invoked instead of the Wallet, the End-Us
             <organization> ISO/IEC JTC 1/SC 17 Cards and security devices for personal identification</organization>
           </author>
           <date year="2024"/>
+        </front>
+</reference>
+
+<reference anchor="ETSI.TL" target="https://www.etsi.org/deliver/etsi_ts/119600_119699/119612/02.01.01_60/ts_119612v020101p.pdf">
+        <front>
+          <title>ETSI TS 119 612 V2.1.1 Electronic Signatures and Infrastructures (ESI); Trusted Lists </title>
+          <author>
+            <organization>European Telecommunications Standards Institute (ETSI)</organization>
+          </author>
+          <date year="2015"/>
         </front>
 </reference>
 
