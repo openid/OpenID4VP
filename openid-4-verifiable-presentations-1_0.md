@@ -730,7 +730,7 @@ Possible types are defined below.
 
 `values`:
 : REQUIRED. An array of strings, where each string (value) contains information specific to the
-used Accepted Issuer Query type that allows to identify an issuer or a trust ecosystem that an
+used Accepted Issuer Query type that allows to identify an issuer, trust framework, or a federation that an
 issuer belongs to.
 
 Below are descriptions for the different Type Identifiers (string), the description on how to interpret
