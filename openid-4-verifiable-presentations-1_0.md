@@ -2017,11 +2017,13 @@ The signed request allows the Wallet to authenticate the Verifier using one or m
 
 The signed Request Object MAY contain all the parameters listed in (#dc_api_request), except `request`.
 
-Verifiers can format signed Requests either using JWS Compact Serialization or JWS Serialization [@!RFC7515]). 
+Verifiers can format signed Requests either using JWS Compact Serialization or JWS JSON Serialization [@!RFC7515]). 
 
 #### JWS Compact Serialization
 
-In case of the JWS Compact Serialization, all request parameters are encoded in a request object as defined in (#vp_token_request) and the JWS object is used as the value of the `request` claim in the `data` element of the API call. This is illustated in the following example.
+When the JWS Compact Serialization is used to send the request, the Verifier can convey only one Trust Framework, i.e., the Verifier should know which trust frameworks the wallet supports. All request parameters are encoded in a request object as defined in (#vp_token_request) and the JWS object is used as the value of the `request` claim in the `data` element of the API call. 
+
+This is illustrated in the following non-normative example.
 
 ```js
 { request: "eyJhbGciOiJF..." }
@@ -2033,7 +2035,7 @@ This is an example of the payload of a signed OpenID4VP request used with the W3
 
 #### JWS JSON Serialization
 
-The JWS JSON Serialization [@!RFC7515]) allows the Verifier to use multiple Client Identifiers and corresponding key material and metadata to protect the same request. This serves use cases where the Verifier requests credentials belonging to different trust frameworks and, therefore, needs to authenticate in the context of those trust frameworks.
+The JWS JSON Serialization [@!RFC7515]) allows the Verifier to use multiple Client Identifiers and corresponding key material and metadata to protect the same request. This serves use cases where the Verifier requests Credentials belonging to different trust frameworks and, therefore, needs to authenticate in the context of those trust frameworks.
 
 In this case, the following request parameters MUST be present in the protected header of the respective `signature` object in the `signatures` array defined in [@!RFC7515, section 7.2.1]:
 
@@ -2061,7 +2063,7 @@ Below is a non-normative example of such a request:
 
 Every object in the `signatures` structure contains the parameters and the signature specific to a particular Client Identifier. The signature is calculated as specified in section 5.1 of [@!RFC7515].
 
-This is an example of a protected header:
+The following is a non-normative example of a content of a decoded protected header:
 
 ```
 {
@@ -2074,7 +2076,7 @@ This is an example of a protected header:
 }
 ```
 
-This is an example of the payload of a signed OpenID4VP request used with the W3C Digital Credentials API in conjunction with JWS JSON Serialization:
+The following is a non-normative example of the payload of a signed OpenID4VP request used with the W3C Digital Credentials API in conjunction with JWS JSON Serialization:
 
 <{{examples/digital_credentials_api/signed_request_payload.json}} 
 
