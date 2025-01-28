@@ -816,7 +816,7 @@ Below is a non-normative example of such an entry of type  `etsi_tl`:
 #### OpenID Federation
 
 Type:
-: `"oidf"`
+: `"openid_fed"`
 
 Value:
 : The `Entity Identifier` as defined in Section 1 of [@!OpenID.Federation] that is bound to
@@ -824,10 +824,10 @@ an entity in an OpenID Federation System. While this Entity Identifier could be 
 that ecosystem, this entity would usually have the Entity Configuration of a Trust Anchor.
 The trust chain of a matching credential MUST contain the given Entity Identifier.
 
-Below is a non-normative example of such an entry of type `oidf`: 
+Below is a non-normative example of such an entry of type `openid_fed`: 
 ```json
 {
-  "type": "oidf",
+  "type": "openid_fed",
   "values": ["https://trustanchor.example.com"]
 }
 ```
