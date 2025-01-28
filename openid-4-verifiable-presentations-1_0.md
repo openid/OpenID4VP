@@ -669,7 +669,7 @@ unknown properties.
 
 ## Credential Query {#credential_query}
 
-A Credential Query is an object representing a request for a presentation of one ore more matching
+A Credential Query is an object representing a request for a presentation of one or more matching
 Credentials.
 
 Each entry in `credentials` MUST be an object with the following properties:
