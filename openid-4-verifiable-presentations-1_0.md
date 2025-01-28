@@ -669,8 +669,8 @@ unknown properties.
 
 ## Credential Query {#credential_query}
 
-A Credential Query is an object representing a request for a presentation of one
-Credential.
+A Credential Query is an object representing a request for a presentation of one ore more matching
+Credentials.
 
 Each entry in `credentials` MUST be an object with the following properties:
 
@@ -685,6 +685,9 @@ be present more than once.
 : REQUIRED. A string that specifies the format of the requested
 Verifiable Credential. Valid Credential Format Identifier values are defined in
 (#format_specific_parameters).
+
+`multiple`:
+: OPTIONAL. A boolean which indicates whether multiple Credentials can be returned for this Credential Query. If omitted, the default value is `false`.
 
 `meta`: 
 : OPTIONAL. An object defining additional properties requested by the Verifier that
@@ -978,7 +981,7 @@ When a VP Token is returned, the respective response includes the following para
 
 `vp_token`:
 : REQUIRED. The structure of this parameter depends on the query language used to request the presentations in the Authorization Request:
- * If DCQL was used, this is a JSON-encoded object; the keys are the `id` values used for the Credential Queries in the DCQL query, and the values are the Verifiable Presentations that match the respective Credential Query. The Verifiable Presentations are represented as strings or objects depending on the format as defined in (#format_specific_parameters). The same rules as above apply for encoding the Verifiable Presentations.
+ * If DCQL was used, this is a JSON-encoded object; the keys are the `id` values used for the Credential Queries in the DCQL query, and the values are either the Verifiable Presentations that match the respective Credential Query or, if `multiple` in the Credential Query is set to `true`, an array of one or more Verifiable Presentations that match the respective Credential Query. The Verifiable Presentations are represented as strings or objects depending on the format as defined in (#format_specific_parameters). The same rules as above apply for encoding the Verifiable Presentations.
  * In case [@!DIF.PresentationExchange] was used, it is a string or JSON object that MUST contain a single Verifiable Presentation or an array of strings and JSON objects each of them containing a Verifiable Presentation. Each Verifiable Presentation MUST be represented as a string (that is a base64url-encoded value) or a JSON object depending on a format as defined in (#format_specific_parameters).  When a single Verifiable Presentation is returned, the array syntax MUST NOT be used.  If (#format_specific_parameters) defines a rule for encoding the respective Credential format in the Credential Response, this rules MUST also be followed when encoding Credentials of this format in the `vp_token` response parameter. Otherwise, this specification does not require any additional encoding when a Credential format is already represented as a JSON object or a string.
 
 `presentation_submission`:
@@ -1013,6 +1016,16 @@ brevity):
 ```json
 {
   "my_credential": "eyJhbGci...QMA"
+}
+```
+
+The following is a non-normative example of the contents of a VP Token
+containing multiple Verifiable Presentations in the SD-JWT VC format when the
+Credential Query has `multiple` set to `true` (shortened for brevity):
+
+```json
+{
+  "my_credential": ["eyJhbGci...QMA", "eyJhbGci...QMA"]
 }
 ```
 
@@ -2797,6 +2810,7 @@ The technology described in this specification was made available from contribut
    * require `typ` value in request object to be `oauth-authz-req+jwt`
    * add `SessionTranscript` requirements 
    * use claims path pointer for mdoc based credentials
+   * support returning multiple presentations for a single dcql credential query when requested using `multiple`
 
    -23
 
