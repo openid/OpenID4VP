@@ -7,7 +7,7 @@ keyword = ["security", "openid", "ssi"]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "openid-4-verifiable-presentations-1_0-24"
+value = "openid-4-verifiable-presentations-1_0-25"
 status = "standard"
 
 [[author]]
@@ -500,7 +500,7 @@ Note: "https://self-issued.me/v2" is a symbolic string and can be used as an `au
 
 This specification defines the concept of a Client Identifier Scheme that indicates how the Wallet is supposed to interpret the Client Identifier and associated data in the process of Client identification, authentication, and authorization. The Client Identifier Scheme enables deployments of this specification to use different mechanisms to obtain and validate metadata of the Verifier beyond the scope of [@!RFC6749]. The term Client Identifier Scheme is used since the Verifier is acting as an OAuth 2.0 Client.
 
-The Client Identifier Scheme is a string that MAY be communicated by the Verifier in a prefix within the `client_id` parameter in the Authorization Request. A fallback to pre-registered Clients as in [@!RFC6749] remains in place as a default mechanism in case no Client Identifier Scheme was provided. A certain Client Identifier Scheme may require the Verifier to sign the Authorization Request as means of authentication and/or pass additional parameters and require the Wallet to process them.
+The Client Identifier Scheme is a string that MAY be communicated by the Verifier in a prefix within the `client_id` parameter in the Authorization Request. A fallback to pre-registered Clients as in [@!RFC6749] or a default Client Identifier Scheme is in place as a default mechanism in case no Client Identifier Scheme was provided. A certain Client Identifier Scheme may require the Verifier to sign the Authorization Request as means of authentication and/or pass additional parameters and require the Wallet to process them.
 
 ### Syntax
 
@@ -512,7 +512,7 @@ In the `client_id` Authorization Request parameter and other places where the Cl
 
 Here, `<client_id_scheme>` is the Client Identifier Scheme and `<orig_client_id>` is an identifier for the Client within the namespace of that scheme. See (#client_identifier_schemes) for Client Identifier Schemes defined by this specification. 
 
-Wallets MUST use the presence of a `:` (colon) character to determine whether a Client Identifier Scheme is used. If a `:` character is present, the Wallet MUST interpret the Client Identifier according to the Client Identifier Scheme, here defined as the string before the (first) `:` character. If the Wallet does not support the Client Identifier Scheme, the Wallet MUST refuse the request.
+Wallets MUST use the presence of a `:` (colon) character and the content preceding it to determine whether a Client Identifier Scheme is used. If a `:` character is present and the content preceding it is a recognized and supported Client Identifier Scheme value, the Wallet MUST interpret the Client Identifier according to the given Client Identifier Scheme. The Client Identifier Scheme is defined as the string before the (first) `:` character. 
 
 For example, an Authorization Request might contain `client_id=verifier_attestation:example-client` to indicate that the `verifier_attestation` Client Identifier Scheme is to be used and that within this scheme, the Verifier can be identified by the string `example-client`. The presentation would contain the full `verifier_attestation:example-client` string as the audience (intended receiver) and the same full string would be used as the Client Identifier anywhere in the OAuth flow.
 
@@ -521,12 +521,16 @@ Note that the Verifier needs to determine which Client Identifier Schemes the Wa
 Depending on the Client Identifier Scheme, the Verifier can communicate a JSON object with its metadata using the `client_metadata` parameter which contains name/value pairs.
 
 ### Fallback
+TODO...:::
+If a `:` character is not present in the Client Identifier, the Wallet MUST treat the Client Identifier as referencing a pre-registered client. This is equivalent to the [@!RFC6749] default behavior, i.e., the Client Identifier needs to be known to the Wallet in advance of the Authorization Request. The Verifier metadata is obtained using [@!RFC7591] or through out-of-band mechanisms. 
 
-If a `:` character is not present in the Client Identifier, the Wallet MUST treat the Client Identifier as referencing a pre-registered client. This is equivalent to the [@!RFC6749] default behavior, i.e., the Client Identifier needs to be known to the Wallet in advance of the Authorization Request. The Verifier metadata is obtained using [@!RFC7591] or through out-of-band mechanisms.
+For example, if an Authorization Request contains `client_id=example-client`, the Wallet would interpret the Client Identifier as referring to a pre-registered client.
 
-For example, if an Authorization Request contains `client_id=example-client`, the Wallet would interprete the Client Identifier as referring to a pre-registered client.
+If a `:` character is present in the Client Identifier but the value preceding it is not a recognized and supported Client Identifier Scheme value, the Wallet MAY treat the Client Identifier as having a default Client Identifier Scheme. 
 
-From this definition, it follows that pre-registered clients MUST NOT contain a `:` character in their Client Identifier.
+For example, an Authorization Request containing a `client_id` value of `=https://federation-verifier.example.com` could be interpreted by the Wallet as referring to an OpenID Federation Entity Identifier, with the default Client Identifier Scheme being `openid_federation`.
+
+From this definition, it follows that pre-registered clients MUST NOT contain a `:` character preceded immediately by a supported Client Identifier Scheme value in the first part of their Client Identifier.
 
 ### Security Considerations
 
@@ -554,11 +558,11 @@ Location: https://wallet.example.org/universal-link?
     7D%7D%7D
 ```
 
-* `https`: This value indicates that the Client Identifier is an Entity Identifier defined in OpenID Federation [@!OpenID.Federation]. Since the Entity Identifier is already defined to start with `https:`, this Client Identifier Scheme MUST NOT be prefixed additionally. Processing rules given in [@!OpenID.Federation] MUST be followed. Automatic Registration as defined in [@!OpenID.Federation] MUST be used. The Authorization Request MAY also contain a `trust_chain` parameter. The final Verifier metadata is obtained from the Trust Chain after applying the policies, according to [@!OpenID.Federation]. The `client_metadata` parameter, if present in the Authorization Request, MUST be ignored when this Client Identifier scheme is used. Example Client Identifier: `https://federation-verifier.example.com`.
+* `openid_federation`: This value indicates that the Client Identifier is an Entity Identifier defined in OpenID Federation [@!OpenID.Federation]. Since the Entity Identifier is already defined to start with `https:`, this Client Identifier Scheme MUST NOT be prefixed additionally. Processing rules given in [@!OpenID.Federation] MUST be followed. Automatic Registration as defined in [@!OpenID.Federation] MUST be used. The Authorization Request MAY also contain a `trust_chain` parameter. The final Verifier metadata is obtained from the Trust Chain after applying the policies, according to [@!OpenID.Federation]. The `client_metadata` parameter, if present in the Authorization Request, MUST be ignored when this Client Identifier scheme is used. Example Client Identifier: `openid_federation:https://federation-verifier.example.com`.
 
-* `did`: This value indicates that the Client Identifier is a DID defined in [@!DID-Core]. Since the DID URI is already defined to start with `did:`, this Client Identifier Scheme MUST NOT be prefixed additionally. The request MUST be signed with a private key associated with the DID. A public key to verify the signature MUST be obtained from the `verificationMethod` property of a DID Document. Since DID Document may include multiple public keys, a particular public key used to sign the request in question MUST be identified by the `kid` in the JOSE Header. To obtain the DID Document, the Wallet MUST use DID Resolution defined by the DID method used by the Verifier. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter as defined in (#new_parameters). Example Client Identifier: `did:example:123#1`.
+* `decentralized-identifier`: This value indicates that the Client Identifier is a DID defined in [@!DID-Core]. The request MUST be signed with a private key associated with the DID. A public key to verify the signature MUST be obtained from the `verificationMethod` property of a DID Document. Since DID Document may include multiple public keys, a particular public key used to sign the request in question MUST be identified by the `kid` in the JOSE Header. To obtain the DID Document, the Wallet MUST use DID Resolution defined by the DID method used by the Verifier. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter as defined in (#new_parameters). Example Client Identifier: `decentralized_identifier:did:example:123`.
 
-The following is a non-normative example of a header and a body of a signed Request Object when Client Identifier scheme is a `did`:
+The following is a non-normative example of a header and a body of a signed Request Object when the Client Identifier scheme is a `decentralized_identifier`:
 
 Header
 
@@ -568,7 +572,7 @@ Body
 
 <{{examples/request/request_object_client_id_did.json}}
 
-* `verifier_attestation`: This Client Identifier Scheme allows the Verifier to authenticate using a JWT that is bound to a certain public key as defined in (#verifier_attestation_jwt). When the Client Identifier Scheme is `verifier_attestation`, the Client Identifier MUST equal the `sub` claim value in the Verifier attestation JWT. The request MUST be signed with the private key corresponding to the public key in the `cnf` claim in the Verifier attestation JWT. This serves as proof of possesion of this key. The Verifier attestation JWT MUST be added to the `jwt` JOSE Header of the request object (see (#verifier_attestation_jwt)). The Wallet MUST validate the signature on the Verifier attestation JWT. The `iss` claim value of the Verifier Attestation JWT MUST identify a party the Wallet trusts for issuing Verifier Attestation JWTs. If the Wallet cannot establish trust, it MUST refuse the request. If the issuer of the Verifier Attestation JWT adds a `redirect_uris` claim to the attestation, the Wallet MUST ensure the `redirect_uri` request parameter value exactly matches one of the `redirect_uris` claim entries. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter. Example Client Identifier: `verifier_attestation:verifier.example`.
+* `verifier_attestation`: This Client Identifier Scheme allows the Verifier to authenticate using a JWT that is bound to a certain public key as defined in (#verifier_attestation_jwt). When the Client Identifier Scheme is `verifier_attestation`, the Client Identifier MUST equal the `sub` claim value in the Verifier attestation JWT. The request MUST be signed with the private key corresponding to the public key in the `cnf` claim in the Verifier attestation JWT. This serves as proof of possession of this key. The Verifier attestation JWT MUST be added to the `jwt` JOSE Header of the request object (see (#verifier_attestation_jwt)). The Wallet MUST validate the signature on the Verifier attestation JWT. The `iss` claim value of the Verifier Attestation JWT MUST identify a party the Wallet trusts for issuing Verifier Attestation JWTs. If the Wallet cannot establish trust, it MUST refuse the request. If the issuer of the Verifier Attestation JWT adds a `redirect_uris` claim to the attestation, the Wallet MUST ensure the `redirect_uri` request parameter value exactly matches one of the `redirect_uris` claim entries. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter. Example Client Identifier: `verifier_attestation:verifier.example`.
 
 * `x509_san_dns`: When the Client Identifier Scheme is `x509_san_dns`, the Client Identifier MUST be a DNS name and match a `dNSName` Subject Alternative Name (SAN) [@!RFC5280] entry in the leaf certificate passed with the request. The request MUST be signed with the private key corresponding to the public key in the leaf X.509 certificate of the certificate chain added to the request in the `x5c` JOSE header [@!RFC7515] of the signed request object. The Wallet MUST validate the signature and the trust chain of the X.509 certificate. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter. If the Wallet can establish trust in the Client Identifier authenticated through the certificate, e.g. because the Client Identifier is contained in a list of trusted Client Identifiers, it may allow the client to freely choose the `redirect_uri` value. If not, the FQDN of the `redirect_uri` value MUST match the Client Identifier without the prefix `x509_san_dns:`. Example Client Identifier: `x509_san_dns:client.example.org`.
 
@@ -2790,6 +2794,10 @@ The technology described in this specification was made available from contribut
 # Document History
 
    [[ To be removed from the final specification ]]
+
+   -25
+
+   * make consistent the use of prefixes in the client_id scheme
 
    -24
 

@@ -41,7 +41,7 @@
       "type": "Ed25519Signature2018",
       "created": "2021-03-19T15:30:15Z",
       "challenge": "n-0S6_WzA2Mj",
-      "domain": "https://client.example.org/cb",
+      "domain": "x509_san_uri:https://client.example.org/cb",
       "jws": "eyJhb...JQdBw",
       "proofPurpose": "authentication",
       "verificationMethod": "did:example:holder#key-1"
@@ -67,9 +67,9 @@
    oJMS0XfLlBwsg~WyJRZ19PNjR6cUF4ZTQxMmExMDhpcm9BIiwgImFkZHJlc3MiLCB7In
    N0cmVldF9hZGRyZXNzIjogIjEyMyBNYWluIFN0IiwgImxvY2FsaXR5IjogIkFueXRvd2
    4iLCAicmVnaW9uIjogIkFueXN0YXRlIiwgImNvdW50cnkiOiAiVVMifV0~eyJhbGciOi
-   AiRVMyNTYiLCAidHlwIjogImtiK2p3dCJ9.eyJub25jZSI6ICIxMjM0NTY3ODkwIiwgI
-   mF1ZCI6ICJodHRwczovL2V4YW1wbGUuY29tL3ZlcmlmaWVyIiwgImlhdCI6IDE3MDk1N
-   zYwMzcsICJzZF9oYXNoIjogIkQtaGVBamp0Q2Z4bkhjTDJyckZtNXNreTBjYXlZakhYd
-   zd3U2dwU3N2bzQifQ.ytKc24j5CGv8So1Iyo5LhPROWCpg-p4YwtyNCt0L1QsSh7MPhS
-   mUtBzlOgb3xvMde0uk3MUpLLUVO96zlrp6zg"
+   JFUzI1NiIsInR5cCI6ImtiK2p3dCJ9.eyAgIm5vbmNlIjogIjEyMzQ1Njc4OTAiLCAgI
+   mF1ZCI6ICJ4NTA5X3Nhbl91cmk6aHR0cHM6Ly9jbGllbnQuZXhhbXBsZS5vcmcvYyIsI
+   CAiaWF0IjogMTcwOTU3NjAzNywgICJzZF9oYXNoIjogIi4uLmhhc2ggdmFsdWUuLi4if
+   Q.BSzKgxY-u--8-RvjSqpJMi612J6sVl3F9pj0zoe8pVzUVoZsKFBG2DELyHHa4MlR3i
+   6wt7n77vtt7uG13EYyNw"
 ]
