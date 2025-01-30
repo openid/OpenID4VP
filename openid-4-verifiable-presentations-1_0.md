@@ -528,7 +528,7 @@ For example, if an Authorization Request contains `client_id=example-client`, th
 
 If a `:` character is present in the Client Identifier but the value preceding it is not a recognized and supported Client Identifier Scheme value, the Wallet MAY treat the Client Identifier as having a default Client Identifier Scheme. 
 
-For example, an Authorization Request containing a `client_id` value of `=https://federation-verifier.example.com` could be interpreted by the Wallet as referring to an OpenID Federation Entity Identifier, with the default Client Identifier Scheme being `openid_federation`.
+For example, an Authorization Request containing a `client_id` value of `https://federation-verifier.example.com` could be interpreted by the Wallet as referring to an OpenID Federation Entity Identifier, with the default Client Identifier Scheme being `openid_federation`.
 
 From this definition, it follows that pre-registered clients MUST NOT contain a `:` character preceded immediately by a supported Client Identifier Scheme value in the first part of their Client Identifier.
 
