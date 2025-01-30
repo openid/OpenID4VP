@@ -981,7 +981,7 @@ When a VP Token is returned, the respective response includes the following para
 
 `vp_token`:
 : REQUIRED. The structure of this parameter depends on the query language used to request the presentations in the Authorization Request:
- * If DCQL was used, this is a JSON-encoded object; the keys are the `id` values used for the Credential Queries in the DCQL query, and the values are either the Verifiable Presentations that match the respective Credential Query or, if `multiple` in the Credential Query is set to `true`, an array of one or more Verifiable Presentations that match the respective Credential Query. The Verifiable Presentations are represented as strings or objects depending on the format as defined in (#format_specific_parameters). The same rules as above apply for encoding the Verifiable Presentations.
+ * If DCQL was used, this is a JSON-encoded object which contains entries having: the key as the `id` value used for a Credential Query in the DCQL query; and the value as an array of one or more Verifiable Presentations that match the respective Credential Query. When `multiple` is not `true`, the array MUST contain only one Verifiable Presentation. There MUST NOT be any entry in the JSON-encoded object for optional Credential Queries when there are no matching Credentials for the respective Credential Query. The Verifiable Presentations are represented as strings or objects depending on the format as defined in (#format_specific_parameters). The same rules as above apply for encoding the Verifiable Presentations.
  * In case [@!DIF.PresentationExchange] was used, it is a string or JSON object that MUST contain a single Verifiable Presentation or an array of strings and JSON objects each of them containing a Verifiable Presentation. Each Verifiable Presentation MUST be represented as a string (that is a base64url-encoded value) or a JSON object depending on a format as defined in (#format_specific_parameters).  When a single Verifiable Presentation is returned, the array syntax MUST NOT be used.  If (#format_specific_parameters) defines a rule for encoding the respective Credential format in the Credential Response, this rules MUST also be followed when encoding Credentials of this format in the `vp_token` response parameter. Otherwise, this specification does not require any additional encoding when a Credential format is already represented as a JSON object or a string.
 
 `presentation_submission`:
@@ -1015,7 +1015,7 @@ brevity):
 
 ```json
 {
-  "my_credential": "eyJhbGci...QMA"
+  "my_credential": ["eyJhbGci...QMA"]
 }
 ```
 
@@ -1025,7 +1025,7 @@ Credential Query has `multiple` set to `true` (shortened for brevity):
 
 ```json
 {
-  "my_credential": ["eyJhbGci...QMA", "eyJhbGci...QMA"]
+  "my_credential": ["eyJhbGci...QMA", "eyJhbGci...QMA", ...]
 }
 ```
 
@@ -2274,7 +2274,7 @@ An example DCQL query using the mdoc format is shown in (#more_dcql_query_exampl
 
 ```json
 {
-  "my_credential": "<base64url-encoded DeviceResponse>"
+  "my_credential": ["<base64url-encoded DeviceResponse>"]
 }
 ```
 
