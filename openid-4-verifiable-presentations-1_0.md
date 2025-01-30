@@ -2907,6 +2907,10 @@ The technology described in this specification was made available from contribut
 
    [[ To be removed from the final specification ]]
 
+   -25
+
+   * add `accepted_issuers` to DCQL
+
    -24
 
    * require `typ` value in request object to be `oauth-authz-req+jwt`
