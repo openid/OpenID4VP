@@ -1964,8 +1964,8 @@ The value `1` MUST be used for the `<version>` field to indicate the request and
 
 The following exchange protocol values are defined by this specification:
 
-* Unsigned requests: `urn:openid:protocol:openid4vp:v1:unsigned`
-* Signed requests: `urn:openid:protocol:openid4vp:v1:signed`
+* Unsigned requests: `urn:openid:dcapi-protocol:openid4vp:v1:unsigned`
+* Signed requests: `urn:openid:dcapi-protocol:openid4vp:v1:signed`
 
 ## Request {#dc_api_request}
 
