@@ -2798,6 +2798,7 @@ The technology described in this specification was made available from contribut
    [[ To be removed from the final specification ]]
 
    -25
+   
    * add language on client ID and nonce binding for ISO mdocs and W3C VCs
 
    -24
