@@ -7,7 +7,7 @@ keyword = ["security", "openid", "ssi"]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "openid-4-verifiable-presentations-1_0-24"
+value = "openid-4-verifiable-presentations-1_0-25"
 status = "standard"
 
 [[author]]
@@ -536,7 +536,7 @@ Confusing Verifiers using a Client Identifier Scheme with those using none can l
 
 This specification defines the following Client Identifier Schemes, followed by the examples where applicable: 
 
-* `redirect_uri`: This value indicates that the Client Identifier (without the prefix `redirect_uri:`) is the Verifier's Redirect URI (or Response URI when Response Mode `direct_post` is used). The Authorization Request MUST NOT be signed. The Verifier MAY omit the `redirect_uri` Authorization Request parameter (or `response_uri` when Response Mode `direct_post` is used). All Verifier metadata parameters MUST be passed using the `client_metadata` parameter defined in (#new_parameters). Example Client Identifier value is `redirect_uri:https://client.example.org/cb`.
+* `redirect_uri`: This value indicates that the Client Identifier (without the prefix `redirect_uri:`) is the Verifier's Redirect URI (or Response URI when Response Mode `direct_post` is used). The Authorization Request MUST NOT be signed. This Client Identifier Scheme MUST NOT be used with the Request URI response compliant to [@RFC9101] defined in (#request_uri_response). The Verifier MAY omit the `redirect_uri` Authorization Request parameter (or `response_uri` when Response Mode `direct_post` is used). All Verifier metadata parameters MUST be passed using the `client_metadata` parameter defined in (#new_parameters). Example Client Identifier value is `redirect_uri:https://client.example.org/cb`.
 
 The following is a non-normative example of a request with this Client Identifier Scheme:
 
@@ -614,7 +614,7 @@ Content-Type: application/x-www-form-urlencoded
   wallet_nonce=qPmxiNFCR3QTm19POc8u
 ```
 
-### Request URI Response
+### Request URI Response {#request_uri_response}
 
 The Request URI response MUST be an HTTP response with the content type "application/oauth-authz-req+jwt" and the body being a signed, optionally encrypted, request object as defined in [@RFC9101]. The request object MUST fulfill the requirements as defined in (#vp_token_request).
 
@@ -2790,6 +2790,10 @@ The technology described in this specification was made available from contribut
 # Document History
 
    [[ To be removed from the final specification ]]
+
+   -25
+
+   * clarify that redirect_uri client id scheme cannot be used with rfc 9101
 
    -24
 
