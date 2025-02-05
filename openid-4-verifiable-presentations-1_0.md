@@ -873,6 +873,7 @@ In detail, the array is processed from left to right as follows:
        currently selected element(s) is not an array, abort processing and
        return an error. If the index does not exist in a selected array, remove
        that array from the selection.
+    4. If the component is anything else, abort processing and return an error.       
 3. If the set of elements currently selected is empty, abort processing and
    return an error.
 
