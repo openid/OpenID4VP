@@ -7,7 +7,7 @@ keyword = ["security", "openid", "ssi"]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "openid-4-verifiable-presentations-1_0-24"
+value = "openid-4-verifiable-presentations-1_0-25"
 status = "standard"
 
 [[author]]
