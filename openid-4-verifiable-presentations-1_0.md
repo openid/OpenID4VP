@@ -295,7 +295,7 @@ Exactly one of the following parameters MUST be present in the Authorization Req
 
     * `jwks`: OPTIONAL. A JWKS as defined in [@!RFC7591]. It MAY contain one or more public keys, such as those used by the Wallet as an input to a key agreement that may be used for encryption of the Authorization Response (see (#jarm)), or where the Wallet will require the public key of the Verifier to generate the Verifiable Presentation. This allows the Verifier to pass ephemeral keys specific to this Authorization Request. Public keys included in this parameter MUST NOT be used to verify the signature of signed Authorization Requests.
     * `vp_formats`: REQUIRED when not available to the Wallet via another mechanism. As defined in (#client_metadata_parameters).
-    * `authorization_signed_response_alg`: OPTIONAL. As defined in [@!JARM].
+    * `authorization_signed_response_alg`: OPTIONAL. As defined in [@!JARM], with an adjustment to the default behavior when this parameter is absent: instead of defaulting to `RS256`, the Authorization Response is not signed.
     * `authorization_encrypted_response_alg`: OPTIONAL. As defined in [@!JARM].
     * `authorization_encrypted_response_enc`: OPTIONAL. As defined in [@!JARM].
 
@@ -877,6 +877,7 @@ In detail, the array is processed from left to right as follows:
        currently selected element(s) is not an array, abort processing and
        return an error. If the index does not exist in a selected array, remove
        that array from the selection.
+    4. If the component is anything else, abort processing and return an error.       
 3. If the set of elements currently selected is empty, abort processing and
    return an error.
 
@@ -1150,7 +1151,7 @@ This section defines how an Authorization Response containing a VP Token can be 
 
 To sign, encrypt, or both sign and encrypt the Authorization Response, implementations MUST use the JWT Secured Authorization Response Mode for OAuth 2.0 (JARM) [@!JARM], and when only encrypting, the JARM extension described below.
 
-This specification also defines how to encrypt an unsigned Authorization Response by extending the mechanisms defined in [@!JARM]. The JSON containing the Authorization Response parameters can be encrypted as the payload of the JWE.
+This specification also defines how to encrypt an unsigned Authorization Response by adapting the mechanisms defined in [@!JARM]. The JSON containing the Authorization Response parameters can be encrypted as the payload of the JWE.
 
 The advantage of an encrypted but not signed Authorization Response is that it prevents the signing key from being used as a correlation factor. It can also be a challenge to establish trust in the signing key to ensure authenticity. For security considerations with encrypted but unsigned responses, see (#encrypting_unsigned_response).
 
@@ -2031,7 +2032,7 @@ The value of the `response_mode` parameter MUST be `dc_api` when the response is
 
 In addition to the above-mentioned parameters, a new parameter is introduced for OpenID4VP over the W3C Digital Credentials API:
 
-* `expected_origins`: REQUIRED when signed requests defined in (#signed_request) are used with the Digital Credentials API (DC API). An array of strings, each string representing an Origin of the Verifier that is making the request. The Wallet can detect replay of the request from a malicious Verifier by comparing values in this parameter to the Origin.
+* `expected_origins`: REQUIRED when signed requests defined in (#signed_request) are used with the Digital Credentials API (DC API). An array of strings, each string representing an Origin of the Verifier that is making the request. The Wallet can detect replay of the request from a malicious Verifier by comparing values in this parameter to the Origin. This parameter is not for use in unsigned requests and therefore a Wallet MUST ignore this parameter if it is present in an unsigned request.
 
 Additional request parameters MAY be defined and used with OpenID4VP over the DC API.
 
@@ -2106,6 +2107,11 @@ This `presentation_definition` parameter contains a single `input_descriptor` el
 
 #### Presentation Response
 
+The following requirements apply to the `nonce` and `aud` claims of the Verifiable Presentation:
+
+- the `nonce` claim MUST be the value of `nonce` from the Authorization Request;
+- the `aud` claim MUST be the value of the Client Identifier; or effective Client Identifier for an unsigned Authorization Request over the DC API, as described in (#dc_api_request).
+
 The following is a non-normative example of an Authorization Response:
 
 <{{examples/response/response.txt}}
@@ -2117,8 +2123,6 @@ The following is a non-normative example of the content of the `presentation_sub
 The following is a non-normative example of the payload of the Verifiable Presentation in the `vp_token` parameter provided in the same response and referred to by the `presentation_submission` above:
 
 <{{examples/response/jwt_vp.json}}
-
-Note: The VP's `nonce` claim contains the value of the `nonce` of the presentation request and the `aud` claim contains the Client Identifier of the Verifier. This allows the Verifier to detect replay of a Presentation as recommended in (#preventing-replay).
 
 ### LDP VCs
 
@@ -2148,6 +2152,11 @@ This `presentation_definition` parameter contains a single `input_descriptor` el
 
 #### Presentation Response
 
+The following requirements apply to the `challenge` and `domain` claims within the `proof` object in the Verifiable Presentation:
+
+- the `challenge` claim MUST be the value of `nonce` from the Authorization Request;
+- the `domain` claim MUST be the value of the Client Identifier; or effective Client Identifier for an unsigned Authorization Request over the DC API, as described in (#dc_api_request).
+
 The following is a non-normative example of an Authorization Response:
 
 <{{examples/response/response.txt}}
@@ -2159,8 +2168,6 @@ The following is a non-normative example of the content of the `presentation_sub
 The following is a non-normative example of the Verifiable Presentation in the `vp_token` parameter provided in the same response and referred to by the `presentation_submission` above:
 
 <{{examples/response/ldp_vp.json}}
-
-Note: The VP's `challenge` claim contains the value of the `nonce` of the presentation request and the `domain` claims contains the Client Identifier of the Verifier. This allows the Verifier to detect replay of a presentation as recommended in (#preventing-replay). 
 
 ## AnonCreds
 
@@ -2277,7 +2284,7 @@ See ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 Annex C [@ISO.
 
 The VP Token contains the base64url-encoded `DeviceResponse` CBOR structure as defined in ISO/IEC 18013-5 [@ISO.18013-5] or ISO/IEC 23220-4 [@ISO.23220-4]. Essentially, the `DeviceResponse` CBOR structure contains a signature or MAC over the `SessionTranscript` CBOR structure including the OpenID4VP-specific `Handover` CBOR structure.
 
-See ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 Annex C [@ISO.23220-4] for the latest examples on how to use the `presentation_submission` parameter and how to generate the Authorizaton Response for presenting Credentials in the mdoc format.
+See ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 Annex C [@ISO.23220-4] for the latest examples on how to use the `presentation_submission` parameter and how to generate the Authorizaton Response for presenting Credentials in the mdoc format. This includes how the `client_id` and `nonce` are used in the `SessionTranscript`.
 
 ### `Handover` and `SessionTranscript` Definitions
 
@@ -2798,6 +2805,8 @@ The technology described in this specification was made available from contribut
    -25
 
    * make consistent the use of prefixes in the client_id scheme
+   * add language on client ID and nonce binding for ISO mdocs and W3C VCs
+   * clarify the behavior is not to sign when authorization_signed_response_alg is omitted
 
    -24
 
