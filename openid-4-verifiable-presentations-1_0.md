@@ -800,12 +800,12 @@ Type:
 
 Value:
 : The identifier (can also be a URL) of a Trusted List as specified in ETSI TS 119 612 [@ETSI.TL].An ETSI
-Trusted List contains references to other Trusted Lists, creating a list of trustedf lists, or entries
+Trusted List contains references to other Trusted Lists, creating a list of trusted lists, or entries
 for Trust Service Providers with corresponding service description and X.509 Certificates. The trust chain
-of a matching Credential MUST contain at least one X.509 Certificate that matches one of the entires of the
+of a matching Credential MUST contain at least one X.509 Certificate that matches one of the entries of the
 Trusted List or its cascading Trusted Lists.
 
-Below is a non-normative example of such an entry of type  `etsi_tl`:
+Below is a non-normative example of such an entry of type `etsi_tl`:
 ```json
 {
   "type": "etsi_tl",
