@@ -295,7 +295,7 @@ Exactly one of the following parameters MUST be present in the Authorization Req
 
     * `jwks`: OPTIONAL. A JWKS as defined in [@!RFC7591]. It MAY contain one or more public keys, such as those used by the Wallet as an input to a key agreement that may be used for encryption of the Authorization Response (see (#jarm)), or where the Wallet will require the public key of the Verifier to generate the Verifiable Presentation. This allows the Verifier to pass ephemeral keys specific to this Authorization Request. Public keys included in this parameter MUST NOT be used to verify the signature of signed Authorization Requests.
     * `vp_formats`: REQUIRED when not available to the Wallet via another mechanism. As defined in (#client_metadata_parameters).
-    * `authorization_signed_response_alg`: OPTIONAL. As defined in [@!JARM].
+    * `authorization_signed_response_alg`: OPTIONAL. As defined in [@!JARM], with an adjustment to the default behavior when this parameter is absent: instead of defaulting to `RS256`, the Authorization Response is not signed.
     * `authorization_encrypted_response_alg`: OPTIONAL. As defined in [@!JARM].
     * `authorization_encrypted_response_enc`: OPTIONAL. As defined in [@!JARM].
 
@@ -873,6 +873,7 @@ In detail, the array is processed from left to right as follows:
        currently selected element(s) is not an array, abort processing and
        return an error. If the index does not exist in a selected array, remove
        that array from the selection.
+    4. If the component is anything else, abort processing and return an error.       
 3. If the set of elements currently selected is empty, abort processing and
    return an error.
 
@@ -1146,7 +1147,7 @@ This section defines how an Authorization Response containing a VP Token can be 
 
 To sign, encrypt, or both sign and encrypt the Authorization Response, implementations MUST use the JWT Secured Authorization Response Mode for OAuth 2.0 (JARM) [@!JARM], and when only encrypting, the JARM extension described below.
 
-This specification also defines how to encrypt an unsigned Authorization Response by extending the mechanisms defined in [@!JARM]. The JSON containing the Authorization Response parameters can be encrypted as the payload of the JWE.
+This specification also defines how to encrypt an unsigned Authorization Response by adapting the mechanisms defined in [@!JARM]. The JSON containing the Authorization Response parameters can be encrypted as the payload of the JWE.
 
 The advantage of an encrypted but not signed Authorization Response is that it prevents the signing key from being used as a correlation factor. It can also be a challenge to establish trust in the signing key to ensure authenticity. For security considerations with encrypted but unsigned responses, see (#encrypting_unsigned_response).
 
@@ -2800,6 +2801,7 @@ The technology described in this specification was made available from contribut
    -25
    
    * add language on client ID and nonce binding for ISO mdocs and W3C VCs
+   * clarify the behavior is not to sign when authorization_signed_response_alg is omitted
 
    -24
 
