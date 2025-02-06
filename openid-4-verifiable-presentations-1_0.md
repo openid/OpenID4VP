@@ -726,7 +726,7 @@ Each entry in `accepted_issuers` MUST be an object with the following properties
 
 `type`:
 : REQUIRED. A string uniquely identifying the type of information about the issuer trust framework.
-Possible types are defined below.
+Types defined by this specification are listed below.
 
 `values`:
 : REQUIRED. An array of strings, where each string (value) contains information specific to the
