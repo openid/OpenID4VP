@@ -1,6 +1,6 @@
 GET /authorize?
   response_type=vp_token
-  &client_id=x505_san_dns%3Aclient.example.org
+  &client_id=x509_san_dns%3Aclient.example.org
   &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
   &presentation_definition=...
   &nonce=n-0S6_WzA2Mj HTTP/1.1
