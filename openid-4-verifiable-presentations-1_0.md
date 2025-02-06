@@ -2103,6 +2103,11 @@ This `presentation_definition` parameter contains a single `input_descriptor` el
 
 #### Presentation Response
 
+The following requirements apply to the `nonce` and `aud` claims of the Verifiable Presentation:
+
+- the `nonce` claim MUST be the value of `nonce` from the Authorization Request;
+- the `aud` claim MUST be the value of the Client Identifier; or effective Client Identifier for an unsigned Authorization Request over the DC API, as described in (#dc_api_request).
+
 The following is a non-normative example of an Authorization Response:
 
 <{{examples/response/response.txt}}
@@ -2114,8 +2119,6 @@ The following is a non-normative example of the content of the `presentation_sub
 The following is a non-normative example of the payload of the Verifiable Presentation in the `vp_token` parameter provided in the same response and referred to by the `presentation_submission` above:
 
 <{{examples/response/jwt_vp.json}}
-
-Note: The VP's `nonce` claim contains the value of the `nonce` of the presentation request and the `aud` claim contains the Client Identifier of the Verifier. This allows the Verifier to detect replay of a Presentation as recommended in (#preventing-replay).
 
 ### LDP VCs
 
@@ -2145,6 +2148,11 @@ This `presentation_definition` parameter contains a single `input_descriptor` el
 
 #### Presentation Response
 
+The following requirements apply to the `challenge` and `domain` claims within the `proof` object in the Verifiable Presentation:
+
+- the `challenge` claim MUST be the value of `nonce` from the Authorization Request;
+- the `domain` claim MUST be the value of the Client Identifier; or effective Client Identifier for an unsigned Authorization Request over the DC API, as described in (#dc_api_request).
+
 The following is a non-normative example of an Authorization Response:
 
 <{{examples/response/response.txt}}
@@ -2156,8 +2164,6 @@ The following is a non-normative example of the content of the `presentation_sub
 The following is a non-normative example of the Verifiable Presentation in the `vp_token` parameter provided in the same response and referred to by the `presentation_submission` above:
 
 <{{examples/response/ldp_vp.json}}
-
-Note: The VP's `challenge` claim contains the value of the `nonce` of the presentation request and the `domain` claims contains the Client Identifier of the Verifier. This allows the Verifier to detect replay of a presentation as recommended in (#preventing-replay). 
 
 ## AnonCreds
 
@@ -2274,7 +2280,7 @@ See ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 Annex C [@ISO.
 
 The VP Token contains the base64url-encoded `DeviceResponse` CBOR structure as defined in ISO/IEC 18013-5 [@ISO.18013-5] or ISO/IEC 23220-4 [@ISO.23220-4]. Essentially, the `DeviceResponse` CBOR structure contains a signature or MAC over the `SessionTranscript` CBOR structure including the OpenID4VP-specific `Handover` CBOR structure.
 
-See ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 Annex C [@ISO.23220-4] for the latest examples on how to use the `presentation_submission` parameter and how to generate the Authorizaton Response for presenting Credentials in the mdoc format.
+See ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 Annex C [@ISO.23220-4] for the latest examples on how to use the `presentation_submission` parameter and how to generate the Authorizaton Response for presenting Credentials in the mdoc format. This includes how the `client_id` and `nonce` are used in the `SessionTranscript`.
 
 ### `Handover` and `SessionTranscript` Definitions
 
@@ -2793,7 +2799,8 @@ The technology described in this specification was made available from contribut
    [[ To be removed from the final specification ]]
 
    -25
-
+   
+   * add language on client ID and nonce binding for ISO mdocs and W3C VCs
    * clarify the behavior is not to sign when authorization_signed_response_alg is omitted
 
    -24
