@@ -562,7 +562,7 @@ Location: https://wallet.example.org/universal-link?
 
 * `decentralized_identifier`: This value indicates that the Client Identifier is a DID defined in [@!DID-Core]. The request MUST be signed with a private key associated with the DID. A public key to verify the signature MUST be obtained from the `verificationMethod` property of a DID Document. Since DID Document may include multiple public keys, a particular public key used to sign the request in question MUST be identified by the `kid` in the JOSE Header. To obtain the DID Document, the Wallet MUST use DID Resolution defined by the DID method used by the Verifier. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter as defined in (#new_parameters). Example Client Identifier: `decentralized_identifier:did:example:123`.
 
-The following is a non-normative example of a header and a body of a signed Request Object when the Client Identifier scheme is a `decentralized_identifier`:
+The following is a non-normative example of a header and a body of a signed Request Object when the Client Identifier scheme is `decentralized_identifier`:
 
 Header
 
