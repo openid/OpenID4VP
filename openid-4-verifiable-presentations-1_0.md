@@ -2,12 +2,12 @@
 title = "OpenID for Verifiable Presentations - Editor's draft"
 abbrev = "openid-4-vp"
 ipr = "none"
-workgroup = "OpenID Connect"
+workgroup = "OpenID Digital Credentials Protocols"
 keyword = ["security", "openid", "ssi"]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "openid-4-verifiable-presentations-1_0-24"
+value = "openid-4-verifiable-presentations-1_0-25"
 status = "standard"
 
 [[author]]
