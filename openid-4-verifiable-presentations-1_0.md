@@ -758,8 +758,9 @@ and for selecting credentials.
 
 The following rules apply for selecting claims via `claims` and `claim_sets`:
 
-- If `claims` is absent, the Verifier requests all claims existing
-  in the Credential.
+- If `claims` is absent, the Verifier requests no claims that are selectively disclosable; the Wallet MUST
+  return only the claims that are mandatory to present (e.g., the issuer-signed JWT and KB+JWT for a Credential
+  of format SD-JWT).
 - If `claims` is present, but `claim_sets` is absent,
   the Verifier requests all claims listed in `claims`.
 - If both `claims` and `claim_sets` are present, the Verifier requests one combination of the claims listed in
@@ -767,6 +768,7 @@ The following rules apply for selecting claims via `claims` and `claim_sets`:
   array expresses the Verifier's preference for what is returned; the Wallet MUST return
   the first option that it can satisfy. If the Wallet cannot satisfy any of the
   options, it MUST NOT return any claims.
+- `claim_sets` MUST NOT be present if `claims` is absent.
 
 When a Claims Query contains a restriction on the values of a claim, the Wallet
 SHOULD NOT return the claim if its value does not match at least one of the
@@ -791,6 +793,10 @@ more information.
 
 If the Wallet cannot deliver all claims requested by the Verifier
 according to these rules, it MUST NOT return the respective Credential.
+
+Note: For Credential Formats that do not support selective disclosure, the case of both `claims`
+and `claim_sets` being absent is interpreted as requesting a presentation of the "full credential"
+since all claims are mandatory to present.
 
 #### Selecting Credentials
 
@@ -2807,6 +2813,7 @@ The technology described in this specification was made available from contribut
 
    -25
    
+   * clarify DCQL case of `claims` and `claim_sets` being absent
    * add language on client ID and nonce binding for ISO mdocs and W3C VCs
    * clarify the behavior is not to sign when authorization_signed_response_alg is omitted
 
