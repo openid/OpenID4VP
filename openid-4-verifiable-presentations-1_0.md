@@ -758,9 +758,9 @@ and for selecting credentials.
 
 The following rules apply for selecting claims via `claims` and `claim_sets`:
 
-- If `claims` is absent, the Verifier requests no claims that are selectively disclosable; the Wallet MUST
-  return only the claims that are mandatory to present (e.g., the issuer-signed JWT and KB+JWT for a Credential
-  of format SD-JWT).
+- If `claims` is absent, the Verifier is requesting no claims that are selectively disclosable; the Wallet MUST
+  return only the claims that are mandatory to present (e.g., SD-JWT and Key Binding JWT for a Credential
+  of format IETF SD-JWT VC).
 - If `claims` is present, but `claim_sets` is absent,
   the Verifier requests all claims listed in `claims`.
 - If both `claims` and `claim_sets` are present, the Verifier requests one combination of the claims listed in
@@ -794,7 +794,7 @@ more information.
 If the Wallet cannot deliver all claims requested by the Verifier
 according to these rules, it MUST NOT return the respective Credential.
 
-Note: For Credential Formats that do not support selective disclosure, the case of both `claims`
+For Credential Formats that do not support selective disclosure, the case of both `claims`
 and `claim_sets` being absent is interpreted as requesting a presentation of the "full credential"
 since all claims are mandatory to present.
 
