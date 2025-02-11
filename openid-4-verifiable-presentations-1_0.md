@@ -280,15 +280,17 @@ One exception to this rule is `transaction_data` parameter, and the wallets that
 This specification defines the following new request parameters:
 
 `presentation_definition`:
-: A string containing a Presentation Definition JSON object. See (#request_presentation_definition) for more details.
+: A JSON object containing a Presentation Definition. See (#request_presentation_definition) for more details.
 
 `presentation_definition_uri`:
 : A string containing an HTTPS URL pointing to a resource where a Presentation Definition JSON object can be retrieved. See (#request_presentation_definition_uri) for more details.
 
 `dcql_query`:
-: A string containing a JSON-encoded DCQL query as defined in (#dcql_query).
+: A JSON object containing a DCQL query as defined in (#dcql_query).
 
 Exactly one of the following parameters MUST be present in the Authorization Request: `dcql_query`, `presentation_definition`, `presentation_definition_uri`, or a `scope` value representing a Presentation Definition.
+
+In the context of an authorization request according to [RFC6749], parameters containing JSON objects are encoded using the application/x-www-form-urlencoded format of the serialized JSON.
 
 `client_metadata`:
 : OPTIONAL. A JSON object containing the Verifier metadata values. It MUST be UTF-8 encoded. The following metadata parameters MAY be used:
@@ -2812,6 +2814,7 @@ The technology described in this specification was made available from contribut
    * add language on client ID and nonce binding for ISO mdocs and W3C VCs
    * clarify the behavior is not to sign when authorization_signed_response_alg is omitted
    * add a note on the use of apu/apv in the JWE header of encrypted responses
+   * clarify that `dcql_query` and `presentation_definition` are passed as JSON objects (not strings) in request objects
 
    -24
 
