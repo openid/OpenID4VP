@@ -2,12 +2,12 @@
 title = "OpenID for Verifiable Presentations - Editor's draft"
 abbrev = "openid-4-vp"
 ipr = "none"
-workgroup = "OpenID Connect"
+workgroup = "OpenID Digital Credentials Protocols"
 keyword = ["security", "openid", "ssi"]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "openid-4-verifiable-presentations-1_0-24"
+value = "openid-4-verifiable-presentations-1_0-25"
 status = "standard"
 
 [[author]]
@@ -1162,6 +1162,8 @@ If the JWT is only a JWE, the following processing rules MUST be followed:
 - `iss`, `exp` and `aud` MUST be omitted in the JWT Claims Set of the JWE, and the processing rules as per [@!JARM] Section 2.4 related to these claims do not apply.
 - The processing rules as per [@!JARM] Section 2.4 related to JWS processing MUST be ignored.
 
+Note that for the ECDH JWE algorithms (from section 4.6 of [@!RFC7518]), the `apu` and `apv` values are inputs
+into the key derivation process that is used to derive the content encryption key. Regardless of algorithm used, the values are always part of the AEAD tag computation so will still be bound to the encrypted response.
 The following is a non-normative example of the payload of a JWT used in an Authorization Response that is encrypted and not signed:
 
 <{{examples/response/jarm_jwt_enc_only_vc_json_body.json}}
@@ -2816,6 +2818,7 @@ The technology described in this specification was made available from contribut
    * clarify DCQL case of `claims` and `claim_sets` being absent
    * add language on client ID and nonce binding for ISO mdocs and W3C VCs
    * clarify the behavior is not to sign when authorization_signed_response_alg is omitted
+   * add a note on the use of apu/apv in the JWE header of encrypted responses
 
    -24
 
