@@ -741,24 +741,6 @@ issuer belongs to.
 Below are descriptions for the different Type Identifiers (string), the description on how to interpret
 and perform the matching logic for each provided value.
 
-#### X.509 Thumbprint
-
-Type:
-: `"x5t#S256"`
-
-Value:
-: The base64url encoded SHA-256 digest (a.k.a. thumbprint, fingerprint) of the DER encoding of an X.509
-certificate as defined in Section 4.1.8 of [@!RFC7515]. This thumbprint MUST match with the thumbprint
-of an X.509 certificate in the trust chain of the Credential.
-
-Below is a non-normative example of such an entry of type `x5t#S256`:
-```json
-{
-  "type": "x5t#S256",
-  "values": ["455943cf819425761d1f950263ebf54755d8d684c25535943976f488bc79d23b"]
-}
-```
-
 #### Authority Key Identifier
 
 Type:
@@ -774,27 +756,6 @@ Below is a non-normative example of such an entry of type `aki`:
 {
   "type": "aki",
   "values": ["s9tIpPmhxdiuNkHMEWNpYim8S8Y"]
-}
-```
-
-#### Verified Issuer Certificate Authority List (VICAL)
-
-Type:
-: `"vical"`
-
-Value:
-: The identifier (can also be a URL) of a Verified Issuer Certificate Authority List (VICAL) as specified in
-[@ISO.18013-5]. The VICAL contains a list of Issuing Authority Certificate Authorities (IACA), that provide
-DER encoded X.509 Certificates and corresponding allowed document types (an array of DocType identifiers).
-This Type MUST only be used in combination with Credentials of the Credential Format mdoc. The trust chain
-of a matching Credential MUST contain at last one X.509 Certificate entry in the IACAs and the allowed
-DocTypes of the corresponding IACA entry MUST match with the doctype of the Credential.
-
-Below is a non-normative example of such an entry of type `vical`:
-```json
-{
-  "type": "vical",
-  "values": ["https://vical.example.com"]
 }
 ```
 
