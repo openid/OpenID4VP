@@ -788,7 +788,7 @@ Value:
 : The `Entity Identifier` as defined in Section 1 of [@!OpenID.Federation] that is bound to
 an entity in an OpenID Federation System. While this Entity Identifier could be any entity in
 that ecosystem, this entity would usually have the Entity Configuration of a Trust Anchor.
-The trust chain of a matching credential MUST contain the given Entity Identifier.
+A valid trust path, including the given Entity Identifier, must be constructible from a matching credential.
 
 Below is a non-normative example of such an entry of type `openid_fed`: 
 ```json
