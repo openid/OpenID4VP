@@ -2562,13 +2562,13 @@ established by [@!RFC6749].
 ### vp_token
 
 * Response Type Name: `vp_token`
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Specification Document(s): (#response) of this specification
 
 ### vp_token id_token
 
 * Response Type Name: `vp_token id_token`
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Specification Document(s): (#response) of this specification
 
 ## OAuth Parameters Registry
@@ -2581,77 +2581,77 @@ established by [@!RFC6749].
 
 * Name: `presentation_definition`
 * Parameter Usage Location: authorization request
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#new_parameters) of this specification
 
 ### presentation_definition_uri
 
 * Name: `presentation_definition_uri`
 * Parameter Usage Location: authorization request
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#new_parameters) of this specification
 
 ### dcql_query
 
 * Name: `dcql_query`
 * Parameter Usage Location: authorization request
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#new_parameters) of this specification
 
 ### client_metadata
 
 * Name: `client_metadata`
 * Parameter Usage Location: authorization request
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#new_parameters) of this specification
 
 ### request_uri_method
 
 * Name: `request_uri_method`
 * Parameter Usage Location: authorization request
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#new_parameters) of this specification
 
 ### transaction_data
 
 * Name: `transaction_data`
 * Parameter Usage Location: authorization request
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#new_parameters) of this specification
 
 ### wallet_nonce
 
 * Name: `wallet_nonce`
 * Parameter Usage Location: authorization request, token response
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#request_uri_method_post) of this specification
 
 ### response_uri
 
 * Name: `response_uri`
 * Parameter Usage Location: authorization request
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#response_mode_post) of this specification
 
 ### vp_token
 
 * Name: `vp_token`
 * Parameter Usage Location: authorization response, token response
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#response-parameters) of this specification
 
 ### presentation_submission
 
 * Name: `presentation_submission`
 * Parameter Usage Location: authorization response, token response
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#response-parameters) of this specification
 
 ### expected_origins
 
 * Name: `expected_origins`
 * Parameter Usage Location: authorization request
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#dc_api_request) of this specification
 
 ## OAuth Extensions Error Registry
@@ -2665,7 +2665,7 @@ established by [@!RFC6749].
 * Name: `vp_formats_not_supported`
 * Usage Location: authorization endpoint, token endpoint
 * Protocol Extension: OpenID for Verifiable Presentations
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#error-response) of this specification
 
 ### invalid_presentation_definition_uri
@@ -2673,7 +2673,7 @@ established by [@!RFC6749].
 * Name: `invalid_presentation_definition_uri`
 * Usage Location: authorization endpoint, token endpoint
 * Protocol Extension: OpenID for Verifiable Presentations
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#error-response) of this specification
 
 ### invalid_presentation_definition_reference
@@ -2681,7 +2681,7 @@ established by [@!RFC6749].
 * Name: `invalid_presentation_definition_reference`
 * Usage Location: authorization endpoint, token endpoint
 * Protocol Extension: OpenID for Verifiable Presentations
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#error-response) of this specification
 
 ### invalid_request_uri_method
@@ -2689,7 +2689,7 @@ established by [@!RFC6749].
 * Name: `invalid_request_uri_method`
 * Usage Location: authorization endpoint
 * Protocol Extension: OpenID for Verifiable Presentations
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#error-response) of this specification
 
 ### wallet_unavailable
@@ -2697,7 +2697,7 @@ established by [@!RFC6749].
 * Name: `wallet_unavailable`
 * Usage Location: authorization endpoint, token endpoint
 * Protocol Extension: OpenID for Verifiable Presentations
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#error-response) of this specification
 
 ## OAuth Authorization Server Metadata Registry
@@ -2710,14 +2710,14 @@ established by [@!RFC8414].
 
 * Metadata Name: `presentation_definition_uri_supported`
 * Metadata Description: Boolean value specifying whether the Wallet supports the transfer of presentation_definition by reference
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#as_metadata_parameters) of this specification
 
 ### vp_formats_supported
 
 * Metadata Name: `vp_formats_supported`
 * Metadata Description: An object containing a list of name/value pairs, where the name is a string identifying a Credential format supported by the Wallet
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#as_metadata_parameters) of this specification
 
 ## OAuth Dynamic Client Registration Metadata Registry
@@ -2730,7 +2730,7 @@ established by [@!RFC7591].
 
 * Client Metadata Name: `vp_formats`
 * Client Metadata Description: An object defining the formats and proof types of Verifiable Presentations and Verifiable Credentials that a Verifier supports
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#client_metadata_parameters) of this specification
 
 
@@ -2761,7 +2761,7 @@ The media type for a Verifier Attestation JWT is `application/verifier-attestati
 * Intended usage: COMMON
 * Restrictions on usage: none
 * Author: Oliver Terbu, oliver.terbu@mattr.global
-* Change controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 
 ## JSON Web Signature and Encryption Header Parameters Registry {#jose_header}
 
@@ -2774,7 +2774,7 @@ established by [@!RFC7515].
 * Header Parameter Name: `jwt`
 * Header Parameter Description: This header contains a JWT. Processing rules MAY depend on the `typ` header value of the respective JWT. 
 * Header Parameter Usage Location: JWS
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Specification Document(s): (#verifier_attestation_jwt) of this specification
 
 ## Uniform Resource Identifier (URI) Schemes Registry
@@ -2788,7 +2788,7 @@ in the IANA "Uniform Resource Identifier (URI) Schemes" registry [@IANA.URI.Sche
 * Description: Custom scheme used for wallet invocation
 * Status: Provisional
 * Well-Known URI Support: -
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#openid4vp-scheme) of this specification
 
 # Acknowledgements {#Acknowledgements}
