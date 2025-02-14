@@ -786,7 +786,7 @@ Type:
 
 Value:
 : The `Entity Identifier` as defined in Section 1 of [@!OpenID.Federation] that is bound to
-an entity in an OpenID Federation System. While this Entity Identifier could be any entity in
+an entity in a federation. While this Entity Identifier could be any entity in
 that ecosystem, this entity would usually have the Entity Configuration of a Trust Anchor.
 A valid trust path, including the given Entity Identifier, must be constructible from a matching credential.
 
