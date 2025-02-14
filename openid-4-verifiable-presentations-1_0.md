@@ -693,11 +693,11 @@ this object are defined per Credential Format. Examples of those are in (#sd_jwt
 no specific constraints are placed on the metadata or validity of the requested
 Credential.
 
-`accepted_issuers`:
-: OPTIONAL. A non-empty array of objects as defined in (#dcql_accepted_issuers) that
+`trusted_authorities`:
+: OPTIONAL. A non-empty array of objects as defined in (#dcql_trusted_authorities) that
 specifies expected issuers or trust frameworks that an issuer belongs to, that the
 Verifier will accept. Every Credential returned by the Wallet SHOULD match at least
-one of the conditions present in the corresponding `accepted_issuers` array if present.
+one of the conditions present in the corresponding `trusted_authorities` array if present.
 
 Note that Relying Parties must verify that the issuer of a received presentation is
 trusted on their own and this feature mainly aims to help data minimization by not
@@ -715,19 +715,19 @@ The rules for selecting claims to send are defined in (#selecting_claims).
 
 Note that multiple Credential Queries in a request MAY request a presentation of the same Credential.
 
-### Accepted Issuer Query {#dcql_accepted_issuers}
+### Trusted Authorities Query {#dcql_trusted_authorities}
 
-An Accepted Issuer Query is an object representing information that helps to identify an issuer
+A Trusted Authorities Query is an object representing information that helps to identify an issuer
 or the trust framework that an issuer is belonging to. A Credential is identified as a match
-to an Accepted Issuer Query if it to matches with one of the provided values in one of the provided
+to a Trusted Authorities Query if it to matches with one of the provided values in one of the provided
 types. How exactly the matching works is defined for the different types below
 
 Note that explicit issuer matching can also be achieved using claim value matching for certain
 Credential formats (e.g., value matching the `iss` claim in an SD-JWT). The methods provided in
-accepted_issuers are more tailored towards matching trust frameworks and those that require more
-complex matching logic (e.g., certificate thumbprints).
+`trusted_authorities` are tailored towards matching trust frameworks and more direct issuer matching
+variants that require more complex matching logic (e.g., certificate thumbprints).
 
-Each entry in `accepted_issuers` MUST be an object with the following properties:
+Each entry in `trusted_authorities` MUST be an object with the following properties:
 
 `type`:
 : REQUIRED. A string uniquely identifying the type of information about the issuer trust framework.
@@ -735,7 +735,7 @@ Types defined by this specification are listed below.
 
 `values`:
 : REQUIRED. An array of strings, where each string (value) contains information specific to the
-used Accepted Issuer Query type that allows to identify an issuer, trust framework, or a federation that an
+used Trusted Authorities Query type that allows to identify an issuer, trust framework, or a federation that an
 issuer belongs to.
 
 Below are descriptions for the different Type Identifiers (string), the description on how to interpret
@@ -2910,7 +2910,7 @@ The technology described in this specification was made available from contribut
 
    -25
 
-   * add `accepted_issuers` to DCQL
+   * add `trusted_authorities` to DCQL
    * add language on client ID and nonce binding for ISO mdocs and W3C VCs
    * clarify the behavior is not to sign when authorization_signed_response_alg is omitted
 
