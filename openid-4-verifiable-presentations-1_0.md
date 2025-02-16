@@ -718,14 +718,14 @@ Note that multiple Credential Queries in a request MAY request a presentation of
 ### Trusted Authorities Query {#dcql_trusted_authorities}
 
 A Trusted Authorities Query is an object representing information that helps to identify an issuer
-or the trust framework that an issuer is belonging to. A Credential is identified as a match
-to a Trusted Authorities Query if it to matches with one of the provided values in one of the provided
+or the trust framework that an issuer belongs to. A Credential is identified as a match
+to a Trusted Authorities Query if it matches with one of the provided values in one of the provided
 types. How exactly the matching works is defined for the different types below
 
 Note that explicit issuer matching can also be achieved using claim value matching for certain
 Credential formats (e.g., value matching the `iss` claim in an SD-JWT). The methods provided in
 `trusted_authorities` are tailored towards matching trust frameworks and more direct issuer matching
-variants that require more complex matching logic (e.g., certificate thumbprints).
+variants that require more complex matching logic (e.g., Authority Key Identifier).
 
 Each entry in `trusted_authorities` MUST be an object with the following properties:
 
