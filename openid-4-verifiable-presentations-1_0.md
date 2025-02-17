@@ -2,12 +2,12 @@
 title = "OpenID for Verifiable Presentations - Editor's draft"
 abbrev = "openid-4-vp"
 ipr = "none"
-workgroup = "OpenID Connect"
+workgroup = "OpenID Digital Credentials Protocols"
 keyword = ["security", "openid", "ssi"]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "openid-4-verifiable-presentations-1_0-24"
+value = "openid-4-verifiable-presentations-1_0-25"
 status = "standard"
 
 [[author]]
@@ -295,7 +295,7 @@ Exactly one of the following parameters MUST be present in the Authorization Req
 
     * `jwks`: OPTIONAL. A JWKS as defined in [@!RFC7591]. It MAY contain one or more public keys, such as those used by the Wallet as an input to a key agreement that may be used for encryption of the Authorization Response (see (#jarm)), or where the Wallet will require the public key of the Verifier to generate the Verifiable Presentation. This allows the Verifier to pass ephemeral keys specific to this Authorization Request. Public keys included in this parameter MUST NOT be used to verify the signature of signed Authorization Requests.
     * `vp_formats`: REQUIRED when not available to the Wallet via another mechanism. As defined in (#client_metadata_parameters).
-    * `authorization_signed_response_alg`: OPTIONAL. As defined in [@!JARM].
+    * `authorization_signed_response_alg`: OPTIONAL. As defined in [@!JARM], with an adjustment to the default behavior when this parameter is absent: instead of defaulting to `RS256`, the Authorization Response is not signed.
     * `authorization_encrypted_response_alg`: OPTIONAL. As defined in [@!JARM].
     * `authorization_encrypted_response_enc`: OPTIONAL. As defined in [@!JARM].
 
@@ -876,6 +876,7 @@ In detail, the array is processed from left to right as follows:
        currently selected element(s) is not an array, abort processing and
        return an error. If the index does not exist in a selected array, remove
        that array from the selection.
+    4. If the component is anything else, abort processing and return an error.       
 3. If the set of elements currently selected is empty, abort processing and
    return an error.
 
@@ -1159,7 +1160,7 @@ This section defines how an Authorization Response containing a VP Token can be 
 
 To sign, encrypt, or both sign and encrypt the Authorization Response, implementations MUST use the JWT Secured Authorization Response Mode for OAuth 2.0 (JARM) [@!JARM], and when only encrypting, the JARM extension described below.
 
-This specification also defines how to encrypt an unsigned Authorization Response by extending the mechanisms defined in [@!JARM]. The JSON containing the Authorization Response parameters can be encrypted as the payload of the JWE.
+This specification also defines how to encrypt an unsigned Authorization Response by adapting the mechanisms defined in [@!JARM]. The JSON containing the Authorization Response parameters can be encrypted as the payload of the JWE.
 
 The advantage of an encrypted but not signed Authorization Response is that it prevents the signing key from being used as a correlation factor. It can also be a challenge to establish trust in the signing key to ensure authenticity. For security considerations with encrypted but unsigned responses, see (#encrypting_unsigned_response).
 
@@ -1168,6 +1169,8 @@ If the JWT is only a JWE, the following processing rules MUST be followed:
 - `iss`, `exp` and `aud` MUST be omitted in the JWT Claims Set of the JWE, and the processing rules as per [@!JARM] Section 2.4 related to these claims do not apply.
 - The processing rules as per [@!JARM] Section 2.4 related to JWS processing MUST be ignored.
 
+Note that for the ECDH JWE algorithms (from section 4.6 of [@!RFC7518]), the `apu` and `apv` values are inputs
+into the key derivation process that is used to derive the content encryption key. Regardless of algorithm used, the values are always part of the AEAD tag computation so will still be bound to the encrypted response.
 The following is a non-normative example of the payload of a JWT used in an Authorization Response that is encrypted and not signed:
 
 <{{examples/response/jarm_jwt_enc_only_vc_json_body.json}}
@@ -2004,7 +2007,14 @@ And lastly, as part of the request, the Wallet is provided with information abou
 
 ## Protocol
 
-To use OpenID4VP over the DC API, the value of the exchange protocol used with the Digital Credentials API (DC API), is `openid4vp`.
+To use OpenID4VP with the Digital Credentials API (DC API), the exchange protocol value has the following format: `urn:openid:protocol:openid4vp:v<version>:<request-type>`. The `<version>` field is a numeric value, and `<request-type>` explicitly specifies the type of request. This approach eliminates the need for Wallets to perform implicit parameter matching to accurately identify the version and the expected request and response parameters.
+
+The value `1` MUST be used for the `<version>` field to indicate the request and response are compatible with this version of the specification. For `<request-type>`, unsigned requests, as defined in (#unsigned_request), MUST use `unsigned`, and signed requests, as defined in (#signed_request), MUST use `signed`.
+
+The following exchange protocol values are defined by this specification:
+
+* Unsigned requests: `urn:openid:dcapi-protocol:openid4vp:v1:unsigned`
+* Signed requests: `urn:openid:dcapi-protocol:openid4vp:v1:signed`
 
 ## Request {#dc_api_request}
 
@@ -2040,7 +2050,7 @@ The value of the `response_mode` parameter MUST be `dc_api` when the response is
 
 In addition to the above-mentioned parameters, a new parameter is introduced for OpenID4VP over the W3C Digital Credentials API:
 
-* `expected_origins`: REQUIRED when signed requests defined in (#signed_request) are used with the Digital Credentials API (DC API). An array of strings, each string representing an Origin of the Verifier that is making the request. The Wallet can detect replay of the request from a malicious Verifier by comparing values in this parameter to the Origin.
+* `expected_origins`: REQUIRED when signed requests defined in (#signed_request) are used with the Digital Credentials API (DC API). An array of strings, each string representing an Origin of the Verifier that is making the request. The Wallet can detect replay of the request from a malicious Verifier by comparing values in this parameter to the Origin. This parameter is not for use in unsigned requests and therefore a Wallet MUST ignore this parameter if it is present in an unsigned request.
 
 Additional request parameters MAY be defined and used with OpenID4VP over the DC API.
 
@@ -2115,6 +2125,11 @@ This `presentation_definition` parameter contains a single `input_descriptor` el
 
 #### Presentation Response
 
+The following requirements apply to the `nonce` and `aud` claims of the Verifiable Presentation:
+
+- the `nonce` claim MUST be the value of `nonce` from the Authorization Request;
+- the `aud` claim MUST be the value of the Client Identifier; or effective Client Identifier for an unsigned Authorization Request over the DC API, as described in (#dc_api_request).
+
 The following is a non-normative example of an Authorization Response:
 
 <{{examples/response/response.txt}}
@@ -2126,8 +2141,6 @@ The following is a non-normative example of the content of the `presentation_sub
 The following is a non-normative example of the payload of the Verifiable Presentation in the `vp_token` parameter provided in the same response and referred to by the `presentation_submission` above:
 
 <{{examples/response/jwt_vp.json}}
-
-Note: The VP's `nonce` claim contains the value of the `nonce` of the presentation request and the `aud` claim contains the Client Identifier of the Verifier. This allows the Verifier to detect replay of a Presentation as recommended in (#preventing-replay).
 
 ### LDP VCs
 
@@ -2157,6 +2170,11 @@ This `presentation_definition` parameter contains a single `input_descriptor` el
 
 #### Presentation Response
 
+The following requirements apply to the `challenge` and `domain` claims within the `proof` object in the Verifiable Presentation:
+
+- the `challenge` claim MUST be the value of `nonce` from the Authorization Request;
+- the `domain` claim MUST be the value of the Client Identifier; or effective Client Identifier for an unsigned Authorization Request over the DC API, as described in (#dc_api_request).
+
 The following is a non-normative example of an Authorization Response:
 
 <{{examples/response/response.txt}}
@@ -2168,8 +2186,6 @@ The following is a non-normative example of the content of the `presentation_sub
 The following is a non-normative example of the Verifiable Presentation in the `vp_token` parameter provided in the same response and referred to by the `presentation_submission` above:
 
 <{{examples/response/ldp_vp.json}}
-
-Note: The VP's `challenge` claim contains the value of the `nonce` of the presentation request and the `domain` claims contains the Client Identifier of the Verifier. This allows the Verifier to detect replay of a presentation as recommended in (#preventing-replay). 
 
 ## AnonCreds
 
@@ -2286,7 +2302,7 @@ See ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 Annex C [@ISO.
 
 The VP Token contains the base64url-encoded `DeviceResponse` CBOR structure as defined in ISO/IEC 18013-5 [@ISO.18013-5] or ISO/IEC 23220-4 [@ISO.23220-4]. Essentially, the `DeviceResponse` CBOR structure contains a signature or MAC over the `SessionTranscript` CBOR structure including the OpenID4VP-specific `Handover` CBOR structure.
 
-See ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 Annex C [@ISO.23220-4] for the latest examples on how to use the `presentation_submission` parameter and how to generate the Authorizaton Response for presenting Credentials in the mdoc format.
+See ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 Annex C [@ISO.23220-4] for the latest examples on how to use the `presentation_submission` parameter and how to generate the Authorizaton Response for presenting Credentials in the mdoc format. This includes how the `client_id` and `nonce` are used in the `SessionTranscript`.
 
 ### `Handover` and `SessionTranscript` Definitions
 
@@ -2559,13 +2575,13 @@ established by [@!RFC6749].
 ### vp_token
 
 * Response Type Name: `vp_token`
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Specification Document(s): (#response) of this specification
 
 ### vp_token id_token
 
 * Response Type Name: `vp_token id_token`
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Specification Document(s): (#response) of this specification
 
 ## OAuth Parameters Registry
@@ -2578,77 +2594,77 @@ established by [@!RFC6749].
 
 * Name: `presentation_definition`
 * Parameter Usage Location: authorization request
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#new_parameters) of this specification
 
 ### presentation_definition_uri
 
 * Name: `presentation_definition_uri`
 * Parameter Usage Location: authorization request
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#new_parameters) of this specification
 
 ### dcql_query
 
 * Name: `dcql_query`
 * Parameter Usage Location: authorization request
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#new_parameters) of this specification
 
 ### client_metadata
 
 * Name: `client_metadata`
 * Parameter Usage Location: authorization request
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#new_parameters) of this specification
 
 ### request_uri_method
 
 * Name: `request_uri_method`
 * Parameter Usage Location: authorization request
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#new_parameters) of this specification
 
 ### transaction_data
 
 * Name: `transaction_data`
 * Parameter Usage Location: authorization request
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#new_parameters) of this specification
 
 ### wallet_nonce
 
 * Name: `wallet_nonce`
 * Parameter Usage Location: authorization request, token response
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#request_uri_method_post) of this specification
 
 ### response_uri
 
 * Name: `response_uri`
 * Parameter Usage Location: authorization request
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#response_mode_post) of this specification
 
 ### vp_token
 
 * Name: `vp_token`
 * Parameter Usage Location: authorization response, token response
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#response-parameters) of this specification
 
 ### presentation_submission
 
 * Name: `presentation_submission`
 * Parameter Usage Location: authorization response, token response
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#response-parameters) of this specification
 
 ### expected_origins
 
 * Name: `expected_origins`
 * Parameter Usage Location: authorization request
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#dc_api_request) of this specification
 
 ## OAuth Extensions Error Registry
@@ -2662,7 +2678,7 @@ established by [@!RFC6749].
 * Name: `vp_formats_not_supported`
 * Usage Location: authorization endpoint, token endpoint
 * Protocol Extension: OpenID for Verifiable Presentations
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#error-response) of this specification
 
 ### invalid_presentation_definition_uri
@@ -2670,7 +2686,7 @@ established by [@!RFC6749].
 * Name: `invalid_presentation_definition_uri`
 * Usage Location: authorization endpoint, token endpoint
 * Protocol Extension: OpenID for Verifiable Presentations
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#error-response) of this specification
 
 ### invalid_presentation_definition_reference
@@ -2678,7 +2694,7 @@ established by [@!RFC6749].
 * Name: `invalid_presentation_definition_reference`
 * Usage Location: authorization endpoint, token endpoint
 * Protocol Extension: OpenID for Verifiable Presentations
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#error-response) of this specification
 
 ### invalid_request_uri_method
@@ -2686,7 +2702,7 @@ established by [@!RFC6749].
 * Name: `invalid_request_uri_method`
 * Usage Location: authorization endpoint
 * Protocol Extension: OpenID for Verifiable Presentations
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#error-response) of this specification
 
 ### wallet_unavailable
@@ -2694,7 +2710,7 @@ established by [@!RFC6749].
 * Name: `wallet_unavailable`
 * Usage Location: authorization endpoint, token endpoint
 * Protocol Extension: OpenID for Verifiable Presentations
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#error-response) of this specification
 
 ## OAuth Authorization Server Metadata Registry
@@ -2707,14 +2723,14 @@ established by [@!RFC8414].
 
 * Metadata Name: `presentation_definition_uri_supported`
 * Metadata Description: Boolean value specifying whether the Wallet supports the transfer of presentation_definition by reference
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#as_metadata_parameters) of this specification
 
 ### vp_formats_supported
 
 * Metadata Name: `vp_formats_supported`
 * Metadata Description: An object containing a list of name/value pairs, where the name is a string identifying a Credential format supported by the Wallet
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#as_metadata_parameters) of this specification
 
 ## OAuth Dynamic Client Registration Metadata Registry
@@ -2727,7 +2743,7 @@ established by [@!RFC7591].
 
 * Client Metadata Name: `vp_formats`
 * Client Metadata Description: An object defining the formats and proof types of Verifiable Presentations and Verifiable Credentials that a Verifier supports
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#client_metadata_parameters) of this specification
 
 
@@ -2758,7 +2774,7 @@ The media type for a Verifier Attestation JWT is `application/verifier-attestati
 * Intended usage: COMMON
 * Restrictions on usage: none
 * Author: Oliver Terbu, oliver.terbu@mattr.global
-* Change controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 
 ## JSON Web Signature and Encryption Header Parameters Registry {#jose_header}
 
@@ -2771,7 +2787,7 @@ established by [@!RFC7515].
 * Header Parameter Name: `jwt`
 * Header Parameter Description: This header contains a JWT. Processing rules MAY depend on the `typ` header value of the respective JWT. 
 * Header Parameter Usage Location: JWS
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Specification Document(s): (#verifier_attestation_jwt) of this specification
 
 ## Uniform Resource Identifier (URI) Schemes Registry
@@ -2785,7 +2801,7 @@ in the IANA "Uniform Resource Identifier (URI) Schemes" registry [@IANA.URI.Sche
 * Description: Custom scheme used for wallet invocation
 * Status: Provisional
 * Well-Known URI Support: -
-* Change Controller: OpenID Foundation Artifact Binding Working Group - openid-specs-ab@lists.openid.net
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#openid4vp-scheme) of this specification
 
 # Acknowledgements {#Acknowledgements}
@@ -2794,15 +2810,21 @@ We would like to thank Richard Barnes, Paul Bastian, Vittorio Bertocci, Christia
 
 # Notices
 
-Copyright (c) 2024 The OpenID Foundation.
+Copyright (c) 2025 The OpenID Foundation.
 
-The OpenID Foundation (OIDF) grants to any Contributor, developer, implementer, or other interested party a non-exclusive, royalty free, worldwide copyright license to reproduce, prepare derivative works from, distribute, perform and display, this Implementers Draft or Final Specification solely for the purposes of (i) developing specifications, and (ii) implementing Implementers Drafts and Final Specifications based on such documents, provided that attribution be made to the OIDF as the source of the material, but that such attribution does not indicate an endorsement by the OIDF.
+The OpenID Foundation (OIDF) grants to any Contributor, developer, implementer, or other interested party a non-exclusive, royalty free, worldwide copyright license to reproduce, prepare derivative works from, distribute, perform and display, this Implementers Draft, Final Specification, or Final Specification Incorporating Errata Corrections solely for the purposes of (i) developing specifications, and (ii) implementing Implementers Drafts, Final Specifications, and Final Specification Incorporating Errata Corrections based on such documents, provided that attribution be made to the OIDF as the source of the material, but that such attribution does not indicate an endorsement by the OIDF.
 
-The technology described in this specification was made available from contributions from various sources, including members of the OpenID Foundation and others. Although the OpenID Foundation has taken steps to help ensure that the technology is available for distribution, it takes no position regarding the validity or scope of any intellectual property or other rights that might be claimed to pertain to the implementation or use of the technology described in this specification or the extent to which any license under such rights might or might not be available; neither does it represent that it has made any independent effort to identify any such rights. The OpenID Foundation and the contributors to this specification make no (and hereby expressly disclaim any) warranties (express, implied, or otherwise), including implied warranties of merchantability, non-infringement, fitness for a particular purpose, or title, related to this specification, and the entire risk as to implementing this specification is assumed by the implementer. The OpenID Intellectual Property Rights policy requires contributors to offer a patent promise not to assert certain patent claims against other contributors and against implementers. The OpenID Foundation invites any interested party to bring to its attention any copyrights, patents, patent applications, or other proprietary rights that may cover technology that may be required to practice this specification.
+The technology described in this specification was made available from contributions from various sources, including members of the OpenID Foundation and others. Although the OpenID Foundation has taken steps to help ensure that the technology is available for distribution, it takes no position regarding the validity or scope of any intellectual property or other rights that might be claimed to pertain to the implementation or use of the technology described in this specification or the extent to which any license under such rights might or might not be available; neither does it represent that it has made any independent effort to identify any such rights. The OpenID Foundation and the contributors to this specification make no (and hereby expressly disclaim any) warranties (express, implied, or otherwise), including implied warranties of merchantability, non-infringement, fitness for a particular purpose, or title, related to this specification, and the entire risk as to implementing this specification is assumed by the implementer. The OpenID Intellectual Property Rights policy (found at openid.net) requires contributors to offer a patent promise not to assert certain patent claims against other contributors and against implementers. OpenID invites any interested party to bring to its attention any copyrights, patents, patent applications, or other proprietary rights that may cover technology that may be required to practice this specification.
 
 # Document History
 
    [[ To be removed from the final specification ]]
+
+   -25
+   
+   * add language on client ID and nonce binding for ISO mdocs and W3C VCs
+   * clarify the behavior is not to sign when authorization_signed_response_alg is omitted
+   * add a note on the use of apu/apv in the JWE header of encrypted responses
 
    -24
 
