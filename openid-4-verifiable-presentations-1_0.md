@@ -695,7 +695,7 @@ Credential.
 
 `trusted_authorities`:
 : OPTIONAL. A non-empty array of objects as defined in (#dcql_trusted_authorities) that
-specifies expected issuers or trust frameworks that an issuer belongs to, that the
+specifies expected authorities or trust frameworks that certify issuers, that the
 Verifier will accept. Every Credential returned by the Wallet SHOULD match at least
 one of the conditions present in the corresponding `trusted_authorities` array if present.
 
@@ -717,8 +717,8 @@ Note that multiple Credential Queries in a request MAY request a presentation of
 
 ### Trusted Authorities Query {#dcql_trusted_authorities}
 
-A Trusted Authorities Query is an object representing information that helps to identify an issuer
-or the trust framework that an issuer belongs to. A Credential is identified as a match
+A Trusted Authorities Query is an object representing information that helps to identify an authority
+or the trust framework that certifies issuers. A Credential is identified as a match
 to a Trusted Authorities Query if it matches with one of the provided values in one of the provided
 types. How exactly the matching works is defined for the different types below
 
