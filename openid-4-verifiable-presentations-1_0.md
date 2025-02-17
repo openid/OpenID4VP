@@ -722,10 +722,10 @@ or the trust framework that certifies issuers. A Credential is identified as a m
 to a Trusted Authorities Query if it matches with one of the provided values in one of the provided
 types. How exactly the matching works is defined for the different types below
 
-Note that explicit issuer matching can also be achieved using claim value matching for certain
-Credential formats (e.g., value matching the `iss` claim in an SD-JWT). The methods provided in
-`trusted_authorities` are tailored towards matching trust frameworks and more direct issuer matching
-variants that require more complex matching logic (e.g., Authority Key Identifier).
+Note that direct issuer matching should not use `trusted_authorities`. Direct issuer matching
+should use claim value matching if possible (e.g., value matching the `iss` claim in an SD-JWT).
+The methods provided in `trusted_authorities` are for more indirect matching logic required by trust
+frameworks or X.509 PKI.
 
 Each entry in `trusted_authorities` MUST be an object with the following properties:
 
