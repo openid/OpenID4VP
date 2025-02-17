@@ -2825,6 +2825,7 @@ The technology described in this specification was made available from contribut
    * add language on client ID and nonce binding for ISO mdocs and W3C VCs
    * clarify the behavior is not to sign when authorization_signed_response_alg is omitted
    * add a note on the use of apu/apv in the JWE header of encrypted responses
+   * support returning multiple presentations for a single dcql credential query when requested using `multiple`
 
    -24
 
@@ -2832,7 +2833,6 @@ The technology described in this specification was made available from contribut
    * require `typ` value in request object to be `oauth-authz-req+jwt`
    * add `SessionTranscript` requirements 
    * use claims path pointer for mdoc based credentials
-   * support returning multiple presentations for a single dcql credential query when requested using `multiple`
 
    -23
 
