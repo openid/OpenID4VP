@@ -2307,7 +2307,11 @@ OpenID4VPDCAPIHandover = [
   OpenID4VPDCAPIHandoverInfoHash ; A cryptographic hash of OpenID4VPDCAPIHandoverInfo
 ]
 
-OpenID4VPDCAPIHandoverInfoHash = bstr  ; sha-256 hash of OpenID4VPDCAPIHandoverInfo
+; Contains the sha-256 hash of OpenID4VPDCAPIHandoverInfoBytes
+OpenID4VPDCAPIHandoverInfoHash = bstr
+
+; Contains the bytes of OpenID4VPDCAPIHandoverInfo encoded as CBOR
+OpenID4VPDCAPIHandoverInfoBytes = bstr .cbor OpenID4VPDCAPIHandoverInfo
 
 OpenID4VPDCAPIHandoverInfo = [
   origin,
@@ -2315,21 +2319,21 @@ OpenID4VPDCAPIHandoverInfo = [
   nonce
 ] ; Array containing handover parameters
 
-client_id = tstr  ; UTF-8 encoded string
+client_id = tstr
 
-origin = tstr    ; UTF-8 encoded string
+origin = tstr
 
-nonce = tstr     ; UTF-8 encoded string
+nonce = tstr
 ```
 
 The `OpenID4VPDCAPIHandover` structure has the following elements:
 
-* The first element MUST be the fixed UTF-8 encoded string `OpenID4VPDCAPIHandover`. This serves as a unique identifier for the handover structure to prevent misinterpretation or confusion.
-* The second element MUST be the `OpenID4VPDCAPIHandoverInfoHash`, represented as a CBOR byte string which encodes the sha-256 hash of the `OpenID4VPDCAPIHandoverInfo` CBOR array.
+* The first element MUST be the string `OpenID4VPDCAPIHandover`. This serves as a unique identifier for the handover structure to prevent misinterpretation or confusion.
+* The second element MUST be a bytestring which contains the sha-256 hash of the bytes of `OpenID4VPDCAPIHandoverInfo` when encoded as CBOR.
 * The `OpenID4VPDCAPIHandoverInfo` has the following elements:
-  * The first element MUST be the UTF-8 encoded string representing the origin of the request as described in (#dc_api_request).
-  * The second element MUST be the UTF-8 encoded string value of the effective Client Identifier as defined in (#dc_api_request).
-  * The third element MUST be the UTF-8 encoded string value of the `nonce` request parameter.
+  * The first element MUST be the string representing the origin of the request as described in (#dc_api_request).
+  * The second element MUST be the value of the effective Client Identifier as defined in (#dc_api_request).
+  * The third element MUST be the value of the `nonce` request parameter.
 
 #### Invocation via other methods {#non-dc-api-invocation}
 
