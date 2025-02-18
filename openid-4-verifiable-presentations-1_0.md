@@ -290,7 +290,7 @@ This specification defines the following new request parameters:
 
 Exactly one of the following parameters MUST be present in the Authorization Request: `dcql_query`, `presentation_definition`, `presentation_definition_uri`, or a `scope` value representing a Presentation Definition.
 
-In the context of an authorization request according to [@RFC6749], parameters containing JSON objects are encoded using the application/x-www-form-urlencoded format of the serialized JSON.
+In the context of an authorization request according to [@RFC6749], parameters containing objects are transferred as JSON-serialized strings (using the application/x-www-form-urlencoded format as usual for request parameters).
 
 `client_metadata`:
 : OPTIONAL. A JSON object containing the Verifier metadata values. It MUST be UTF-8 encoded. The following metadata parameters MAY be used:
