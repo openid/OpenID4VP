@@ -749,7 +749,8 @@ Type:
 Value:
 : The base64url encoded Authority Key Identifier element as defined in Section 4.2.1.1 of [@!RFC5280].
 The raw byte representation of this element MUST match with the AuthorityKeyIdentifier element of an X.509
-certificate in the trust chain of a matching Credential.
+certificate in the certificate chain present in the credential (e.g., in the header of an mdoc or SD-JWT).
+Note that the chain can consist of a single certificate.
 
 Below is a non-normative example of such an entry of type `aki`:
 ```json
@@ -765,7 +766,7 @@ Type:
 : `"etsi_tl"`
 
 Value:
-: The identifier (can also be a URL) of a Trusted List as specified in ETSI TS 119 612 [@ETSI.TL].An ETSI
+: The identifier of a Trusted List as specified in ETSI TS 119 612 [@ETSI.TL].An ETSI
 Trusted List contains references to other Trusted Lists, creating a list of trusted lists, or entries
 for Trust Service Providers with corresponding service description and X.509 Certificates. The trust chain
 of a matching Credential MUST contain at least one X.509 Certificate that matches one of the entries of the
