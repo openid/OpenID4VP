@@ -2818,6 +2818,7 @@ The technology described in this specification was made available from contribut
 
    -25
    
+   * improve text about effective client identifiers
    * clarify DCQL case of `claims` and `claim_sets` being absent
    * add language on client ID and nonce binding for ISO mdocs and W3C VCs
    * clarify the behavior is not to sign when authorization_signed_response_alg is omitted
