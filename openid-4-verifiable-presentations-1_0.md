@@ -514,7 +514,7 @@ Here, `<client_id_scheme>` is the Client Identifier Scheme and `<orig_client_id>
 
 Wallets MUST use the presence of a `:` (colon) character to determine whether a Client Identifier Scheme is used. If a `:` character is present, the Wallet MUST interpret the Client Identifier according to the Client Identifier Scheme, here defined as the string before the (first) `:` character. If the Wallet does not support the Client Identifier Scheme, the Wallet MUST refuse the request.
 
-For example, an Authorization Request might contain `client_id=verifier_attestation:example-client` to indicate that the `verifier_attestation` Client Identifier Scheme is to be used and that within this scheme, the Verifier can be identified by the string `example-client`. The presentation would contain the full `verifier_attestation:example-client` string as the audience (intended receiver) and the same full string would be used as the Client Identifier anywhere in the OAuth flow.
+For example, an Authorization Request might contain `client_id=verifier_attestation:example-client` to indicate that the `verifier_attestation` Client Identifier Scheme is to be used and that within this scheme, the Verifier can be identified by the string `example-client`. The Wallet would authenticate the Verifier using the Verifier Attestation and the presentation would contain the full `verifier_attestation:example-client` string as the audience (intended receiver) and the same full string would be used as the Client Identifier anywhere in the OAuth flow.
 
 Note that the Verifier needs to determine which Client Identifier Schemes the Wallet supports prior to sending the Authorization Request in order to choose a supported scheme.
 
@@ -574,7 +574,7 @@ Body
 
 * `x509_san_uri`: When the Client Identifier Scheme is `x509_san_uri`, the Client Identifier MUST be a URI and match a `uniformResourceIdentifier` Subject Alternative Name (SAN) [@!RFC5280] entry in the leaf certificate passed with the request. The request MUST be signed with the private key corresponding to the public key in the leaf X.509 certificate of the certificate chain added to the request in the `x5c` JOSE header [@!RFC7515] of the signed request object. The Wallet MUST validate the signature and the trust chain of the X.509 certificate. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter. If the Wallet can establish trust in the Client Identifier authenticated through the certificate, e.g., because the Client Identifier is contained in a list of trusted Client Identifiers, it may allow the client to freely choose the `redirect_uri` value. If not, the `redirect_uri` value MUST match the Client Identifier without the prefix `x509_san_uri:`. Example Client Identifier: `x509_san_uri:https://client.example.org/cb`.
 
-* `web-origin`: This Client Identifier Scheme is defined in (#dc_api_request). The Wallet MUST NOT accept this Client Identifier Scheme if the request is not sent via the Digital Credentials API defined in (#dc_api).
+* `web-origin`: This Client Identifier Scheme is defined in (#dc_api_request). The Wallet MUST NOT accept this Client Identifier Scheme in any Request, but the Client Identifier Scheme is constructed by the Wallet based on the Origin provided by the platform if the request is sent via the Digital Credentials API defined in (#dc_api).
 
 To use the Client Identifier Schemes `https`, `did`, `verifier_attestation`, `x509_san_dns`, and `x509_san_uri`, Verifiers MUST be confidential clients. This might require changes to the technical design of native apps as such apps are typically public clients.
 
@@ -1529,7 +1529,7 @@ An attacker could try to inject a VP Token (or an individual Verifiable Presenta
 
 Implementers of this specification MUST implement the controls as defined in this section to detect such an attack. 
 
-This specification assumes that a Verifiable Credential is always presented with a cryptographic proof of possession which can be a Verifiable Presentation. This cryptographic proof of possession MUST be bound by the Wallet to the intended audience (the Client Identifier of the Verifier) and the respective transaction (identified by the `nonce` parameter in the Authorization Request). The Verifier MUST verify this binding. 
+This specification assumes that a Verifiable Credential is always presented with a cryptographic proof of possession which can be a Verifiable Presentation. This cryptographic proof of possession MUST be bound by the Wallet to the intended audience (the authenticated Client Identifier of the Verifier) and the respective transaction (identified by the `nonce` parameter in the Authorization Request). The Verifier MUST verify this binding.
 
 The Verifier MUST create a fresh, cryptographically random number with sufficient entropy for every Authorization Request, store it with its current session, and pass it in the `nonce` Authorization Request Parameter to the Wallet.  
 
@@ -2037,7 +2037,7 @@ Out of the Authorization Request parameters defined in [@!RFC6749] and (#vp_toke
 * `transaction_data`
 * `dcql_query`
 
-The `client_id` parameter MUST be omitted in unsigned requests defined in (#unsigned_request). The Wallet determines the effective Client Identifier from the Origin. The effective Client Identifier is composed of a synthetic Client Identifier Scheme of `web-origin` and the Origin itself. For example, an Origin of `https://verifier.example.com` would result in an effective Client Identifier of `web-origin:https://verifier.example.com`. The transport of the request and Origin to the Wallet is platform-specific and is out of scope of OpenID4VP over the W3C Digital Credentials API. The Wallet MUST ignore any `client_id` parameter that is present in an unsigned request.
+The `client_id` parameter MUST be omitted in unsigned requests defined in (#unsigned_request). The transport of the request and Origin to the Wallet is platform-specific and is out of scope of OpenID4VP over the W3C Digital Credentials API. The Wallet MUST ignore any `client_id` parameter that is present in an unsigned request.
 
 The value of the `response_mode` parameter MUST be `dc_api` when the response is neither signed nor encrypted and `dc_api.jwt` when the response is signed and/or encrypted as defined in (#jarm).
 
@@ -2055,8 +2055,9 @@ Any OpenID4VP request compliant to this section of this specification can be use
 
 ### Unsigned Request {#unsigned_request}
 
-The Verifier MAY send all the OpenID4VP request parameters as members in the request member passed to the API. In this case, the Wallet will use the Verifier's Origin to determine the Verifier's effective Client Identifier.
-
+The Verifier MAY send all the OpenID4VP request parameters as members in the request member passed to the API. In this case, the Wallet will use the plattform-provided Origin of the Verifier to determine the Verifier's authenticated Client Identifier.
+This Client Identifier is composed of a synthetic Client Identifier Scheme of `web-origin` and the Origin itself. For example, an Origin of `https://verifier.example.com` would result in a Client Identifier of `web-origin:https://verifier.example.com`.
+This Origin based Client Identifier is then used as any other authenticated Client Identifier in the intended audience for the VP Token as described in (#preventing-replay).
 
 ### Signed Request {#signed_request}
 
@@ -2120,8 +2121,8 @@ This `presentation_definition` parameter contains a single `input_descriptor` el
 
 The following requirements apply to the `nonce` and `aud` claims of the Verifiable Presentation:
 
-- the `nonce` claim MUST be the value of `nonce` from the Authorization Request;
-- the `aud` claim MUST be the value of the Client Identifier; or effective Client Identifier for an unsigned Authorization Request over the DC API, as described in (#dc_api_request).
+- the `nonce` claim MUST be the value of `nonce` from the Authorization Request
+- the `aud` claim MUST be the value of the Client Identifier
 
 The following is a non-normative example of an Authorization Response:
 
@@ -2165,8 +2166,8 @@ This `presentation_definition` parameter contains a single `input_descriptor` el
 
 The following requirements apply to the `challenge` and `domain` claims within the `proof` object in the Verifiable Presentation:
 
-- the `challenge` claim MUST be the value of `nonce` from the Authorization Request;
-- the `domain` claim MUST be the value of the Client Identifier; or effective Client Identifier for an unsigned Authorization Request over the DC API, as described in (#dc_api_request).
+- the `challenge` claim MUST be the value of `nonce` from the Authorization Request
+- the `domain` claim MUST be the value of the Client Identifier
 
 The following is a non-normative example of an Authorization Response:
 
@@ -2338,7 +2339,7 @@ The `OpenID4VPDCAPIHandover` structure has the following elements:
 * The second element MUST be a bytestring which contains the sha-256 hash of the bytes of `OpenID4VPDCAPIHandoverInfo` when encoded as CBOR.
 * The `OpenID4VPDCAPIHandoverInfo` has the following elements:
   * The first element MUST be the string representing the origin of the request as described in (#dc_api_request).
-  * The second element MUST be the value of the effective Client Identifier as defined in (#dc_api_request).
+  * The second element MUST be the value of the Client Identifier as defined in (#dc_api_request).
   * The third element MUST be the value of the `nonce` request parameter.
 
 #### Invocation via other methods {#non-dc-api-invocation}
@@ -2447,10 +2448,8 @@ A non-normative example of the Authorization Response would look the same as in 
 
 The following requirements apply to the `nonce` and `aud` claims in the Key Binding JWT:
 
-- the `nonce` claim MUST be the value of `nonce` from the Authorization Request;
-- the `aud` claim MUST be the value of the Client Identifier; 
-
-Note that for an unsigned Authorization Request over the DC API, the `client_id` parameter is not used. Instead, the effective Client Identifier is derived from the Origin, as described in (#dc_api_request).
+- the `nonce` claim MUST be the value of `nonce` from the Authorization Request
+- the `aud` claim MUST be the value of the Client Identifier
 
 The `transaction_data_hashes` response parameter defined in (#transaction_data) MUST be included in the Key Binding JWT as a top level claim. This means that transaction data mechanism cannot be used with SD-JWT VCs without cryptographic key binding and, therefore, do not use KB JWT.
 
