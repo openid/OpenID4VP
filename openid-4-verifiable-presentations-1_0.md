@@ -574,7 +574,7 @@ Body
 
 * `x509_san_uri`: When the Client Identifier Scheme is `x509_san_uri`, the Client Identifier MUST be a URI and match a `uniformResourceIdentifier` Subject Alternative Name (SAN) [@!RFC5280] entry in the leaf certificate passed with the request. The request MUST be signed with the private key corresponding to the public key in the leaf X.509 certificate of the certificate chain added to the request in the `x5c` JOSE header [@!RFC7515] of the signed request object. The Wallet MUST validate the signature and the trust chain of the X.509 certificate. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter. If the Wallet can establish trust in the Client Identifier authenticated through the certificate, e.g., because the Client Identifier is contained in a list of trusted Client Identifiers, it may allow the client to freely choose the `redirect_uri` value. If not, the `redirect_uri` value MUST match the Client Identifier without the prefix `x509_san_uri:`. Example Client Identifier: `x509_san_uri:https://client.example.org/cb`.
 
-* `web-origin`: This Client Identifier Scheme is defined in (#dc_api_request) and MUST only be used if the request is sent as an unsigned request via the Digital Credentials API defined in (#dc_api). The Wallet MUST NOT accept this Client Identifier Scheme in a Request, but the Client Identifier using this Client Identifier Scheme is constructed by the Wallet based on the Origin provided by the platform as defined in (#unsigned_request).
+* `web-origin`: This Client Identifier Scheme is defined in (#dc_api_request) and MUST only be used if the request is sent as an unsigned request via the Digital Credentials API defined in (#dc_api). The Wallet MUST construct the Client Identifier by appending the Origin provided by the platform as defined in (#unsigned_request) to the string `web-origin:` that denotes this Client Identifier Scheme. For example, an Origin of `https://verifier.example.com` would result in an effective Client Identifier of `web-origin:https://verifier.example.com`.
 
 To use the Client Identifier Schemes `https`, `did`, `verifier_attestation`, `x509_san_dns`, and `x509_san_uri`, Verifiers MUST be confidential clients. This might require changes to the technical design of native apps as such apps are typically public clients.
 
@@ -2056,7 +2056,6 @@ Any OpenID4VP request compliant to this section of this specification can be use
 ### Unsigned Request {#unsigned_request}
 
 The Verifier MAY send all the OpenID4VP request parameters as members in the request member passed to the API. In this case, the Wallet will use the plattform-provided Origin of the Verifier to determine the Verifier's authenticated Client Identifier.
-This Client Identifier is composed of a synthetic Client Identifier Scheme of `web-origin` and the Origin itself. For example, an Origin of `https://verifier.example.com` would result in a Client Identifier of `web-origin:https://verifier.example.com`.
 This Origin based Client Identifier is then used as any other authenticated Client Identifier in the intended audience for the VP Token as described in (#preventing-replay).
 
 ### Signed Request {#signed_request}
