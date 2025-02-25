@@ -1,7 +1,7 @@
 {
   "iss": "did:example:ebfeb1f712ebc6f1c276e12ec21",
   "jti": "urn:uuid:3978344f-8596-4c3a-a978-8fcaba3903c5",
-  "aud": "x509_san_uri:https://client.example.org/cb",
+  "aud": "x509_san_dns:client.example.org",
   "nbf": 1541493724,
   "iat": 1541493724,
   "exp": 1573029723,
