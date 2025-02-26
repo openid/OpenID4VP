@@ -1776,11 +1776,11 @@ In the event that another component is invoked instead of the Wallet, the End-Us
 
 ## Privacy implications of mechanisms to establish trust in issuers {#privacy_trusted_authorities}
 
-This specification introduces an extension point that allows for a Verifer to express expected issuers or trust frameworks that cerify issuers.
+This specification introduces an extension point that allows for a Verifier to express expected issuers or trust frameworks that certify issuers.
 It is important to understand the implications that different mechanism to establish trust in issuers have on the privacy of the overall system.
 Generally speaking, a distinction can be made between self-contained mechanisms, where all information necessary to validate if a credential matches the request is already present in the Wallet and Verifier, and those mechanisms that require some form of online resolution.
 Mechanisms that require online resolution can leak information that could be used to profile the usage of credentials and the overall ecosystem.
-Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make sure that the privacy properties of the mechanisms they choose to support, matches with the desired privcacy properties of the overall ecosystem.
+Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make sure that the privacy properties of the mechanisms they choose to support matches with the desired privacy properties of the overall ecosystem.
 
 {backmatter}
 
