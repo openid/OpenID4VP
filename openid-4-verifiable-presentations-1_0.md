@@ -64,7 +64,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 # Terminology
 
-This specification uses the terms "Access Token", "Authorization Request", "Authorization Response", "Client", "Client Authentication", "Client Identifier", "Grant Type", "Response Type", "Token Request" and "Token Response" defined by OAuth 2.0 [@!RFC6749], the terms "End-User", "Entity", "Request Object", "Request URI" as defined by OpenID Connect Core [@!OpenID.Core], the term "JSON Web Token (JWT)" defined by JSON Web Token (JWT) [@!RFC7519], the term "JOSE Header" defined by JSON Web Signature (JWS) [@!RFC7515], the term "JSON Web Encryption (JWE)" defined by [@!RFC7516], and the term "Response Mode" defined by OAuth 2.0 Multiple Response Type Encoding Practices [@!OAuth.Responses].
+This specification uses the terms "Access Token", "Authorization Request", "Authorization Response", "Client", "Client Authentication", "Client Identifier", "Grant Type", "Response Type", "Token Request" and "Token Response" defined by OAuth 2.0 [@!RFC6749], the terms "End-User" and "Entity" as defined by OpenID Connect Core [@!OpenID.Core], the terms "Request Object" and "Request URI" as defined by [@!RFC9101], the term "JSON Web Token (JWT)" defined by JSON Web Token (JWT) [@!RFC7519], the term "JOSE Header" defined by JSON Web Signature (JWS) [@!RFC7515], the term "JSON Web Encryption (JWE)" defined by [@!RFC7516], and the term "Response Mode" defined by OAuth 2.0 Multiple Response Type Encoding Practices [@!OAuth.Responses].
 
 Base64url-encoded denotes the URL-safe base64 encoding without padding defined in Section 2 of [@!RFC7515].
 
@@ -669,8 +669,8 @@ unknown properties.
 
 ## Credential Query {#credential_query}
 
-A Credential Query is an object representing a request for a presentation of one
-Credential.
+A Credential Query is an object representing a request for a presentation of one or more matching
+Credentials.
 
 Each entry in `credentials` MUST be an object with the following properties:
 
@@ -685,6 +685,9 @@ be present more than once.
 : REQUIRED. A string that specifies the format of the requested
 Verifiable Credential. Valid Credential Format Identifier values are defined in
 (#format_specific_parameters).
+
+`multiple`:
+: OPTIONAL. A boolean which indicates whether multiple Credentials can be returned for this Credential Query. If omitted, the default value is `false`.
 
 `meta`: 
 : OPTIONAL. An object defining additional properties requested by the Verifier that
@@ -758,8 +761,9 @@ and for selecting credentials.
 
 The following rules apply for selecting claims via `claims` and `claim_sets`:
 
-- If `claims` is absent, the Verifier requests all claims existing
-  in the Credential.
+- If `claims` is absent, the Verifier is requesting no claims that are selectively disclosable; the Wallet MUST
+  return only the claims that are mandatory to present (e.g., SD-JWT and Key Binding JWT for a Credential
+  of format IETF SD-JWT VC).
 - If `claims` is present, but `claim_sets` is absent,
   the Verifier requests all claims listed in `claims`.
 - If both `claims` and `claim_sets` are present, the Verifier requests one combination of the claims listed in
@@ -767,6 +771,7 @@ The following rules apply for selecting claims via `claims` and `claim_sets`:
   array expresses the Verifier's preference for what is returned; the Wallet MUST return
   the first option that it can satisfy. If the Wallet cannot satisfy any of the
   options, it MUST NOT return any claims.
+- `claim_sets` MUST NOT be present if `claims` is absent.
 
 When a Claims Query contains a restriction on the values of a claim, the Wallet
 SHOULD NOT return the claim if its value does not match at least one of the
@@ -791,6 +796,10 @@ more information.
 
 If the Wallet cannot deliver all claims requested by the Verifier
 according to these rules, it MUST NOT return the respective Credential.
+
+For Credential Formats that do not support selective disclosure, the case of both `claims`
+and `claim_sets` being absent is interpreted as requesting a presentation of the "full credential"
+since all claims are mandatory to present.
 
 #### Selecting Credentials
 
@@ -979,7 +988,7 @@ When a VP Token is returned, the respective response includes the following para
 
 `vp_token`:
 : REQUIRED. The structure of this parameter depends on the query language used to request the presentations in the Authorization Request:
- * If DCQL was used, this is a JSON-encoded object; the keys are the `id` values used for the Credential Queries in the DCQL query, and the values are the Verifiable Presentations that match the respective Credential Query. The Verifiable Presentations are represented as strings or objects depending on the format as defined in (#format_specific_parameters). The same rules as above apply for encoding the Verifiable Presentations.
+ * If DCQL was used, this is a JSON-encoded object containing entries where: the key is the `id` value used for a Credential Query in the DCQL query; and the value is an array of one or more Verifiable Presentations that match the respective Credential Query. When `multiple` is  omitted, or set to `false`, the array MUST contain only one Verifiable Presentation. There MUST NOT be any entry in the JSON-encoded object for optional Credential Queries when there are no matching Credentials for the respective Credential Query. Each Verifiable Presentation is represented as a string or object, depending on the format as defined in (#format_specific_parameters). The same rules as above apply for encoding the Verifiable Presentations.
  * In case [@!DIF.PresentationExchange] was used, it is a string or JSON object that MUST contain a single Verifiable Presentation or an array of strings and JSON objects each of them containing a Verifiable Presentation. Each Verifiable Presentation MUST be represented as a string (that is a base64url-encoded value) or a JSON object depending on a format as defined in (#format_specific_parameters).  When a single Verifiable Presentation is returned, the array syntax MUST NOT be used.  If (#format_specific_parameters) defines a rule for encoding the respective Credential format in the Credential Response, this rules MUST also be followed when encoding Credentials of this format in the `vp_token` response parameter. Otherwise, this specification does not require any additional encoding when a Credential format is already represented as a JSON object or a string.
 
 `presentation_submission`:
@@ -1013,7 +1022,17 @@ brevity):
 
 ```json
 {
-  "my_credential": "eyJhbGci...QMA"
+  "my_credential": ["eyJhbGci...QMA"]
+}
+```
+
+The following is a non-normative example of the contents of a VP Token
+containing multiple Verifiable Presentations in the SD-JWT VC format when the
+Credential Query has `multiple` set to `true` (shortened for brevity):
+
+```json
+{
+  "my_credential": ["eyJhbGci...QMA", "eyJhbGci...QMA", ...]
 }
 ```
 
@@ -2277,7 +2296,7 @@ An example DCQL query using the mdoc format is shown in (#more_dcql_query_exampl
 
 ```json
 {
-  "my_credential": "<base64url-encoded DeviceResponse>"
+  "my_credential": ["<base64url-encoded DeviceResponse>"]
 }
 ```
 
@@ -2307,7 +2326,11 @@ OpenID4VPDCAPIHandover = [
   OpenID4VPDCAPIHandoverInfoHash ; A cryptographic hash of OpenID4VPDCAPIHandoverInfo
 ]
 
-OpenID4VPDCAPIHandoverInfoHash = bstr  ; sha-256 hash of OpenID4VPDCAPIHandoverInfo
+; Contains the sha-256 hash of OpenID4VPDCAPIHandoverInfoBytes
+OpenID4VPDCAPIHandoverInfoHash = bstr
+
+; Contains the bytes of OpenID4VPDCAPIHandoverInfo encoded as CBOR
+OpenID4VPDCAPIHandoverInfoBytes = bstr .cbor OpenID4VPDCAPIHandoverInfo
 
 OpenID4VPDCAPIHandoverInfo = [
   origin,
@@ -2315,21 +2338,21 @@ OpenID4VPDCAPIHandoverInfo = [
   nonce
 ] ; Array containing handover parameters
 
-client_id = tstr  ; UTF-8 encoded string
+client_id = tstr
 
-origin = tstr    ; UTF-8 encoded string
+origin = tstr
 
-nonce = tstr     ; UTF-8 encoded string
+nonce = tstr
 ```
 
 The `OpenID4VPDCAPIHandover` structure has the following elements:
 
-* The first element MUST be the fixed UTF-8 encoded string `OpenID4VPDCAPIHandover`. This serves as a unique identifier for the handover structure to prevent misinterpretation or confusion.
-* The second element MUST be the `OpenID4VPDCAPIHandoverInfoHash`, represented as a CBOR byte string which encodes the sha-256 hash of the `OpenID4VPDCAPIHandoverInfo` CBOR array.
+* The first element MUST be the string `OpenID4VPDCAPIHandover`. This serves as a unique identifier for the handover structure to prevent misinterpretation or confusion.
+* The second element MUST be a bytestring which contains the sha-256 hash of the bytes of `OpenID4VPDCAPIHandoverInfo` when encoded as CBOR.
 * The `OpenID4VPDCAPIHandoverInfo` has the following elements:
-  * The first element MUST be the UTF-8 encoded string representing the origin of the request as described in (#dc_api_request).
-  * The second element MUST be the UTF-8 encoded string value of the effective Client Identifier as defined in (#dc_api_request).
-  * The third element MUST be the UTF-8 encoded string value of the `nonce` request parameter.
+  * The first element MUST be the string representing the origin of the request as described in (#dc_api_request).
+  * The second element MUST be the value of the effective Client Identifier as defined in (#dc_api_request).
+  * The third element MUST be the value of the `nonce` request parameter.
 
 #### Invocation via other methods {#non-dc-api-invocation}
 
@@ -2809,11 +2832,13 @@ The technology described in this specification was made available from contribut
 
    -25
    
+   * clarify DCQL case of `claims` and `claim_sets` being absent
    * add language on client ID and nonce binding for ISO mdocs and W3C VCs
    * clarify the behavior is not to sign when authorization_signed_response_alg is omitted
    * add a note on the use of apu/apv in the JWE header of encrypted responses
    * add x509_hash client identifier scheme
    * remove x509_san_uri client identifier scheme
+   * support returning multiple presentations for a single dcql credential query when requested using `multiple`
 
    -24
 
