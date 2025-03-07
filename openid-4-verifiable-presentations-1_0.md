@@ -2836,6 +2836,7 @@ The technology described in this specification was made available from contribut
 
    -25
    
+   * add note introducing cbor and cddl
    * clarify DCQL case of `claims` and `claim_sets` being absent
    * add language on client ID and nonce binding for ISO mdocs and W3C VCs
    * clarify the behavior is not to sign when authorization_signed_response_alg is omitted
