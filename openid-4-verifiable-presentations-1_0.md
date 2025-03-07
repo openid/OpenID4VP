@@ -797,8 +797,8 @@ not intended to define options the user can choose from, see (#dcql_query_ui) fo
 more information. The Wallet is recommended to return the first option it can satisfy
 since that is the preferred option from the Verifier. However there can be reasons to
 deviate. Examples of such reasons are; scenarios where the Verifier did not order 
-the elements according to least information disclosure, operational reasons why returning
-a different element than the first one has UX benefits for the Wallet. 
+the options according to least information disclosure, operational reasons why returning
+a different option than the first option has UX benefits for the Wallet. 
 
 If the Wallet cannot deliver all claims requested by the Verifier
 according to these rules, it MUST NOT return the respective Credential.
