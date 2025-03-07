@@ -2356,6 +2356,61 @@ The `OpenID4VPDCAPIHandover` structure has the following elements:
   * The second element MUST be the value of the effective Client Identifier as defined in (#dc_api_request).
   * The third element MUST be the value of the `nonce` request parameter.
 
+The following is a non-normative example of the `OpenID4VPDCAPIHandoverInfo` structure:
+```
+Hex:
+
+837368747470733a2f2f6578616d706c652e636f6d781e7765622d6f726967696e3a68747470733a2f2f6578616d706c652e636f6d782b313141457a39684f5375354c5f666f43474a776c5765454c6f525458636433627a6a5350725a376956446b
+
+CBOR diagnostic:
+
+83                                                # array(3)
+  73                                              #   string(19)
+    68747470733a2f2f6578616d706c652e636f6d        #     "https://example.com"
+  78 1e                                           #   string(30)
+    7765622d6f726967696e3a68747470733a2f2f657861  #     "web-origin:https://exa"
+    6d706c652e636f6d                              #     "mple.com"
+  78 2b                                           #   string(43)
+    313141457a39684f5375354c5f666f43474a776c5765  #     "11AEz9hOSu5L_foCGJwlWe"
+    454c6f525458636433627a6a5350725a376956446b    #     "ELoRTXcd3bzjSPrZ7iVDk"
+```
+
+The following is a non-normative example of the `OpenID4VPDCAPIHandover` structure:
+```
+Hex:
+
+82764f70656e4944345650444341504948616e646f7665725820507ee40d57b7d0c4f82d7c7e140a4b2d44753970d085729ea1f2cfa98243b08f
+
+CBOR diagnostic:
+
+82                                                # array(2)
+  76                                              #   string(22)
+    4f70656e4944345650444341504948616e646f766572  #     "OpenID4VPDCAPIHandover"
+  58 20                                           #   bytes(32)
+    507ee40d57b7d0c4f82d7c7e140a4b2d44753970d085  #     "P~ä\x0dW·ÐÄø-|~\x14\x0aK-Du9pÐ\x85"
+    729ea1f2cfa98243b08f                          #     "r\x9e¡òÏ©\x82C°\x8f"
+```
+
+The following is a non-normative example of the `SessionTranscript` structure:
+```
+Hex:
+
+83f6f682764f70656e4944345650444341504948616e646f7665725820507ee40d57b7d0c4f82d7c7e140a4b2d44753970d085729ea1f2cfa98243b08f
+
+CBOR diagnostic:
+
+83                                                # array(3)
+  f6                                              #   null
+  f6                                              #   null
+  82                                              #   array(2)
+    76                                            #     string(22)
+      4f70656e4944345650444341504948616e646f7665  #       "OpenID4VPDCAPIHandove"
+      72                                          #       "r"
+    58 20                                         #     bytes(32)
+      507ee40d57b7d0c4f82d7c7e140a4b2d44753970d0  #       "P~ä\x0dW·ÐÄø-|~\x14\x0aK-Du9pÐ"
+      85729ea1f2cfa98243b08f                      #       "\x85r\x9e¡òÏ©\x82C°\x8f"
+```
+
 #### Invocation via other methods {#non-dc-api-invocation}
 
 If the presentation request is invoked via other methods, the rules for generating the `SessionTranscript` and `Handover` CBOR structure are specified in ISO/IEC 18013-7 [@ISO.18013-7], ISO/IEC 18013-5 [@ISO.18013-5] and ISO/IEC 23220-4 [@ISO.23220-4].
