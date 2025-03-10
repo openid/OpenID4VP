@@ -752,7 +752,9 @@ within the Verifiable Credential, as defined in (#claims_path_pointer).
 `values`:
 : OPTIONAL. An array of strings, integers or boolean values that specifies the expected values of the claim.
 If the `values` property is present, the Wallet SHOULD return the claim only if the
-type and value of the claim both match for at least one of the elements in the array. Details of the processing rules are defined in (#selecting_claims).
+type and value of the claim both match for at least one of the elements in the array. Details of the processing
+rules are defined in (#selecting_claims). Note that the expected behavior for value matching is only strict matching
+of the values, not any sort of fuzzy matching.
 
 ### Selecting Claims and Credentials {#dcql_query_lang_processing_rules}
 
@@ -781,9 +783,10 @@ elements in `values` i.e., the claim should be treated the same as if it did not
 exist in the Credential. Implementing this restriction may not be possible in
 all cases, for example, if the Wallet does not have access to the claim value
 before presentation or user consent or if another component routing
-the request to the Wallet does not have access to the claim value. Therefore, Verifiers
-must treat restrictions expressed using `values` as a best-effort way to improve
-user privacy, but MUST NOT rely on it for security checks.
+the request to the Wallet does not have access to the claim value. It might also
+come down to a decision of the Wallet and/or the user if the value matching request
+is followed. Therefore, Verifiers must treat restrictions expressed using `values` as a
+best-effort way to improve user privacy, but MUST NOT rely on it for security checks.
 
 The purpose of the `claim_sets` syntax is to provide a way for a verifier to
 describe alternative ways a given credential can satisfy the request. The array
@@ -2834,6 +2837,7 @@ The technology described in this specification was made available from contribut
 
    -25
    
+   * clarify value matching in DCQL
    * clarify DCQL case of `claims` and `claim_sets` being absent
    * add language on client ID and nonce binding for ISO mdocs and W3C VCs
    * clarify the behavior is not to sign when authorization_signed_response_alg is omitted
