@@ -2322,7 +2322,7 @@ If the presentation request is invoked using the Digital Credentials API, the `S
 * `EReaderKeyBytes` MUST be `null`.
 * `Handover` MUST be the `OpenID4VPDCAPIHandover` CBOR structure as defined below.
 
-Note: The following section contains a definition in Concise Data Definition Language (CDDL), a language used to define data structures - see [@RFC8610] for more details. Bstr refers to Byte String, defined as major type 2 in CBOR and tstr refers to Text String, defined as major type 3 in CBOR (encoded in utf-8) as defined in section 3.1 of [@RFC8949].
+Note: The following section contains a definition in Concise Data Definition Language (CDDL), a language used to define data structures - see [@RFC8610] for more details. `bstr` refers to Byte String, defined as major type 2 in CBOR and `tstr` refers to Text String, defined as major type 3 in CBOR (encoded in utf-8) as defined in section 3.1 of [@RFC8949].
 
 ```cddl
 OpenID4VPDCAPIHandover = [
