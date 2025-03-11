@@ -314,7 +314,6 @@ This enables the Wallet to assess the Verifier's capabilities, allowing it to tr
 
     * `type`: REQUIRED. String that identifies the type of transaction data . This value determines parameters that can be included in the `transaction_data` object. The specific values are out of scope of this specification. It is RECOMMENDED to use collision-resistant names for `type` values.
     * `credential_ids`: REQUIRED. Array of strings each referencing a Credential requested by the Verifier that can be used to authorize this transaction. In [@!DIF.PresentationExchange], the string matches the `id` field in the Input Descriptor. In the Digital Credentials Query Language, the string matches the `id` field in the Credential Query. If there is more than one element in the array, the Wallet MUST use only one of the referenced Credentials for transaction authorization.
-    * `transaction_data_hashes_alg`: OPTIONAL. Array of strings each representing a hash algorithm identifier, one of which MUST be used to calculate hashes in `transaction_data_hashes` response parameter. The value of the identifier MUST be a hash algorithm value from the "Hash Name String" column in the IANA "Named Information Hash Algorithm" registry [@IANA.Hash.Algorithms] or a value defined in another specification and/or profile of this specification. If this parameter is not present, a default value of `sha-256` SHOULD be used. To promote interoperability, implementations SHOULD support the sha-256 hash algorithm.
 
 Each document specifying details of a transaction data type defines what Credential(s) can be used to authorize those transactions. Those Credential(s) can be issued specifically for the transaction authorization use case or re-use existing Credential(s) used for user identification. A mechanism for Credential Issuers to express that a particular Credential can be used for authorization of transaction data is out of scope for this specification.
 
@@ -324,7 +323,6 @@ The following is a non-normative example of a transaction data content, after ba
 {
   "type": "example_type",
   "credential_ids": [ "id card credential" ],
-  "transaction_data_hashes_alg": [ "sha-256" ]
   // other transaction data type specific parameters
 }
 ```
@@ -1192,7 +1190,7 @@ The following is a non-normative example of the payload of the JWT used in the e
 
 The transaction data mechanism enables a binding between the user's identification/authentication and the user’s authorization, for example to complete a payment transaction, or to sign specific document(s) using QES (Qualified Electronic Signatures). This is achieved by signing the transaction data used for user authorization with the user-controlled key used for proof of possession of the Credential being presented as a means for user identification/authentication.
 
-The Wallet that received the `transaction_data` parameter in the request MUST include a representation or reference to the data in the in the respective credential presentation. How this is done is specific to each credential format and is defined by each Credential Format, such as those in (#format_specific_parameters). If the Wallet does not support `transaction_data` parameter, it MUST return an error.
+The Wallet that received the `transaction_data` parameter in the request MUST include a representation or reference to the data in the in the respective credential presentation. How this is done is part of the specification of any Credential Format that supports it, such as some of those in (#format_specific_parameters). If the Wallet does not support `transaction_data` parameter, it MUST return an error.
 
 ## Error Response {#error-response}
 
@@ -2437,10 +2435,16 @@ The following requirements apply to the `nonce` and `aud` claims in the Key Bind
 
 Note that for an unsigned Authorization Request over the DC API, the `client_id` parameter is not used. Instead, the effective Client Identifier is derived from the Origin, as described in (#dc_api_request).
 
-If the Wallet received the `transaction_data` parameter in the request, it MUST include in the Key Binding JWT as a top level claim a `transaction_data_hashes` parameter defined below. This means that transaction data mechanism cannot be used with SD-JWT VCs without cryptographic key binding and, therefore, do not use KB JWT. If the wallet does not support `transaction_data` parameter, it MUST return an error.
+The SD JWT VC format supports `transaction_data` as specified in (#transaction_data). If used, it is recommended that the transaction data type specification includes the following parameter, in addition to `type` and `credential_ids` from (#new_parameters):
 
-* `transaction_data_hashes`: Representation of hashes, where each hash is calculated using a hash function over the data in the strings received in the `transaction_data` request parameter. Each hash value ensures the integrity of, and maps to, the respective transaction data object. Where in the response this parameter is included is defined by each Credential Format, but it has to be included in the mechanism used for the proof of possession of the Credential that is signed using the user-controlled key.
+* `transaction_data_hashes_alg`: OPTIONAL. Array of strings each representing a hash algorithm identifier, one of which MUST be used to calculate hashes in `transaction_data_hashes` response parameter. The value of the identifier MUST be a hash algorithm value from the "Hash Name String" column in the IANA "Named Information Hash Algorithm" registry [@IANA.Hash.Algorithms] or a value defined in another specification and/or profile of this specification.
+
+If the Wallet received the `transaction_data` parameter in the request, it MUST include in the Key Binding JWT as a top level claim a `transaction_data_hashes` parameter defined below.
+
+* `transaction_data_hashes`: Representation of hashes, where each hash is calculated using a hash function over the data in the strings received in the `transaction_data` request parameter. Each hash value ensures the integrity of, and maps to, the respective transaction data object. If `transaction_data_hashes_alg` was specified in the request, the hash function MUST be one of its values. If `transaction_data_hashes_alg` was not specified in the request, the hash function MUST be `sha-256`.
 * `transaction_data_hashes_alg`: REQUIRED when this parameter was present in the `transaction_data` request parameter. String representing the hash algorithm identifier used to calculate hashes in `transaction_data_hashes` response parameter.
+
+This means that transaction data mechanism cannot be used with SD-JWT VCs without cryptographic key binding and, therefore, do not use KB JWT. If the wallet does not support `transaction_data` parameter, it MUST return an error.
 
 The following is a non-normative example of the content of the `presentation_submission` parameter:
 
