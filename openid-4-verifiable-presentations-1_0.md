@@ -2167,6 +2167,10 @@ The following is a non-normative example of the Verifiable Presentation in the `
 
 <{{examples/response/ldp_vp.json}}
 
+### Transaction Data
+
+The W3C Verifiable Credentials format does not support transaction data as specified in (#transaction_data).
+
 ## AnonCreds
 
 AnonCreds is a Credential format defined as part of the Hyperledger Indy project [@Hyperledger.Indy].
@@ -2227,6 +2231,10 @@ The following is the content of the `vp_token` parameter:
 
 <{{examples/response/ac_vp_sd.json}}
 
+### Transaction Data
+
+The AnonCreds format does not support transaction data as specified in (#transaction_data).
+
 ## Mobile Documents or mdocs (ISO/IEC 18013 and ISO/IEC 23220 series) {#mdocs}
 
 ISO/IEC 18013-5:2021 [@ISO.18013-5] defines a mobile driving license (mDL) Credential in the mobile document (mdoc) format. Although ISO/IEC 18013-5:2021 [@ISO.18013-5] is specific to mobile driving licenses (mDLs), the Credential format can be utilized with any type of Credential (or mdoc document types). The ISO/IEC 23220 series has extracted components from ISO/IEC 18013-5:2021 [@ISO.18013-5] and ISO/IEC TS 18013-7 [@ISO.18013-7] that are common across document types to facilitate the profiling of the specification for other document types. The core data structures are shared between ISO/IEC 18013-5:2021 [@ISO.18013-5], ISO/IEC 23220-2 [@ISO.23220-2], ISO/IEC 23220-4 [@ISO.23220-4] which are encoded in CBOR and secured using COSE_Sign1.
@@ -2243,6 +2251,10 @@ ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 [@ISO.23220-4] Ann
 * Required Wallet and Verifier Metadata parameters and their values when OpenID4VP is used with the `mdoc-openid4vp://` custom URI scheme.
 The `SessionTranscript` and `Handover` CBOR structure when the invocation does not use the DC API. Also see (#non-dc-api-invocation).
 * Additional restrictions on Authorization Request and Authorization Response parameters to ensure compliance with ISO/IEC TS 18013-7 [@ISO.18013-7] and ISO/IEC 23220-4 [@ISO.23220-4]. For instance, to comply with ISO/IEC TS 18013-7 [@ISO.18013-7], only the same-device flow is supported, the `request_uri` Authorization Request parameter is required, and the Authorization Response has to be encrypted.
+
+### Transaction Data
+
+Some document types support some transaction data ((#transaction_data)) to be protected using mdoc authentication, as part of the `DeviceSigned` data structure [@ISO.18013-5]. In those cases, the specifications of these document types include which transaction data types are supported and how the transaction data parameters map to namespaces and device-signed items. If a Wallet receives a request with a `transaction_data` type that is not specified for the document type, the Wallet MUST reject the request due to an unsupported transaction data type.
 
 ### DCQL Query and Response
 
@@ -2377,6 +2389,19 @@ __Claim `birthdate`__:
  * Contents:
 `["6Ij7tM-a5iVPGboS5tmvVA", "birthdate", "1940-01-01"]`
 
+### Transaction Data
+
+The SD JWT VC format supports `transaction_data` as specified in (#transaction_data). If used, it is recommended that the transaction data type specification includes the following parameter, in addition to `type` and `credential_ids` from (#new_parameters):
+
+* `transaction_data_hashes_alg`: OPTIONAL. Array of strings each representing a hash algorithm identifier, one of which MUST be used to calculate hashes in `transaction_data_hashes` response parameter. The value of the identifier MUST be a hash algorithm value from the "Hash Name String" column in the IANA "Named Information Hash Algorithm" registry [@IANA.Hash.Algorithms] or a value defined in another specification and/or profile of this specification.
+
+If the Wallet received the `transaction_data` parameter in the request, it MUST include in the Key Binding JWT as a top level claim a `transaction_data_hashes` parameter defined below.
+
+* `transaction_data_hashes`: Representation of hashes, where each hash is calculated using a hash function over the data in the strings received in the `transaction_data` request parameter. Each hash value ensures the integrity of, and maps to, the respective transaction data object. If `transaction_data_hashes_alg` was specified in the request, the hash function MUST be one of its values. If `transaction_data_hashes_alg` was not specified in the request, the hash function MUST be `sha-256`.
+* `transaction_data_hashes_alg`: REQUIRED when this parameter was present in the `transaction_data` request parameter. String representing the hash algorithm identifier used to calculate hashes in `transaction_data_hashes` response parameter.
+
+This means that transaction data mechanism cannot be used with SD-JWT VCs without cryptographic key binding and, therefore, do not use KB JWT. If the wallet does not support `transaction_data` parameter, it MUST return an error.
+
 ### Verifier Metadata
 
 The `format` value in the `vp_formats` parameter of the Verifier metadata MUST have the key `dc+sd-jwt`, and the value is an object consisting of the following name/value pairs:
@@ -2434,17 +2459,6 @@ The following requirements apply to the `nonce` and `aud` claims in the Key Bind
 - the `aud` claim MUST be the value of the Client Identifier; 
 
 Note that for an unsigned Authorization Request over the DC API, the `client_id` parameter is not used. Instead, the effective Client Identifier is derived from the Origin, as described in (#dc_api_request).
-
-The SD JWT VC format supports `transaction_data` as specified in (#transaction_data). If used, it is recommended that the transaction data type specification includes the following parameter, in addition to `type` and `credential_ids` from (#new_parameters):
-
-* `transaction_data_hashes_alg`: OPTIONAL. Array of strings each representing a hash algorithm identifier, one of which MUST be used to calculate hashes in `transaction_data_hashes` response parameter. The value of the identifier MUST be a hash algorithm value from the "Hash Name String" column in the IANA "Named Information Hash Algorithm" registry [@IANA.Hash.Algorithms] or a value defined in another specification and/or profile of this specification.
-
-If the Wallet received the `transaction_data` parameter in the request, it MUST include in the Key Binding JWT as a top level claim a `transaction_data_hashes` parameter defined below.
-
-* `transaction_data_hashes`: Representation of hashes, where each hash is calculated using a hash function over the data in the strings received in the `transaction_data` request parameter. Each hash value ensures the integrity of, and maps to, the respective transaction data object. If `transaction_data_hashes_alg` was specified in the request, the hash function MUST be one of its values. If `transaction_data_hashes_alg` was not specified in the request, the hash function MUST be `sha-256`.
-* `transaction_data_hashes_alg`: REQUIRED when this parameter was present in the `transaction_data` request parameter. String representing the hash algorithm identifier used to calculate hashes in `transaction_data_hashes` response parameter.
-
-This means that transaction data mechanism cannot be used with SD-JWT VCs without cryptographic key binding and, therefore, do not use KB JWT. If the wallet does not support `transaction_data` parameter, it MUST return an error.
 
 The following is a non-normative example of the content of the `presentation_submission` parameter:
 
