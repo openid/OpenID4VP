@@ -756,10 +756,10 @@ Type:
 : `"aki"`
 
 Value:
-: The base64url encoded Authority Key Identifier element as defined in Section 4.2.1.1 of [@!RFC5280].
-The raw byte representation of this element MUST match with the AuthorityKeyIdentifier element of an X.509
-certificate in the certificate chain present in the credential (e.g., in the header of an mdoc or SD-JWT).
-Note that the chain can consist of a single certificate.
+: Contains the KeyIdentifier of the AuthorityKeyIdentifier as defined in Section 4.2.1.1 of [@!RFC5280],
+encoded as base64url. The raw byte representation of this element MUST match with the AuthorityKeyIdentifier
+element of an X.509 certificate in the certificate chain present in the credential (e.g., in the header of
+an mdoc or SD-JWT). Note that the chain can consist of a single certificate.
 
 Below is a non-normative example of such an entry of type `aki`:
 ```json
