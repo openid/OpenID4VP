@@ -700,7 +700,7 @@ Credential.
 
 `trusted_authorities`:
 : OPTIONAL. A non-empty array of objects as defined in (#dcql_trusted_authorities) that
-specifies expected authorities or trust frameworks that certify issuers, that the
+specifies expected authorities or trust frameworks that certify Issuers, that the
 Verifier will accept. Every Credential returned by the Wallet SHOULD match at least
 one of the conditions present in the corresponding `trusted_authorities` array if present.
 
@@ -723,7 +723,7 @@ Note that multiple Credential Queries in a request MAY request a presentation of
 ### Trusted Authorities Query {#dcql_trusted_authorities}
 
 A Trusted Authorities Query is an object representing information that helps to identify an authority
-or the trust framework that certifies issuers. A Credential is identified as a match
+or the trust framework that certifies Issuers. A Credential is identified as a match
 to a Trusted Authorities Query if it matches with one of the provided values in one of the provided
 types. How exactly the matching works is defined for the different types below
 
@@ -1789,14 +1789,16 @@ Requests from the Wallet to the Verifier SHOULD be sent with the minimal amount 
 
 In the event that another component is invoked instead of the Wallet, the End-User MUST be informed and give consent before the invoked component returns the `wallet_unavailable` Authorization Error Response to the Verifier.
 
-## Privacy implications of mechanisms to establish trust in issuers {#privacy_trusted_authorities}
+## Privacy implications of mechanisms to establish trust in Issuers {#privacy_trusted_authorities}
 
-This specification introduces an extension point that allows for a Verifier to express expected issuers or trust frameworks that certify issuers.
-It is important to understand the implications that different mechanism to establish trust in issuers can have on the privacy of the overall system.
+This specification introduces an extension point that allows for a Verifier to express expected Issuers or trust frameworks that certify Issuers.
+It is important to understand the implications that different mechanism to establish trust in Issuers can have on the privacy of the overall system.
 
 Generally speaking, a distinction can be made between self-contained mechanisms, where all information necessary to validate if a credential matches the request is already present in the Wallet and Verifier, and those mechanisms that require some form of online resolution.
 Mechanisms that require online resolution can leak information that could be used to profile the usage of credentials and the overall ecosystem.
-Especially the case where a Wallet has to retrieve information before being able to construct a presentation that matches the request could leak a lot of information about individual users to other parties.
+
+Especially the case where a Wallet has to retrieve information before being able to construct a presentation that matches the request could leak information about individual users to other parties.
+Wallets SHOULD NOT fetch URLs provided by the Verifier that are unknown to the Wallet. The privacy concerns can be mitigated if the Wallet knows the URL and the URL is hosted by a trusted third party or the URL is only used as an identifier but not fetched upon receiving a request by a Verifier containing the URL.
 
 Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make sure that the privacy properties of the mechanisms they choose to support matches with the desired privacy properties of the overall ecosystem.
 
