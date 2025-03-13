@@ -774,7 +774,7 @@ Type:
 : `"etsi_tl"`
 
 Value:
-: The identifier of a Trusted List as specified in ETSI TS 119 612 [@ETSI.TL].An ETSI
+: The identifier of a Trusted List as specified in ETSI TS 119 612 [@ETSI.TL]. An ETSI
 Trusted List contains references to other Trusted Lists, creating a list of trusted lists, or entries
 for Trust Service Providers with corresponding service description and X.509 Certificates. The trust chain
 of a matching Credential MUST contain at least one X.509 Certificate that matches one of the entries of the
