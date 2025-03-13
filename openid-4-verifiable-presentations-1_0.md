@@ -698,6 +698,16 @@ this object are defined per Credential Format. Examples of those are in (#sd_jwt
 no specific constraints are placed on the metadata or validity of the requested
 Credential.
 
+`trusted_authorities`:
+: OPTIONAL. A non-empty array of objects as defined in (#dcql_trusted_authorities) that
+specifies expected authorities or trust frameworks that certify Issuers, that the
+Verifier will accept. Every Credential returned by the Wallet SHOULD match at least
+one of the conditions present in the corresponding `trusted_authorities` array if present.
+
+Note that Relying Parties must verify that the issuer of a received presentation is
+trusted on their own and this feature mainly aims to help data minimization by not
+revealing information that would likely be rejected.
+
 `claims`:
 : OPTIONAL. A non-empty array of objects as defined in (#claims_query) that specifies
 claims in the requested Credential. Verifiers MUST NOT point to the same claim more than
@@ -709,6 +719,94 @@ elements in `claims` that specifies which combinations of `claims` for the Crede
 The rules for selecting claims to send are defined in (#selecting_claims).
 
 Note that multiple Credential Queries in a request MAY request a presentation of the same Credential.
+
+### Trusted Authorities Query {#dcql_trusted_authorities}
+
+A Trusted Authorities Query is an object representing information that helps to identify an authority
+or the trust framework that certifies Issuers. A Credential is identified as a match
+to a Trusted Authorities Query if it matches with one of the provided values in one of the provided
+types. How exactly the matching works is defined for the different types below
+
+Note that direct Issuer matching can also work using claim value matching if supported (e.g., value matching
+the `iss` claim in an SD-JWT) if the mechanisms for `trusted_authorities` are not applicable but might
+be less likely to work due to the constraints on value matching (see #selecting_claims for more details).
+
+Each entry in `trusted_authorities` MUST be an object with the following properties:
+
+`type`:
+: REQUIRED. A string uniquely identifying the type of information about the issuer trust framework.
+Types defined by this specification are listed below.
+
+`values`:
+: REQUIRED. An array of strings, where each string (value) contains information specific to the
+used Trusted Authorities Query type that allows to identify an issuer, trust framework, or a federation that an
+issuer belongs to.
+
+Below are descriptions for the different Type Identifiers (string), the description on how to interpret
+and perform the matching logic for each provided value.
+
+Note that depending on the trusted authorities type used, the underlying mechanisms can have
+different privacy implications. More detail on privacy considerations for the trusted authorities
+can be found in (#privacy_trusted_authorities).
+
+#### Authority Key Identifier
+
+Type:
+: `"aki"`
+
+Value:
+: Contains the KeyIdentifier of the AuthorityKeyIdentifier as defined in Section 4.2.1.1 of [@!RFC5280],
+encoded as base64url. The raw byte representation of this element MUST match with the AuthorityKeyIdentifier
+element of an X.509 certificate in the certificate chain present in the credential (e.g., in the header of
+an mdoc or SD-JWT). Note that the chain can consist of a single certificate and the credential can include the
+entire X.509 chain or parts of it.
+
+Below is a non-normative example of such an entry of type `aki`:
+```json
+{
+  "type": "aki",
+  "values": ["s9tIpPmhxdiuNkHMEWNpYim8S8Y"]
+}
+```
+
+#### ETSI Trusted List
+
+Type:
+: `"etsi_tl"`
+
+Value:
+: The identifier of a Trusted List as specified in ETSI TS 119 612 [@ETSI.TL]. An ETSI
+Trusted List contains references to other Trusted Lists, creating a list of trusted lists, or entries
+for Trust Service Providers with corresponding service description and X.509 Certificates. The trust chain
+of a matching Credential MUST contain at least one X.509 Certificate that matches one of the entries of the
+Trusted List or its cascading Trusted Lists.
+
+Below is a non-normative example of such an entry of type `etsi_tl`:
+```json
+{
+  "type": "etsi_tl",
+  "values": ["https://lotl.example.com"]
+}
+```
+
+#### OpenID Federation
+
+Type:
+: `"openid_fed"`
+
+Value:
+: The `Entity Identifier` as defined in Section 1 of [@!OpenID.Federation] that is bound to
+an entity in a federation. While this Entity Identifier could be any entity in
+that ecosystem, this entity would usually have the Entity Configuration of a Trust Anchor.
+A valid trust path, including the given Entity Identifier, must be constructible from a matching credential.
+
+Below is a non-normative example of such an entry of type `openid_fed`: 
+```json
+{
+  "type": "openid_fed",
+  "values": ["https://trustanchor.example.com"]
+}
+```
 
 ## Credential Set Query {#credential_set_query}
 
@@ -1691,6 +1789,19 @@ Requests from the Wallet to the Verifier SHOULD be sent with the minimal amount 
 
 In the event that another component is invoked instead of the Wallet, the End-User MUST be informed and give consent before the invoked component returns the `wallet_unavailable` Authorization Error Response to the Verifier.
 
+## Privacy implications of mechanisms to establish trust in Issuers {#privacy_trusted_authorities}
+
+This specification introduces an extension point that allows for a Verifier to express expected Issuers or trust frameworks that certify Issuers.
+It is important to understand the implications that different mechanism to establish trust in Issuers can have on the privacy of the overall system.
+
+Generally speaking, a distinction can be made between self-contained mechanisms, where all information necessary to validate if a credential matches the request is already present in the Wallet and Verifier, and those mechanisms that require some form of online resolution.
+Mechanisms that require online resolution can leak information that could be used to profile the usage of credentials and the overall ecosystem.
+
+Especially the case where a Wallet has to retrieve information before being able to construct a presentation that matches the request could leak information about individual users to other parties.
+Wallets SHOULD NOT fetch URLs provided by the Verifier in a request that are unknown to the Wallet or hosted by a third party that the Wallet does not trust. The privacy concerns can be mitigated if the URLs are only used by the Wallet as identifiers but not fetched upon receiving the request from the Verifier.
+
+Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make sure that the privacy properties of the mechanisms they choose to support matches with the desired privacy properties of the overall ecosystem.
+
 {backmatter}
 
 <reference anchor="VC_DATA" target="https://www.w3.org/TR/2022/REC-vc-data-model-20220303/">
@@ -1870,6 +1981,16 @@ In the event that another component is invoked instead of the Wallet, the End-Us
             <organization> ISO/IEC JTC 1/SC 17 Cards and security devices for personal identification</organization>
           </author>
           <date year="2024"/>
+        </front>
+</reference>
+
+<reference anchor="ETSI.TL" target="https://www.etsi.org/deliver/etsi_ts/119600_119699/119612/02.01.01_60/ts_119612v020101p.pdf">
+        <front>
+          <title>ETSI TS 119 612 V2.1.1 Electronic Signatures and Infrastructures (ESI); Trusted Lists </title>
+          <author>
+            <organization>European Telecommunications Standards Institute (ETSI)</organization>
+          </author>
+          <date year="2015"/>
         </front>
 </reference>
 
@@ -2322,6 +2443,8 @@ If the presentation request is invoked using the Digital Credentials API, the `S
 * `EReaderKeyBytes` MUST be `null`.
 * `Handover` MUST be the `OpenID4VPDCAPIHandover` CBOR structure as defined below.
 
+Note: The following section contains a definition in Concise Data Definition Language (CDDL), a language used to define data structures - see [@RFC8610] for more details. `bstr` refers to Byte String, defined as major type 2 in CBOR and `tstr` refers to Text String, defined as major type 3 in CBOR (encoded in utf-8) as defined in section 3.1 of [@RFC8949].
+
 ```cddl
 OpenID4VPDCAPIHandover = [
   "OpenID4VPDCAPIHandover", ; A fixed identifier for this handover type
@@ -2350,7 +2473,7 @@ nonce = tstr
 The `OpenID4VPDCAPIHandover` structure has the following elements:
 
 * The first element MUST be the string `OpenID4VPDCAPIHandover`. This serves as a unique identifier for the handover structure to prevent misinterpretation or confusion.
-* The second element MUST be a bytestring which contains the sha-256 hash of the bytes of `OpenID4VPDCAPIHandoverInfo` when encoded as CBOR.
+* The second element MUST be a Byte String which contains the sha-256 hash of the bytes of `OpenID4VPDCAPIHandoverInfo` when encoded as CBOR.
 * The `OpenID4VPDCAPIHandoverInfo` has the following elements:
   * The first element MUST be the string representing the origin of the request as described in (#dc_api_request).
   * The second element MUST be the value of the effective Client Identifier as defined in (#dc_api_request).
@@ -2835,6 +2958,8 @@ The technology described in this specification was made available from contribut
    -25
    
    * authz requests using redirect_uri scheme can be signed
+   * add `trusted_authorities` to DCQL  
+   * add note introducing cbor and cddl
    * clarify DCQL case of `claims` and `claim_sets` being absent
    * add language on client ID and nonce binding for ISO mdocs and W3C VCs
    * clarify the behavior is not to sign when authorization_signed_response_alg is omitted
