@@ -2136,14 +2136,14 @@ And lastly, as part of the request, the Wallet is provided with information abou
 
 ## Protocol
 
-To use OpenID4VP with the Digital Credentials API (DC API), the exchange protocol value has the following format: `urn:openid:protocol:openid4vp:v<version>:<request-type>`. The `<version>` field is a numeric value, and `<request-type>` explicitly specifies the type of request. This approach eliminates the need for Wallets to perform implicit parameter matching to accurately identify the version and the expected request and response parameters.
+To use OpenID4VP with the Digital Credentials API (DC API), the exchange protocol value has the following format: `openid4vp-v<version>-<request-type>`. The `<version>` field is a numeric value, and `<request-type>` explicitly specifies the type of request. This approach eliminates the need for Wallets to perform implicit parameter matching to accurately identify the version and the expected request and response parameters.
 
 The value `1` MUST be used for the `<version>` field to indicate the request and response are compatible with this version of the specification. For `<request-type>`, unsigned requests, as defined in (#unsigned_request), MUST use `unsigned`, and signed requests, as defined in (#signed_request), MUST use `signed`.
 
 The following exchange protocol values are defined by this specification:
 
-* Unsigned requests: `urn:openid:dcapi-protocol:openid4vp:v1:unsigned`
-* Signed requests: `urn:openid:dcapi-protocol:openid4vp:v1:signed`
+* Unsigned requests: `openid4vp-v1-unsigned`
+* Signed requests: `openid4vp-v1-signed`
 
 ## Request {#dc_api_request}
 
@@ -2443,6 +2443,8 @@ If the presentation request is invoked using the Digital Credentials API, the `S
 * `EReaderKeyBytes` MUST be `null`.
 * `Handover` MUST be the `OpenID4VPDCAPIHandover` CBOR structure as defined below.
 
+Note: The following section contains a definition in Concise Data Definition Language (CDDL), a language used to define data structures - see [@RFC8610] for more details. `bstr` refers to Byte String, defined as major type 2 in CBOR and `tstr` refers to Text String, defined as major type 3 in CBOR (encoded in utf-8) as defined in section 3.1 of [@RFC8949].
+
 ```cddl
 OpenID4VPDCAPIHandover = [
   "OpenID4VPDCAPIHandover", ; A fixed identifier for this handover type
@@ -2471,7 +2473,7 @@ nonce = tstr
 The `OpenID4VPDCAPIHandover` structure has the following elements:
 
 * The first element MUST be the string `OpenID4VPDCAPIHandover`. This serves as a unique identifier for the handover structure to prevent misinterpretation or confusion.
-* The second element MUST be a bytestring which contains the sha-256 hash of the bytes of `OpenID4VPDCAPIHandoverInfo` when encoded as CBOR.
+* The second element MUST be a Byte String which contains the sha-256 hash of the bytes of `OpenID4VPDCAPIHandoverInfo` when encoded as CBOR.
 * The `OpenID4VPDCAPIHandoverInfo` has the following elements:
   * The first element MUST be the string representing the origin of the request as described in (#dc_api_request).
   * The second element MUST be the value of the effective Client Identifier as defined in (#dc_api_request).
@@ -2956,6 +2958,7 @@ The technology described in this specification was made available from contribut
    -25
 
    * add `trusted_authorities` to DCQL  
+   * add note introducing cbor and cddl
    * clarify DCQL case of `claims` and `claim_sets` being absent
    * add language on client ID and nonce binding for ISO mdocs and W3C VCs
    * clarify the behavior is not to sign when authorization_signed_response_alg is omitted
