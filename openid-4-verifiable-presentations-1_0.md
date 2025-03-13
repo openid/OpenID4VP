@@ -1190,7 +1190,7 @@ The following is a non-normative example of the payload of the JWT used in the e
 
 The transaction data mechanism enables a binding between the user's identification/authentication and the user’s authorization, for example to complete a payment transaction, or to sign specific document(s) using QES (Qualified Electronic Signatures). This is achieved by signing the transaction data used for user authorization with the user-controlled key used for proof of possession of the Credential being presented as a means for user identification/authentication.
 
-The Wallet that received the `transaction_data` parameter in the request MUST include a representation or reference to the data in the in the respective credential presentation. How this is done is part of the specification of any Credential Format that supports it, such as some of those in (#format_specific_parameters). If the Wallet does not support `transaction_data` parameter, it MUST return an error.
+The Wallet that received the `transaction_data` parameter in the request MUST include a representation or reference to the data in the respective credential presentation. How this is done is part of the specification of any Credential Format that supports it, such as some of those in (#format_specific_parameters). If the Wallet does not support `transaction_data` parameter, it MUST return an error.
 
 ## Error Response {#error-response}
 
@@ -2400,7 +2400,7 @@ If the Wallet received the `transaction_data` parameter in the request, it MUST 
 * `transaction_data_hashes`: Array of base64url-encoded hashes, where each hash is calculated using a hash function over the data in the base64url-decoded strings received in the `transaction_data` request parameter. Each hash value ensures the integrity of, and maps to, the respective transaction data object. If `transaction_data_hashes_alg` was specified in the request, the hash function MUST be one of its values. If `transaction_data_hashes_alg` was not specified in the request, the hash function MUST be `sha-256`.
 * `transaction_data_hashes_alg`: REQUIRED when this parameter was present in the `transaction_data` request parameter. String representing the hash algorithm identifier used to calculate hashes in `transaction_data_hashes` response parameter.
 
-This means that transaction data mechanism cannot be used with SD-JWT VCs without cryptographic key binding and, therefore, do not use KB JWT. If the wallet does not support `transaction_data` parameter, it MUST return an error.
+Note: This means that transaction data mechanism requires use of a SD-JWT VCs with cryptographic key binding.
 
 ### Verifier Metadata
 
