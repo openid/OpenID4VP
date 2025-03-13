@@ -1797,7 +1797,7 @@ Generally speaking, a distinction can be made between self-contained mechanisms,
 Mechanisms that require online resolution can leak information that could be used to profile the usage of credentials and the overall ecosystem.
 
 Especially the case where a Wallet has to retrieve information before being able to construct a presentation that matches the request could leak information about individual users to other parties.
-Wallets SHOULD NOT fetch URLs provided by the Verifier that are unknown to the Wallet. The privacy concerns can be mitigated if the Wallet knows the URL and the URL is hosted by a trusted third party or the URL is only used as an identifier but not fetched upon receiving a request by a Verifier containing the URL.
+Wallets SHOULD NOT fetch URLs provided by the Verifier in a request that are unknown to the Wallet or hosted by a third party that the Wallet does not trust. The privacy concerns can be mitigated if the URLs are only used by the Wallet as identifiers but not fetched upon receiving the request from the Verifier.
 
 Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make sure that the privacy properties of the mechanisms they choose to support matches with the desired privacy properties of the overall ecosystem.
 
