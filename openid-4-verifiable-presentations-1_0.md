@@ -2352,7 +2352,7 @@ nonce = tstr
 The `OpenID4VPDCAPIHandover` structure has the following elements:
 
 * The first element MUST be the string `OpenID4VPDCAPIHandover`. This serves as a unique identifier for the handover structure to prevent misinterpretation or confusion.
-* The second element MUST be a byte string which contains the sha-256 hash of the bytes of `OpenID4VPDCAPIHandoverInfo` when encoded as CBOR.
+* The second element MUST be a Byte String which contains the sha-256 hash of the bytes of `OpenID4VPDCAPIHandoverInfo` when encoded as CBOR.
 * The `OpenID4VPDCAPIHandoverInfo` has the following elements:
   * The first element MUST be the string representing the origin of the request as described in (#dc_api_request).
   * The second element MUST be the value of the effective Client Identifier as defined in (#dc_api_request).
