@@ -40,7 +40,7 @@
     "type": "Ed25519Signature2018",
     "created": "2021-03-19T15:30:15Z",
     "challenge": "n-0S6_WzA2Mj",
-    "domain": "https://client.example.org/cb",
+    "domain": "x509_san_uri:https://client.example.org/cb",
     "jws": "eyJhbG...IAoDA",
     "proofPurpose": "authentication",
     "verificationMethod": "did:example:holder#key-1"
