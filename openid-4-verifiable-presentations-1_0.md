@@ -2397,7 +2397,7 @@ The SD JWT VC format supports `transaction_data` as specified in (#transaction_d
 
 If the Wallet received the `transaction_data` parameter in the request, it MUST include in the Key Binding JWT as a top level claim a `transaction_data_hashes` parameter defined below.
 
-* `transaction_data_hashes`: Array of base64url-encoded hashes, where each hash is calculated using a hash function over the data in the base64url-decoded strings received in the `transaction_data` request parameter. Each hash value ensures the integrity of, and maps to, the respective transaction data object. If `transaction_data_hashes_alg` was specified in the request, the hash function MUST be one of its values. If `transaction_data_hashes_alg` was not specified in the request, the hash function MUST be `sha-256`.
+* `transaction_data_hashes`: Array of hashes, where each hash is calculated using a hash function over the data in the strings received in the `transaction_data` request parameter. Each hash value ensures the integrity of, and maps to, the respective transaction data object. If `transaction_data_hashes_alg` was specified in the request, the hash function MUST be one of its values. If `transaction_data_hashes_alg` was not specified in the request, the hash function MUST be `sha-256`.
 * `transaction_data_hashes_alg`: REQUIRED when this parameter was present in the `transaction_data` request parameter. String representing the hash algorithm identifier used to calculate hashes in `transaction_data_hashes` response parameter.
 
 Note: This means that transaction data mechanism requires use of a SD-JWT VCs with cryptographic key binding.
