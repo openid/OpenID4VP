@@ -2181,7 +2181,7 @@ In addition to the above-mentioned parameters, a new parameter is introduced for
 
 * `expected_origins`: REQUIRED when signed requests defined in (#signed_request) are used with the Digital Credentials API (DC API). An array of strings, each string representing an Origin of the Verifier that is making the request. The Wallet can detect replay of the request from a malicious Verifier by comparing values in this parameter to the Origin. This parameter is not for use in unsigned requests and therefore a Wallet MUST ignore this parameter if it is present in an unsigned request.
 
-Additional request parameters MAY be defined and used with OpenID4VP over the DC API.
+Additional request parameters MAY be defined and used with OpenID4VP over the DC API, including parameters defined by a specific client identifier scheme (such as the `trust_chain` parameter for the `https` client id scheme).
 
 The Wallet MUST ignore any unrecognized parameters.
 
