@@ -1804,6 +1804,21 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
 
 {backmatter}
 
+<reference anchor="JSON-LD" target="https://www.w3.org/TR/json-ld11/">
+  <front>
+    <title>Verifiable Credentials Data Model 1.1</title>
+    <author fullname="Gregg Kellogg">      
+    </author>
+    <author fullname="Pierre-Antoine Champin">
+      <organization>LIRIS - Université de Lyon</organization>
+    </author>
+    <author fullname="Dave Longley">
+      <organization>Digital Bazaar</organization>
+    </author>
+   <date day="16" month="Jul" year="2020"/>
+  </front>
+</reference>
+
 <reference anchor="VC_DATA" target="https://www.w3.org/TR/2022/REC-vc-data-model-20220303/">
   <front>
     <title>Verifiable Credentials Data Model 1.1</title>
@@ -2608,7 +2623,7 @@ The following is a non-normative example of the unsecured payload of the Key Bin
 
 ### SD-JWT VCDM {#sd-jwt_vcdm}
 
-SD-JWT VCDM (Verifiable Credential Data Model) uses the IETF SD-JWT VC [@!I-D.ietf-oauth-sd-jwt-vc] credential format and allows to incorporate existing data data models, e.g., W3C VCDM [@?W3C.VCDM1.1] or [@?W3C.VCDM2.0], while enabling a consistent approach to selective disclosure.
+SD-JWT VCDM (Verifiable Credential Data Model) uses the IETF SD-JWT VC [@!I-D.ietf-oauth-sd-jwt-vc] credential format and allows to incorporate existing data data models, e.g., W3C VCDM [@?VC_DATA], while enabling a consistent approach to selective disclosure.
 
 Information contained in SD-JWT VCDM credentials can be processed using a JSON-LD [@?JSON-LD] processor after applying SD-JWT VC processing.
 
