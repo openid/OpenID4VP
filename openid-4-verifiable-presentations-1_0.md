@@ -3056,6 +3056,7 @@ The technology described in this specification was made available from contribut
 
    -25
 
+   * add SD-JWT VCDM
    * add `trusted_authorities` to DCQL  
    * add note introducing cbor and cddl
    * clarify DCQL case of `claims` and `claim_sets` being absent
