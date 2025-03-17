@@ -2640,7 +2640,7 @@ For backward compatibility with JWT processors, the following registered JWT cla
 
 IETF SD-JWT VC is extended with the following claims:
 
-* `ld`: OPTIONAL. Contains a JSON-LD object in compact form, e.g., [@!W3C.VCDM1.1] or [@!W3C.VCDM2.0].
+* `ld`: OPTIONAL. Contains a JSON-LD [@!JSON-LD] object in compact form, e.g., [@?VC_DATA].
 
 The following outlines a suggested non-normative set of processing steps for SD-JWT VCDM:
 1. SD-JWT VC Processing:
