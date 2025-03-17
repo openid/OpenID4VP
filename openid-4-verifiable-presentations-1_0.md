@@ -2606,6 +2606,83 @@ The following is a non-normative example of the unsecured payload of the Key Bin
 
 <{{examples/response/kb_jwt_unsecured.json}}
 
+### SD-JWT VCDM {#sd-jwt_vcdm}
+
+SD-JWT VCDM (Verifiable Credential Data Model) uses the IETF SD-JWT VC [@!I-D.ietf-oauth-sd-jwt-vc] credential format and allows to incorporate existing data data models, e.g., W3C VCDM [@?W3C.VCDM1.1] or [@?W3C.VCDM2.0], while enabling a consistent approach to selective disclosure.
+
+Information contained in SD-JWT VCDM credentials can be processed using a JSON-LD [@?JSON-LD] processor after applying SD-JWT VC processing.
+
+When IETF SD-JWT VC is mentioned in this specification, SD-JWT VCDM defined in this section MAY be used.
+
+Implementers of SD-JWT VCDM MUST use valid values for the `vct` Claim defined in IETF SD-JWT VC [@!I-D.ietf-oauth-sd-jwt-vc].
+
+For backward compatibility with JWT processors, the following registered JWT claims MUST be used:
+
+* To represent the validity period of SD-JWT VCDM (i.e., cryptographic signature), `exp`/`nbf`/`iat` Claims encoded as a UNIX timestamp (NumericDate) MUST be used.
+* `iss` Claim MUST represent the Credential Issuer.
+* `status` Claim MUST represent the information to obtain the status of the Credential.
+* `sub` Claim MUST represent the subject identifier of the Credential.
+
+IETF SD-JWT VC is extended with the following claims:
+
+* `ld`: OPTIONAL. Contains a JSON-LD object in compact form, e.g., [@!W3C.VCDM1.1] or [@!W3C.VCDM2.0].
+
+The following outlines a suggested non-normative set of processing steps for SD-JWT VCDM:
+1. SD-JWT VC Processing:
+- A receiver (holder or verifier) of an SD-JWT VCDM applies the processing rules outlined in Section 4 of [@!I-D.ietf-oauth-sd-jwt-vc], including verifying signatures, validity periods, status information, etc.
+- If the `vct` value is associated with any SD-JWT VC Type Metadata, schema validation of the entire SD-JWT VCDM is performed, including the nested `ld` claim.
+- Additionally, trust framework rules are applied, such as ensuring the Credential Issuer is authorized to issue SD-JWT VCDMs for the specified `vct` value.
+
+2. Business Logic Processing:
+
+- Once the SD-JWT VC is verified and trusted by the SD-JWT VC processor, and if the `ld` claim is present, the receiver extracts the JSON-LD object from the `ld` claim and uses this for the business logic object. If the `ld` claim is not present, the entire SD-JWT VC is considered to represent the business logic object.
+- The business logic object is then passed on for further use case-specific processing and validation. The business logic assumes that all security-critical functions (e.g., signature verification, trusted issuer) have already been performed during the previous step. Additional schema validation is applied if provided in the `ld` claim, e.g., to support SHACL schemas. Note that while a `vct` claim is required, SD-JWT VC type metadata resolution and related schema validation is optional in certain cases.
+
+The following is a non-normative example of an unsecured payload of an SD-JWT VCDM, that is built using the example of unsecured payload in Section 3.3 of [@!I-D.ietf-oauth-sd-jwt-vc]:
+
+```json
+{
+   "vct":"https://credentials.example.com/identity_credential",
+   "ld":{
+      "@context":[
+         "https://www.w3.org/ns/credentials/v2",
+         "https://w3id.org/citizenship/v3",
+      ],
+      "type":[
+         "VerifiableCredential",
+         "PermanentResidentCard"
+      ],
+      "credentialSubject":{
+         "givenName": "John",
+         "familyName": "Doe",
+         "birthDate": "1978-07-17"
+      }
+   }
+}
+```
+
+The following is a non-normative example of how the unsecured payload of an SD-JWT VCDM above can be used for the SD-JWT:
+```json
+{
+  "_sd": [
+    "vwUhdFvpylx9Sqi2YNBV1dfVK6lCbhXvkH0nThfKFT0"
+  ],
+  "iss": "https://example.com/issuer",
+  "iat": 1683000000,
+  "exp": 1883000000,
+  "vct": "https://credentials.example.com/identity_credential",
+  "_sd_alg": "sha-256",
+  "cnf": {
+    "jwk": {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "TCAER19Zvu3OHF4j4W4vfSVoHIP1ILilDls7vCeGemc",
+      "y": "ZxjiWWbZMQGHVWKVQ4hbSIirsVfuecCE6t4jT9F2HZQ"
+    }
+  }
+}    
+```
+
 ## Combining this specification with SIOPv2
 
 This section shows how SIOP and OpenID for Verifiable Presentations can be combined to present Verifiable Credentials and pseudonymously authenticate an End-User using subject controlled key material.
@@ -2938,6 +3015,13 @@ in the IANA "Uniform Resource Identifier (URI) Schemes" registry [@IANA.URI.Sche
 * Well-Known URI Support: -
 * Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#openid4vp-scheme) of this specification
+
+## JSON Web Token Claims Registration
+
+* Claim Name: "ld"
+* Claim Description: JSON-LD object in compact form
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
+* Reference: (#sd-jwt_vcdm) of this specification
 
 # Acknowledgements {#Acknowledgements}
 
