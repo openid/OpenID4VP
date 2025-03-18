@@ -2644,6 +2644,7 @@ IETF SD-JWT VC is extended with the following claims:
 
 The following outlines a suggested non-normative set of processing steps for SD-JWT VCDM:
 1. SD-JWT VC Processing:
+
 - A receiver (holder or verifier) of an SD-JWT VCDM applies the processing rules outlined in Section 4 of [@!I-D.ietf-oauth-sd-jwt-vc], including verifying signatures, validity periods, status information, etc.
 - If the `vct` value is associated with any SD-JWT VC Type Metadata, schema validation of the entire SD-JWT VCDM is performed, including the nested `ld` claim.
 - Additionally, trust framework rules are applied, such as ensuring the Credential Issuer is authorized to issue SD-JWT VCDMs for the specified `vct` value.
