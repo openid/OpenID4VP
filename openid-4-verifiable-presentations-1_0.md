@@ -538,9 +538,9 @@ Confusing Verifiers using a Client Identifier Scheme with those using none can l
 
 This specification defines the following Client Identifier Schemes, followed by the examples where applicable: 
 
-* `redirect_uri`: This value indicates that the Client Identifier (without the prefix `redirect_uri:`) is the Verifier's Redirect URI (or Response URI when Response Mode `direct_post` is used). The Verifier MAY omit the `redirect_uri` Authorization Request parameter (or `response_uri` when Response Mode `direct_post` is used). All Verifier metadata parameters MUST be passed using the `client_metadata` parameter defined in (#new_parameters). Example Client Identifier value is `redirect_uri:https://client.example.org/cb`.
+* `redirect_uri`: This value indicates that the Client Identifier (without the prefix `redirect_uri:`) is the Verifier's Redirect URI (or Response URI when Response Mode `direct_post` is used). The Verifier MAY omit the `redirect_uri` Authorization Request parameter (or `response_uri` when Response Mode `direct_post` is used). All Verifier metadata parameters MUST be passed using the `client_metadata` parameter defined in (#new_parameters). An example Client Identifier value is `redirect_uri:https://client.example.org/cb`. Requests using the `redirect_uri` Client Identifier Scheme cannot be signed because there is no method for the Wallet to obtain a trusted key for verification. Therefore, implementations requiring signed requests cannot use the `redirect_uri` Client ID scheme.
 
-The following is a non-normative example of an unsigned request with this Client Identifier Scheme:
+The following is a non-normative example of an unsigned request with the `redirect_uri` Client Identifier Scheme:
 
 ```
 HTTP/1.1 302 Found
@@ -2957,7 +2957,7 @@ The technology described in this specification was made available from contribut
 
    -25
    
-   * authz requests using redirect_uri scheme can be signed
+   * clarify why requests using redirect_uri scheme cannot be signed
    * add `trusted_authorities` to DCQL  
    * add note introducing cbor and cddl
    * clarify DCQL case of `claims` and `claim_sets` being absent
