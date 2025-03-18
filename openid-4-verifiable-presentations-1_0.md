@@ -2623,7 +2623,7 @@ The following is a non-normative example of the unsecured payload of the Key Bin
 
 ### SD-JWT VCDM {#sd-jwt_vcdm}
 
-SD-JWT VCDM (Verifiable Credential Data Model) uses the IETF SD-JWT VC [@!I-D.ietf-oauth-sd-jwt-vc] credential format and allows to incorporate existing data models that use Linked Data, e.g., W3C VCDM [@?VC_DATA], while enabling a consistent approach to selective disclosure.
+SD-JWT VCDM (Verifiable Credential Data Model) uses the IETF SD-JWT VC [@!I-D.ietf-oauth-sd-jwt-vc] credential format and allows to incorporate existing data models that use Linked Data, e.g., W3C VCDM [@?VC_DATA], while enabling a consistent and uncomplicated approach to selective disclosure.
 
 Information contained in SD-JWT VCDM credentials can be processed using a JSON-LD [@?JSON-LD] processor after applying SD-JWT VC processing.
 
