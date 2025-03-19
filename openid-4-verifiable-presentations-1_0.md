@@ -349,7 +349,14 @@ The following additional considerations are given for pre-existing Authorization
 
 ## Examples
 
-The following is a non-normative example of an Authorization Request: 
+The Verifier MAY send an Authorization Request using either of these 3 options:
+
+1. Passing as URL with encoded parameters
+2. Passing a request object as value
+3. Passing a request object by reference
+2 and 3 are defined in the JWT-Secured Authorization Request (JAR) [@RFC9101].
+
+The following is a non-normative example of an Authorization Request with URL encoded parameters: 
 
 ```
 GET /authorize?
@@ -361,14 +368,70 @@ GET /authorize?
   &nonce=n-0S6_WzA2Mj HTTP/1.1
 ```
 
-The following is a non-normative example of an Authorization Request with a `request_uri_method` parameter (including the additional `client_metadata`): 
-
+The following is a non-normative example of Authorization Request with request object as value:
 ```
 GET /authorize?
-  client_id=x509_san_dns:client.example.org
-  &client_metadata=...
+  client_id=redirect_uri%3Ahttps%3A%2F%2Fclient.example.org%2Fcb
+  &request=eyJrd...
+```
+Where the contents of `request` consist of base64url-encoding and signing (in the example with RS256 algo)
+this json:
+```
+{
+  "iss": "s6BhdRkqt3",
+  "aud": "https://self-issued.me/v2",
+  "response_type": "vp_token",
+  "client_id": "s6BhdRkqt3",
+  "redirect_uri": "https//client.example.org/cb",
+  "presentation_definition": {
+    "id": "example_jwt_vc",
+    "input_descriptors": [
+      {
+        "id": "id_credential",
+        "format": {
+          "jwt_vc_json": {
+            "proof_type": [
+              "JsonWebSignature2020"
+            ]
+          }
+        },
+        "constraints": {
+          "fields": [
+            {
+              "path": [
+                "$.vc.type"
+              ],
+              "filter": {
+                "type": "array",
+                "contains": {
+                  "const": "IDCredential"
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "nonce": "n-0S6_WzA2Mj"
+}
+```
+The following is a non-normative example of Authorization Request with request object as reference:
+```
+GET /authorize?
+  client_id=x509_san_dns%3Aclient.example.org
   &request_uri=https%3A%2F%2Fclient.example.org%2Frequest%2Fvapof4ql2i7m41m68uep
   &request_uri_method=post HTTP/1.1
+```
+Later, the wallet might send the following non-normative example request to the `request_uri`:
+```
+POST /request/vapof4ql2i7m41m68uep HTTP/1.1
+Host: client.example.org
+Content-Type: application/x-www-form-urlencoded
+wallet_metadata=%7B%22vp_formats_supported%22%3A%7B%22jwt_vc_json%22%3A%7B%22alg_values_supported
+%22%3A%5B%22ES256K%22%2C%22ES384%22%5D%7D%2C%22jwt_vp_json%22%3A%7B%22alg_values_supported%22%3A%
+5B%22ES256K%22%2C%22EdDSA%22%5D%7D%7D%7D&
+wallet_nonce=qPmxiNFCR3QTm19POc8u
 ```
 
 ## `presentation_definition` Parameter {#request_presentation_definition}
