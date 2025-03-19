@@ -2395,7 +2395,7 @@ The SD JWT VC format supports `transaction_data` as specified in (#transaction_d
 
 * `transaction_data_hashes_alg`: OPTIONAL. Array of strings each representing a hash algorithm identifier, one of which MUST be used to calculate hashes in `transaction_data_hashes` response parameter. The value of the identifier MUST be a hash algorithm value from the "Hash Name String" column in the IANA "Named Information Hash Algorithm" registry [@IANA.Hash.Algorithms] or a value defined in another specification and/or profile of this specification.
 
-If the Wallet received the `transaction_data` parameter in the request, it MUST include in the Key Binding JWT as a top level claim a `transaction_data_hashes` parameter defined below.
+If the Wallet received the `transaction_data` parameter in the request, the Wallet MUST include a top level claim parameter `transaction_data_hashes` in the Key Binding JWT as defined below.
 
 * `transaction_data_hashes`: Array of hashes, where each hash is calculated using a hash function over the data in the strings received in the `transaction_data` request parameter. Each hash value ensures the integrity of, and maps to, the respective transaction data object. If `transaction_data_hashes_alg` was specified in the request, the hash function MUST be one of its values. If `transaction_data_hashes_alg` was not specified in the request, the hash function MUST be `sha-256`.
 * `transaction_data_hashes_alg`: REQUIRED when this parameter was present in the `transaction_data` request parameter. String representing the hash algorithm identifier used to calculate hashes in `transaction_data_hashes` response parameter.
