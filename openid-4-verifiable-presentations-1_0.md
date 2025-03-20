@@ -2233,7 +2233,7 @@ The following is the content of the `vp_token` parameter:
 
 ### Transaction Data
 
-The AnonCreds format does not support transaction data as specified in (#transaction_data).
+The AnonCreds format profile as defined in this specification does not support transaction data as defined in (#transaction_data).
 
 ## Mobile Documents or mdocs (ISO/IEC 18013 and ISO/IEC 23220 series) {#mdocs}
 
