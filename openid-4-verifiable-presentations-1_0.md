@@ -1304,7 +1304,7 @@ This specification also defines a new Response Mode `direct_post.jwt`, which all
 
 The Response Mode `direct_post.jwt` causes the Wallet to send the Authorization Response using an HTTP POST request instead of redirecting back to the Verifier as defined in (#response_mode_post). The Wallet adds the `response` parameter containing the JWT as defined in Section 4.1. of [@!JARM] and (#jarm) in the body of an HTTP POST request using the `application/x-www-form-urlencoded` content type. The names and values in the body MUST be encoded using UTF-8.
 
-If a Wallet is unable to generate a JARM response, it MAY send an error response without using JARM as per (#response_mode_post).
+If a Wallet is unable to generate a JARM response, it MAY send an error response without encapsulating it in a JWT.
 
 The following is a non-normative example of a response using the `presentation_submission` and `vp_token` values from (#jwt_vc). (line breaks for display purposes only):
 
