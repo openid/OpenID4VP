@@ -574,7 +574,7 @@ Body
 
 * `x509_san_dns`: When the Client Identifier Scheme is `x509_san_dns`, the Client Identifier MUST be a DNS name and match a `dNSName` Subject Alternative Name (SAN) [@!RFC5280] entry in the leaf certificate passed with the request. The request MUST be signed with the private key corresponding to the public key in the leaf X.509 certificate of the certificate chain added to the request in the `x5c` JOSE header [@!RFC7515] of the signed request object. The Wallet MUST validate the signature and the trust chain of the X.509 certificate. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter. If the Wallet can establish trust in the Client Identifier authenticated through the certificate, e.g. because the Client Identifier is contained in a list of trusted Client Identifiers, it may allow the client to freely choose the `redirect_uri` value. If not, the FQDN of the `redirect_uri` value MUST match the Client Identifier without the prefix `x509_san_dns:`. Example Client Identifier: `x509_san_dns:client.example.org`.
 
-* `origin`: This Client Identifier Scheme is defined in (#dc_api_request). The Wallet MUST NOT accept this Client Identifier Scheme in requests. In OpenID4VP over the Digital Credentials API the audience of the Credential Presentation is the origin value prefixed by `origin:`, for example `origin:https://verifier.example.com/`.
+* `origin`: This Client Identifier Scheme is defined in (#dc_api_request). The Wallet MUST NOT accept this Client Identifier Scheme in requests. In OpenID4VP over the Digital Credentials API, the audience of the Credential Presentation is always the origin value prefixed by `origin:`, for example `origin:https://verifier.example.com/`.
 
 * `x509_hash`: When the Client Identifier Scheme is `x509_hash`, the Client Identifier MUST be a hash and match the hash of the leaf certificate passed with the request. The request MUST be signed with the private key corresponding to the public key in the leaf X.509 certificate of the certificate chain added to the request in the `x5c` JOSE header parameter [@!RFC7515] of the signed request object. The value of `x509_hash` is the base64url encoded value of the SHA-256 hash of the DER-encoded X.509 certificate. The Wallet MUST validate the signature and the trust chain of the X.509 leaf certificate. All verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter. Example Client Identifier: `x509_hash:Uvo3HtuIxuhC92rShpgqcT3YXwrqRxWEviRiA0OZszk`
 
@@ -2054,6 +2054,8 @@ Out of the Authorization Request parameters defined in [@!RFC6749] and (#vp_toke
 
 The `client_id` parameter MUST be omitted in unsigned requests defined in (#unsigned_request). The Wallet MUST ignore any `client_id` parameter that is present in an unsigned request.
 
+The `client_id` parameter MUST be present in signed requests defined in (#signed_request), as it communicates to the wallet which Client Identifier Scheme and Client Identifier to use when verifying the request signature or retrieving client metadata.
+
 The value of the `response_mode` parameter MUST be `dc_api` when the response is neither signed nor encrypted and `dc_api.jwt` when the response is signed and/or encrypted as defined in (#jarm).
 
 In addition to the above-mentioned parameters, a new parameter is introduced for OpenID4VP over the W3C Digital Credentials API:
@@ -2098,7 +2100,7 @@ Every OpenID4VP Authorization Request results in a response being provided throu
 
 The security properties that are normally provided by the Client Identifier are achieved by binding the response to the Origin it was received from.
 
-The audience for the response (for example, the `aud` value in a Key Binding JWT) MUST be the Origin, prefixed with `origin:`. This is the case even for signed requests - when using OpenID4VP over the DC API the Client Identifier is never used as the audience for the response.
+The audience for the response (for example, the `aud` value in a Key Binding JWT) MUST be the Origin, prefixed with `origin:`, for example `origin:https://verifier.example.com/`. This is the case even for signed requests. Therefore, when using OpenID4VP over the DC API, the Client Identifier is not used as the audience for the response.
 
 # Credential Format Specific Parameters {#format_specific_parameters}
 
@@ -2141,7 +2143,7 @@ This `presentation_definition` parameter contains a single `input_descriptor` el
 The following requirements apply to the `nonce` and `aud` claims of the Verifiable Presentation:
 
 - the `nonce` claim MUST be the value of `nonce` from the Authorization Request;
-- the `aud` claim MUST be the value of the Client Identifier; or for a request over the DC API MUST be the Origin prefixed with `origin:`, as described in (#dc_api_response).
+- the `aud` claim MUST be the value of the Client Identifier, except for requests over the DC API where it MUST be the Origin prefixed with `origin:`, as described in (#dc_api_response).
 
 The following is a non-normative example of an Authorization Response:
 
@@ -2186,7 +2188,7 @@ This `presentation_definition` parameter contains a single `input_descriptor` el
 The following requirements apply to the `challenge` and `domain` claims within the `proof` object in the Verifiable Presentation:
 
 - the `challenge` claim MUST be the value of `nonce` from the Authorization Request;
-- the `domain` claim MUST be the value of the Client Identifier; or for a request over the DC API MUST be the Origin prefixed with `origin:`, as described in (#dc_api_response).
+- the `domain` claim MUST be the value of the Client Identifier, except for requests over the DC API where it MUST be the Origin prefixed with `origin:`, as described in (#dc_api_response).
 
 The following is a non-normative example of an Authorization Response:
 
@@ -2464,7 +2466,7 @@ A non-normative example of the Authorization Response would look the same as in 
 The following requirements apply to the `nonce` and `aud` claims in the Key Binding JWT:
 
 - the `nonce` claim MUST be the value of `nonce` from the Authorization Request;
-- the `aud` claim MUST be the value of the Client Identifier; or for a request over the DC API MUST be the Origin prefixed with `origin:`, as described in (#dc_api_response).
+- the `aud` claim MUST be the value of the Client Identifier, except for requests over the DC API where it MUST be the Origin prefixed with `origin:`, as described in (#dc_api_response).
 
 The `transaction_data_hashes` response parameter defined in (#transaction_data) MUST be included in the Key Binding JWT as a top level claim. This means that transaction data mechanism cannot be used with SD-JWT VCs without cryptographic key binding and, therefore, do not use KB JWT.
 
