@@ -2206,7 +2206,9 @@ The following is a non-normative example of an unsigned OpenID4VP request (when 
 
 The `client_id` parameter MUST be omitted in unsigned requests defined in (#unsigned_request). The Wallet determines the effective Client Identifier from the Origin. The effective Client Identifier is composed of a synthetic Client Identifier Scheme of `web-origin` and the Origin itself. For example, an Origin of `https://verifier.example.com` would result in an effective Client Identifier of `web-origin:https://verifier.example.com`. The transport of the request and Origin to the Wallet is platform-specific and is out of scope of OpenID4VP over the W3C Digital Credentials API. The Wallet MUST ignore any `client_id` parameter that is present in an unsigned request.
 
-The value of the `response_mode` parameter MUST be `dc_api` when the response is neither signed nor encrypted and `dc_api.jwt` when the response is signed and/or encrypted as defined in (#jarm).
+The value of the `response_mode` parameter MUST be `dc_api` when the response is neither signed nor encrypted and `dc_api.jwt` when the response is signed and/or encrypted as defined in (#jarm). The Response Mode `dc_api` causes the Wallet to send the Authorization Response via the DC API. For Response Mode `dc_api.jwt`, the Wallet includes the `response` parameter, which contains a JWT encapsulating the Authorization Response, as defined in (#jarm).
+
+If a Wallet is unable to generate a JARM response, it MAY send an error response without using JARM as per (#response_mode_post).
 
 In addition to the above-mentioned parameters, a new parameter is introduced for OpenID4VP over the W3C Digital Credentials API:
 
