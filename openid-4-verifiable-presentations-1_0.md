@@ -350,7 +350,7 @@ The following additional considerations are given for pre-existing Authorization
 : REQUIRED. Defined in [@!OAuth.Responses]. This parameter is used (through the new Response Mode `direct_post`) to ask the Wallet to send the response to the Verifier via an HTTPS connection (see (#response_mode_post) for more details). It is also used to request signing and encrypting (see (#jarm) for more details). 
 
 `client_id`:
-: REQUIRED for non-DC API implementations. Defined in [@!RFC6749]. However, for the DC API, it is OPTIONAL, as specified in (#dc_api). This specification also defines additional requirements to enable the use of Client Identifier Schemes, as described in [#client_metadata_management].
+: REQUIRED for non-DC API implementations. Defined in [@!RFC6749]. However, for the DC API, it is OPTIONAL, as specified in (#dc_api). This specification also defines additional requirements to enable the use of Client Identifier Schemes, as described in (#client_metadata_management).
 
 ## Examples
 
