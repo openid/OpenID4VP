@@ -1464,7 +1464,7 @@ The following is a non-normative example of a Wallet Metadata for a Wallet that 
     "dc_api.jwt"
   ],
   "client_id_schemes_supported": [
-    "web-origin
+    "web-origin"
   ]
 }
 ```
