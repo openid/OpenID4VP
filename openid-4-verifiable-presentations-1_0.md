@@ -2169,7 +2169,7 @@ The following is a non-normative example of the Verifiable Presentation in the `
 
 ### Transaction Data
 
-The W3C Verifiable Credentials format does not support transaction data as specified in (#transaction_data).
+The W3C Verifiable Credentials format profile as defined in this specification does not support transaction data as defined in (#transaction_data).
 
 ## AnonCreds
 
