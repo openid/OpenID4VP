@@ -3004,7 +3004,7 @@ in the IANA "Uniform Resource Identifier (URI) Schemes" registry [@IANA.URI.Sche
 
 # Acknowledgements {#Acknowledgements}
 
-We would like to thank Richard Barnes, Paul Bastian, Vittorio Bertocci, Christian Bormann, John Bradley, Marcos Caceres, Brian Campbell, Lee Campbell, Tim Cappalli, Gabe Cohen, David Chadwick, Andrii Deinega, Rajvardhan Deshmukh, Giuseppe De Marco, Mark Dobrinic, Daniel Fett, Pedro Felix, George Fletcher, Ryan Galluzzo, Timo Glasta, Sam Goto, Mark Haine, Martijn Haring, Fabian Hauck, Roland Hedberg, Joseph Heenan, Bjorn Hjelm, Alen Horvat, Andrew Hughes, Jacob Ideskog, Łukasz Jaromin, Edmund Jay, Michael B. Jones, Tom Jones, Judith Kahrer, Takahiko Kawasaki, Gaurav Khot, Niels Klomp, Ronald Koenig, Markus Kreusch, Adam Lemmon, Hicham Lozi, Daniel McGrogan, Jeremie Miller, Kenichi Nakamura, Gareth Oliver, Andreea Prian, Rolson Quadras, Javier Ruiz, Nat Sakimura, Arjen van Veen, Steve Venema, Jan Vereecken, David Waite, Jacob Ward, David Zeuthen for their valuable feedback and contributions to this specification.
+We would like to thank Richard Barnes, Paul Bastian, Vittorio Bertocci, Christian Bormann, John Bradley, Marcos Caceres, Brian Campbell, Lee Campbell, Tim Cappalli, Gabe Cohen, David Chadwick, Andrii Deinega, Rajvardhan Deshmukh, Giuseppe De Marco, Mark Dobrinic, Daniel Fett, Pedro Felix, George Fletcher, Ryan Galluzzo, Timo Glasta, Sam Goto, Mark Haine, Martijn Haring, Fabian Hauck, Roland Hedberg, Joseph Heenan, Bjorn Hjelm, Alen Horvat, Andrew Hughes, Jacob Ideskog, Łukasz Jaromin, Edmund Jay, Michael B. Jones, Tom Jones, Judith Kahrer, Takahiko Kawasaki, Gaurav Khot, Niels Klomp, Ronald Koenig, Markus Kreusch, Adam Lemmon, Hicham Lozi, Daniel McGrogan, Jeremie Miller, Kenichi Nakamura, Gareth Oliver, Andreea Prian, Rolson Quadras, Javier Ruiz, Nat Sakimura, Arjen van Veen, Steve Venema, Jan Vereecken, David Waite, Jacob Ward, David Zeuthen, and Aaron Parecki for their valuable feedback and contributions to this specification.
 
 # Notices
 
@@ -3030,6 +3030,7 @@ The technology described in this specification was made available from contribut
    * remove x509_san_uri client identifier scheme
    * clarify that `dcql_query` and `presentation_definition` are passed as JSON objects (not strings) in request objects
    * support returning multiple presentations for a single dcql credential query when requested using `multiple`
+   * renamed "Client ID Scheme" to "Client ID Prefix"
 
    -24
 
