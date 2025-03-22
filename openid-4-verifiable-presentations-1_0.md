@@ -1836,6 +1836,18 @@ The OpenID Foundation provides tools that can be used to confirm that an impleme
 
 https://openid.net/certification/conformance-testing-for-openid-for-verifiable-presentations/
 
+## Authorization link share
+
+An attacker could perform an authorization request and share the resulting link to a victim to perform its presentation flow if not mitigated. The proximity between the verifier and the holder is a fundamental security factor for a presentation, it proves the response is tied to the presentation request and is associated to it, verifiers and wallets being compliant with the protocol. That proximity enabled by the link between the holder delegated by his wallet and the verifier can be enforced using security practices.
+
+### Using web protocols
+
+Using the `direct_post` Response Mode allows the wallet to reply back to the verfier through the `response_uri` endpoint, the verifier can then initiate a presentation session. A short time to live for that session can minimize the attack surface reducing the attack frame within malicious actors can act. Preventing replay attacks can be done by authorizing a single presentation within a session. Those mitigations would act on both same and cross device flows.
+
+### Digital Credentials API
+
+Digital Credentials API gives a protocol for the user-agent to connect to a wallet in a secure manner. That protocol prevents from session fixation by using the wallet device ability to interact with the browser within a secure frame. That way of mitigation avoids this type of attacks through link sharing.
+
 # Privacy Considerations
 
 ## Authorization Requests with Request URI
