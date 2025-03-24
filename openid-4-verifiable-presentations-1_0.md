@@ -994,13 +994,31 @@ Credentials to present. However, it is typically expected that the Wallet
 presents the End-User with a choice of which Credential(s) to present if
 multiple of the sets of Credentials in `options` can satisfy the request.
 
-#### Security Considerations {#dcql_query_security}
+#### Security and Privacy Considerations {#dcql_query_security}
+
+##### Enforcing Constraints
 
 While the Verifier can specify various constraints both on the claims level and
 the Credential level as shown above, it MUST NOT rely on the Wallet to enforce
 these constraints. The Wallet is not controlled by the Verifier and the Verifier
 MUST perform its own security checks on the returned Credentials and
 presentations.
+
+##### Value Matching
+
+When using `values` to match the expected values of claims, the fact that a
+claim within a certain credential matched a value or did not match a value might
+already leak information about the claim value. Therefore, Wallets MUST take
+precautions against leaking information about the claim value when processing
+`values`. This SHOULD include, in particular:
+
+- ensuring that a Verifier cannot distinguish between the case where a user did
+  not consent to releasing the credential and the case where the claim value did
+  not match the expected value, and
+- preventing repeated or "silent" requests leaking data to the Verifier without
+  the user's consent by ensuring that all requests, even if no response can be
+  sent by the Wallet due to a `values` mismatch, require some form of user
+  interaction before a response is sent.
 
 # Claims Path Pointer {#claims_path_pointer}
 
