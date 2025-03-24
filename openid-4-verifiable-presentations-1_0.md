@@ -2054,7 +2054,7 @@ Out of the Authorization Request parameters defined in [@!RFC6749] and (#vp_toke
 
 The `client_id` parameter MUST be omitted in unsigned requests defined in (#unsigned_request). The Wallet MUST ignore any `client_id` parameter that is present in an unsigned request.
 
-The `client_id` parameter MUST be present in signed requests defined in (#signed_request), as it communicates to the wallet which Client Identifier Scheme and Client Identifier to use when verifying the request signature or retrieving client metadata.
+The `client_id` parameter MUST be present in signed requests defined in (#signed_request), as it communicates to the wallet which Client Identifier Scheme and Client Identifier to use when authenticating the client through verification of the request signature or retrieving client metadata.
 
 The value of the `response_mode` parameter MUST be `dc_api` when the response is neither signed nor encrypted and `dc_api.jwt` when the response is signed and/or encrypted as defined in (#jarm).
 
