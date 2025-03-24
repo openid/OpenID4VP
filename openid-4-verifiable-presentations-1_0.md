@@ -528,7 +528,7 @@ If a `:` character is not present in the Client Identifier, the Wallet MUST trea
 
 For example, if an Authorization Request contains `client_id=example-client`, the Wallet would interpret the Client Identifier as referring to a pre-registered client.
 
-If the Client Identifier begins with `https://`, the Wallet MUST treat the Client Identifier as an Entity Identifier defined in OpenID Federation [@!OpenID.Federation].
+If the Client Identifier begins with `https://` the full Client Identifier URL represents an Entity Identifier defined in OpenID Federation [@!OpenID.Federation] and MUST be processed as though it was prefixed with `openid_federation` as described below.
 
 If a `:` character is present in the Client Identifier but the value preceding it is not a recognized and supported Client Identifier Scheme value, the Wallet MAY treat the Client Identifier as having a default Client Identifier Scheme. 
 
@@ -584,9 +584,7 @@ Body
 
 * `openid_federation`: This value indicates that the Client Identifier is an Entity Identifier defined in OpenID Federation [@!OpenID.Federation]. Processing rules given in [@!OpenID.Federation] MUST be followed. Automatic Registration as defined in [@!OpenID.Federation] MUST be used. The Authorization Request MAY also contain a `trust_chain` parameter. The final Verifier metadata is obtained from the Trust Chain after applying the policies, according to [@!OpenID.Federation]. The `client_metadata` parameter, if present in the Authorization Request, MUST be ignored when this Client Identifier scheme is used. Example Client Identifier: `openid_federation:https://federation-verifier.example.com`.
 
-* `https`: If the Client Identifier begins with `https://` (the Client Identifier Scheme being `https`) the full Client Identifier URL represents an Entity Identifier defined in OpenID Federation [@!OpenID.Federation] and MUST be processed as though it was prefixed with `openid_federation` as described above. Example Client Identifier: `https://federation-verifier.example.com`.
-
-To use the Client Identifier Schemes `openid_federation`, `https`, `decentralized_identifier`, `verifier_attestation`, `x509_san_dns` and `x509_hash`, Verifiers MUST be confidential clients. This might require changes to the technical design of native apps as such apps are typically public clients.
+To use the Client Identifier Schemes `openid_federation`, `decentralized_identifier`, `verifier_attestation`, `x509_san_dns` and `x509_hash`, Verifiers MUST be confidential clients. This might require changes to the technical design of native apps as such apps are typically public clients.
 
 Other specifications can define further Client Identifier Schemes. It is RECOMMENDED to use collision-resistant names for such values.
 
