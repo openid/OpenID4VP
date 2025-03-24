@@ -2591,12 +2591,15 @@ OpenID4VPDCAPIHandoverInfoBytes = bstr .cbor OpenID4VPDCAPIHandoverInfo
 
 OpenID4VPDCAPIHandoverInfo = [
   origin,
-  nonce
+  nonce,
+  jwk_thumbprint
 ] ; Array containing handover parameters
 
 origin = tstr
 
 nonce = tstr
+
+jwk_thumbprint = tstr
 ```
 
 The `OpenID4VPDCAPIHandover` structure has the following elements:
