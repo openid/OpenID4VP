@@ -2356,7 +2356,7 @@ The `OpenID4VPDCAPIHandover` structure has the following elements:
   * The second element MUST be the value of the effective Client Identifier as defined in (#dc_api_request).
   * The third element MUST be the value of the `nonce` request parameter.
 
-The following is a non-normative example of the input JWK for the JWK Thumbprint for the `OpenID4VPDCAPIHandoverInfo`:
+The following is a non-normative example of the input JWK for calculating the JWK Thumbprint in the context of `OpenID4VPDCAPIHandoverInfo`:
 ```json
 {
   "kty": "EC",
