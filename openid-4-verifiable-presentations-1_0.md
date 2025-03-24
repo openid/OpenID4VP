@@ -2599,7 +2599,7 @@ origin = tstr
 
 nonce = tstr
 
-jwk_thumbprint = tstr
+jwk_thumbprint = bstr
 ```
 
 The `OpenID4VPDCAPIHandover` structure has the following elements:
