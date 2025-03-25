@@ -795,10 +795,11 @@ proof of age request should prioritize requesting an attribute like
 `age_over_18` over an attribute like `birth_date`. The `claim_sets` syntax is
 not intended to define options the user can choose from, see (#dcql_query_ui) for
 more information. The Wallet is recommended to return the first option it can satisfy
-since that is the preferred option from the Verifier. However there can be reasons to
-deviate. Examples of such reasons are; scenarios where the Verifier did not order 
-the options according to least information disclosure, operational reasons why returning
-a different option than the first option has UX benefits for the Wallet. 
+since that is the preferred option from the Verifier. However, there can be reasons to
+deviate. Non-exhaustive examples of such reasons are:
+
+- scenarios where the Verifier did not order the options according to least information disclosure
+- operational reasons why returning a different option than the first option has UX benefits for the Wallet. 
 
 If the Wallet cannot deliver all claims requested by the Verifier
 according to these rules, it MUST NOT return the respective Credential.
