@@ -881,9 +881,9 @@ elements in `values` i.e., the claim should be treated the same as if it did not
 exist in the Credential. Implementing this restriction may not be possible in
 all cases, for example, if the Wallet does not have access to the claim value
 before presentation or user consent or if another component routing
-the request to the Wallet does not have access to the claim value. It might also
-come down to a decision of the Wallet and/or the user if the value matching request
-is followed. Therefore, Verifiers must treat restrictions expressed using `values` as a
+the request to the Wallet does not have access to the claim value. It is ultimately up to the
+Wallet and/or the End-User if the value matching request
+is followed. Therefore, Verifiers MUST treat restrictions expressed using `values` as a
 best-effort way to improve user privacy, but MUST NOT rely on it for security checks.
 
 The purpose of the `claim_sets` syntax is to provide a way for a verifier to
