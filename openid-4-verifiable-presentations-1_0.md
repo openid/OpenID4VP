@@ -115,7 +115,7 @@ VP Token:
 : An artifact containing one or more Verifiable Presentations returned as a response to an Authorization Request. The structure of VP Tokens is defined in (#response-parameters).
 
 Verifier:
-: An entity that requests, receives, and validates Verifiable Presentations. During presentation of Credentials, Verifier acts as an OAuth 2.0 Client towards the Wallet that is acting as an OAuth 2.0 Authorization Server. However, in the context of the Digital Credentials API [@!W3C.Digital_Credentials_API], the Verifier remains an OAuth 2.0 Client, though only specific aspects of OAuth 2.0 referenced by this specification apply. The Verifier is a specific case of OAuth 2.0 Client, just like Relying Party (RP) in [@OpenID.Core].
+: An entity that requests, receives, and validates Verifiable Presentations. During presentation of Credentials, Verifier acts as an OAuth 2.0 Client towards the Wallet that is acting as an OAuth 2.0 Authorization Server. In the context of the Digital Credentials API [@!W3C.Digital_Credentials_API], the Verifier remains an OAuth 2.0 Client, though only specific aspects of OAuth 2.0 referenced by this specification apply. The Verifier is a specific case of OAuth 2.0 Client, just like Relying Party (RP) in [@OpenID.Core].
 
 Verifiable Credential (VC):
 : An Issuer-signed Credential whose authenticity can be cryptographically verified. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA] (VCDM), [@ISO.18013-5] (mdoc), [@!I-D.ietf-oauth-sd-jwt-vc] (SD-JWT VC), and [@Hyperledger.Indy] (AnonCreds).
