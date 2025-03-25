@@ -2395,7 +2395,7 @@ __Claim `birthdate`__:
 
 The SD-JWT VC format supports `transaction_data` as specified in (#transaction_data). If used, it is RECOMMENDED that the transaction data type specification includes the following parameter, in addition to `type` and `credential_ids` from (#new_parameters):
 
-* `transaction_data_hashes_alg`: OPTIONAL. Array of strings each representing a hash algorithm identifier, one of which MUST be used to calculate hashes in `transaction_data_hashes` response parameter. The value of the identifier MUST be a hash algorithm value from the "Hash Name String" column in the IANA "Named Information Hash Algorithm" registry [@IANA.Hash.Algorithms] or a value defined in another specification and/or profile of this specification.
+* `transaction_data_hashes_alg`: OPTIONAL. Array of strings each representing a hash algorithm identifier, one of which MUST be used to calculate hashes in `transaction_data_hashes` response parameter. The value of the identifier MUST be a hash algorithm value from the "Hash Name String" column in the IANA "Named Information Hash Algorithm" registry [@IANA.Hash.Algorithms] or a value defined in another specification and/or profile of this specification. If this parameter is not present, a default value of `sha-256` MUST be used. To promote interoperability, implementations MUST support the sha-256 hash algorithm.
 
 If the Wallet received the `transaction_data` parameter in the request, the Wallet MUST include a top level claim parameter `transaction_data_hashes` in the Key Binding JWT as defined below.
 
