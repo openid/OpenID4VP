@@ -2373,7 +2373,7 @@ The following is a non-normative example of the `OpenID4VPDCAPIHandoverInfo` str
 ```
 Hex:
 
-837368747470733a2f2f6578616d706c652e636f6d782b4c346167535859767664706b7a6663345666506a4768715a73736e756a64723748436a742d62444c6d7041782b516f50736b6e726738676a6171693043616f46504b794c6370537a34585f71505034596d7872316d6b4563
+837368747470733a2f2f6578616d706c652e636f6d782b6578633767426b786a7831726463397564527276654b7653734a4971383061766c58654c4868477771744158204283ec927ae0f208daaa2d026a814f2b22dca52cf85ffa8f3f8626c6bd669047
 
 CBOR diagnostic:
 
@@ -2381,18 +2381,18 @@ CBOR diagnostic:
   73                                              #   string(19)
     68747470733a2f2f6578616d706c652e636f6d        #     "https://example.com"
   78 2b                                           #   string(43)
-    4c346167535859767664706b7a6663345666506a4768  #     "L4agSXYvvdpkzfc4VfPjGh"
-    715a73736e756a64723748436a742d62444c6d7041    #     "qZssnujdr7HCjt-bDLmpA"
-  78 2b                                           #   string(43)
-    516f50736b6e726738676a6171693043616f46504b79  #     "QoPsknrg8gjaqi0CaoFPKy"
-    4c6370537a34585f71505034596d7872316d6b4563    #     "LcpSz4X_qPP4Ymxr1mkEc"
+    6578633767426b786a7831726463397564527276654b  #     "exc7gBkxjx1rdc9udRrveK"
+    7653734a4971383061766c58654c48684777717441    #     "vSsJIq80avlXeLHhGwqtA"
+  58 20                                           #   bytes(32)
+    4283ec927ae0f208daaa2d026a814f2b22dca52cf85f  #     "B\x83ì\x92zàò\x08Úª-\x02j\x81O+"Ü¥,ø_"
+    fa8f3f8626c6bd669047                          #     "ú\x8f?\x86&Æ½f\x90G"
 ```
 
 The following is a non-normative example of the `OpenID4VPDCAPIHandover` structure:
 ```
 Hex:
 
-82764f70656e4944345650444341504948616e646f76657258203f94de36e3292c1ded4511cd48450da3e787afeead8732cc013bd7acb9870626
+82764f70656e4944345650444341504948616e646f7665725820fbece366f4212f9762c74cfdbf83b8c69e371d5d68cea09cb4c48ca6daab761a
 
 CBOR diagnostic:
 
@@ -2400,15 +2400,15 @@ CBOR diagnostic:
   76                                              #   string(22)
     4f70656e4944345650444341504948616e646f766572  #     "OpenID4VPDCAPIHandover"
   58 20                                           #   bytes(32)
-    3f94de36e3292c1ded4511cd48450da3e787afeead87  #     "?\x94Þ6ã),\x1díE\x11ÍHE\x0d£ç\x87¯î\xad\x87"
-    32cc013bd7acb9870626                          #     "2Ì\x01;×¬¹\x87\x06&"
+    fbece366f4212f9762c74cfdbf83b8c69e371d5d68ce  #     "ûìãfô!/\x97bÇLý¿\x83¸Æ\x9e7\x1d]hÎ"
+    a09cb4c48ca6daab761a                          #     "\xa0\x9c´Ä\x8c¦Ú«v\x1a"
 ```
 
 The following is a non-normative example of the `SessionTranscript` structure:
 ```
 Hex:
 
-83f6f682764f70656e4944345650444341504948616e646f76657258203f94de36e3292c1ded4511cd48450da3e787afeead8732cc013bd7acb9870626
+83f6f682764f70656e4944345650444341504948616e646f7665725820fbece366f4212f9762c74cfdbf83b8c69e371d5d68cea09cb4c48ca6daab761a
 
 CBOR diagnostic:
 
@@ -2420,8 +2420,8 @@ CBOR diagnostic:
       4f70656e4944345650444341504948616e646f7665  #       "OpenID4VPDCAPIHandove"
       72                                          #       "r"
     58 20                                         #     bytes(32)
-      3f94de36e3292c1ded4511cd48450da3e787afeead  #       "?\x94Þ6ã),\x1díE\x11ÍHE\x0d£ç\x87¯î\xad"
-      8732cc013bd7acb9870626                      #       "\x872Ì\x01;×¬¹\x87\x06&"
+      fbece366f4212f9762c74cfdbf83b8c69e371d5d68  #       "ûìãfô!/\x97bÇLý¿\x83¸Æ\x9e7\x1d]h"
+      cea09cb4c48ca6daab761a                      #       "Î\xa0\x9c´Ä\x8c¦Ú«v\x1a"
 ```
 
 #### Invocation via other methods {#non-dc-api-invocation}
