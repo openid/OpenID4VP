@@ -931,7 +931,7 @@ The following rules apply for selecting claims via `claims` and `claim_sets`:
   the Verifier requests all claims listed in `claims`.
 - If both `claims` and `claim_sets` are present, the Verifier requests one combination of the claims listed in
   `claim_sets`. The order of the options conveyed in the `claim_sets`
-  array expresses the Verifier's preference for what is returned; the Wallet MUST return
+  array expresses the Verifier's preference for what is returned; the Wallet SHOULD return
   the first option that it can satisfy. If the Wallet cannot satisfy any of the
   options, it MUST NOT return any claims.
 - `claim_sets` MUST NOT be present if `claims` is absent.
@@ -955,7 +955,12 @@ information disclosure to influence how they order these options. For example, a
 proof of age request should prioritize requesting an attribute like
 `age_over_18` over an attribute like `birth_date`. The `claim_sets` syntax is
 not intended to define options the user can choose from, see (#dcql_query_ui) for
-more information.
+more information. The Wallet is recommended to return the first option it can satisfy
+since that is the preferred option from the Verifier. However, there can be reasons to
+deviate. Non-exhaustive examples of such reasons are:
+
+- scenarios where the Verifier did not order the options according to least information disclosure
+- operational reasons why returning a different option than the first option has UX benefits for the Wallet. 
 
 If the Wallet cannot deliver all claims requested by the Verifier
 according to these rules, it MUST NOT return the respective Credential.
