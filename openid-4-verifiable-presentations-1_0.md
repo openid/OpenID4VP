@@ -850,9 +850,8 @@ within the Verifiable Credential, as defined in (#claims_path_pointer).
 `values`:
 : OPTIONAL. An array of strings, integers or boolean values that specifies the expected values of the claim.
 If the `values` property is present, the Wallet SHOULD return the claim only if the
-type and value of the claim both match for at least one of the elements in the array. Details of the processing
-rules are defined in (#selecting_claims). Note that the expected behavior for value matching is only strict matching
-of the values, not any sort of fuzzy matching.
+type and value of the claim both match exactly for at least one of the elements in the array. Details of the processing
+rules are defined in (#selecting_claims).
 
 ### Selecting Claims and Credentials {#dcql_query_lang_processing_rules}
 
