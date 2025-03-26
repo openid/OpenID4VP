@@ -2542,6 +2542,84 @@ The `OpenID4VPDCAPIHandover` structure has the following elements:
   * The first element MUST be the string representing the Origin of the request as described in (#dc_api_request). It MUST NOT be prefixed with `origin:`.
   * The second element MUST be the value of the `nonce` request parameter.
 
+The following is a non-normative example of the input JWK for calculating the JWK Thumbprint in the context of `OpenID4VPDCAPIHandoverInfo`:
+```json
+{
+  "kty": "EC",
+  "crv": "P-256",
+  "x": "DxiH5Q4Yx3UrukE2lWCErq8N8bqC9CHLLrAwLz5BmE0",
+  "y": "XtLM4-3h5o3HUH0MHVJV0kyq0iBlrBwlh8qEDMZ4-Pc",
+  "use": "enc",
+  "alg": "ECDH-ES",
+  "kid": "1"
+}
+```
+
+The following is a non-normative example of the `OpenID4VPDCAPIHandoverInfo` structure:
+```
+Hex:
+
+837368747470733a2f2f6578616d706c652e636f6d782b6578633767426b786a7831
+726463397564527276654b7653734a4971383061766c58654c486847777174415820
+4283ec927ae0f208daaa2d026a814f2b22dca52cf85ffa8f3f8626c6bd669047
+
+CBOR diagnostic:
+
+83                                 # array(3)
+  73                               #   string(19)
+    68747470733a2f2f6578616d706c65 #     "https://example"
+    2e636f6d                       #     ".com"
+  78 2b                            #   string(43)
+    6578633767426b786a783172646339 #     "exc7gBkxjx1rdc9"
+    7564527276654b7653734a49713830 #     "udRrveKvSsJIq80"
+    61766c58654c48684777717441     #     "avlXeLHhGwqtA"
+  58 20                            #   bytes(32)
+    4283ec927ae0f208daaa2d026a814f #     "B\x83ì\x92zàò\x08Úª-\x02j\x81O"
+    2b22dca52cf85ffa8f3f8626c6bd66 #     "+"Ü¥,ø_ú\x8f?\x86&Æ½f"
+    9047                           #     "\x90G"
+```
+
+The following is a non-normative example of the `OpenID4VPDCAPIHandover` structure:
+```
+Hex:
+
+82764f70656e4944345650444341504948616e646f7665725820fbece366f4212f97
+62c74cfdbf83b8c69e371d5d68cea09cb4c48ca6daab761a
+
+CBOR diagnostic:
+
+82                                 # array(2)
+  76                               #   string(22)
+    4f70656e4944345650444341504948 #     "OpenID4VPDCAPIH"
+    616e646f766572                 #     "andover"
+  58 20                            #   bytes(32)
+    fbece366f4212f9762c74cfdbf83b8 #     "ûìãfô!/\x97bÇLý¿\x83¸"
+    c69e371d5d68cea09cb4c48ca6daab #     "Æ\x9e7\x1d]hÎ\xa0\x9c´Ä\x8c¦Ú«"
+    761a                           #     "v\x1a"
+```
+
+The following is a non-normative example of the `SessionTranscript` structure:
+```
+Hex:
+
+83f6f682764f70656e4944345650444341504948616e646f7665725820fbece366f4
+212f9762c74cfdbf83b8c69e371d5d68cea09cb4c48ca6daab761a
+
+CBOR diagnostic:
+
+83                                 # array(3)
+  f6                               #   null
+  f6                               #   null
+  82                               #   array(2)
+    76                             #     string(22)
+      4f70656e49443456504443415049 #       "OpenID4VPDCAPI"
+      48616e646f766572             #       "Handover"
+    58 20                          #     bytes(32)
+      fbece366f4212f9762c74cfdbf83 #       "ûìãfô!/\x97bÇLý¿\x83"
+      b8c69e371d5d68cea09cb4c48ca6 #       "¸Æ\x9e7\x1d]hÎ\xa0\x9c´Ä\x8c¦"
+      daab761a                     #       "Ú«v\x1a"
+```
+
 #### Invocation via other methods {#non-dc-api-invocation}
 
 If the presentation request is invoked via other methods, the rules for generating the `SessionTranscript` and `Handover` CBOR structure are specified in ISO/IEC 18013-7 [@ISO.18013-7], ISO/IEC 18013-5 [@ISO.18013-5] and ISO/IEC 23220-4 [@ISO.23220-4].
