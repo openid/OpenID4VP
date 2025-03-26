@@ -378,10 +378,10 @@ Where the contents of `request` consist of base64url-encoding and signing (in th
 this json:
 ```
 {
-  "iss": "s6BhdRkqt3",
+  "iss": "redirect_uri:https://client.example.org/cb",
   "aud": "https://self-issued.me/v2",
   "response_type": "vp_token",
-  "client_id": "s6BhdRkqt3",
+  "client_id": "redirect_uri:https://client.example.org/cb",
   "redirect_uri": "https//client.example.org/cb",
   "presentation_definition": {
     "id": "example_jwt_vc",
