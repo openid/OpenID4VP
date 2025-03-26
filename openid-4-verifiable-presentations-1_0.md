@@ -2256,9 +2256,9 @@ The `SessionTranscript` and `Handover` CBOR structure when the invocation does n
 
 ### Transaction Data
 
-It is (recommended?) that each transaction_type defines a DataElement to be used to return the processed transaction data. Additionally it is (recommended?) that it specifies the processing rules, potentially including any hash function to be applied, and the expected resulting structure.
+It is RECOMMENDED that each transaction data type defines a data element (`NameSpace`, `DataElementIdentifier`, `DataElementValue`) to be used to return the processed transaction data. Additionally it is RECOMMENDED that it specifies the processing rules, potentially including any hash function to be applied, and the expected resulting structure.
 
-Some document types support some transaction data ((#transaction_data)) to be protected using mdoc authentication, as part of the `DeviceSigned` data structure [@ISO.18013-5]. In those cases, the specifications of these document types include which transaction data types are supported, and issuer includes the relevant data elements in the KeyAuthorization. If a Wallet receives a request with a `transaction_data` type whose DataElement is authorized, the Wallet MUST reject the request due to an unsupported transaction data type.
+Some document types support some transaction data ((#transaction_data)) to be protected using mdoc authentication, as part of the `DeviceSigned` data structure [@ISO.18013-5]. In those cases, the specifications of these document types include which transaction data types are supported, and the issuer includes the relevant data elements in the `KeyAuthorizations`. If a Wallet receives a request with a `transaction_data` type whose data element is unauthorized, the Wallet MUST reject the request due to an unsupported transaction data type.
 
 ### DCQL Query and Response
 
