@@ -2323,7 +2323,7 @@ Every object in the `signatures` structure contains the parameters and the signa
 
 The following is a non-normative example of a content of a decoded protected header:
 
-```
+```json
 {
   "alg": "ES256",
   "x5c": [
