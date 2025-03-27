@@ -2303,7 +2303,7 @@ All other request parameters MUST be present in the `payload` element of the JWS
 
 Below is a non-normative example of such a request:
 
-```js
+```json
 {
   "payload": "eyAiaXNzIjogImh0dHBzOi8...NzY4Mzc4MzYiIF0gfQ",
   "signatures": [
