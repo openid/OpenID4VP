@@ -3183,6 +3183,7 @@ The technology described in this specification was made available from contribut
    * clarify that `dcql_query` and `presentation_definition` are passed as JSON objects (not strings) in request objects
    * support returning multiple presentations for a single dcql credential query when requested using `multiple`
    * Added support for multiple Client Identifiers and corresponding Request Signature to the DC API profile
+   * require `kid` in JWE response header if present in client_metadata `jwks`
 
    -24
 
