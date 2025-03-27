@@ -3052,7 +3052,7 @@ established by [@!RFC7515].
 ### client_id
 
 * Header Parameter Name: `client_id`
-* Header Parameter Description: This header contains a Client Identifier. 
+* Header Parameter Description: This header contains a Client Identifier. A Client Identifier is used in OAuth to identify a certain client. It is defined in [@!RFC6749], section 2.2.
 * Header Parameter Usage Location: JWS
 * Change Controller: IETF
 * Specification Document(s): [@!RFC6749]
