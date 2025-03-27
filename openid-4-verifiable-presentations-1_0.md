@@ -1190,7 +1190,7 @@ The following is a non-normative example of the payload of the JWT used in the e
 
 The transaction data mechanism enables a binding between the user's identification/authentication and the user’s authorization, for example to complete a payment transaction, or to sign specific document(s) using QES (Qualified Electronic Signatures). This is achieved by signing the transaction data used for user authorization with the user-controlled key used for proof of possession of the Credential being presented as a means for user identification/authentication.
 
-The Wallet that received the `transaction_data` parameter in the request MUST include a representation or reference to the data in the respective credential presentation. How this is done is Credential Format specific and is, therefore defined by each Credential Format, such as those in (#format_specific_parameters).
+The Wallet that received the `transaction_data` parameter in the request MUST include a representation or reference to the data in the respective credential presentation. How this is done is Transaction Data Type specific. Credential Formats can give recommendations of how to handle transaction data, such as those in (#format_specific_parameters).
 
 If the Wallet does not support `transaction_data` parameter, it MUST return an error upon receiving a request that includes it.
 
