@@ -363,6 +363,7 @@ GET /authorize?
 ```
 
 The following is a non-normative example of Authorization Request with a request object as value:
+
 ```
 GET /authorize?
   client_id=redirect_uri%3Ahttps%3A%2F%2Fclient.example.org%2Fcb
@@ -371,7 +372,8 @@ GET /authorize?
 
 Where the contents of `request` consist of base64url-encoding and signing (in the example with RS256 algorithm)
 the following, JSON-encoded request:
-```
+
+```json
 {
   "iss": "redirect_uri:https://client.example.org/cb",
   "aud": "https://self-issued.me/v2",
@@ -421,7 +423,7 @@ wallet_nonce=qPmxiNFCR3QTm19POc8u
 
 Wallets MAY support requesting presentation of Verifiable Credentials using OAuth 2.0 scope values.
 
-Such a scope value MUST be an alias for a well-defined DCQL query.
+Such a scope value MUST be an alias for a well-defined DCQL query. Since more than one scope value can be used at the same time, the IDs for credentials (see (#credential_query)) and for claims (see (#claims_query)) within the DCQL queries in all scope values supported by a Wallet MUST be disjoint.
 
 The specific scope values, and the mapping between a certain scope value and the respective 
 DCQL query is out of scope of this specification. 
@@ -650,7 +652,7 @@ Each entry in `credentials` MUST be an object with the following properties:
 the constraints in `credential_sets`. The value MUST be a non-empty string
 consisting of alphanumeric, underscore (`_`) or hyphen (`-`) characters.
 Within the Authorization Request, the same `id` MUST NOT
-be present more than once.
+be present more than once (whether for credentials or for claim sets, defined below).
 
 `format`:
 : REQUIRED. A string that specifies the format of the requested
@@ -810,7 +812,7 @@ Each entry in `claims` MUST be an object with the following properties:
 identifying the particular claim. The value MUST be a non-empty string
 consisting of alphanumeric, underscore (`_`) or hyphen (`-`) characters.
 Within the particular `claims` array, the same `id` MUST NOT
-be present more than once.
+be present more than once (whether for credentials or for claim sets).
 
 `path`:
 : REQUIRED The value MUST be a non-empty array representing a claims path pointer that specifies the path to a claim
