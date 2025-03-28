@@ -822,6 +822,11 @@ If the `values` property is present, the Wallet SHOULD return the claim only if 
 type and value of the claim both match exactly for at least one of the elements in the array. Details of the processing
 rules are defined in (#selecting_claims).
 
+`contains`:
+: OPTIONAL. An array of strings or integers that, when specified, must appear in the matched array claim in any order.
+If the `contains` property is present, the Wallet SHOULD return the claim only if it is an array
+and if it contains all of the elements in the `contains` array, without taking into account ordering of elements.
+
 ### Selecting Claims and Credentials {#dcql_query_lang_processing_rules}
 
 The following section describes the logic that applies for selecting claims 
@@ -844,14 +849,15 @@ The following rules apply for selecting claims via `claims` and `claim_sets`:
 - `claim_sets` MUST NOT be present if `claims` is absent.
 
 When a Claims Query contains a restriction on the values of a claim, the Wallet
-SHOULD NOT return the claim if its value does not match at least one of the
-elements in `values` i.e., the claim should be treated the same as if it did not
+SHOULD NOT return the claim if its value does not match according to the rules for
+`values` and `contains` defined in (#claims_query), i.e.,
+the claim should be treated the same as if it did not
 exist in the Credential. Implementing this restriction may not be possible in
 all cases, for example, if the Wallet does not have access to the claim value
 before presentation or user consent or if another component routing
 the request to the Wallet does not have access to the claim value. It is ultimately up to the
 Wallet and/or the End-User if the value matching request
-is followed. Therefore, Verifiers MUST treat restrictions expressed using `values` as a
+is followed. Therefore, Verifiers MUST treat restrictions expressed using `values` and `contains` as a
 best-effort way to improve user privacy, but MUST NOT rely on it for security checks.
 
 The purpose of the `claim_sets` syntax is to provide a way for a verifier to
@@ -2175,27 +2181,33 @@ The security properties that are normally provided by the Client Identifier are 
 
 The audience for the response (for example, the `aud` value in a Key Binding JWT) MUST be the Origin, prefixed with `origin:`, for example `origin:https://verifier.example.com/`. This is the case even for signed requests. Therefore, when using OpenID4VP over the DC API, the Client Identifier is not used as the audience for the response.
 
-# Credential Format Specific Parameters {#format_specific_parameters}
+# Credential Format Specific Parameters and Rules {#format_specific_parameters}
 
-OpenID for Verifiable Presentations is Credential Format agnostic, i.e., it is designed to allow applications to request and receive Verifiable Presentations and Verifiable Credentials in any Credential Format. This section defines a set of Credential Format specific parameters for some of the known Credential Formats. For the Credential Formats that are not mentioned in this specification, other specifications or deployments can define their own set of Credential Format specific parameters.
+OpenID for Verifiable Presentations is Credential Format agnostic, i.e., it is designed to allow applications to request and receive Verifiable Presentations and Verifiable Credentials in any Credential Format. This section defines a set of Credential Format specific parameters and rules for some of the known Credential Formats. For the Credential Formats that are not mentioned in this specification, other specifications or deployments can define their own set of Credential Format specific parameters.
 
 ## W3C Verifiable Credentials
 
 todo: define where the claims path operates
 todo: is proof_type_value correct?
 
-### Parameters in the `meta` parameter in Credential Query
+### DCQL
+
+#### Parameters in the `meta` parameter in Credential Query
 
 The following is a W3C Verifiable Credentials specific parameter in the meta parameter in a Credential Query as defined in (#credential_query):
 
 `proof_type_values`:
 : OPTIONAL. An array of strings that specifies the types of proofs that the Verifier accepts to be used in the Verifiable Presentation, for example `RsaSignature2018`.
 
+#### Claims Matching
+
+The `claims_path` parameter in the Credential Query as defined in (#credential_query) is used to specify the claims that the Verifier wants to receive in the Verifiable Presentation. When used in the context of W3C Verifiable Credentials, the `claims_path` parameter always matches on the root of Verifiable Credential (not the Verifiable Presentation). Examples are shown in the following subsections.
+
 ### VC signed as a JWT, not using JSON-LD {#jwt_vc}
 
 This section illustrates the presentation of a Credential conformant to [@VC_DATA] that is signed using JWS, and does not use JSON-LD.
 
-The Credential format identifiers are `jwt_vc_json` for a W3C Verifiable Credential and `jwt_vp_json` for W3C Verifiable Presentation.
+The Credential format identifiers are `jwt_vc_json` to request a W3C Verifiable Credential and `jwt_vp_json` to request a W3C Verifiable Presentation.
 
 Cipher suites should use algorithm names defined in [IANA JOSE Algorithms Registry](https://www.iana.org/assignments/jose/jose.xhtml#web-signature-encryption-algorithms).
 
@@ -2236,7 +2248,7 @@ The following is a non-normative example of the payload of the Verifiable Presen
 
 This section illustrates presentation of a Credential conformant to [@VC_DATA] that is secured using Data Integrity, using JSON-LD.
 
-The Credential format identifiers are `ldp_vc` for a W3C Verifiable Credential and `ldp_vp` for a W3C Verifiable Presentation.
+The Credential format identifiers are `ldp_vc` to request a W3C Verifiable Credential and `ldp_vp` to request a W3C Verifiable Presentation.
 
 Cipher suites should use signature suites names defined in [Linked Data Cryptographic Suite Registry](https://w3c-ccg.github.io/ld-cryptosuite-registry/).
 
@@ -2271,9 +2283,26 @@ AnonCreds is a Credential format defined as part of the Hyperledger Indy project
 
 To be able to request AnonCreds, there needs to be a set of identifiers for Verifiable Credentials, Verifiable Presentations ("proofs" in Indy terminology) and crypto schemes.
 
-Credential format identifier is `ac_vc` for a Credential, and `ac_vp` for a Presentation.  # todo: is ac_vc actually needed?
+The Credential format identifier is `ac_vp` to request a Presentation.
 
-Identifier for a CL-signature crypto scheme used in the examples in this section is `CLSignature2019`.
+The identifier for the CL-signature crypto scheme used in the examples in this section is `CLSignature2019`.
+
+### DCQL
+
+#### Parameters in the `meta` parameter in Credential Query {#anoncreds_meta_parameter}
+
+The following are AnonCreds specific parameters in the `meta` parameter in a Credential Query as defined in (#credential_query):
+
+`schema_id_values`:
+: OPTIONAL. An array of strings that specifies the allowed values for the `schema_id` of the requested Verifiable Credential. It MUST be a valid scheme identifier as defined in [@Hyperledger.Indy].
+`cred_def_id_values`:
+: OPTIONAL. An array of strings that specifies the allowed values for the `cred_def_id` of the requested Verifiable Credential. It MUST be a valid credential definition identifier as defined in [@Hyperledger.Indy].
+`proof_type_values`:
+: OPTIONAL. An array of strings that specifies the types of proofs that the Verifier accepts to be used in the Verifiable Presentation, for example `CLSignature2019`.
+
+#### Claims Matching
+
+When used in the context of AnonCreds, the `claims_path` parameter always matches on the contents of the `values` key in the JSON-representation of the Verifiable Credential.
 
 ### Example Credential
 
@@ -2281,18 +2310,11 @@ The following is a non-normative example of an AnonCred Credential that will be 
 
 <{{examples/credentials/ac_vc.json}}
 
-The most important parts for the purpose of this section are `scheme_id` parameter and `values` parameter that contains the actual End-User claims. 
+The most important parts for the purpose of this section are `schema_id` parameter and `values` parameter that contains the actual End-User claims. 
 
-### Presentation Request 
+#### Presentation Request 
 
-todo: define where the claims path operates
-todo: is proof_type_value correct?
-
-#### Request Example {#anoncreds_request}
-
-This example leverages the AnonCreds' capabilities for selective release by requesting a subset of the claims in the Credential to be disclosed to the Verifier.
-
-The following is a non-normative example of a DCQL request:
+The following is a non-normative example of a DCQL request for an AnonCreds Credential::
 
 <{{examples/request/dcql_ac_vc_sd.json}}
 
@@ -2318,11 +2340,11 @@ ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 [@ISO.23220-4] Ann
 The `SessionTranscript` and `Handover` CBOR structure when the invocation does not use the DC API. Also see (#non-dc-api-invocation).
 * Additional restrictions on Authorization Request and Authorization Response parameters to ensure compliance with ISO/IEC TS 18013-7 [@ISO.18013-7] and ISO/IEC 23220-4 [@ISO.23220-4]. For instance, to comply with ISO/IEC TS 18013-7 [@ISO.18013-7], only the same-device flow is supported, the `request_uri` Authorization Request parameter is required, and the Authorization Response has to be encrypted.
 
-### DCQL Query and Response
+### DCQL
 
-This section defines ISO mdoc specific DCQL Query and Response parameters.
+This section defines ISO mdoc specific DCQL Query parameters.
 
-#### Parameters in the `meta` parameter in Credential Query {#mdocs_meta_parameter}
+#### Parameter in the `meta` parameter in Credential Query {#mdocs_meta_parameter}
 
 The following is an ISO mdoc specific parameter in the `meta` parameter in a Credential Query as defined in (#credential_query).
 
@@ -2331,14 +2353,14 @@ The following is an ISO mdoc specific parameter in the `meta` parameter in a Cre
 doctype of the requested Verifiable Credential. It MUST
 be a valid doctype identifier as defined in [@ISO.18013-5].
 
-#### Parameters in the Claims Query {#mdocs_claims_query}
+#### Parameter in the Claims Query {#mdocs_claims_query}
 
 The following are ISO mdoc specific parameters to be used in a Claims Query as defined in (#claims_query).
 
 `intent_to_retain`
 : OPTIONAL. A boolean that is equivalent to `IntentToRetain` variable defined in Section 8.3.2.1.2.1 of [@ISO.18013-5].
 
-#### mdoc DCQL Query example
+### Presentation Response
 
 An example DCQL query using the mdoc format is shown in (#more_dcql_query_examples). The following is a non-normative example for a VP Token in the response:
 
@@ -2347,12 +2369,6 @@ An example DCQL query using the mdoc format is shown in (#more_dcql_query_exampl
   "my_credential": ["<base64url-encoded DeviceResponse>"]
 }
 ```
-
-### Presentation Request
-
-See ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 Annex C [@ISO.23220-4] for the latest examples on how to use the `presentation_definition` parameter for requesting Credentials in the mdoc format.
-
-### Presentation Response
 
 The VP Token contains the base64url-encoded `DeviceResponse` CBOR structure as defined in ISO/IEC 18013-5 [@ISO.18013-5] or ISO/IEC 23220-4 [@ISO.23220-4]. Essentially, the `DeviceResponse` CBOR structure contains a signature or MAC over the `SessionTranscript` CBOR structure including the OpenID4VP-specific `Handover` CBOR structure.
 
@@ -2542,11 +2558,11 @@ The following is a non-normative example of `client_metadata` request parameter 
 
 <{{examples/client_metadata/sd_jwt_vc_verifier_metadata.json}}
 
-### DCQL Query and Response
+### DCQL
 
-This section defines SD-JWT VC specific DCQL Query and Response parameters.
+This section defines SD-JWT VC specific DCQL Query parameters.
 
-#### Parameters in the `meta` parameter in Credential Query {#sd_jwt_vc_meta_parameter}
+#### Parameter in the `meta` parameter in Credential Query {#sd_jwt_vc_meta_parameter}
 
 The following is an SD-JWT VC specific parameter in the `meta` parameter in a Credential Query as defined in (#credential_query).
 
@@ -2557,7 +2573,7 @@ be valid type identifiers as defined in [@!I-D.ietf-oauth-sd-jwt-vc]. The Wallet
 MAY return credentials that inherit from any of the specified types, following
 the inheritance logic defined in [@!I-D.ietf-oauth-sd-jwt-vc].
 
-#### SD-JWT VC DCQL Query example
+### Presentation Response
 
 A non-normative example DCQL query using the SD-JWT VC format is shown in (#dcql_query_example).
 The respective response is shown in (#response_dcql_query).
@@ -2569,7 +2585,7 @@ The following requirements apply to the `nonce` and `aud` claims in the Key Bind
 - the `nonce` claim MUST be the value of `nonce` from the Authorization Request;
 - the `aud` claim MUST be the value of the Client Identifier, except for requests over the DC API where it MUST be the Origin prefixed with `origin:`, as described in (#dc_api_response).
 
-The `transaction_data_hashes` response parameter defined in (#transaction_data) MUST be included in the Key Binding JWT as a top level claim. This means that transaction data mechanism cannot be used with SD-JWT VCs without cryptographic key binding (i.e., which do not use the KB-JWT).
+The `transaction_data_hashes` response parameter defined in (#transaction_data), if Transaction Data is used, MUST be included in the Key Binding JWT as a top level claim. This means that transaction data mechanism cannot be used with SD-JWT VCs without cryptographic key binding (i.e., which do not use the KB-JWT).
 
 The following is a non-normative example of the unsecured payload of the Key Binding JWT.
 
@@ -2903,6 +2919,7 @@ The technology described in this specification was made available from contribut
    * support returning multiple presentations for a single dcql credential query when requested using `multiple`
    * Added support for multiple Client Identifiers and corresponding Request Signature to the DC API profile
    * remove presentation exchange
+   * added `contains` to ensure features of PE can be mapped
 
    -24
 

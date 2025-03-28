@@ -2,20 +2,17 @@
   "credentials": [
     {
       "id": "example_vc_ac_sd",
-      "format": "ac_vc",  # todo: or _vp
+      "format": "ac_vp",
       "meta": {
-        "proof_type_values": ["CLSignature2019"]
+        "proof_type_values": ["CLSignature2019"],
+        "schema_id_values": ["did:indy:idu:test:3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0.1"]
       },
       "claims": [
         {
-          "path": ["schema_id"],
-          "values": ["did:indy:idu:test:3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0.1"]
+          "path": ["given_name"]
         },
         {
-          "path": ["values", "given_name"]  # todo: is values the right path here?
-        },
-        {
-          "path": ["values", "family_name"]
+          "path": ["family_name"]
         }
       ]
     }

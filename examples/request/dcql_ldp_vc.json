@@ -2,13 +2,19 @@
   "credentials": [ 
     {
       "id": "example_ldp_vc",
-      "format": "ldp_vc",  # todo: should this be a _vp?
+      "format": "ldp_vp",
       "meta": {
-        "proof_type_values": ["Ed25519Signature2018"]  # todo: should this be a simple value matching in the VP?
+        "proof_type_values": ["Ed25519Signature2018"]
       },
       "claims": [
-        {"path": ["verifiableCredential", 0, "type"], "values": ["IDCredential"]}  # todo: path is from start of presentation - is that correct?
-        # todo: above: we would need to match on multiple values
+        {"path": ["type"], "contains": ["IDCredential"]},
+        {"path": ["credentialSubject", "family_name"]},
+        {"path": ["credentialSubject", "given_name"]},
+        {"path": ["credentialSubject", "birthdate"]},
+        {"path": ["credentialSubject", "address", "street_address"]},
+        {"path": ["credentialSubject", "address", "locality"]},
+        {"path": ["credentialSubject", "address", "postal_code"]},
+        {"path": ["credentialSubject", "address", "country"]}
       ]
     }
   ]

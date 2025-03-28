@@ -8,9 +8,11 @@
       },
       "claims": [
         {
-          "path": ["vc", "type"],
-          "values": ["IDCredential"]
-        }
+          "path": ["type"],
+          "contains": ["IDCredential"]
+        },
+        {"path": ["credentialSubject", "family_name"]},
+        {"path": ["credentialSubject", "given_name"]}
       ]
     }
   ]
