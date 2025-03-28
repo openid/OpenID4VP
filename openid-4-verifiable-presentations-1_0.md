@@ -1245,7 +1245,7 @@ The Response Mode `direct_post.jwt` causes the Wallet to send the Authorization 
 
 If a Wallet is unable to generate a JARM response, it MAY send an error response without using JARM as per (#response_mode_post).
 
-The following is a non-normative example of a response using the `vp_token` values from (#jwt_vc). (line breaks for display purposes only):
+The following is a non-normative example of a response using the `vp_token` values from (#jwt_vc) (line breaks for display purposes only):
 
 <{{examples/response/jarm_jwt_vc_json_post.txt}}
 
