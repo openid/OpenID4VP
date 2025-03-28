@@ -1,0 +1,23 @@
+{
+  "credentials": [
+    {
+      "id": "example_vc_ac_sd",
+      "format": "ac_vc",  # todo: or _vp
+      "meta": {
+        "proof_type_values": ["CLSignature2019"]
+      },
+      "claims": [
+        {
+          "path": ["schema_id"],
+          "values": ["did:indy:idu:test:3QowxFtwciWceMFr7WbwnM:2:BasicScheme:0.1"]
+        },
+        {
+          "path": ["values", "given_name"]  # todo: is values the right path here?
+        },
+        {
+          "path": ["values", "family_name"]
+        }
+      ]
+    }
+  ]
+}

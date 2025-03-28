@@ -1,0 +1,15 @@
+{
+  "credentials": [ 
+    {
+      "id": "example_ldp_vc",
+      "format": "ldp_vc",  # todo: should this be a _vp?
+      "meta": {
+        "proof_type_values": ["Ed25519Signature2018"]  # todo: should this be a simple value matching in the VP?
+      },
+      "claims": [
+        {"path": ["verifiableCredential", 0, "type"], "values": ["IDCredential"]}  # todo: path is from start of presentation - is that correct?
+        # todo: above: we would need to match on multiple values
+      ]
+    }
+  ]
+}

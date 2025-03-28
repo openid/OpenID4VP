@@ -1,0 +1,17 @@
+{
+  "credentials": [
+    {
+      "id": "example_jwt_vc",
+      "format": "jwt_vp_json",
+      "meta": {
+        "proof_type_values": ["JsonWebSignature2020"]
+      },
+      "claims": [
+        {
+          "path": ["vc", "type"],
+          "values": ["IDCredential"]
+        }
+      ]
+    }
+  ]
+}
