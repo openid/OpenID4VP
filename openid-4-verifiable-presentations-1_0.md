@@ -2297,8 +2297,10 @@ The following are AnonCreds specific parameters in the `meta` parameter in a Cre
 
 `schema_id_values`:
 : OPTIONAL. An array of strings that specifies the allowed values for the `schema_id` of the requested Verifiable Credential. It MUST be a valid scheme identifier as defined in [@Hyperledger.Indy].
+
 `cred_def_id_values`:
 : OPTIONAL. An array of strings that specifies the allowed values for the `cred_def_id` of the requested Verifiable Credential. It MUST be a valid credential definition identifier as defined in [@Hyperledger.Indy].
+
 `proof_type_values`:
 : OPTIONAL. An array of strings that specifies the types of proofs that the Verifier accepts to be used in the Verifiable Presentation, for example `CLSignature2019`.
 
