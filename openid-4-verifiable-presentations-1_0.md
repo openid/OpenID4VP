@@ -318,7 +318,7 @@ The following is a non-normative example of a transaction data content, after ba
 ```
 {
   "type": "example_type",
-  "credential_ids": [ "id card credential" ],
+  "credential_ids": [ "id_card_credential" ],
   "transaction_data_hashes_alg": [ "sha-256" ]
   // other transaction data type specific parameters
 }
