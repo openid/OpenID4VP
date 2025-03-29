@@ -172,7 +172,7 @@ Note: The diagram does not illustrate all the optional features of this specific
         |    Interacts    |                                                   |
         |---------------->|                                                   |
         |                 |  (1) Authorization Request                        |
-        |                 |  (Presentation Definition)                        |
+        |                 |  (DCQL query)                                     |
         |                 |-------------------------------------------------->|
         |                 |                                                   |
         |                 |                                                   |
@@ -216,7 +216,7 @@ Note: The usage of the Request URI as defined in [@!RFC9101] does not depend on 
         |                 |<--------------------------------------------------|
         |                 |                                                   |
         |                 |  (2.5) Respond with the Request Object            |
-        |                 |      (Presentation Definition)                    |
+        |                 |      (DCQL query)                                 |
         |                 |-------------------------------------------------->|
         |                 |                                                   |
         |   End-User Authentication / Consent                                 |
@@ -269,7 +269,7 @@ The Verifier communicates a Client Identifier Scheme that indicate how the Walle
 
 Depending on the Client Identifier Scheme, the Verifier can communicate a JSON object with its metadata using the `client_metadata` parameter which contains name/value pairs.
 
-This specification enables the Verifier to send both Presentation Definition JSON object and Client Metadata JSON object by value or by reference.
+This specification enables the Verifier to send the Client Metadata JSON object by value or by reference.
 
 Additional request parameters, other than those defined in this section, MAY be defined and used, as described in [@!RFC6749].
 The Wallet MUST ignore any unrecognized parameters, other than the `transaction_data` parameter.
