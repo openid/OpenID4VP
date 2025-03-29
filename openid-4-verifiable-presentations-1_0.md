@@ -519,7 +519,7 @@ Location: https://wallet.example.org/universal-link?
   response_type=vp_token
   &client_id=redirect_uri%3Ahttps%3A%2F%2Fclient.example.org%2Fcb
   &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
-  &presentation_definition=...
+  &dcql_query=...
   &nonce=n-0S6_WzA2Mj
   &client_metadata=%7B%22vp_formats%22%3A%7B%22jwt_vp_json%22%3A%
     7B%22alg%22%3A%5B%22EdDSA%22%2C%22ES256K%22%5D%7D%2C%22ldp_vp
