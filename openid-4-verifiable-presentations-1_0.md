@@ -824,9 +824,8 @@ type and value of the claim both match exactly for at least one of the elements 
 rules are defined in (#selecting_claims).
 
 `contains`:
-: OPTIONAL. An array of strings or integers that, when specified, must appear in the matched array claim in any order.
-If the `contains` property is present, the Wallet SHOULD return the claim only if it is an array
-and if it contains all of the elements in the `contains` array, without taking into account ordering of elements.
+: OPTIONAL. An array of strings or integers that, when specified, MUST appear in the matched array claim in any order.
+When the `contains` property is present, the Wallet SHOULD return the claim only if the claim is an array that includes all elements listed in the `contains` array, irrespective of their order.
 
 ### Selecting Claims and Credentials {#dcql_query_lang_processing_rules}
 
@@ -931,7 +930,7 @@ processing are the referenced claims.
 
 ## Semantics for JSON-based credentials
 
-This section defines the semantics of a claims path pointer when applied to a JSON-based credential or presentation.
+This section defines the semantics of a claims path pointer when applied to a JSON-based Credential or Presentation.
 
 A string value indicates that the respective key is to be selected, a null value
 indicates that all elements of the currently selected array(s) are to be selected;
@@ -1474,7 +1473,7 @@ The following is a non-normative example of a set of static configuration values
 
 ## Nested Verifiable Presentations
 
-This specification does not support presentation of a Verifiable Presentation nested inside another Verifiable Presentation
+This specification does not support presentation of a Verifiable Presentation nested inside another Verifiable Presentation.
 
 ## State Management {#state_management}
 
@@ -2188,14 +2187,12 @@ OpenID for Verifiable Presentations is Credential Format agnostic, i.e., it is d
 
 ## W3C Verifiable Credentials
 
-todo: define where the claims path operates
-todo: is proof_type_value correct?
 
 ### DCQL
 
 #### Parameters in the `meta` parameter in Credential Query
 
-The following is a W3C Verifiable Credentials specific parameter in the meta parameter in a Credential Query as defined in (#credential_query):
+The following is a W3C Verifiable Credentials specific parameter in the `meta` parameter in a Credential Query as defined in (#credential_query):
 
 `proof_type_values`:
 : OPTIONAL. An array of strings that specifies the types of proofs that the Verifier accepts to be used in the Verifiable Presentation, for example `RsaSignature2018`.
@@ -2337,7 +2334,7 @@ ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 [@ISO.23220-4] Ann
 
 [@ISO.18013-7] defines the following elements:
 
-* Rules for the `presentation_definition` Authorization Request parameter and the `presentation_submission` Authorization Response parameter (no longer supported in this specification)
+* Rules for the `presentation_definition` Authorization Request parameter and the `presentation_submission` Authorization Response parameter (which were supported until draft -24 of this specification)
 * Wallet invocation using the `mdoc-openid4vp://` custom URI scheme.
 * Required Wallet and Verifier Metadata parameters and their values when OpenID4VP is used with the `mdoc-openid4vp://` custom URI scheme.
 The `SessionTranscript` and `Handover` CBOR structure when the invocation does not use the DC API. Also see (#non-dc-api-invocation).
@@ -2921,7 +2918,7 @@ The technology described in this specification was made available from contribut
    * clarify that `dcql_query` and `presentation_definition` are passed as JSON objects (not strings) in request objects
    * support returning multiple presentations for a single dcql credential query when requested using `multiple`
    * Added support for multiple Client Identifiers and corresponding Request Signature to the DC API profile
-   * remove presentation exchange
+   * remove DIF Presentation Exchange as a query language option
    * added `contains` to ensure features of PE can be mapped
 
    -24
