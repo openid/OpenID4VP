@@ -60,7 +60,7 @@ This specification can also be combined with [@!SIOPv2], if implementers require
 
 ## Requirements Notation and Conventions
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC 2119 [@!RFC2119].
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 [@!RFC2119] [@!RFC8174] when, and only when, they appear in all capitals, as shown here.
 
 # Terminology
 
@@ -349,7 +349,14 @@ The following additional considerations are given for pre-existing Authorization
 
 ## Examples
 
-The following is a non-normative example of an Authorization Request: 
+The Verifier MAY send an Authorization Request using either of these 3 options:
+
+1. Passing as URL with encoded parameters
+2. Passing a request object as value
+3. Passing a request object by reference
+2 and 3 are defined in the JWT-Secured Authorization Request (JAR) [@RFC9101].
+
+The following is a non-normative example of an Authorization Request with URL encoded parameters: 
 
 ```
 GET /authorize?
@@ -361,14 +368,70 @@ GET /authorize?
   &nonce=n-0S6_WzA2Mj HTTP/1.1
 ```
 
-The following is a non-normative example of an Authorization Request with a `request_uri_method` parameter (including the additional `client_metadata`): 
-
+The following is a non-normative example of Authorization Request with request object as value:
 ```
 GET /authorize?
-  client_id=x509_san_dns:client.example.org
-  &client_metadata=...
+  client_id=redirect_uri%3Ahttps%3A%2F%2Fclient.example.org%2Fcb
+  &request=eyJrd...
+```
+Where the contents of `request` consist of base64url-encoding and signing (in the example with RS256 algo)
+this json:
+```
+{
+  "iss": "redirect_uri:https://client.example.org/cb",
+  "aud": "https://self-issued.me/v2",
+  "response_type": "vp_token",
+  "client_id": "redirect_uri:https://client.example.org/cb",
+  "redirect_uri": "https//client.example.org/cb",
+  "presentation_definition": {
+    "id": "example_jwt_vc",
+    "input_descriptors": [
+      {
+        "id": "id_credential",
+        "format": {
+          "jwt_vc_json": {
+            "proof_type": [
+              "JsonWebSignature2020"
+            ]
+          }
+        },
+        "constraints": {
+          "fields": [
+            {
+              "path": [
+                "$.vc.type"
+              ],
+              "filter": {
+                "type": "array",
+                "contains": {
+                  "const": "IDCredential"
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "nonce": "n-0S6_WzA2Mj"
+}
+```
+The following is a non-normative example of Authorization Request with request object as reference:
+```
+GET /authorize?
+  client_id=x509_san_dns%3Aclient.example.org
   &request_uri=https%3A%2F%2Fclient.example.org%2Frequest%2Fvapof4ql2i7m41m68uep
   &request_uri_method=post HTTP/1.1
+```
+Later, the wallet might send the following non-normative example request to the `request_uri`:
+```
+POST /request/vapof4ql2i7m41m68uep HTTP/1.1
+Host: client.example.org
+Content-Type: application/x-www-form-urlencoded
+wallet_metadata=%7B%22vp_formats_supported%22%3A%7B%22jwt_vc_json%22%3A%7B%22alg_values_supported
+%22%3A%5B%22ES256K%22%2C%22ES384%22%5D%7D%2C%22jwt_vp_json%22%3A%7B%22alg_values_supported%22%3A%
+5B%22ES256K%22%2C%22EdDSA%22%5D%7D%7D%7D&
+wallet_nonce=qPmxiNFCR3QTm19POc8u
 ```
 
 ## `presentation_definition` Parameter {#request_presentation_definition}
@@ -538,9 +601,9 @@ Confusing Verifiers using a Client Identifier Scheme with those using none can l
 
 This specification defines the following Client Identifier Schemes, followed by the examples where applicable: 
 
-* `redirect_uri`: This value indicates that the Client Identifier (without the prefix `redirect_uri:`) is the Verifier's Redirect URI (or Response URI when Response Mode `direct_post` is used). The Authorization Request MUST NOT be signed. The Verifier MAY omit the `redirect_uri` Authorization Request parameter (or `response_uri` when Response Mode `direct_post` is used). All Verifier metadata parameters MUST be passed using the `client_metadata` parameter defined in (#new_parameters). Example Client Identifier value is `redirect_uri:https://client.example.org/cb`.
+* `redirect_uri`: This value indicates that the Client Identifier (without the prefix `redirect_uri:`) is the Verifier's Redirect URI (or Response URI when Response Mode `direct_post` is used). The Verifier MAY omit the `redirect_uri` Authorization Request parameter (or `response_uri` when Response Mode `direct_post` is used). All Verifier metadata parameters MUST be passed using the `client_metadata` parameter defined in (#new_parameters). An example Client Identifier value is `redirect_uri:https://client.example.org/cb`. Requests using the `redirect_uri` Client Identifier Scheme cannot be signed because there is no method for the Wallet to obtain a trusted key for verification. Therefore, implementations requiring signed requests cannot use the `redirect_uri` Client ID scheme.
 
-The following is a non-normative example of a request with this Client Identifier Scheme:
+The following is a non-normative example of an unsigned request with the `redirect_uri` Client Identifier Scheme:
 
 ```
 HTTP/1.1 302 Found
@@ -574,7 +637,7 @@ Body
 
 * `x509_san_dns`: When the Client Identifier Scheme is `x509_san_dns`, the Client Identifier MUST be a DNS name and match a `dNSName` Subject Alternative Name (SAN) [@!RFC5280] entry in the leaf certificate passed with the request. The request MUST be signed with the private key corresponding to the public key in the leaf X.509 certificate of the certificate chain added to the request in the `x5c` JOSE header [@!RFC7515] of the signed request object. The Wallet MUST validate the signature and the trust chain of the X.509 certificate. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter. If the Wallet can establish trust in the Client Identifier authenticated through the certificate, e.g. because the Client Identifier is contained in a list of trusted Client Identifiers, it may allow the client to freely choose the `redirect_uri` value. If not, the FQDN of the `redirect_uri` value MUST match the Client Identifier without the prefix `x509_san_dns:`. Example Client Identifier: `x509_san_dns:client.example.org`.
 
-* `web-origin`: This Client Identifier Scheme is defined in (#dc_api_request). The Wallet MUST NOT accept this Client Identifier Scheme if the request is not sent via the Digital Credentials API defined in (#dc_api).
+* `origin`: This Client Identifier Scheme is defined in (#dc_api_request). The Wallet MUST NOT accept this Client Identifier Scheme in requests. In OpenID4VP over the Digital Credentials API, the audience of the Credential Presentation is always the origin value prefixed by `origin:`, for example `origin:https://verifier.example.com/`.
 
 * `x509_hash`: When the Client Identifier Scheme is `x509_hash`, the Client Identifier MUST be a hash and match the hash of the leaf certificate passed with the request. The request MUST be signed with the private key corresponding to the public key in the leaf X.509 certificate of the certificate chain added to the request in the `x5c` JOSE header parameter [@!RFC7515] of the signed request object. The value of `x509_hash` is the base64url encoded value of the SHA-256 hash of the DER-encoded X.509 certificate. The Wallet MUST validate the signature and the trust chain of the X.509 leaf certificate. All verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter. Example Client Identifier: `x509_hash:Uvo3HtuIxuhC92rShpgqcT3YXwrqRxWEviRiA0OZszk`
 
@@ -850,7 +913,8 @@ within the Verifiable Credential, as defined in (#claims_path_pointer).
 `values`:
 : OPTIONAL. An array of strings, integers or boolean values that specifies the expected values of the claim.
 If the `values` property is present, the Wallet SHOULD return the claim only if the
-type and value of the claim both match for at least one of the elements in the array. Details of the processing rules are defined in (#selecting_claims).
+type and value of the claim both match exactly for at least one of the elements in the array. Details of the processing
+rules are defined in (#selecting_claims).
 
 ### Selecting Claims and Credentials {#dcql_query_lang_processing_rules}
 
@@ -868,7 +932,7 @@ The following rules apply for selecting claims via `claims` and `claim_sets`:
   the Verifier requests all claims listed in `claims`.
 - If both `claims` and `claim_sets` are present, the Verifier requests one combination of the claims listed in
   `claim_sets`. The order of the options conveyed in the `claim_sets`
-  array expresses the Verifier's preference for what is returned; the Wallet MUST return
+  array expresses the Verifier's preference for what is returned; the Wallet SHOULD return
   the first option that it can satisfy. If the Wallet cannot satisfy any of the
   options, it MUST NOT return any claims.
 - `claim_sets` MUST NOT be present if `claims` is absent.
@@ -879,9 +943,10 @@ elements in `values` i.e., the claim should be treated the same as if it did not
 exist in the Credential. Implementing this restriction may not be possible in
 all cases, for example, if the Wallet does not have access to the claim value
 before presentation or user consent or if another component routing
-the request to the Wallet does not have access to the claim value. Therefore, Verifiers
-must treat restrictions expressed using `values` as a best-effort way to improve
-user privacy, but MUST NOT rely on it for security checks.
+the request to the Wallet does not have access to the claim value. It is ultimately up to the
+Wallet and/or the End-User if the value matching request
+is followed. Therefore, Verifiers MUST treat restrictions expressed using `values` as a
+best-effort way to improve user privacy, but MUST NOT rely on it for security checks.
 
 The purpose of the `claim_sets` syntax is to provide a way for a verifier to
 describe alternative ways a given credential can satisfy the request. The array
@@ -892,7 +957,12 @@ information disclosure to influence how they order these options. For example, a
 proof of age request should prioritize requesting an attribute like
 `age_over_18` over an attribute like `birth_date`. The `claim_sets` syntax is
 not intended to define options the user can choose from, see (#dcql_query_ui) for
-more information.
+more information. The Wallet is recommended to return the first option it can satisfy
+since that is the preferred option from the Verifier. However, there can be reasons to
+deviate. Non-exhaustive examples of such reasons are:
+
+- scenarios where the Verifier did not order the options according to least information disclosure
+- operational reasons why returning a different option than the first option has UX benefits for the Wallet. 
 
 If the Wallet cannot deliver all claims requested by the Verifier
 according to these rules, it MUST NOT return the respective Credential.
@@ -1474,9 +1544,9 @@ A Verifier Attestation JWT MUST contain the following claims:
 
 * `iss`: REQUIRED. This claim identifies the issuer of the Verifier Attestation JWT. The `iss` value MAY be used to retrieve the issuer's public key. How the trust is established between Wallet and Issuer and how the public key is obtained for validating the attestation's signature is out of scope of this specification. 
 * `sub`: REQUIRED. The value of this claim MUST be the `client_id` of the client making the credential request.
-* `iat`: OPTIONAL. (number). The value of this claim MUST be the time at which the Verifier Attestation JWT was issued using the syntax defined in [RFC7519].
-* `exp`: REQUIRED. (number). The value of this claim MUST be the time at which the Verifier Attestation JWT expires using the syntax defined in [RFC7519]. The Wallet MUST reject any Verifier Attestation JWT with an expiration time that has passed, subject to allowable clock skew between systems.
-* `nbf`: OPTIONAL. The Verifier Attestation JWT MAY contain an "nbf" (not before) claim that identifies the time before which the token MUST NOT be accepted for processing.
+* `iat`: OPTIONAL. A number representing the time at which the Verifier Attestation JWT was issued using the syntax defined in [RFC7519].
+* `exp`: REQUIRED. A number representing the time at which the Verifier Attestation JWT expires using the syntax defined in [RFC7519]. The Wallet MUST reject any Verifier Attestation JWT with an expiration time that has passed, subject to allowable clock skew between systems.
+* `nbf`: OPTIONAL. A number representing the time before which the token MUST NOT be accepted for processing.
 * `cnf`: REQUIRED. This claim contains the confirmation method as defined in [@!RFC7800]. It MUST contain a JSON Web Key [@!RFC7517] as defined in Section 3.2 of [@!RFC7800]. This claim determines the public key for which's corresponding private key the Verifier MUST proof possession of when presenting the Verifier Attestation JWT. This additional security measure allows the Verifier to obtain a Verifier Attestation JWT from a trusted issuer and use it for a long time independent of that issuer without the risk of an adversary impersonating the Verifier by replaying a captured attestation.
 
 Additional claims MAY be defined and used in the Verifier Attestation JWT,
@@ -2130,7 +2200,7 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
 
 This section defines how to use OpenID4VP with the Digital Credentials API.
 
-The name "Digital Credentials API" (DC API) encomposes the W3C Digital Credentials API [@!W3C.Digital_Credentials_API]
+The name "Digital Credentials API" (DC API) encompasses the W3C Digital Credentials API [@!W3C.Digital_Credentials_API]
 as well as its native App Platform equivalents in operating systems (such as [Credential Manager on Android](https://developer.android.com/jetpack/androidx/releases/credentials)).
 The DC API allows web sites and native apps acting as Verifiers to request the presentation of verifiable credentials.
 The API itself is agnostic to the Credential exchange protocol and can be used with different protocols.
@@ -2188,13 +2258,19 @@ Out of the Authorization Request parameters defined in [@!RFC6749] and (#vp_toke
 * `transaction_data`
 * `dcql_query`
 
-The `client_id` parameter MUST be omitted in unsigned requests defined in (#unsigned_request). The Wallet determines the effective Client Identifier from the Origin. The effective Client Identifier is composed of a synthetic Client Identifier Scheme of `web-origin` and the Origin itself. For example, an Origin of `https://verifier.example.com` would result in an effective Client Identifier of `web-origin:https://verifier.example.com`. The transport of the request and Origin to the Wallet is platform-specific and is out of scope of OpenID4VP over the W3C Digital Credentials API. The Wallet MUST ignore any `client_id` parameter that is present in an unsigned request.
+The `client_id` parameter MUST be omitted in unsigned requests defined in (#unsigned_request). The Wallet MUST ignore any `client_id` parameter that is present in an unsigned request.
+
+Parameters defined by a specific client identifier scheme (such as the `trust_chain` parameter for the OpenID Federation client id scheme) are also supported over the W3C Digital Credentials API.
+
+The `client_id` parameter MUST be present in signed requests defined in (#signed_request), as it communicates to the wallet which Client Identifier Scheme and Client Identifier to use when authenticating the client through verification of the request signature or retrieving client metadata.
 
 The value of the `response_mode` parameter MUST be `dc_api` when the response is neither signed nor encrypted and `dc_api.jwt` when the response is signed and/or encrypted as defined in (#jarm).
 
 In addition to the above-mentioned parameters, a new parameter is introduced for OpenID4VP over the W3C Digital Credentials API:
 
 * `expected_origins`: REQUIRED when signed requests defined in (#signed_request) are used with the Digital Credentials API (DC API). An array of strings, each string representing an Origin of the Verifier that is making the request. The Wallet can detect replay of the request from a malicious Verifier by comparing values in this parameter to the Origin. This parameter is not for use in unsigned requests and therefore a Wallet MUST ignore this parameter if it is present in an unsigned request.
+
+The transport of the request and Origin to the Wallet is platform-specific and is out of scope of OpenID4VP over the Digital Credentials API.
 
 Additional request parameters MAY be defined and used with OpenID4VP over the DC API.
 
@@ -2206,30 +2282,86 @@ Any OpenID4VP request compliant to this section of this specification can be use
 
 ### Unsigned Request {#unsigned_request}
 
-The Verifier MAY send all the OpenID4VP request parameters as members in the request member passed to the API. In this case, the Wallet will use the Verifier's Origin to determine the Verifier's effective Client Identifier.
-
+The Verifier MAY send all the OpenID4VP request parameters as members in the request member passed to the API.
 
 ### Signed Request {#signed_request}
 
 The Verifier MAY send a signed request, for example, when identification and authentication of the Verifier is required.
 
+The signed request allows the Wallet to authenticate the Verifier using one or more trust framework(s) in addition to the Web PKI utilized by the browser. An example of such a trust framework is the Verifier (RP) management infrastructure set up in the context of the eIDAS regulation in the European Union, in which case, the Wallet can no longer rely only on the web origin of the Verifier. This web origin MAY still be used to further strengthen the security of the flow. The external trust framework could, for example, map the Client Identifier to registered web origins.
+
 The signed Request Object MAY contain all the parameters listed in (#dc_api_request), except `request`.
 
-Below is a non-normative example of such a request sent over the Digital Credentials API (DC API):
+Verifiers SHOULD format signed Requests using JWS Compact Serialization but MAY use JWS JSON Serialization [@!RFC7515]) to cater for use cases described below. 
+
+#### JWS Compact Serialization
+
+When the JWS Compact Serialization is used to send the request, the Verifier can convey only one Trust Framework, i.e., the Verifier should know which trust frameworks the wallet supports. All request parameters are encoded in a request object as defined in (#vp_token_request) and the JWS object is used as the value of the `request` claim in the `data` element of the API call. 
+
+This is illustrated in the following non-normative example.
 
 ```js
 { request: "eyJhbGciOiJF..." }
 ```
 
-This is an example of the payload of a signed OpenID4VP request used with the DC API:
+This is an example of the payload of a signed OpenID4VP request used with the W3C Digital Credentials API in conjunction with JWS Compact Serialization:
 
-<{{examples/digital_credentials_api/signed_request_payload.json}}
+<{{examples/digital_credentials_api/signed_request_payload_compact.json}} 
 
-The signed request allows the Wallet to authenticate the Verifier using a trust framework other than the Web PKI utilized by the browser. An example of such a trust framework is the Verifier (RP) management infrastructure set up in the context of the eIDAS regulation in the European Union, in which case, the Wallet can no longer rely only on the Origin of the Verifier. This Origin MAY still be used to further strengthen the security of the flow. The external trust framework could, for example, map the Client Identifier to registered Origins.
+#### JWS JSON Serialization
 
-## Response
+The JWS JSON Serialization [@!RFC7515]) allows the Verifier to use multiple Client Identifiers and corresponding key material to protect the same request. This serves use cases where the Verifier requests Credentials belonging to different trust frameworks and, therefore, needs to authenticate in the context of those trust frameworks.
+
+In this case, the following request parameters MUST be present in the protected header of the respective `signature` object in the `signatures` array defined in [@!RFC7515, section 7.2.1]:
+
+* `client_id`
+
+All other request parameters MUST be present in the `payload` element of the JWS object.
+
+Below is a non-normative example of such a request:
+
+```json
+{
+  "payload": "eyAiaXNzIjogImh0dHBzOi8...NzY4Mzc4MzYiIF0gfQ",
+  "signatures": [
+    {
+      "protected": "eyJhbGciOiAiRVMyNT..MiLCJraWQiOiAiMSJ9XX19fQ",
+      "signature": "PFwem0Ajp2Sag...T2z784h8TQqgTR9tXcif0jw"
+    },
+    {
+      "protected": "eyJhbGciOiAiRVMyNTY...tpZCI6ICIxIn1dfX19",
+      "signature": "irgtXbJGwE2wN4Lc...2TvUodsE0vaC-NXpB9G39cMXZ9A"
+    }
+  ]
+}
+```
+
+Every object in the `signatures` structure contains the parameters and the signature specific to a particular Client Identifier. The signature is calculated as specified in section 5.1 of [@!RFC7515].
+
+The following is a non-normative example of a content of a decoded protected header:
+
+```json
+{
+  "alg": "ES256",
+  "x5c": [
+    "MIICOjCCAeG...djzH7lA==",
+    "MIICLTCCAdS...koAmhWVKe"
+  ],
+  "client_id": "x509_san_dns:rp.example.com"
+}
+```
+
+The following is a non-normative example of the payload of a signed OpenID4VP request used with the W3C Digital Credentials API in conjunction with JWS JSON Serialization:
+
+<{{examples/digital_credentials_api/signed_request_payload.json}} 
+
+## Response {#dc_api_response}
 
 Every OpenID4VP Authorization Request results in a response being provided through the Digital Credentials API (DC API). The response is an instance of the `DigitalCredential` interface, as defined in [@!W3C.Digital_Credentials_API], and the OpenID4VP Authorization Response parameters as defined for the Response Type are represented as an object within the `data` attribute.
+
+The security properties that are normally provided by the Client Identifier are achieved by binding the response to the Origin it was received from.
+
+The audience for the response (for example, the `aud` value in a Key Binding JWT) MUST be the Origin, prefixed with `origin:`, for example `origin:https://verifier.example.com/`. This is the case even for signed requests. Therefore, when using OpenID4VP over the DC API, the Client Identifier is not used as the audience for the response.
 
 # Credential Format Specific Parameters {#format_specific_parameters}
 
@@ -2272,7 +2404,7 @@ This `presentation_definition` parameter contains a single `input_descriptor` el
 The following requirements apply to the `nonce` and `aud` claims of the Verifiable Presentation:
 
 - the `nonce` claim MUST be the value of `nonce` from the Authorization Request;
-- the `aud` claim MUST be the value of the Client Identifier; or effective Client Identifier for an unsigned Authorization Request over the DC API, as described in (#dc_api_request).
+- the `aud` claim MUST be the value of the Client Identifier, except for requests over the DC API where it MUST be the Origin prefixed with `origin:`, as described in (#dc_api_response).
 
 The following is a non-normative example of an Authorization Response:
 
@@ -2317,7 +2449,7 @@ This `presentation_definition` parameter contains a single `input_descriptor` el
 The following requirements apply to the `challenge` and `domain` claims within the `proof` object in the Verifiable Presentation:
 
 - the `challenge` claim MUST be the value of `nonce` from the Authorization Request;
-- the `domain` claim MUST be the value of the Client Identifier; or effective Client Identifier for an unsigned Authorization Request over the DC API, as described in (#dc_api_request).
+- the `domain` claim MUST be the value of the Client Identifier, except for requests over the DC API where it MUST be the Origin prefixed with `origin:`, as described in (#dc_api_response).
 
 The following is a non-normative example of an Authorization Response:
 
@@ -2474,11 +2606,8 @@ OpenID4VPDCAPIHandoverInfoBytes = bstr .cbor OpenID4VPDCAPIHandoverInfo
 
 OpenID4VPDCAPIHandoverInfo = [
   origin,
-  client_id,
   nonce
 ] ; Array containing handover parameters
-
-client_id = tstr
 
 origin = tstr
 
@@ -2490,9 +2619,86 @@ The `OpenID4VPDCAPIHandover` structure has the following elements:
 * The first element MUST be the string `OpenID4VPDCAPIHandover`. This serves as a unique identifier for the handover structure to prevent misinterpretation or confusion.
 * The second element MUST be a Byte String which contains the sha-256 hash of the bytes of `OpenID4VPDCAPIHandoverInfo` when encoded as CBOR.
 * The `OpenID4VPDCAPIHandoverInfo` has the following elements:
-  * The first element MUST be the string representing the origin of the request as described in (#dc_api_request).
-  * The second element MUST be the value of the effective Client Identifier as defined in (#dc_api_request).
-  * The third element MUST be the value of the `nonce` request parameter.
+  * The first element MUST be the string representing the Origin of the request as described in (#dc_api_request). It MUST NOT be prefixed with `origin:`.
+  * The second element MUST be the value of the `nonce` request parameter.
+
+The following is a non-normative example of the input JWK for calculating the JWK Thumbprint in the context of `OpenID4VPDCAPIHandoverInfo`:
+```json
+{
+  "kty": "EC",
+  "crv": "P-256",
+  "x": "DxiH5Q4Yx3UrukE2lWCErq8N8bqC9CHLLrAwLz5BmE0",
+  "y": "XtLM4-3h5o3HUH0MHVJV0kyq0iBlrBwlh8qEDMZ4-Pc",
+  "use": "enc",
+  "alg": "ECDH-ES",
+  "kid": "1"
+}
+```
+
+The following is a non-normative example of the `OpenID4VPDCAPIHandoverInfo` structure:
+```
+Hex:
+
+837368747470733a2f2f6578616d706c652e636f6d782b6578633767426b786a7831
+726463397564527276654b7653734a4971383061766c58654c486847777174415820
+4283ec927ae0f208daaa2d026a814f2b22dca52cf85ffa8f3f8626c6bd669047
+
+CBOR diagnostic:
+
+83                                 # array(3)
+  73                               #   string(19)
+    68747470733a2f2f6578616d706c65 #     "https://example"
+    2e636f6d                       #     ".com"
+  78 2b                            #   string(43)
+    6578633767426b786a783172646339 #     "exc7gBkxjx1rdc9"
+    7564527276654b7653734a49713830 #     "udRrveKvSsJIq80"
+    61766c58654c48684777717441     #     "avlXeLHhGwqtA"
+  58 20                            #   bytes(32)
+    4283ec927ae0f208daaa2d026a814f #     "B\x83ì\x92zàò\x08Úª-\x02j\x81O"
+    2b22dca52cf85ffa8f3f8626c6bd66 #     "+"Ü¥,ø_ú\x8f?\x86&Æ½f"
+    9047                           #     "\x90G"
+```
+
+The following is a non-normative example of the `OpenID4VPDCAPIHandover` structure:
+```
+Hex:
+
+82764f70656e4944345650444341504948616e646f7665725820fbece366f4212f97
+62c74cfdbf83b8c69e371d5d68cea09cb4c48ca6daab761a
+
+CBOR diagnostic:
+
+82                                 # array(2)
+  76                               #   string(22)
+    4f70656e4944345650444341504948 #     "OpenID4VPDCAPIH"
+    616e646f766572                 #     "andover"
+  58 20                            #   bytes(32)
+    fbece366f4212f9762c74cfdbf83b8 #     "ûìãfô!/\x97bÇLý¿\x83¸"
+    c69e371d5d68cea09cb4c48ca6daab #     "Æ\x9e7\x1d]hÎ\xa0\x9c´Ä\x8c¦Ú«"
+    761a                           #     "v\x1a"
+```
+
+The following is a non-normative example of the `SessionTranscript` structure:
+```
+Hex:
+
+83f6f682764f70656e4944345650444341504948616e646f7665725820fbece366f4
+212f9762c74cfdbf83b8c69e371d5d68cea09cb4c48ca6daab761a
+
+CBOR diagnostic:
+
+83                                 # array(3)
+  f6                               #   null
+  f6                               #   null
+  82                               #   array(2)
+    76                             #     string(22)
+      4f70656e49443456504443415049 #       "OpenID4VPDCAPI"
+      48616e646f766572             #       "Handover"
+    58 20                          #     bytes(32)
+      fbece366f4212f9762c74cfdbf83 #       "ûìãfô!/\x97bÇLý¿\x83"
+      b8c69e371d5d68cea09cb4c48ca6 #       "¸Æ\x9e7\x1d]hÎ\xa0\x9c´Ä\x8c¦"
+      daab761a                     #       "Ú«v\x1a"
+```
 
 #### Invocation via other methods {#non-dc-api-invocation}
 
@@ -2601,9 +2807,7 @@ A non-normative example of the Authorization Response would look the same as in 
 The following requirements apply to the `nonce` and `aud` claims in the Key Binding JWT:
 
 - the `nonce` claim MUST be the value of `nonce` from the Authorization Request;
-- the `aud` claim MUST be the value of the Client Identifier; 
-
-Note that for an unsigned Authorization Request over the DC API, the `client_id` parameter is not used. Instead, the effective Client Identifier is derived from the Origin, as described in (#dc_api_request).
+- the `aud` claim MUST be the value of the Client Identifier, except for requests over the DC API where it MUST be the Origin prefixed with `origin:`, as described in (#dc_api_response).
 
 The `transaction_data_hashes` response parameter defined in (#transaction_data) MUST be included in the Key Binding JWT as a top level claim. This means that transaction data mechanism cannot be used with SD-JWT VCs without cryptographic key binding and, therefore, do not use KB JWT.
 
@@ -3018,6 +3222,14 @@ established by [@!RFC7515].
 * Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Specification Document(s): (#verifier_attestation_jwt) of this specification
 
+### client_id
+
+* Header Parameter Name: `client_id`
+* Header Parameter Description: This header contains a Client Identifier. A Client Identifier is used in OAuth to identify a certain client. It is defined in [@!RFC6749], section 2.2.
+* Header Parameter Usage Location: JWS
+* Change Controller: IETF
+* Specification Document(s): [@!RFC6749]
+
 ## Uniform Resource Identifier (URI) Schemes Registry
 
 This specification registers the following URI scheme
@@ -3058,16 +3270,20 @@ The technology described in this specification was made available from contribut
    -25
 
    * add SD-JWT VCDM
+   * clarify value matching in DCQL
+   * clarify why requests using redirect_uri scheme cannot be signed
    * add `trusted_authorities` to DCQL  
    * add note introducing cbor and cddl
    * clarify DCQL case of `claims` and `claim_sets` being absent
    * add language on client ID and nonce binding for ISO mdocs and W3C VCs
+   * for DC API, always use Origin for binding the response (e.g. in Key Binding JWT `aud` and sessionTranscript in mdoc)
    * clarify the behavior is not to sign when authorization_signed_response_alg is omitted
    * add a note on the use of apu/apv in the JWE header of encrypted responses
    * add x509_hash client identifier scheme
    * remove x509_san_uri client identifier scheme
    * clarify that `dcql_query` and `presentation_definition` are passed as JSON objects (not strings) in request objects
    * support returning multiple presentations for a single dcql credential query when requested using `multiple`
+   * Added support for multiple Client Identifiers and corresponding Request Signature to the DC API profile
 
    -24
 
