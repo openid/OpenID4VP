@@ -2169,9 +2169,6 @@ The following is a non-normative example of the Verifiable Presentation in the `
 
 <{{examples/response/ldp_vp.json}}
 
-### Transaction Data
-
-The W3C Verifiable Credentials format profile as defined in this specification does not support transaction data as defined in (#transaction_data).
 
 ## AnonCreds
 
@@ -2233,9 +2230,6 @@ The following is the content of the `vp_token` parameter:
 
 <{{examples/response/ac_vp_sd.json}}
 
-### Transaction Data
-
-The AnonCreds format profile as defined in this specification does not support transaction data as defined in (#transaction_data).
 
 ## Mobile Documents or mdocs (ISO/IEC 18013 and ISO/IEC 23220 series) {#mdocs}
 
