@@ -819,6 +819,23 @@ If the `values` property is present, the Wallet SHOULD return the claim only if 
 type and value of the claim both match exactly for at least one of the elements in the array. Details of the processing
 rules are defined in (#selecting_claims).
 
+If a Wallet implements value matching and the credential to match against is
+an ISO mdoc-based credential, the following rules apply:
+
+- If the value to match against is a string, only claims encoded as a `tstr` (major
+  type 2 according to [@RFC8949]) are considered and the value of the claim MUST
+  match the value to match against exactly. CBOR tags (major type 6) MUST be ignored.
+  For example, if the value to match against is `2025-03-31`, both the CBOR
+  values (in diagnostic notation) `"2025-03-31"` and `#6.1004("2025-03-31")` would
+  match.
+- If the value to match against is an integer, only claims encoded as unsigned
+  integers (major type 0), negative integers (major type 1), and `bignum` (as per
+  section 3.4.3 of [@RFC8949]) are considered. The CBOR value MUST match exactly against the
+  provided value. CBOR tags (major type 6) MUST be ignored.
+- If the value to match against is a boolean, only claims encoded as major type
+  7, additional information 20 (`false`) and 21 (`true`) are considered. The CBOR value 
+  MUST match exactly against the provided value. CBOR tags (major type 6) MUST be ignored.
+
 ### Selecting Claims and Credentials {#dcql_query_lang_processing_rules}
 
 The following section describes the logic that applies for selecting claims 
