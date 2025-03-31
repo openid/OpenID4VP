@@ -1019,13 +1019,16 @@ already leak information about the claim value. Therefore, Wallets MUST take
 precautions against leaking information about the claim value when processing
 `values`. This SHOULD include, in particular:
 
-- ensuring that a Verifier cannot distinguish between the case where a user did
+- ensuring that a Verifier, in the response, cannot distinguish between the case where a user did
   not consent to releasing the credential and the case where the claim value did
   not match the expected value, and
 - preventing repeated or "silent" requests leaking data to the Verifier without
   the user's consent by ensuring that all requests, even if no response can be
   sent by the Wallet due to a `values` mismatch, require some form of user
   interaction before a response is sent.
+
+In both cases listed here, the potential leakage of information through both regular and
+error responses needs to be considered.
 
 # Claims Path Pointer {#claims_path_pointer}
 
