@@ -124,7 +124,10 @@ Verifiable Presentation (VP):
 W3C Verifiable Credential:
 : A Verifiable Credential compliant to the [@VC_DATA] specification.
 
-W3C Verifiable Presentation:
+W3C Verifiable Presentation:    * `authorization_encrypted_response_enc`: OPTIONAL. As defined in [@!JARM]. The JWE [@!RFC7516] enc algorithm REQUIRED for encrypting authorization responses. If authorization_encrypted_response_alg is specified, the default for this value is A128CBC-HS256. When authorization_encrypted_response_enc is included, authorization_encrypted_response_alg MUST also be provided.
+
+    Note: The encryption parameters `authorization_encrypted_response_alg` and `authorization_encrypted_response_enc` from [@!JARM] are reused to avoid redefining them. They are intended to be used for an unsigned, encrypted response (see (#response_encryption)). As signing is unnecessary, the mechanism specified in [@!JARM] do not apply.
+
 : A Verifiable Presentation compliant to the [@VC_DATA] specification.
 
 Wallet:
@@ -297,8 +300,10 @@ In the context of an authorization request according to [@RFC6749], parameters c
 
     * `jwks`: OPTIONAL. A JWKS as defined in [@!RFC7591]. It MAY contain one or more public keys, such as those used by the Wallet as an input to a key agreement that may be used for encryption of the Authorization Response (see (#response_encryption)), or where the Wallet will require the public key of the Verifier to generate the Verifiable Presentation. This allows the Verifier to pass ephemeral keys specific to this Authorization Request. Public keys included in this parameter MUST NOT be used to verify the signature of signed Authorization Requests.
     * `vp_formats`: REQUIRED when not available to the Wallet via another mechanism. As defined in (#client_metadata_parameters).
-    * `authorization_encrypted_response_alg`: OPTIONAL. As defined in [@!JARM].
-    * `authorization_encrypted_response_enc`: OPTIONAL. As defined in [@!JARM].
+    * `authorization_encrypted_response_alg`: OPTIONAL. As defined in [@!JARM]. The JWE [@!RFC7516] alg algorithm REQUIRED for encrypting authorization responses. See (#response_encyption) for usage. The default, if omitted, is that no encryption is performed.
+    * `authorization_encrypted_response_enc`: OPTIONAL. As defined in [@!JARM]. The JWE [@!RFC7516] enc algorithm REQUIRED for encrypting authorization responses. If authorization_encrypted_response_alg is specified, the default for this value is A128CBC-HS256. When authorization_encrypted_response_enc is included, authorization_encrypted_response_alg MUST also be provided.
+
+    Note: The encryption parameters `authorization_encrypted_response_alg` and `authorization_encrypted_response_enc` from [@!JARM] are reused to avoid redefining them. They are intended to be used for an unsigned, encrypted response (see (#response_encryption)). As signing is unnecessary, the mechanism specified in [@!JARM] do not apply.
 
     Authoritative data the Wallet is able to obtain about the Client from other sources, for example those from an OpenID Federation Entity Statement, take precedence over the values passed in `client_metadata`.
 
