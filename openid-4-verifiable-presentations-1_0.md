@@ -2534,7 +2534,7 @@ This section defines ISO mdoc specific DCQL Query and Response parameters.
 The following is an ISO mdoc specific parameter in the `meta` parameter in a Credential Query as defined in (#credential_query).
 
 `doctype_value`:
-: OPTIONAL. String that specifies an allowed value for the
+: MANDATORY. String that specifies an allowed value for the
 doctype of the requested Verifiable Credential. It MUST
 be a valid doctype identifier as defined in [@ISO.18013-5].
 
@@ -2758,7 +2758,7 @@ This section defines SD-JWT VC specific DCQL Query and Response parameters.
 The following is an SD-JWT VC specific parameter in the `meta` parameter in a Credential Query as defined in (#credential_query).
 
 `vct_values`:
-: OPTIONAL. An array of strings that specifies allowed values for
+: MANDATORY. An array of strings that specifies allowed values for
 the type of the requested Verifiable Credential. All elements in the array MUST
 be valid type identifiers as defined in [@!I-D.ietf-oauth-sd-jwt-vc]. The Wallet
 MAY return credentials that inherit from any of the specified types, following
