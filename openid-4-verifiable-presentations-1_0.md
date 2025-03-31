@@ -329,6 +329,24 @@ The following is a non-normative example of a transaction data content, after ba
 }
 ```
 
+`attachments`:
+: OPTIONAL. Array of objects, where each object includes an extra resource that needs to be passed to the Wallet. These resources are intended to provide additional context to the Wallet or the End-User. Each object contains the following parameters:
+
+    * `format`: REQUIRED: String that identifies the format of the attachment.
+    * `data`: REQUIRED: Object that contains the data of the attachment. It will be parsed by the Wallet according to the `format` parameter.
+    * `credential_ids`: OPTIONAL. Array of strings each referencing a Credential requested by the Verifier for which the attachment is relevant. In [@!DIF.PresentationExchange], the string matches the `id` field in the Input Descriptor. In the Digital Credentials Query Language, the string matches the `id` field in the Credential Query. If there is more than one element in the array, the Wallet MUST use only one of the referenced Credentials for transaction authorization.
+
+The Wallet MUST ignore any unrecognized attachment formats, see (#attachments-in-authorization-requests) for more details.
+
+The following is a non-normative example of an attachment object:
+
+```
+{
+  "format": "eudi_registration_certificate",
+  "data": "eyJhbGciOiJFUzI1....EF0RBtvPClL71TWHlIQ"
+}
+```
+
 ## Existing Parameters
 
 The following additional considerations are given for pre-existing Authorization Request parameters:
@@ -705,6 +723,20 @@ The Wallet then validates the request as specified in OAuth 2.0 [@RFC6749].
 ### Request URI Error Response
 
 If the Verifier responds with any HTTP error response, the Wallet MUST terminate the process.
+
+## Attachments in Authorization Requests {#attachments-in-authorization-requests}
+
+This section provides guidance on processing and security considerations for the `attachments` parameter defined in (#new_parameters).
+
+### Proof of Possession
+
+In some cases, the Verifier may want to include attachments that are bound to a key or require verification of their origin.
+
+It is up to the ecosystem profile to define how proof of possession is conveyed. Verifiers SHOULD use the `nonce` parameter from the Authorization Request in any proof-of-possession calculation to prevent replay attacks. The Wallet MUST validate such proofs if defined by the profile and ignore or reject attachments that fail validation.
+
+### Multi-Relying Party Behavior
+
+In some cases, the Verifier may want to include attachments based on a specific eco system profile. In such a scenario, the Authorization Request MUST sent a signed reuqest in the JWS JSON Serialization format, see (#jws-json-serialization).
 
 # Digital Credentials Query Language (DCQL) {#dcql_query}
 
@@ -2311,11 +2343,12 @@ This is an example of the payload of a signed OpenID4VP request used with the W3
 
 #### JWS JSON Serialization
 
-The JWS JSON Serialization [@!RFC7515]) allows the Verifier to use multiple Client Identifiers and corresponding key material to protect the same request. This serves use cases where the Verifier requests Credentials belonging to different trust frameworks and, therefore, needs to authenticate in the context of those trust frameworks.
+The JWS JSON Serialization [@!RFC7515]) allows the Verifier to use multiple Client Identifiers and corresponding key material to protect the same request. This serves use cases where the Verifier requests Credentials belonging to different trust frameworks and, therefore, needs to authenticate in the context of those trust frameworks. It also allows the Verifier to add different attachments for each Client Identifier.
 
 In this case, the following request parameters MUST be present in the protected header of the respective `signature` object in the `signatures` array defined in [@!RFC7515, section 7.2.1]:
 
 * `client_id`
+* `attachments`
 
 All other request parameters MUST be present in the `payload` element of the JWS object.
 
