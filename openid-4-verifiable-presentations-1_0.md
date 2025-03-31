@@ -124,10 +124,7 @@ Verifiable Presentation (VP):
 W3C Verifiable Credential:
 : A Verifiable Credential compliant to the [@VC_DATA] specification.
 
-W3C Verifiable Presentation:    * `authorization_encrypted_response_enc`: OPTIONAL. As defined in [@!JARM]. The JWE [@!RFC7516] enc algorithm REQUIRED for encrypting authorization responses. If authorization_encrypted_response_alg is specified, the default for this value is A128CBC-HS256. When authorization_encrypted_response_enc is included, authorization_encrypted_response_alg MUST also be provided.
-
-    Note: The encryption parameters `authorization_encrypted_response_alg` and `authorization_encrypted_response_enc` from [@!JARM] are reused to avoid redefining them. They are intended to be used for an unsigned, encrypted response (see (#response_encryption)). As signing is unnecessary, the mechanism specified in [@!JARM] do not apply.
-
+W3C Verifiable Presentation:
 : A Verifiable Presentation compliant to the [@VC_DATA] specification.
 
 Wallet:
