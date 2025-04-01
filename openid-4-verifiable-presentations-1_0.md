@@ -1713,7 +1713,7 @@ Implementers should be aware that this specification uses several specifications
 - SD-JWT-based Verifiable Credentials (SD-JWT VC) draft -08 [I-D.ietf-oauth-sd-jwt-vc]
 - W3C Digital Credentials API - [@!W3C.Digital_Credentials_API]
 
-While every effort will be made to prevent breaking changes to these specifications, should they occur, OpenID4VP implementations should continue to use the specifically referenced draft versions above in preference to the final versions, unless using a possible future OpenID Connect profile or specification that updates some or all of these references.
+While breaking changes to these specifications are not expected, should they occur, OpenID4VP implementations should continue to use the specifically referenced draft versions above in preference to the final versions, unless updated by a profile or new version of this specification.
 
 # Security Considerations {#security_considerations}
 
