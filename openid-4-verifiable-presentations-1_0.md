@@ -2391,15 +2391,15 @@ __Claim `birthdate`__:
 
 It is RECOMMENDED that each transaction data type defines a top level claim parameter to be used in the Key Binding JWT to return the processed transaction data. Additionally it is RECOMMENDED that it specifies the processing rules, potentially including any hash function to be applied, and the expected resulting structure.
 
-Note: When following this recommendation, the transaction data mechanism requires use of an SD-JWT VC with cryptographic key binding.
+Note: When following this recommendation, the transaction data mechanism requires use of an SD-JWT VC with Cryptographic Holder Binding.
 
-#### Example Specification
+#### A Profile of Transaction Data in SD-JWT VC
 
 The following is a non-normative example that can be included in a transaction data type specification:
 
-* The transaction data includes the following parameter, in addition to `type` and `credential_ids` from (#new_parameters):
+* The `transaction_data` request parameter includes the following parameter, in addition to `type` and `credential_ids` from (#new_parameters):
   * `transaction_data_hashes_alg`: OPTIONAL. Array of strings each representing a hash algorithm identifier, one of which MUST be used to calculate hashes in `transaction_data_hashes` response parameter. The value of the identifier MUST be a hash algorithm value from the "Hash Name String" column in the IANA "Named Information Hash Algorithm" registry [@IANA.Hash.Algorithms] or a value defined in another specification and/or profile of this specification. If this parameter is not present, a default value of `sha-256` MUST be used. To promote interoperability, implementations MUST support the sha-256 hash algorithm.
-* The Key Binding JWT includes the following top level claim parameters:
+* The Key Binding JWT in the response includes the following top level parameters:
   * `transaction_data_hashes`: Array of hashes, where each hash is calculated using a hash function over the data in the strings received in the `transaction_data` request parameter. Each hash value ensures the integrity of, and maps to, the respective transaction data object. If `transaction_data_hashes_alg` was specified in the request, the hash function MUST be one of its values. If `transaction_data_hashes_alg` was not specified in the request, the hash function MUST be `sha-256`.
   * `transaction_data_hashes_alg`: REQUIRED when this parameter was present in the `transaction_data` request parameter. String representing the hash algorithm identifier used to calculate hashes in `transaction_data_hashes` response parameter.
 
