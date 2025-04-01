@@ -2919,7 +2919,7 @@ The technology described in this specification was made available from contribut
    * support returning multiple presentations for a single dcql credential query when requested using `multiple`
    * Added support for multiple Client Identifiers and corresponding Request Signature to the DC API profile
    * remove DIF Presentation Exchange as a query language option
-   * added `contains` to ensure features of PE can be mapped
+   * added `contains` to ensure features of PE can be mapped to DCQL syntax
 
    -24
 
