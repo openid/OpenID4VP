@@ -2185,9 +2185,6 @@ OpenID for Verifiable Presentations is Credential Format agnostic, i.e., it is d
 
 The following is a W3C Verifiable Credentials specific parameter in the `meta` parameter in a Credential Query as defined in (#credential_query):
 
-`proof_type_values`:
-: OPTIONAL. An array of strings that specifies the types of proofs that the Verifier accepts to be used in the Verifiable Presentation, for example `["RsaSignature2018"]`.
-
 `type_values`:
 : OPTIONAL. An array of arrays of strings that specifies the types of Verifiable Credentials that the Verifier accepts to be used in the Verifiable Presentation. Each of the top-level arrays specifies one alternative to match the type of the Verifiable Credential against. One level deeper, each array of strings specifies a set of types that must be present in the `type` property of the Verifiable Credential, irrespective of order and whether additional types are present. 
 
@@ -2196,6 +2193,15 @@ For example, if the DCQL query contains `"type_values": [["ACred", "BCred"], ["C
 #### Claims Matching
 
 The `claims_path` parameter in the Credential Query as defined in (#credential_query) is used to specify the claims that the Verifier wants to receive in the Verifiable Presentation. When used in the context of W3C Verifiable Credentials, the `claims_path` parameter always matches on the root of Verifiable Credential (not the Verifiable Presentation). Examples are shown in the following subsections.
+
+### Verifier Metadata
+
+The `vp_formats` parameter of the Verifier metadata MUST have the key `jwt_vp_json` or `ldp_vp` (according to the format, as defined in (#jwt_vc) and (#ldp_vc)), and the value MUST be an object consisting of the following name/value pair:
+
+* `proof_type_values`: OPTIONAL. A JSON array containing types of proofs that
+  the Verifier accepts to be used in the Verifiable Presentation, for example
+  `["RsaSignature2018"]`.
+
 
 ### VC signed as a JWT, not using JSON-LD {#jwt_vc}
 
@@ -2238,7 +2244,7 @@ The following is a non-normative example of the payload of the Verifiable Presen
 
 <{{examples/response/jwt_vp.json}}
 
-### LDP VCs
+### LDP VCs {#ldp_vc}
 
 This section illustrates presentation of a Credential conformant to [@VC_DATA] that is secured using Data Integrity, using JSON-LD.
 
@@ -2570,7 +2576,7 @@ The following is one profile that can be included in a transaction data type spe
 
 ### Verifier Metadata
 
-The `format` value in the `vp_formats` parameter of the Verifier metadata MUST have the key `dc+sd-jwt`, and the value is an object consisting of the following name/value pairs:
+The `vp_formats` parameter of the Verifier metadata MUST have the key `dc+sd-jwt`, and the value MUST be an object consisting of the following name/value pairs:
 
 * `sd-jwt_alg_values`: OPTIONAL. A JSON array containing identifiers of cryptographic algorithms the Verifier supports for signing of an Issuer-signed JWT of an SD-JWT. If present, the `alg` JOSE header (as defined in [@!RFC7515]) of the Issuer-signed JWT of the presented SD-JWT MUST match one of the array values.
 * `kb-jwt_alg_values`: OPTIONAL. A JSON array containing identifiers of cryptographic algorithms the Verifier supports for signing of a Key Binding JWT (KB-JWT). If present, the `alg` JOSE header (as defined in [@!RFC7515]) of the presented KB-JWT MUST match one of the array values.
