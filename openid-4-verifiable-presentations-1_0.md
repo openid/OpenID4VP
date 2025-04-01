@@ -3160,6 +3160,12 @@ established by [@!RFC7591].
 * Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#client_metadata_parameters) of this specification
 
+### attachments
+
+* Name: `attachments`
+* Parameter Usage Location: authorization request
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
+* Reference: (#new_parameters) of this specification
 
 ## Media Types Registry
 
