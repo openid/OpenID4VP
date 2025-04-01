@@ -2290,6 +2290,7 @@ Out of the Authorization Request parameters defined in [@!RFC6749] and (#vp_toke
 * `request`
 * `transaction_data`
 * `dcql_query`
+* `attachments`
 
 The `client_id` parameter MUST be omitted in unsigned requests defined in (#unsigned_request). The Wallet MUST ignore any `client_id` parameter that is present in an unsigned request.
 
