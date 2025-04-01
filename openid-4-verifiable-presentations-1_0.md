@@ -1355,7 +1355,7 @@ The JWT response document MUST include the `vp_token` and, if [@!DIF.Presentatio
 
 The key material used for encryption and signing SHOULD be determined using existing metadata mechanisms. 
 
-To obtain Verifier's public key for the input to the key agreement to encrypt the Authorization Response, the Wallet MUST use `jwks` claim within the `client_metadata` request parameter, or within the metadata defined in the Entity Configuration when [@!OpenID.Federation] is used, or other mechanisms. If the selected public key contains a `kid` parameter, the JWE MUST include the same value in the `kid` JWE header of the encrypted response. This enables the Verifier to identify the specific public key used to encrypt the response.
+To obtain Verifier's public key for the input to the key agreement to encrypt the Authorization Response, the Wallet MUST use `jwks` claim within the `client_metadata` request parameter, or within the metadata defined in the Entity Configuration when [@!OpenID.Federation] is used, or other mechanisms. If the selected public key contains a `kid` parameter, the JWE MUST include the same value in the `kid` JWE Header Parameter (as defined in Section 4.1.6 of [@!RFC7516]) of the encrypted response. This enables the Verifier to identify the specific public key used to encrypt the response.
 
 To sign the Authorization Response, the Wallet MUST use a private key that corresponds to a public key made available in its metadata.
 
