@@ -3248,6 +3248,7 @@ The technology described in this specification was made available from contribut
 
    -25
 
+   * add `attechments` to list of authorization parameters
    * clarify value matching in DCQL
    * clarify why requests using redirect_uri scheme cannot be signed
    * add `trusted_authorities` to DCQL  
