@@ -1704,6 +1704,17 @@ Note: If the Verifier's Response URI did not return a `redirect_uri` in step (6)
 
 (10) The Verifier checks whether the `nonce` received in the Credential(s) in the VP Token in step (9) corresponds to the `nonce` value from the session. The Verifier then consumes the VP Token and invalidates the `transaction-id`, `request-id` and `nonce` in the session.
 
+## Pre-Final Specifications
+
+Implementers should be aware that this specification uses several specifications that are not yet final specifications. Those specifications are:
+
+OpenID Federation 1.0 draft -42 [@!OpenID.Federation]
+SIOPv2 draft -13 [@!SIOPv2]
+SD-JWT-based Verifiable Credentials (SD-JWT VC) draft -08 [I-D.ietf-oauth-sd-jwt-vc]
+W3C Digital Credentials API - [@!W3C.Digital_Credentials_API]
+
+While every effort will be made to prevent breaking changes to these specifications, should they occur, OpenID4VP implementations should continue to use the specifically referenced draft versions above in preference to the final versions, unless using a possible future OpenID Connect profile or specification that updates some or all of these references.
+
 # Security Considerations {#security_considerations}
 
 ## Preventing Replay of the VP Token {#preventing-replay} 
@@ -1895,7 +1906,7 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
     <author fullname="David Chadwick">
       <organization>University of Kent</organization>
     </author>
-   <date day="19" month="Nov" year="2019"/>
+   <date day="03" month="March" year="2022"/>
   </front>
 </reference>
 
@@ -1955,7 +1966,7 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
         </front>
 </reference>
 
-<reference anchor="DID-Core" target="https://www.w3.org/TR/2021/PR-did-core-20210803/">
+<reference anchor="DID-Core" target="https://www.w3.org/TR/2022/REC-did-core-20220719/>
         <front>
         <title>Decentralized Identifiers (DIDs) v1.0</title>
         <author fullname="Manu Sporny">
@@ -1970,7 +1981,7 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
         <author fullname="Drummond Reed">
             <organization>Evernym</organization>
         </author>
-        <date day="3" month="Aug" year="2021"/>
+        <date day="19" month="July" year="2022"/>
         </front>
 </reference>
 
@@ -3169,6 +3180,7 @@ The technology described in this specification was made available from contribut
 
    -25
 
+   * add implementation consideration about pre-final specs
    * clarify value matching in DCQL
    * clarify why requests using redirect_uri scheme cannot be signed
    * add `trusted_authorities` to DCQL  
