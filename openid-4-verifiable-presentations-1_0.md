@@ -603,7 +603,7 @@ This specification defines the following Client Identifier Prefixes, followed by
 
 * `redirect_uri`: This value indicates that the Client Identifier (without the prefix `redirect_uri:`) is the Verifier's Redirect URI (or Response URI when Response Mode `direct_post` is used). The Verifier MAY omit the `redirect_uri` Authorization Request parameter (or `response_uri` when Response Mode `direct_post` is used). All Verifier metadata parameters MUST be passed using the `client_metadata` parameter defined in (#new_parameters). An example Client Identifier value is `redirect_uri:https://client.example.org/cb`. Requests using the `redirect_uri` Client Identifier Scheme cannot be signed because there is no method for the Wallet to obtain a trusted key for verification. Therefore, implementations requiring signed requests cannot use the `redirect_uri` Client ID scheme.
 
-The following is a non-normative example of an unsigned request with thi `redirect_uri` Client Identifier Prefix:
+The following is a non-normative example of an unsigned request with the `redirect_uri` Client Identifier Prefix:
 
 ```
 HTTP/1.1 302 Found
