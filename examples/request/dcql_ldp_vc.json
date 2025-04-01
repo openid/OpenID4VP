@@ -4,10 +4,10 @@
       "id": "example_ldp_vc",
       "format": "ldp_vp",
       "meta": {
-        "proof_type_values": ["Ed25519Signature2018"]
+        "proof_type_values": ["Ed25519Signature2018"],
+        "type_values": [["IDCredential"]]
       },
       "claims": [
-        {"path": ["type"], "contains": ["IDCredential"]},
         {"path": ["credentialSubject", "family_name"]},
         {"path": ["credentialSubject", "given_name"]},
         {"path": ["credentialSubject", "birthdate"]},

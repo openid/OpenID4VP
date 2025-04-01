@@ -823,10 +823,6 @@ If the `values` property is present, the Wallet SHOULD return the claim only if 
 type and value of the claim both match exactly for at least one of the elements in the array. Details of the processing
 rules are defined in (#selecting_claims).
 
-`contains`:
-: OPTIONAL. An array of strings or integers that, when specified, MUST appear in the matched array claim in any order.
-When the `contains` property is present, the Wallet SHOULD return the claim only if the claim is an array that includes all elements listed in the `contains` array, irrespective of their order.
-
 ### Selecting Claims and Credentials {#dcql_query_lang_processing_rules}
 
 The following section describes the logic that applies for selecting claims 
@@ -850,14 +846,14 @@ The following rules apply for selecting claims via `claims` and `claim_sets`:
 
 When a Claims Query contains a restriction on the values of a claim, the Wallet
 SHOULD NOT return the claim if its value does not match according to the rules for
-`values` and `contains` defined in (#claims_query), i.e.,
+`values` defined in (#claims_query), i.e.,
 the claim should be treated the same as if it did not
 exist in the Credential. Implementing this restriction may not be possible in
 all cases, for example, if the Wallet does not have access to the claim value
 before presentation or user consent or if another component routing
 the request to the Wallet does not have access to the claim value. It is ultimately up to the
 Wallet and/or the End-User if the value matching request
-is followed. Therefore, Verifiers MUST treat restrictions expressed using `values` and `contains` as a
+is followed. Therefore, Verifiers MUST treat restrictions expressed using `values` as a
 best-effort way to improve user privacy, but MUST NOT rely on it for security checks.
 
 The purpose of the `claim_sets` syntax is to provide a way for a verifier to
@@ -2195,7 +2191,12 @@ OpenID for Verifiable Presentations is Credential Format agnostic, i.e., it is d
 The following is a W3C Verifiable Credentials specific parameter in the `meta` parameter in a Credential Query as defined in (#credential_query):
 
 `proof_type_values`:
-: OPTIONAL. An array of strings that specifies the types of proofs that the Verifier accepts to be used in the Verifiable Presentation, for example `RsaSignature2018`.
+: OPTIONAL. An array of strings that specifies the types of proofs that the Verifier accepts to be used in the Verifiable Presentation, for example `["RsaSignature2018"]`.
+
+`type_values`:
+: OPTIONAL. An array of arrays of strings that specifies the types of Verifiable Credentials that the Verifier accepts to be used in the Verifiable Presentation. Each of the top-level arrays specifies one alternative to match the type of the Verifiable Credential against. One level deeper, each array of strings specifies a set of types that must be present in the `type` property of the Verifiable Credential, irrespective of order and whether additional types are present. 
+
+For example, if the DCQL query contains `"type_values": [["ACred", "BCred"], ["CCred"]]`, then a Verifiable Credential with the type `["DCred", "BCred", "ACred"]` would match, but a Verifiable Credential with the type `["BCred"]` would not match.
 
 #### Claims Matching
 
@@ -2916,7 +2917,6 @@ The technology described in this specification was made available from contribut
    * support returning multiple presentations for a single dcql credential query when requested using `multiple`
    * Added support for multiple Client Identifiers and corresponding Request Signature to the DC API profile
    * remove DIF Presentation Exchange as a query language option
-   * added `contains` to ensure features of PE can be mapped to DCQL syntax
 
    -24
 
