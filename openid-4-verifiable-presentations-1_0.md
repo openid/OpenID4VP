@@ -1708,10 +1708,10 @@ Note: If the Verifier's Response URI did not return a `redirect_uri` in step (6)
 
 Implementers should be aware that this specification uses several specifications that are not yet final specifications. Those specifications are:
 
-OpenID Federation 1.0 draft -42 [@!OpenID.Federation]
-SIOPv2 draft -13 [@!SIOPv2]
-SD-JWT-based Verifiable Credentials (SD-JWT VC) draft -08 [I-D.ietf-oauth-sd-jwt-vc]
-W3C Digital Credentials API - [@!W3C.Digital_Credentials_API]
+- OpenID Federation 1.0 draft -42 [@!OpenID.Federation]
+- SIOPv2 draft -13 [@!SIOPv2]
+- SD-JWT-based Verifiable Credentials (SD-JWT VC) draft -08 [I-D.ietf-oauth-sd-jwt-vc]
+- W3C Digital Credentials API - [@!W3C.Digital_Credentials_API]
 
 While every effort will be made to prevent breaking changes to these specifications, should they occur, OpenID4VP implementations should continue to use the specifically referenced draft versions above in preference to the final versions, unless using a possible future OpenID Connect profile or specification that updates some or all of these references.
 
