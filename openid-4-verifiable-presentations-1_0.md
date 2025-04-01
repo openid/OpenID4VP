@@ -295,7 +295,7 @@ In the context of an authorization request according to [@RFC6749], parameters c
 `client_metadata`:
 : OPTIONAL. A JSON object containing the Verifier metadata values. It MUST be UTF-8 encoded. The following metadata parameters MAY be used:
 
-    * `jwks`: OPTIONAL. A JWKS as defined in [@!RFC7591]. It MAY contain one or more public keys, such as those used by the Wallet as an input to a key agreement that may be used for encryption of the Authorization Response (see (#jarm)), or where the Wallet will require the public key of the Verifier to generate the Verifiable Presentation. This allows the Verifier to pass ephemeral keys specific to this Authorization Request. Public keys included in this parameter MUST NOT be used to verify the signature of signed Authorization Requests.
+    * `jwks`: OPTIONAL. A JWKS as defined in [@!RFC7591]. It MAY contain one or more public keys, such as those used by the Wallet as an input to a key agreement that may be used for encryption of the Authorization Response (see (#jarm)), or where the Wallet will require the public key of the Verifier to generate the Verifiable Presentation. This allows the Verifier to pass ephemeral keys specific to this Authorization Request. Public keys included in this parameter MUST NOT be used to verify the signature of signed Authorization Requests. This section clarifies key selection (#client_metadata_key_selection)
     * `vp_formats`: REQUIRED when not available to the Wallet via another mechanism. As defined in (#client_metadata_parameters).
     * `authorization_signed_response_alg`: OPTIONAL. As defined in [@!JARM], with an adjustment to the default behavior when this parameter is absent: instead of defaulting to `RS256`, the Authorization Response is not signed.
     * `authorization_encrypted_response_alg`: OPTIONAL. As defined in [@!JARM].
@@ -330,6 +330,13 @@ The following is a non-normative example of a transaction data content, after ba
   // other transaction data type specific parameters
 }
 ```
+### Key selection for client_metadata jwks {#client_metadata_key_selection}
+JWK sets should not contain multiple keys with the same kid. However, to increase interoperability when there are multiple keys with the same kid, the verifier shall consider other JWK attributes, such as kty, use, alg, etc., when selecting the verification key for the particular JWS message. For example, the following algorithm could be used in selecting which key to use to verify a message signature:
+
+
+1. find keys with a kid that matches the kid in the JOSE header;
+2. if a single key is found, use that key;
+3. if multiple keys are found, then the verifier should iterate through the keys until a key is found that has a matching alg, use, kty, or crv that corresponds to the message being verified.
 
 ## Existing Parameters
 
