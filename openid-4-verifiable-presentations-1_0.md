@@ -643,7 +643,7 @@ Body
 
 * `x509_hash`: When the Client Identifier Scheme is `x509_hash`, the Client Identifier MUST be a hash and match the hash of the leaf certificate passed with the request. The request MUST be signed with the private key corresponding to the public key in the leaf X.509 certificate of the certificate chain added to the request in the `x5c` JOSE header parameter [@!RFC7515] of the signed request object. The value of `x509_hash` is the base64url encoded value of the SHA-256 hash of the DER-encoded X.509 certificate. The Wallet MUST validate the signature and the trust chain of the X.509 leaf certificate. All verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter. Example Client Identifier: `x509_hash:Uvo3HtuIxuhC92rShpgqcT3YXwrqRxWEviRiA0OZszk`
 
-To use the Client Identifier Schemes `https`, `did`, `verifier_attestation`, `x509_san_dns` and `x509_hash`, Verifiers MUST be confidential clients. This might require changes to the technical design of native apps as such apps are typically public clients.
+To use the Client Identifier Schemes `https`, `decentralized_identifier`, `verifier_attestation`, `x509_san_dns` and `x509_hash`, Verifiers MUST be confidential clients. This might require changes to the technical design of native apps as such apps are typically public clients.
 
 Other specifications can define further Client Identifier Schemes. It is RECOMMENDED to use collision-resistant names for such values.
 
@@ -1504,7 +1504,7 @@ The following is a non-normative example of a `vp_formats_supported` parameter:
 ```
 
 `client_id_schemes_supported`:
-: OPTIONAL. Array of strings containing the values of the Client Identifier schemes that the Wallet supports. The values defined by this specification are `pre-registered` (which represents the behavior when no Client Identifier Scheme is used), `redirect_uri`, `https`, `verifier_attestation`, `did`, `x509_san_dns` and `x509_hash`. If omitted, the default value is `pre-registered`. Other values may be used when defined in the profiles of this specification.
+: OPTIONAL. Array of strings containing the values of the Client Identifier schemes that the Wallet supports. The values defined by this specification are `pre-registered` (which represents the behavior when no Client Identifier Scheme is used), `redirect_uri`, `https`, `verifier_attestation`, `decentralized_identifier`, `x509_san_dns` and `x509_hash`. If omitted, the default value is `pre-registered`. Other values may be used when defined in the profiles of this specification.
 
 Additional wallet metadata parameters MAY be defined and used,
 as described in [@!RFC8414].
