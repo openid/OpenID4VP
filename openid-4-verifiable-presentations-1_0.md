@@ -2125,7 +2125,7 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
           <author fullname="Vladimir Dzhuvinov">
             <organization>Connect2id</organization>
           </author>
-          <date day="15" month="September" year="2024"/>
+          <date day="05" month="March" year="2025"/>
         </front>
 </reference>
 
