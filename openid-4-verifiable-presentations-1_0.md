@@ -1966,7 +1966,7 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
         </front>
 </reference>
 
-<reference anchor="DID-Core" target="https://www.w3.org/TR/2022/REC-did-core-20220719/>
+<reference anchor="DID-Core" target="https://www.w3.org/TR/2022/REC-did-core-20220719/">
         <front>
         <title>Decentralized Identifiers (DIDs) v1.0</title>
         <author fullname="Manu Sporny">
