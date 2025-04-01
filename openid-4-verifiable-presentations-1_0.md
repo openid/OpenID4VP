@@ -1506,6 +1506,9 @@ The following is a non-normative example of a `vp_formats_supported` parameter:
 `client_id_schemes_supported`:
 : OPTIONAL. Array of strings containing the values of the Client Identifier schemes that the Wallet supports. The values defined by this specification are `pre-registered` (which represents the behavior when no Client Identifier Scheme is used), `redirect_uri`, `https`, `verifier_attestation`, `decentralized_identifier`, `x509_san_dns` and `x509_hash`. If omitted, the default value is `pre-registered`. Other values may be used when defined in the profiles of this specification.
 
+`client_id_scheme_default`:
+: OPTIONAL. A string containing the value of the default Client Identifier scheme that the Wallet will use when appropriate.
+
 Additional wallet metadata parameters MAY be defined and used,
 as described in [@!RFC8414].
 The Verifier MUST ignore any unrecognized parameters.
