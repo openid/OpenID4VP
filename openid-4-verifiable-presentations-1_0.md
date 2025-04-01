@@ -2297,12 +2297,9 @@ The following are AnonCreds specific parameters in the `meta` parameter in a Cre
 `cred_def_id_values`:
 : OPTIONAL. An array of strings that specifies the allowed values for the `cred_def_id` of the requested Verifiable Credential. It MUST be a valid credential definition identifier as defined in [@Hyperledger.Indy].
 
-`proof_type_values`:
-: OPTIONAL. An array of strings that specifies the types of proofs that the Verifier accepts to be used in the Verifiable Presentation, for example `CLSignature2019`.
-
 #### Claims Matching
 
-When used in the context of AnonCreds, the `claims_path` parameter always matches on the contents of the `values` key in the JSON-representation of the Verifiable Credential.
+When used in the context of AnonCreds, the `claims_path` parameter always matches on the object containing the `values` key in the JSON-representation of the Verifiable Credential.
 
 ### Example Credential
 

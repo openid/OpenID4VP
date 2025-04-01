@@ -4,15 +4,14 @@
       "id": "example_vc_ac_sd",
       "format": "ac_vp",
       "meta": {
-        "proof_type_values": ["CLSignature2019"],
         "schema_id_values": ["did:indy:idu:test:3QowxFtwciWceMFr7WbwnM/anoncreds/v0/SCHEMA/BasicScheme/0.1"]
       },
       "claims": [
         {
-          "path": ["given_name"]
+          "path": ["values", "given_name"]
         },
         {
-          "path": ["family_name"]
+          "path": ["values", "family_name"]
         }
       ]
     }
