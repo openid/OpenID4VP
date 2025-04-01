@@ -330,13 +330,13 @@ The following is a non-normative example of a transaction data content, after ba
 ```
 
 `attachments`:
-: OPTIONAL. Array of objects, where each object includes an extra resource that needs to be passed to the Wallet. These resources are intended to provide additional context to the Wallet or the End-User. Each object contains the following parameters:
+: OPTIONAL. Array of objects, where each object includes an extra resource that needs to be passed to the Wallet. These resources are intended to provide additional context to the Wallet or the End-User. The Wallet MUST ignore any unrecognized attachment formats. Each object contains the following parameters:
 
     * `format`: REQUIRED: String that identifies the format of the attachment.
     * `data`: REQUIRED: The structure and content of data are format-dependent and not constrained by this specification.
     * `credential_ids`: OPTIONAL. Array of strings each referencing a Credential requested by the Verifier for which the attachment is relevant. In [@!DIF.PresentationExchange], the string matches the `id` field in the Input Descriptor. In the Digital Credentials Query Language, the string matches the `id` field in the Credential Query. If there is more than one element in the array, the Wallet MUST use only one of the referenced Credentials for transaction authorization.
 
-The Wallet MUST ignore any unrecognized attachment formats, see (#attachments-in-authorization-requests) for more details.
+See (#attachments-in-authorization-requests) for more details.
 
 The following is a non-normative example of an attachment object:
 
