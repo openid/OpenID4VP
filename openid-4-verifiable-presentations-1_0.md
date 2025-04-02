@@ -529,6 +529,7 @@ If a `:` character is not present in the Client Identifier, the Wallet MUST trea
 For example, if an Authorization Request contains `client_id=example-client`, the Wallet would interpret the Client Identifier as referring to a pre-registered client.
 
 If the Client Identifier begins with `https://` the full Client Identifier URL represents an Entity Identifier defined in OpenID Federation [@!OpenID.Federation] and MUST be processed as though it was prefixed with `openid_federation` as described below.
+Note that like all requirements in this specification, this requirement only applies when using this specification.
 
 If a `:` character is present in the Client Identifier but the value preceding it is not a recognized and supported Client Identifier Scheme value, the Wallet MAY treat the Client Identifier as having a default Client Identifier Scheme. 
 
