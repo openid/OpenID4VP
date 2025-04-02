@@ -2852,13 +2852,13 @@ IETF SD-JWT VC is extended with the following claims:
 
 The following outlines a suggested non-normative set of processing steps for SD-JWT VCDM:
 
-##### SD-JWT VC Processing:
+##### Step 1: SD-JWT VC Processing
 
 - A receiver (holder or verifier) of an SD-JWT VCDM applies the processing rules outlined in Section 4 of [@!I-D.ietf-oauth-sd-jwt-vc], including verifying signatures, validity periods, status information, etc.
 - If the `vct` value is associated with any SD-JWT VC Type Metadata, schema validation of the entire SD-JWT VCDM is performed, including the nested `ld` claim.
 - Additionally, trust framework rules are applied, such as ensuring the Credential Issuer is authorized to issue SD-JWT VCDMs for the specified `vct` value.
 
-##### Business Logic Processing:
+##### Step 2: Business Logic Processing
 
 - Once the SD-JWT VC is verified and trusted by the SD-JWT VC processor, and if the `ld` claim is present, the receiver extracts the JSON-LD object from the `ld` claim and uses this for the business logic object. If the `ld` claim is not present, the entire SD-JWT VC is considered to represent the business logic object.
 - The business logic object is then passed on for further use case-specific processing and validation. The business logic assumes that all security-critical functions (e.g., signature verification, trusted issuer) have already been performed during the previous step. Additional schema validation is applied if provided in the `ld` claim, e.g., to support SHACL schemas. Note that while a `vct` claim is required, SD-JWT VC type metadata resolution and related schema validation is optional in certain cases.
