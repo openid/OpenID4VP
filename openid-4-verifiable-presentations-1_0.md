@@ -420,7 +420,7 @@ wallet_nonce=qPmxiNFCR3QTm19POc8u
 
 Wallets MAY support requesting presentation of Verifiable Credentials using OAuth 2.0 scope values.
 
-Such a scope value MUST be an alias for a well-defined DCQL query. Since more than one scope value can be used at the same time, the IDs for credentials (see (#credential_query)) and for claims (see (#claims_query)) within the DCQL queries in all scope values supported by a Wallet MUST be disjoint.
+Such a `scope` parameter value MUST be an alias for a well-defined DCQL query. Since multiple `scope` values can be used at the same time, the identifiers for credentials (see (#credential_query)) and claims (see (#claims_query)) within the DCQL queries associated with `scope` values MUST be unique.
 
 The specific scope values, and the mapping between a certain scope value and the respective 
 DCQL query is out of scope of this specification. 
