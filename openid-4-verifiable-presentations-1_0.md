@@ -591,10 +591,6 @@ For example, if an Authorization Request contains `client_id=example-client`, th
 
 From this definition, it follows that pre-registered clients MUST NOT contain a `:` character in their Client Identifier.
 
-### Security Considerations
-
-Confusing Verifiers using a Client Identifier Scheme with those using none can lead to attacks. Therefore, Wallets MUST always use the full Client Identifier, including the prefix if provided, within the context of the Wallet or its responses to identify the client. This refers in particular to places where the Client Identifier is used in [@!RFC6749] and in the presentation returned to the Verifier.
-
 ### Defined Client Identifier Schemes {#client_identifier_schemes}
 
 This specification defines the following Client Identifier Schemes, followed by the examples where applicable: 
@@ -779,7 +775,7 @@ once in a single query. Wallets SHOULD ignore such duplicate claim queries.
 elements in `claims` that specifies which combinations of `claims` for the Credential are requested.
 The rules for selecting claims to send are defined in (#selecting_claims).
 
-Note that multiple Credential Queries in a request MAY request a presentation of the same Credential.
+Multiple Credential Queries in a request MAY request a presentation of the same Credential.
 
 ### Trusted Authorities Query {#dcql_trusted_authorities}
 
@@ -914,12 +910,16 @@ If the `values` property is present, the Wallet SHOULD return the claim only if 
 type and value of the claim both match exactly for at least one of the elements in the array. Details of the processing
 rules are defined in (#selecting_claims).
 
-### Selecting Claims and Credentials {#dcql_query_lang_processing_rules}
+## Selecting Claims and Credentials {#dcql_query_lang_processing_rules}
 
 The following section describes the logic that applies for selecting claims 
-and for selecting credentials. 
+and for selecting credentials.
 
-#### Selecting Claims {#selecting_claims}
+When the same Credential fulfills more than one Credential Query in a request, that Credential MUST contain
+the combination of claims requested by those Credential Queries. However, that Credential MUST NOT contain
+claims not requested by either of the Credential Queries.
+
+### Selecting Claims {#selecting_claims}
 
 The following rules apply for selecting claims via `claims` and `claim_sets`:
 
@@ -960,7 +960,7 @@ since that is the preferred option from the Verifier. However, there can be reas
 deviate. Non-exhaustive examples of such reasons are:
 
 - scenarios where the Verifier did not order the options according to least information disclosure
-- operational reasons why returning a different option than the first option has UX benefits for the Wallet. 
+- operational reasons why returning a different option than the first option has UX benefits for the Wallet.
 
 If the Wallet cannot deliver all claims requested by the Verifier
 according to these rules, it MUST NOT return the respective Credential.
@@ -969,7 +969,7 @@ For Credential Formats that do not support selective disclosure, the case of bot
 and `claim_sets` being absent is interpreted as requesting a presentation of the "full credential"
 since all claims are mandatory to present.
 
-#### Selecting Credentials
+### Selecting Credentials
 
 The following rules apply for selecting Credentials via `credentials` and `credential_sets`:
 
@@ -990,7 +990,7 @@ they would not exist in the Wallet.
 If the Wallet cannot deliver all non-optional Credentials requested by the
 Verifier according to these rules, it MUST NOT return any Credential(s).
 
-#### User Interface Considerations {#dcql_query_ui}
+### User Interface Considerations {#dcql_query_ui}
 
 While this specification provides the mechanisms for requesting different sets
 of claims and Credentials, it does not define details about the user interface
@@ -998,14 +998,6 @@ of the Wallet, for example, if and how users can select which combination of
 Credentials to present. However, it is typically expected that the Wallet
 presents the End-User with a choice of which Credential(s) to present if
 multiple of the sets of Credentials in `options` can satisfy the request.
-
-#### Security Considerations {#dcql_query_security}
-
-While the Verifier can specify various constraints both on the claims level and
-the Credential level as shown above, it MUST NOT rely on the Wallet to enforce
-these constraints. The Wallet is not controlled by the Verifier and the Verifier
-MUST perform its own security checks on the returned Credentials and
-presentations.
 
 # Claims Path Pointer {#claims_path_pointer}
 
@@ -1837,6 +1829,18 @@ To achieve the full security benefits, it is important that the implementation o
 The OpenID Foundation provides tools that can be used to confirm that an implementation is correct and conformant:
 
 https://openid.net/certification/conformance-testing-for-openid-for-verifiable-presentations/
+
+## Always Use the Full Client Identifier
+
+Confusing Verifiers using a Client Identifier Prefix with those using none can lead to attacks. Therefore, Wallets MUST always use the full Client Identifier, including the prefix if provided, within the context of the Wallet or its responses to identify the client. This refers in particular to places where the Client Identifier is used in [@!RFC6749] and in the presentation returned to the Verifier.
+
+## Security Checks on the Returned Credentials and Presentations {#dcql_query_security}
+
+While the Verifier can specify various constraints both on the claims level and
+the Credential level as shown in (#dcql_query_lang_processing_rules), it MUST NOT rely on the Wallet to enforce
+these constraints. The Wallet is not controlled by the Verifier and the Verifier
+MUST perform its own security checks on the returned Credentials and
+Presentations.
 
 # Privacy Considerations
 
