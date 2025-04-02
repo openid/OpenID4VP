@@ -3251,11 +3251,11 @@ The technology described in this specification was made available from contribut
 
    -26
 
-   * renamed "Client ID Scheme" to "Client ID Prefix", and updated metadata (`client_id_prefixes_supported`) and `error_description` to match
+   * renamed "Client ID Scheme" to "Client ID Prefix", and updated metadata (`client_id_prefixes_supported`) and `error_description` to match  
+   * add `attachments` to list of authorization parameters
 
    -25
-
-   * add `attachments` to list of authorization parameters
+   
    * clarify value matching in DCQL
    * clarify why requests using redirect_uri scheme cannot be signed
    * add `trusted_authorities` to DCQL  
