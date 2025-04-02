@@ -1027,8 +1027,8 @@ precautions against leaking information about the claim value when processing
   sent by the Wallet due to a `values` mismatch, require some form of user
   interaction before a response is sent.
 
-In both cases listed here, the potential leakage of information through both regular and
-error responses needs to be considered.
+In both cases listed here, it needs to be considered that returning an error
+response can also leak information about the processing outcome of `values`.
 
 # Claims Path Pointer {#claims_path_pointer}
 
