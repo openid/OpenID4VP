@@ -2827,13 +2827,15 @@ The following is a non-normative example of the unsecured payload of the Key Bin
 
 ### SD-JWT VCDM {#sd-jwt_vcdm}
 
-SD-JWT VCDM (Verifiable Credential Data Model) uses the IETF SD-JWT VC [@!I-D.ietf-oauth-sd-jwt-vc] credential format and allows to incorporate existing data models that use Linked Data, e.g., W3C VCDM [@?VC_DATA], while enabling a consistent and uncomplicated approach to selective disclosure.
+SD-JWT VCDM (Verifiable Credential Data Model) extends the IETF SD-JWT VC [@!I-D.ietf-oauth-sd-jwt-vc] credential format and allows to incorporate existing data models that use Linked Data, e.g., W3C VCDM [@?VC_DATA], while enabling a consistent and uncomplicated approach to selective disclosure.
 
-Information contained in SD-JWT VCDM credentials can be processed using a JSON-LD [@?JSON-LD] processor after applying SD-JWT VC processing.
+Information contained in SD-JWT VCDM credentials can be processed using a JSON-LD [@?JSON-LD] processor after the SD-JWT VC processing.
 
 When IETF SD-JWT VC is mentioned in this specification, SD-JWT VCDM defined in this section MAY be used.
 
-Implementers of SD-JWT VCDM MUST use valid values for the `vct` Claim defined in IETF SD-JWT VC [@!I-D.ietf-oauth-sd-jwt-vc].
+#### Format
+
+SD-JWT VCDM credentials are valid SD-JWT VC credentials and all requirements from [@!I-D.ietf-oauth-sd-jwt-vc] apply. Additionally, the requirements listed in this section apply.
 
 For backward compatibility with JWT processors, the following registered JWT claims MUST be used:
 
@@ -2846,23 +2848,28 @@ IETF SD-JWT VC is extended with the following claims:
 
 * `ld`: OPTIONAL. Contains a JSON-LD [@!JSON-LD] object in compact form, e.g., [@?VC_DATA].
 
+#### Processing
+
 The following outlines a suggested non-normative set of processing steps for SD-JWT VCDM:
-1. SD-JWT VC Processing:
+
+##### SD-JWT VC Processing:
 
 - A receiver (holder or verifier) of an SD-JWT VCDM applies the processing rules outlined in Section 4 of [@!I-D.ietf-oauth-sd-jwt-vc], including verifying signatures, validity periods, status information, etc.
 - If the `vct` value is associated with any SD-JWT VC Type Metadata, schema validation of the entire SD-JWT VCDM is performed, including the nested `ld` claim.
 - Additionally, trust framework rules are applied, such as ensuring the Credential Issuer is authorized to issue SD-JWT VCDMs for the specified `vct` value.
 
-2. Business Logic Processing:
+##### Business Logic Processing:
 
 - Once the SD-JWT VC is verified and trusted by the SD-JWT VC processor, and if the `ld` claim is present, the receiver extracts the JSON-LD object from the `ld` claim and uses this for the business logic object. If the `ld` claim is not present, the entire SD-JWT VC is considered to represent the business logic object.
 - The business logic object is then passed on for further use case-specific processing and validation. The business logic assumes that all security-critical functions (e.g., signature verification, trusted issuer) have already been performed during the previous step. Additional schema validation is applied if provided in the `ld` claim, e.g., to support SHACL schemas. Note that while a `vct` claim is required, SD-JWT VC type metadata resolution and related schema validation is optional in certain cases.
 
-The following is a non-normative example of an unsecured payload of an SD-JWT VCDM, that is built using the example of unsecured payload in Section 3.3 of [@!I-D.ietf-oauth-sd-jwt-vc]:
+#### Examples
+
+The following is a non-normative example of an unsecured payload of an SD-JWT VCDM (i.e., before applying the modifications to enable selective disclosure and before adding validity claims). This example is derived from the example of an unsecured payload in Section 3.3 of [@!I-D.ietf-oauth-sd-jwt-vc]:
 
 ```json
 {
-   "vct":"https://credentials.example.com/identity_credential",
+   "vct": "https://credentials.example.com/identity_credential",
    "ld":{
       "@context":[
          "https://www.w3.org/ns/credentials/v2",
@@ -2881,7 +2888,7 @@ The following is a non-normative example of an unsecured payload of an SD-JWT VC
 }
 ```
 
-The following is a non-normative example of how the unsecured payload of an SD-JWT VCDM above can be used for the SD-JWT:
+The following is a non-normative example of the SD-JWT payload after enabling selective disclosure:
 ```json
 {
   "_sd": [
