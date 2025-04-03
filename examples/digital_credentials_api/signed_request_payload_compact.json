@@ -3,10 +3,7 @@
     "https://origin1.example.com",
     "https://origin2.example.com"
   ],
-  "response_type": "vp_token",
-  "response_mode": "dc_api",
-  "nonce": "n-0S6_WzA2Mj",
-  "dcql_query": {...},
+  "client_id": "x509_san_dns:rp.example.com",
   "client_metadata": {
     "jwks": {
       "keys": [
@@ -20,5 +17,9 @@
         }
       ]
     }
-  }
+  },
+  "response_type": "vp_token",
+  "response_mode": "dc_api",
+  "nonce": "n-0S6_WzA2Mj",
+  "dcql_query": {...}
 }

@@ -316,7 +316,6 @@ This enables the Wallet to assess the Verifier's capabilities, allowing it to tr
 
     * `type`: REQUIRED. String that identifies the type of transaction data . This value determines parameters that can be included in the `transaction_data` object. The specific values are out of scope of this specification. It is RECOMMENDED to use collision-resistant names for `type` values.
     * `credential_ids`: REQUIRED. Array of strings each referencing a Credential requested by the Verifier that can be used to authorize this transaction. In [@!DIF.PresentationExchange], the string matches the `id` field in the Input Descriptor. In the Digital Credentials Query Language, the string matches the `id` field in the Credential Query. If there is more than one element in the array, the Wallet MUST use only one of the referenced Credentials for transaction authorization.
-    * `transaction_data_hashes_alg`: OPTIONAL. Array of strings each representing a hash algorithm identifier, one of which MUST be used to calculate hashes in `transaction_data_hashes` response parameter. The value of the identifier MUST be a hash algorithm value from the "Hash Name String" column in the IANA "Named Information Hash Algorithm" registry [@IANA.Hash.Algorithms] or a value defined in another specification and/or profile of this specification. If this parameter is not present, a default value of `sha-256` MUST be used. To promote interoperability, implementations MUST support the sha-256 hash algorithm.
 
 Each document specifying details of a transaction data type defines what Credential(s) can be used to authorize those transactions. Those Credential(s) can be issued specifically for the transaction authorization use case or re-use existing Credential(s) used for user identification. A mechanism for Credential Issuers to express that a particular Credential can be used for authorization of transaction data is out of scope for this specification.
 
@@ -326,7 +325,6 @@ The following is a non-normative example of a transaction data content, after ba
 {
   "type": "example_type",
   "credential_ids": [ "id card credential" ],
-  "transaction_data_hashes_alg": [ "sha-256" ]
   // other transaction data type specific parameters
 }
 ```
@@ -378,10 +376,10 @@ Where the contents of `request` consist of base64url-encoding and signing (in th
 this json:
 ```
 {
-  "iss": "s6BhdRkqt3",
+  "iss": "redirect_uri:https://client.example.org/cb",
   "aud": "https://self-issued.me/v2",
   "response_type": "vp_token",
-  "client_id": "s6BhdRkqt3",
+  "client_id": "redirect_uri:https://client.example.org/cb",
   "redirect_uri": "https//client.example.org/cb",
   "presentation_definition": {
     "id": "example_jwt_vc",
@@ -1381,12 +1379,9 @@ The following is a non-normative example of the payload of the JWT used in the e
 
 The transaction data mechanism enables a binding between the user's identification/authentication and the user’s authorization, for example to complete a payment transaction, or to sign specific document(s) using QES (Qualified Electronic Signatures). This is achieved by signing the transaction data used for user authorization with the user-controlled key used for proof of possession of the Credential being presented as a means for user identification/authentication.
 
-The Wallet that received the `transaction_data` parameter in the request MUST include in the response a `transaction_data_hashes` parameter defined below. If the wallet does not support `transaction_data` parameter, it MUST return an error.
+The Wallet that received the `transaction_data` parameter in the request MUST include a representation or reference to the data in the respective credential presentation. How this is done is transaction data type specific. Credential Formats can give recommendations of how to handle transaction data, such as those in (#format_specific_parameters).
 
-Where to include the`transaction_data_hashes` parameter in the response is specific to each credential format and is defined by each Credential Format, such as those in (#format_specific_parameters).
-
-* `transaction_data_hashes`: Array of hashes, where each hash is calculated using a hash function over the strings received in the `transaction_data` request parameter. Each hash value ensures the integrity of, and maps to, the respective transaction data object. Where in the response this parameter is included is defined by each Credential Format, but it has to be included in the mechanism used for the proof of possession of the Credential that is signed using the user-controlled key.
-* `transaction_data_hashes_alg`: REQUIRED when this parameter was present in the `transaction_data` request parameter. String representing the hash algorithm identifier used to calculate hashes in `transaction_data_hashes` response parameter.
+If the Wallet does not support `transaction_data` parameter, it MUST return an error upon receiving a request that includes it.
 
 ## Error Response {#error-response}
 
@@ -2273,19 +2268,72 @@ The Verifier MAY send all the OpenID4VP request parameters as members in the req
 
 The Verifier MAY send a signed request, for example, when identification and authentication of the Verifier is required.
 
+The signed request allows the Wallet to authenticate the Verifier using one or more trust framework(s) in addition to the Web PKI utilized by the browser. An example of such a trust framework is the Verifier (RP) management infrastructure set up in the context of the eIDAS regulation in the European Union, in which case, the Wallet can no longer rely only on the web origin of the Verifier. This web origin MAY still be used to further strengthen the security of the flow. The external trust framework could, for example, map the Client Identifier to registered web origins.
+
 The signed Request Object MAY contain all the parameters listed in (#dc_api_request), except `request`.
 
-Below is a non-normative example of such a request sent over the Digital Credentials API (DC API):
+Verifiers SHOULD format signed Requests using JWS Compact Serialization but MAY use JWS JSON Serialization [@!RFC7515]) to cater for use cases described below. 
+
+#### JWS Compact Serialization
+
+When the JWS Compact Serialization is used to send the request, the Verifier can convey only one Trust Framework, i.e., the Verifier should know which trust frameworks the wallet supports. All request parameters are encoded in a request object as defined in (#vp_token_request) and the JWS object is used as the value of the `request` claim in the `data` element of the API call. 
+
+This is illustrated in the following non-normative example.
 
 ```js
 { request: "eyJhbGciOiJF..." }
 ```
 
-This is an example of the payload of a signed OpenID4VP request used with the DC API:
+This is an example of the payload of a signed OpenID4VP request used with the W3C Digital Credentials API in conjunction with JWS Compact Serialization:
 
-<{{examples/digital_credentials_api/signed_request_payload.json}}
+<{{examples/digital_credentials_api/signed_request_payload_compact.json}} 
 
-The signed request allows the Wallet to authenticate the Verifier using a trust framework other than the Web PKI utilized by the browser. An example of such a trust framework is the Verifier (RP) management infrastructure set up in the context of the eIDAS regulation in the European Union, in which case, the Wallet can no longer rely only on the Origin of the Verifier. This Origin MAY still be used to further strengthen the security of the flow. The external trust framework could, for example, map the Client Identifier to registered Origins.
+#### JWS JSON Serialization
+
+The JWS JSON Serialization [@!RFC7515]) allows the Verifier to use multiple Client Identifiers and corresponding key material to protect the same request. This serves use cases where the Verifier requests Credentials belonging to different trust frameworks and, therefore, needs to authenticate in the context of those trust frameworks.
+
+In this case, the following request parameters MUST be present in the protected header of the respective `signature` object in the `signatures` array defined in [@!RFC7515, section 7.2.1]:
+
+* `client_id`
+
+All other request parameters MUST be present in the `payload` element of the JWS object.
+
+Below is a non-normative example of such a request:
+
+```json
+{
+  "payload": "eyAiaXNzIjogImh0dHBzOi8...NzY4Mzc4MzYiIF0gfQ",
+  "signatures": [
+    {
+      "protected": "eyJhbGciOiAiRVMyNT..MiLCJraWQiOiAiMSJ9XX19fQ",
+      "signature": "PFwem0Ajp2Sag...T2z784h8TQqgTR9tXcif0jw"
+    },
+    {
+      "protected": "eyJhbGciOiAiRVMyNTY...tpZCI6ICIxIn1dfX19",
+      "signature": "irgtXbJGwE2wN4Lc...2TvUodsE0vaC-NXpB9G39cMXZ9A"
+    }
+  ]
+}
+```
+
+Every object in the `signatures` structure contains the parameters and the signature specific to a particular Client Identifier. The signature is calculated as specified in section 5.1 of [@!RFC7515].
+
+The following is a non-normative example of a content of a decoded protected header:
+
+```json
+{
+  "alg": "ES256",
+  "x5c": [
+    "MIICOjCCAeG...djzH7lA==",
+    "MIICLTCCAdS...koAmhWVKe"
+  ],
+  "client_id": "x509_san_dns:rp.example.com"
+}
+```
+
+The following is a non-normative example of the payload of a signed OpenID4VP request used with the W3C Digital Credentials API in conjunction with JWS JSON Serialization:
+
+<{{examples/digital_credentials_api/signed_request_payload.json}} 
 
 ## Response {#dc_api_response}
 
@@ -2395,6 +2443,7 @@ The following is a non-normative example of the Verifiable Presentation in the `
 
 <{{examples/response/ldp_vp.json}}
 
+
 ## AnonCreds
 
 AnonCreds is a Credential format defined as part of the Hyperledger Indy project [@Hyperledger.Indy].
@@ -2455,6 +2504,7 @@ The following is the content of the `vp_token` parameter:
 
 <{{examples/response/ac_vp_sd.json}}
 
+
 ## Mobile Documents or mdocs (ISO/IEC 18013 and ISO/IEC 23220 series) {#mdocs}
 
 ISO/IEC 18013-5:2021 [@ISO.18013-5] defines a mobile driving license (mDL) Credential in the mobile document (mdoc) format. Although ISO/IEC 18013-5:2021 [@ISO.18013-5] is specific to mobile driving licenses (mDLs), the Credential format can be utilized with any type of Credential (or mdoc document types). The ISO/IEC 23220 series has extracted components from ISO/IEC 18013-5:2021 [@ISO.18013-5] and ISO/IEC TS 18013-7 [@ISO.18013-7] that are common across document types to facilitate the profiling of the specification for other document types. The core data structures are shared between ISO/IEC 18013-5:2021 [@ISO.18013-5], ISO/IEC 23220-2 [@ISO.23220-2], ISO/IEC 23220-4 [@ISO.23220-4] which are encoded in CBOR and secured using COSE_Sign1.
@@ -2471,6 +2521,12 @@ ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 [@ISO.23220-4] Ann
 * Required Wallet and Verifier Metadata parameters and their values when OpenID4VP is used with the `mdoc-openid4vp://` custom URI scheme.
 The `SessionTranscript` and `Handover` CBOR structure when the invocation does not use the DC API. Also see (#non-dc-api-invocation).
 * Additional restrictions on Authorization Request and Authorization Response parameters to ensure compliance with ISO/IEC TS 18013-7 [@ISO.18013-7] and ISO/IEC 23220-4 [@ISO.23220-4]. For instance, to comply with ISO/IEC TS 18013-7 [@ISO.18013-7], only the same-device flow is supported, the `request_uri` Authorization Request parameter is required, and the Authorization Response has to be encrypted.
+
+### Transaction Data
+
+It is RECOMMENDED that each transaction data type defines a data element (`NameSpace`, `DataElementIdentifier`, `DataElementValue`) to be used to return the processed transaction data. Additionally it is RECOMMENDED that it specifies the processing rules, potentially including any hash function to be applied, and the expected resulting structure.
+
+Some document types support some transaction data ((#transaction_data)) to be protected using mdoc authentication, as part of the `DeviceSigned` data structure [@ISO.18013-5]. In those cases, the specifications of these document types include which transaction data types are supported, and the issuer includes the relevant data elements in the `KeyAuthorizations`. If a Wallet receives a request with a `transaction_data` type whose data element is unauthorized, the Wallet MUST reject the request due to an unsupported transaction data type.
 
 ### DCQL Query and Response
 
@@ -2538,12 +2594,15 @@ OpenID4VPDCAPIHandoverInfoBytes = bstr .cbor OpenID4VPDCAPIHandoverInfo
 
 OpenID4VPDCAPIHandoverInfo = [
   origin,
-  nonce
+  nonce,
+  jwk_thumbprint
 ] ; Array containing handover parameters
 
 origin = tstr
 
 nonce = tstr
+
+jwk_thumbprint = bstr
 ```
 
 The `OpenID4VPDCAPIHandover` structure has the following elements:
@@ -2553,6 +2612,85 @@ The `OpenID4VPDCAPIHandover` structure has the following elements:
 * The `OpenID4VPDCAPIHandoverInfo` has the following elements:
   * The first element MUST be the string representing the Origin of the request as described in (#dc_api_request). It MUST NOT be prefixed with `origin:`.
   * The second element MUST be the value of the `nonce` request parameter.
+  * For the Response Mode `dc_api.jwt`, the third element MUST be the JWK SHA-256 Thumbprint as defined in [@!RFC7638], encoded as a CBOR Byte String, of the Verifier's public key used to encrypt the response. If the Response Mode is `dc_api`, the third element MUST be `null`. For unsigned requests, including the JWK Thumbprint in the `SessionTranscript` allows the Verifier to detect whether the response was re-encrypted by a third party, potentially leading to the leakage of sensitive information. While this does not prevent such an attack, it makes it detectable and helps preserve the confidentiality of the response.  
+
+The following is a non-normative example of the input JWK for calculating the JWK Thumbprint in the context of `OpenID4VPDCAPIHandoverInfo`:
+```json
+{
+  "kty": "EC",
+  "crv": "P-256",
+  "x": "DxiH5Q4Yx3UrukE2lWCErq8N8bqC9CHLLrAwLz5BmE0",
+  "y": "XtLM4-3h5o3HUH0MHVJV0kyq0iBlrBwlh8qEDMZ4-Pc",
+  "use": "enc",
+  "alg": "ECDH-ES",
+  "kid": "1"
+}
+```
+
+The following is a non-normative example of the `OpenID4VPDCAPIHandoverInfo` structure:
+```
+Hex:
+
+837368747470733a2f2f6578616d706c652e636f6d782b6578633767426b786a7831
+726463397564527276654b7653734a4971383061766c58654c486847777174415820
+4283ec927ae0f208daaa2d026a814f2b22dca52cf85ffa8f3f8626c6bd669047
+
+CBOR diagnostic:
+
+83                                 # array(3)
+  73                               #   string(19)
+    68747470733a2f2f6578616d706c65 #     "https://example"
+    2e636f6d                       #     ".com"
+  78 2b                            #   string(43)
+    6578633767426b786a783172646339 #     "exc7gBkxjx1rdc9"
+    7564527276654b7653734a49713830 #     "udRrveKvSsJIq80"
+    61766c58654c48684777717441     #     "avlXeLHhGwqtA"
+  58 20                            #   bytes(32)
+    4283ec927ae0f208daaa2d026a814f #     "B\x83ì\x92zàò\x08Úª-\x02j\x81O"
+    2b22dca52cf85ffa8f3f8626c6bd66 #     "+"Ü¥,ø_ú\x8f?\x86&Æ½f"
+    9047                           #     "\x90G"
+```
+
+The following is a non-normative example of the `OpenID4VPDCAPIHandover` structure:
+```
+Hex:
+
+82764f70656e4944345650444341504948616e646f7665725820fbece366f4212f97
+62c74cfdbf83b8c69e371d5d68cea09cb4c48ca6daab761a
+
+CBOR diagnostic:
+
+82                                 # array(2)
+  76                               #   string(22)
+    4f70656e4944345650444341504948 #     "OpenID4VPDCAPIH"
+    616e646f766572                 #     "andover"
+  58 20                            #   bytes(32)
+    fbece366f4212f9762c74cfdbf83b8 #     "ûìãfô!/\x97bÇLý¿\x83¸"
+    c69e371d5d68cea09cb4c48ca6daab #     "Æ\x9e7\x1d]hÎ\xa0\x9c´Ä\x8c¦Ú«"
+    761a                           #     "v\x1a"
+```
+
+The following is a non-normative example of the `SessionTranscript` structure:
+```
+Hex:
+
+83f6f682764f70656e4944345650444341504948616e646f7665725820fbece366f4
+212f9762c74cfdbf83b8c69e371d5d68cea09cb4c48ca6daab761a
+
+CBOR diagnostic:
+
+83                                 # array(3)
+  f6                               #   null
+  f6                               #   null
+  82                               #   array(2)
+    76                             #     string(22)
+      4f70656e49443456504443415049 #       "OpenID4VPDCAPI"
+      48616e646f766572             #       "Handover"
+    58 20                          #     bytes(32)
+      fbece366f4212f9762c74cfdbf83 #       "ûìãfô!/\x97bÇLý¿\x83"
+      b8c69e371d5d68cea09cb4c48ca6 #       "¸Æ\x9e7\x1d]hÎ\xa0\x9c´Ä\x8c¦"
+      daab761a                     #       "Ú«v\x1a"
+```
 
 #### Invocation via other methods {#non-dc-api-invocation}
 
@@ -2606,6 +2744,22 @@ __Claim `birthdate`__:
 `LTAxLTAxIl0`
  * Contents:
 `["6Ij7tM-a5iVPGboS5tmvVA", "birthdate", "1940-01-01"]`
+
+### Transaction Data
+
+It is RECOMMENDED that each transaction data type defines a top level claim parameter to be used in the Key Binding JWT to return the processed transaction data. Additionally it is RECOMMENDED that it specifies the processing rules, potentially including any hash function to be applied, and the expected resulting structure.
+
+Note: When following this recommendation, the transaction data mechanism requires use of an SD-JWT VC with Cryptographic Holder Binding.
+
+#### A Profile of Transaction Data in SD-JWT VC
+
+The following is one profile that can be included in a transaction data type specification:
+
+* The `transaction_data` request parameter includes the following parameter, in addition to `type` and `credential_ids` from (#new_parameters):
+  * `transaction_data_hashes_alg`: OPTIONAL. Array of strings each representing a hash algorithm identifier, one of which MUST be used to calculate hashes in `transaction_data_hashes` response parameter. The value of the identifier MUST be a hash algorithm value from the "Hash Name String" column in the IANA "Named Information Hash Algorithm" registry [@IANA.Hash.Algorithms] or a value defined in another specification and/or profile of this specification. If this parameter is not present, a default value of `sha-256` MUST be used. To promote interoperability, implementations MUST support the sha-256 hash algorithm.
+* The Key Binding JWT in the response includes the following top level parameters:
+  * `transaction_data_hashes`: Array of hashes, where each hash is calculated using a hash function over the data in the strings received in the `transaction_data` request parameter. Each hash value ensures the integrity of, and maps to, the respective transaction data object. If `transaction_data_hashes_alg` was specified in the request, the hash function MUST be one of its values. If `transaction_data_hashes_alg` was not specified in the request, the hash function MUST be `sha-256`.
+  * `transaction_data_hashes_alg`: REQUIRED when this parameter was present in the `transaction_data` request parameter. String representing the hash algorithm identifier used to calculate hashes in `transaction_data_hashes` response parameter.
 
 ### Verifier Metadata
 
@@ -2662,8 +2816,6 @@ The following requirements apply to the `nonce` and `aud` claims in the Key Bind
 
 - the `nonce` claim MUST be the value of `nonce` from the Authorization Request;
 - the `aud` claim MUST be the value of the Client Identifier, except for requests over the DC API where it MUST be the Origin prefixed with `origin:`, as described in (#dc_api_response).
-
-The `transaction_data_hashes` response parameter defined in (#transaction_data) MUST be included in the Key Binding JWT as a top level claim. This means that transaction data mechanism cannot be used with SD-JWT VCs without cryptographic key binding and, therefore, do not use KB JWT.
 
 The following is a non-normative example of the content of the `presentation_submission` parameter:
 
@@ -2998,6 +3150,14 @@ established by [@!RFC7515].
 * Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Specification Document(s): (#verifier_attestation_jwt) of this specification
 
+### client_id
+
+* Header Parameter Name: `client_id`
+* Header Parameter Description: This header contains a Client Identifier. A Client Identifier is used in OAuth to identify a certain client. It is defined in [@!RFC6749], section 2.2.
+* Header Parameter Usage Location: JWS
+* Change Controller: IETF
+* Specification Document(s): [@!RFC6749]
+
 ## Uniform Resource Identifier (URI) Schemes Registry
 
 This specification registers the following URI scheme
@@ -3044,6 +3204,7 @@ The technology described in this specification was made available from contribut
    * clarify that `dcql_query` and `presentation_definition` are passed as JSON objects (not strings) in request objects
    * support returning multiple presentations for a single dcql credential query when requested using `multiple`
    * renamed "Client ID Scheme" to "Client ID Prefix", and updated metadata (`client_id_prefixes_supported`) and `error_description` to match
+   * Added support for multiple Client Identifiers and corresponding Request Signature to the DC API profile
 
    -24
 
