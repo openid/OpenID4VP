@@ -917,7 +917,7 @@ and for selecting credentials.
 
 When the same Credential fulfills more than one Credential Query in a request, that Credential MUST contain
 the combination of claims requested by those Credential Queries. However, that Credential MUST NOT contain
-claims not requested by either of the Credential Queries.
+claims not requested by any of the Credential Queries.
 
 ### Selecting Claims {#selecting_claims}
 
