@@ -1343,7 +1343,7 @@ The following is a non-normative example of the payload of a JWT used in an Auth
 
 <{{examples/response/jarm_jwt_enc_only_vc_json_body.json}}
 
-The JWT response document MUST include the contents in the response as defined in (#response-parameters).
+The payload secured by the encrypted JWT response MUST include the contents in the response as defined in (#response-parameters).
 
 The key material used for encryption SHOULD be determined using existing metadata mechanisms.
 
