@@ -7,7 +7,7 @@ keyword = ["security", "openid", "ssi"]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "openid-4-verifiable-presentations-1_0-25"
+value = "openid-4-verifiable-presentations-1_0-26"
 status = "standard"
 
 [[author]]
@@ -3188,6 +3188,10 @@ The technology described in this specification was made available from contribut
 
    [[ To be removed from the final specification ]]
 
+   -26
+
+   * renamed "Client ID Scheme" to "Client ID Prefix", and updated metadata (`client_id_prefixes_supported`) and `error_description` to match
+
    -25
 
    * clarify value matching in DCQL
@@ -3203,7 +3207,6 @@ The technology described in this specification was made available from contribut
    * remove x509_san_uri client identifier scheme
    * clarify that `dcql_query` and `presentation_definition` are passed as JSON objects (not strings) in request objects
    * support returning multiple presentations for a single dcql credential query when requested using `multiple`
-   * renamed "Client ID Scheme" to "Client ID Prefix", and updated metadata (`client_id_prefixes_supported`) and `error_description` to match
    * Added support for multiple Client Identifiers and corresponding Request Signature to the DC API profile
 
    -24
