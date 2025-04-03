@@ -649,7 +649,7 @@ Each entry in `credentials` MUST be an object with the following properties:
 the constraints in `credential_sets`. The value MUST be a non-empty string
 consisting of alphanumeric, underscore (`_`) or hyphen (`-`) characters.
 Within the Authorization Request, the same `id` MUST NOT
-be present more than once (whether for credentials or for claim sets, defined below).
+be present more than once.
 
 `format`:
 : REQUIRED. A string that specifies the format of the requested
@@ -809,7 +809,7 @@ Each entry in `claims` MUST be an object with the following properties:
 identifying the particular claim. The value MUST be a non-empty string
 consisting of alphanumeric, underscore (`_`) or hyphen (`-`) characters.
 Within the particular `claims` array, the same `id` MUST NOT
-be present more than once (whether for credentials or for claim sets).
+be present more than once.
 
 `path`:
 : REQUIRED The value MUST be a non-empty array representing a claims path pointer that specifies the path to a claim
@@ -2631,6 +2631,7 @@ GET /authorize?
   &id_token_type=subject_signed
   &client_id=x509_san_dns%3Aclient.example.org
   &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
+  &dcql_query=...
   &nonce=n-0S6_WzA2Mj HTTP/1.1
 Host: wallet.example.com
 ```
@@ -2944,6 +2945,7 @@ The technology described in this specification was made available from contribut
    * support returning multiple presentations for a single dcql credential query when requested using `multiple`
    * Added support for multiple Client Identifiers and corresponding Request Signature to the DC API profile
    * remove DIF Presentation Exchange as a query language option
+   * Changes in the DCQL query parameters specific to W3C VCs and AnonCreds
 
    -24
 
