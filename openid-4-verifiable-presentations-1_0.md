@@ -300,7 +300,7 @@ In the context of an authorization request according to [@RFC6749], parameters c
     * `authorization_encrypted_response_alg`: OPTIONAL. As defined in [@!JARM]. The JWE [@!RFC7516] algorithm for encrypting authorization responses. See (#response_encryption) for usage. The default, if omitted, is that no encryption is performed.
     * `authorization_encrypted_response_enc`: OPTIONAL. As defined in [@!JARM]. The JWE [@!RFC7516] encryption algorithm for encrypting authorization responses. If `authorization_encrypted_response_alg` is specified, the default for this value is A128CBC-HS256. When `authorization_encrypted_response_enc` is included, `authorization_encrypted_response_alg` MUST also be provided.
 
-Note: Since the response is encrypted (see (#response_encryption)), but not signed, the mechanism specified in [@!JARM] does not apply. However, `authorization_encrypted_response_alg` and `authorization_encrypted_response_enc` metadata parameters from [@!JARM] are reused to avoid redefining them. ```
+Note: Since the response is encrypted (see (#response_encryption)), but not signed, the mechanism specified in [@!JARM] does not apply. However, `authorization_encrypted_response_alg` and `authorization_encrypted_response_enc` metadata parameters from [@!JARM] are reused to avoid redefining them.```
 
     Authoritative data the Wallet is able to obtain about the Client from other sources, for example those from an OpenID Federation Entity Statement, take precedence over the values passed in `client_metadata`.
 
