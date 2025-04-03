@@ -2758,7 +2758,7 @@ This section defines SD-JWT VC specific DCQL Query and Response parameters.
 The following is an SD-JWT VC specific parameter in the `meta` parameter in a Credential Query as defined in (#credential_query).
 
 `vct_values`:
-: MANDATORY. An array of strings that specifies allowed values for
+: REQUIRED. An array of strings that specifies allowed values for
 the type of the requested Verifiable Credential. All elements in the array MUST
 be valid type identifiers as defined in [@!I-D.ietf-oauth-sd-jwt-vc]. The Wallet
 MAY return credentials that inherit from any of the specified types, following
