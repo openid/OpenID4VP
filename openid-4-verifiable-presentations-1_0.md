@@ -2534,7 +2534,7 @@ This section defines ISO mdoc specific DCQL Query and Response parameters.
 The following is an ISO mdoc specific parameter in the `meta` parameter in a Credential Query as defined in (#credential_query).
 
 `doctype_value`:
-: MANDATORY. String that specifies an allowed value for the
+: REQUIRED. String that specifies an allowed value for the
 doctype of the requested Verifiable Credential. It MUST
 be a valid doctype identifier as defined in [@ISO.18013-5].
 
