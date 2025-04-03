@@ -334,7 +334,7 @@ The following is a non-normative example of a transaction data content, after ba
 
     * `format`: REQUIRED: String that identifies the format of the attachment.
     * `data`: REQUIRED: The structure and content of data are format-dependent and not constrained by this specification.
-    * `credential_ids`: OPTIONAL. Array of strings each referencing a Credential requested by the Verifier for which the attachment is relevant. In [@!DIF.PresentationExchange], the string matches the `id` field in the Input Descriptor. In the Digital Credentials Query Language, the string matches the `id` field in the Credential Query. If there is more than one element in the array, the Wallet MUST use only one of the referenced Credentials for transaction authorization.
+    * `credential_ids`: OPTIONAL. Array of strings each referencing a Credential requested by the Verifier for which the attachment is relevant. The string matches the `id` field in the DCQL Credential Query. If there is more than one element in the array, the Wallet MUST use only one of the referenced Credentials for transaction authorization.
 
 See (#attachments-in-authorization-requests) for more details.
 
