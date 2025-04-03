@@ -299,7 +299,7 @@ In the context of an authorization request according to [@RFC6749], parameters c
     * `vp_formats`: REQUIRED when not available to the Wallet via another mechanism. As defined in (#client_metadata_parameters).
     * `authorization_encrypted_response_enc`: OPTIONAL. As defined in [@!JARM]. The JWE [@!RFC7516] enc algorithm REQUIRED for encrypting authorization responses. When a `response_mode` requiring encryption of the Authorization Response (such as `dc_api.jwt` or `direct_post.jwt`) is specified this MUST be present. Otherwise this should be absent.
 
-Note: Since the response is encrypted (see (#response_encryption)), but not signed, the mechanism specified in [@!JARM] does not apply. However, the  `authorization_encrypted_response_enc` metadata parameter from [@!JARM] is reused to avoid redefining them.```
+Note: Since the response is encrypted (see (#response_encryption)), but not signed, the mechanism specified in [@!JARM] does not apply. However, the  `authorization_encrypted_response_enc` metadata parameter from [@!JARM] is reused to avoid redefining it.```
 
     Authoritative data the Wallet is able to obtain about the Client from other sources, for example those from an OpenID Federation Entity Statement, take precedence over the values passed in `client_metadata`.
 
@@ -3108,6 +3108,7 @@ The technology described in this specification was made available from contribut
    * remove x509_san_uri client identifier scheme
    * clarify that `dcql_query` and `presentation_definition` are passed as JSON objects (not strings) in request objects
    * support returning multiple presentations for a single dcql credential query when requested using `multiple`
+   * remove JARM and response signing, using JWT directly for unsigned, encrypted responses.
 
    -24
 
