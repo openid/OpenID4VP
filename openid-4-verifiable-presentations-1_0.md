@@ -468,7 +468,7 @@ Note: "https://self-issued.me/v2" is a symbolic string and can be used as an `au
 
 This specification defines the concept of a Client Identifier Prefix that indicates how the Wallet is supposed to interpret the Client Identifier and associated data in the process of Client identification, authentication, and authorization. The Client Identifier Prefix enables deployments of this specification to use different mechanisms to obtain and validate metadata of the Verifier beyond the scope of [@!RFC6749]. The term Client Identifier Prefix is used since the Verifier is acting as an OAuth 2.0 Client.
 
-The Client Identifier Prefix is a string that MAY be communicated by the Verifier in a prefix within the `client_id` parameter in the Authorization Request. A fallback to pre-registered Clients as in [@!RFC6749] or a default Client Identifier Prefix is in place as a default mechanism in case no Client Identifier Prefix was provided. A certain Client Identifier Prefix may require the Verifier to sign the Authorization Request as means of authentication and/or pass additional parameters and require the Wallet to process them.
+The Client Identifier Prefix is a string that MAY be communicated by the Verifier in a prefix within the `client_id` parameter in the Authorization Request. A fallback to pre-registered Clients as in [@!RFC6749] remains in place as a default mechanism in case no Client Identifier Prefix was provided. A certain Client Identifier Prefix may require the Verifier to sign the Authorization Request as means of authentication and/or pass additional parameters and require the Wallet to process them.
 
 ### Syntax
 
