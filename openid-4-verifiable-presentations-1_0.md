@@ -332,7 +332,7 @@ The following is a non-normative example of a transaction data content, after ba
 `attachments`:
 : OPTIONAL. Array of objects, where each object includes an extra resource that needs to be passed to the Wallet. These resources are intended to provide additional context to the Wallet or the End-User. The Wallet MUST ignore any unrecognized attachment formats. Each object contains the following parameters:
 
-    * `format`: REQUIRED: String that identifies the format of the attachment.
+    * `format`: REQUIRED: String that identifies the format of the attachment. The specific values are out of scope of this specification. It is RECOMMENDED to use collision-resistant names for type values.
     * `data`: REQUIRED: The structure and content of data are format-dependent and not constrained by this specification.
     * `credential_ids`: OPTIONAL. Array of strings each referencing a Credential requested by the Verifier for which the attachment is relevant. Each string matches the `id` field in a DCQL Credential Query. If there is more than one element in the array, the Wallet MUST use only one of the referenced Credentials for transaction authorization.
 
