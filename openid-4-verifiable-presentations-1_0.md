@@ -232,7 +232,7 @@ Figure: Cross Device Flow
 
 (2) The Wallet sends an HTTP GET request to the Request URI to retrieve the Request Object.
 
-(2.5) The HTTP GET response returns the Request Object containing Authorization Request parameters. It especially contains a DCQL query that describes the requirements of the Credential(s) that the Verifier is requesting to be presented. Such requirements could include what type of Credential(s), in what format(s), which individual Claims within those Credential(s) (Selective Disclosure), etc. The Wallet processes the Request Object and determines what Credentials are available matching the Verifier's request. The Wallet also authenticates the End-User and gathers her consent to present the requested Credentials. 
+(2.5) The HTTP GET response returns the Request Object containing Authorization Request parameters. It contains a DCQL query that describes the requirements of the Credential(s) that the Verifier is requesting to be presented. Such requirements could include what type of Credential(s), in what format(s), which individual Claims within those Credential(s) (Selective Disclosure), etc. The Wallet processes the Request Object and determines what Credentials are available matching the Verifier's request. The Wallet also authenticates the End-User and gathers her consent to present the requested Credentials. 
 
 (3) The Wallet prepares the Verifiable Presentation(s) of the Verifiable Credential(s) that the End-User has consented to. It then sends to the Verifier an Authorization Response where the Verifiable Presentation(s) are contained in the `vp_token` parameter.
 
@@ -2206,7 +2206,7 @@ OpenID for Verifiable Presentations is Credential Format agnostic, i.e., it is d
 The following is a W3C Verifiable Credentials specific parameter in the `meta` parameter in a Credential Query as defined in (#credential_query):
 
 `type_values`:
-: OPTIONAL. An array of arrays of strings that specifies the types of Verifiable Credentials that the Verifier accepts to be used in the Verifiable Presentation. Each of the top-level arrays specifies one alternative to match the type of the Verifiable Credential against. Each inner array specifies a set of types that must be present in the `type` property of the Verifiable Credential, regardless of order or the presence of additional types. 
+: OPTIONAL. An array of string arrays that specifies the types of Verifiable Credentials that the Verifier accepts to be used in the Verifiable Presentation. Each of the top-level arrays specifies one alternative to match the type of the Verifiable Credential against. Each inner array specifies a set of types that must be present in the `type` property of the Verifiable Credential, regardless of order or the presence of additional types. 
 
 For example, if the DCQL query contains `"type_values": [["ACred", "BCred"], ["CCred"]]`, then a Verifiable Credential with the type `["DCred", "BCred", "ACred"]` would match, but a Verifiable Credential with the type `["BCred"]` would not match.
 
