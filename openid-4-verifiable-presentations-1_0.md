@@ -1876,7 +1876,7 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
 
 <reference anchor="JSON-LD" target="https://www.w3.org/TR/json-ld11/">
   <front>
-    <title>Verifiable Credentials Data Model 1.1</title>
+    <title>JSON-LD 1.1</title>
     <author fullname="Gregg Kellogg">      
     </author>
     <author fullname="Pierre-Antoine Champin">
@@ -2837,7 +2837,7 @@ When IETF SD-JWT VC is mentioned in this specification, SD-JWT VCDM defined in t
 
 SD-JWT VCDM credentials are valid SD-JWT VC credentials and all requirements from [@!I-D.ietf-oauth-sd-jwt-vc] apply. Additionally, the requirements listed in this section apply.
 
-For backward compatibility with JWT processors, the following registered JWT claims MUST be used:
+For compatibility with JWT processors, the following registered JWT claims are always to be used instead of any respective counterpart properties from W3C VCDM or elsewhere:
 
 * To represent the validity period of SD-JWT VCDM (i.e., cryptographic signature), `exp`/`nbf`/`iat` Claims encoded as a UNIX timestamp (NumericDate) MUST be used.
 * `iss` Claim MUST represent the Credential Issuer.
