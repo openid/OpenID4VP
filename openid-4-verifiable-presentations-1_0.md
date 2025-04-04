@@ -1059,7 +1059,7 @@ Additional, more complex examples can be found in (#more_dcql_query_examples).
 
 # Response {#response}
 
-A VP Token is only returned if the corresponding Authorization Request contained a `dcql_query` parameter or a `scope` parameter (#vp_token_request).
+A VP Token is only returned if the corresponding Authorization Request contained a `dcql_query` parameter or a `scope` parameter presenting a DCQL Query (#vp_token_request).
 
 A VP Token can be returned in the Authorization Response or the Token Response depending on the Response Type used. See (#response_type_vp_token) for more details.
 
