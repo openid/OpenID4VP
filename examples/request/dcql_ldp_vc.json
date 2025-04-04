@@ -1,0 +1,20 @@
+{
+  "credentials": [ 
+    {
+      "id": "example_ldp_vc",
+      "format": "ldp_vp",
+      "meta": {
+        "type_values": [["IDCredential"]]
+      },
+      "claims": [
+        {"path": ["credentialSubject", "family_name"]},
+        {"path": ["credentialSubject", "given_name"]},
+        {"path": ["credentialSubject", "birthdate"]},
+        {"path": ["credentialSubject", "address", "street_address"]},
+        {"path": ["credentialSubject", "address", "locality"]},
+        {"path": ["credentialSubject", "address", "postal_code"]},
+        {"path": ["credentialSubject", "address", "country"]}
+      ]
+    }
+  ]
+}
