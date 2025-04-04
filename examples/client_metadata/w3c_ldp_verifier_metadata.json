@@ -1,0 +1,12 @@
+{
+  "vp_formats": {
+    "ldp_vc": {
+      "proof_type_values": ["Ed25519Signature2018", "DataIntegrityProof"],
+      "cryptosuite_values": ["eddsa-jcs-2022", "eddsa-rdfc-202"]
+    },
+    "ldp_vp": {
+      "proof_type_values": ["Ed25519Signature2018", "DataIntegrityProof"],
+      "cryptosuite_values": ["eddsa-jcs-2022", "eddsa-rdfc-202"]
+    }
+  }
+}
