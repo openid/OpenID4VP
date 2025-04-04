@@ -3213,6 +3213,7 @@ The technology described in this specification was made available from contribut
    -26
 
    * renamed "Client ID Scheme" to "Client ID Prefix", and updated metadata (`client_id_prefixes_supported`) and `error_description` to match
+   * add note that `iss` must be ignored if present in the request object
 
    -25
 
