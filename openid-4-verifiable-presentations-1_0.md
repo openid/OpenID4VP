@@ -586,7 +586,7 @@ Content-Type: application/x-www-form-urlencoded
 
 The Request URI response MUST be an HTTP response with the content type "application/oauth-authz-req+jwt" and the body being a signed, optionally encrypted, request object as defined in [@RFC9101]. The request object MUST fulfill the requirements as defined in (#vp_token_request).
 
-The following is a non-normative example of a request object:
+The following is a non-normative example of a payload for a request object:
 
 ```json
 {
