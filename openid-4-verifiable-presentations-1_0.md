@@ -938,14 +938,14 @@ response can also leak information about the processing outcome of `values`.
 
 # Claims Path Pointer {#claims_path_pointer}
 
-A claims path pointer is a pointer into the Verifiable Credential or Presentation, identifying one or more claims.
+A claims path pointer is a pointer into the Verifiable Credential, identifying one or more claims.
 A claims path pointer MUST be a non-empty array of strings, nulls and non-negative integers.
-A claims path pointer can be processed, which means it is applied to a Credential or Presentation. The results of
+A claims path pointer can be processed, which means it is applied to a Credential. The results of
 processing are the referenced claims.
 
 ## Semantics for JSON-based credentials
 
-This section defines the semantics of a claims path pointer when applied to a JSON-based Credential or Presentation.
+This section defines the semantics of a claims path pointer when applied to a JSON-based Credential.
 
 A string value indicates that the respective key is to be selected, a null value
 indicates that all elements of the currently selected array(s) are to be selected;
