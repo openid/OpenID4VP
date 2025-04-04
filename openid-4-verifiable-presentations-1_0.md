@@ -732,7 +732,7 @@ This section provides guidance on processing and security considerations for the
 
 In some cases, the Verifier may want to include attachments that are bound to a key or require verification of their origin.
 
-It is up to the ecosystem profile to define how proof of possession is conveyed. Verifiers SHOULD use the `nonce` parameter from the Authorization Request in any proof-of-possession calculation to bind to to this transaction. The Wallet MUST validate such proofs if defined by the profile and ignore or reject attachments that fail validation.
+It is up to the ecosystem profile to define how proof of possession is conveyed. Verifiers SHOULD use the `nonce` parameter from the Authorization Request in any proof-of-possession mechanism to bind to this transaction. The Wallet MUST validate such proofs if defined by the profile and ignore or reject attachments that fail validation.
 
 ### Multi-Relying Party Behavior
 
