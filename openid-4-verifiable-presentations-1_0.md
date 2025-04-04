@@ -852,6 +852,23 @@ Wallet and/or the End-User if the value matching request
 is followed. Therefore, Verifiers MUST treat restrictions expressed using `values` as a
 best-effort way to improve user privacy, but MUST NOT rely on it for security checks.
 
+If a Wallet implements value matching and the credential to match against is
+an ISO mdoc-based credential, the following rules apply:
+
+- If the value to match against is a string, only claims encoded as a `tstr` (major
+  type 2 according to [@RFC8949]) are considered and the value of the claim must
+  match the value to match against exactly. CBOR tags (major type 6) shall be ignored.
+  For example if the value to match against is `2025-03-31` both the values CBOR
+  values (in diagnostic notation) `"2025-03-31"` and `#6.1004("2025-03-31")` would
+  match.
+- If the value to match against is a integer, only claims encoded as unsigned
+  integers (major type 0), negative integers (major type 1), and `bignum` (as per
+  section 3.4.3 of [@RFC8949]) are considered. The CBOR value must match the
+  provided value to match against exactly.
+- If the value to match against is a boolean, only claims encoded as major type
+  7, additional information 20 (`false`) and 21 (`true`) are considered. The CBOR
+  value must match the provided value to match against exactly.
+
 The purpose of the `claim_sets` syntax is to provide a way for a verifier to
 describe alternative ways a given credential can satisfy the request. The array
 ordering expresses the Verifier's preference for how to fulfill the request. The
