@@ -2915,7 +2915,7 @@ The following payload would be used in the SD-JWT after encoding the payload abo
 
 <{{examples/sd_jwt_vcdm/01/sd_jwt_payload.json}}
 
-Note: The decision which claims to make selectively disclosable is up to the Issuer of the Credential. Considerations can be found in Section 6 and Section 9.7 of [@!draft-ietf-oauth-selective-disclosure-jwt].
+Note: The decision which claims to make selectively disclosable is up to the Issuer of the Credential. Considerations can be found in Section 6 and Section 9.7 of [@!I-D.ietf-oauth-selective-disclosure-jwt].
 
 ## Combining this specification with SIOPv2
 
