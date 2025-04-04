@@ -494,7 +494,7 @@ If a `:` character is not present in the Client Identifier, the Wallet MUST trea
 
 For example, if an Authorization Request contains `client_id=example-client`, the Wallet would interpret the Client Identifier as referring to a pre-registered client.
 
-If a `:` character is present in the Client Identifier but the value preceding it is not a recognized and supported Client Identifier Prefix value, the Wallet MAY treat the Client Identifier as having a default Client Identifier Prefix. 
+If a `:` character is present in the Client Identifier but the value preceding it is not a recognized and supported Client Identifier Prefix value, the Wallet can treat the Client Identifier as referring to a pre-registered client or it may refuse the request.
 
 For example, an Authorization Request containing a `client_id` value of `https://federation-verifier.example.com` could be interpreted by the Wallet as referring to an OpenID Federation Entity Identifier, with the default Client Identifier Prefix being `openid_federation`.
 
