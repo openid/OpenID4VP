@@ -2879,14 +2879,14 @@ When IETF SD-JWT VC is mentioned in this specification, SD-JWT VCDM defined in t
 
 SD-JWT VCDM credentials are valid SD-JWT VC credentials and all requirements from [@!I-D.ietf-oauth-sd-jwt-vc] apply. Additionally, the requirements listed in this section apply.
 
-For compatibility with JWT processors, the following registered JWT claims are always to be used instead of any respective counterpart properties from W3C VCDM or elsewhere:
+For compatibility with JWT processors, the following registered Claims from [@!RFC7519] and [@!I-D.ietf-oauth-sd-jwt-vc] MUST be used instead of any respective counterpart properties from W3C VCDM or elsewhere:
 
-* To represent the validity period of SD-JWT VCDM (i.e., cryptographic signature), `exp`/`nbf`/`iat` Claims encoded as a UNIX timestamp (NumericDate) MUST be used.
-* `iss` Claim MUST represent the Credential Issuer.
-* `status` Claim MUST represent the information to obtain the status of the Credential.
-* `sub` Claim MUST represent the subject identifier of the Credential.
+* `exp` and `nbf` to represent the validity period of SD-JWT VCDM (i.e., cryptographic signature).
+* `iss` to represent the Credential Issuer.
+* `status` to represent the information to obtain the status of the Credential.
+* `sub` to represent the subject identifier of the Credential.
 
-IETF SD-JWT VC is extended with the following claims:
+IETF SD-JWT VC is extended with the following claim:
 
 * `ld`: OPTIONAL. Contains a JSON-LD [@!JSON-LD] object in compact form, e.g., [@?VC_DATA].
 
