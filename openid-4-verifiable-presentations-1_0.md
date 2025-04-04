@@ -496,7 +496,6 @@ For example, if an Authorization Request contains `client_id=example-client`, th
 
 If a `:` character is present in the Client Identifier but the value preceding it is not a recognized and supported Client Identifier Prefix value, the Wallet can treat the Client Identifier as referring to a pre-registered client or it may refuse the request.
 
-For example, an Authorization Request containing a `client_id` value of `https://federation-verifier.example.com` could be interpreted by the Wallet as referring to an OpenID Federation Entity Identifier, with the default Client Identifier Prefix being `openid_federation`.
 
 From this definition, it follows that pre-registered clients MUST NOT contain a `:` character preceded immediately by a supported Client Identifier Prefix value in the first part of their Client Identifier.
 
@@ -548,7 +547,7 @@ Body
 
 * `x509_hash`: When the Client Identifier Prefix is `x509_hash`, the Client Identifier MUST be a hash and match the hash of the leaf certificate passed with the request. The request MUST be signed with the private key corresponding to the public key in the leaf X.509 certificate of the certificate chain added to the request in the `x5c` JOSE header parameter [@!RFC7515] of the signed request object. The value of `x509_hash` is the base64url encoded value of the SHA-256 hash of the DER-encoded X.509 certificate. The Wallet MUST validate the signature and the trust chain of the X.509 leaf certificate. All verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter. Example Client Identifier: `x509_hash:Uvo3HtuIxuhC92rShpgqcT3YXwrqRxWEviRiA0OZszk`
 
-To use the Client Identifier Prefix `https`, `decentralized_identifier`, `verifier_attestation`, `x509_san_dns` and `x509_hash`, Verifiers MUST be confidential clients. This might require changes to the technical design of native apps as such apps are typically public clients.
+To use the Client Identifier Prefixes `https`, `decentralized_identifier`, `verifier_attestation`, `x509_san_dns` and `x509_hash`, Verifiers MUST be capable of securely storing private key material. This might require changes to the technical design of native apps as such apps are typically public clients.
 
 Other specifications can define further Client Identifier Prefixes. It is RECOMMENDED to use collision-resistant names for such values.
 
@@ -1390,9 +1389,6 @@ The following is a non-normative example of a `vp_formats_supported` parameter:
 `client_id_prefixes_supported`:
 : OPTIONAL. Array of strings containing the values of the Client Identifier Prefixes that the Wallet supports. The values defined by this specification are `pre-registered` (which represents the behavior when no Client Identifier Prefix is used), `redirect_uri`, `https`, `verifier_attestation`, `decentralized_identifier`, `x509_san_dns` and `x509_hash`. If omitted, the default value is `pre-registered`. Other values may be used when defined in the profiles of this specification.
 
-`client_id_prefix_default`:
-: OPTIONAL. A string containing the value of the default Client Identifier Prefix that the Wallet will use when appropriate.
-
 Additional wallet metadata parameters MAY be defined and used,
 as described in [@!RFC8414].
 The Verifier MUST ignore any unrecognized parameters.
@@ -2096,7 +2092,7 @@ Out of the Authorization Request parameters defined in [@!RFC6749] and (#vp_toke
 
 The `client_id` parameter MUST be omitted in unsigned requests defined in (#unsigned_request). The Wallet MUST ignore any `client_id` parameter that is present in an unsigned request.
 
-Parameters defined by a specific client identifier prefix (such as the `trust_chain` parameter for the OpenID Federation client id prefix) are also supported over the W3C Digital Credentials API.
+Parameters defined by a specific Client Identifier Prefix (such as the `trust_chain` parameter for the OpenID Federation Client Identifier Prefix) are also supported over the W3C Digital Credentials API.
 
 The `client_id` parameter MUST be present in signed requests defined in (#signed_request), as it communicates to the wallet which Client Identifier Prefix and Client Identifier to use when authenticating the client through verification of the request signature or retrieving client metadata.
 
