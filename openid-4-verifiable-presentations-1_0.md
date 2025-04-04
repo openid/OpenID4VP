@@ -1842,7 +1842,7 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
           <author>
             <organization>Hyperledger AnonCreds Project</organization>
           </author>
-          <date year="2025"/>
+          <date year="2024"/>
         </front>
 </reference>
 
