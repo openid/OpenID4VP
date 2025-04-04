@@ -2302,7 +2302,7 @@ The following are AnonCreds specific parameters in the `meta` parameter in a Cre
 
 #### Claims Matching
 
-When used in the context of AnonCreds, the `claims_path` parameter always matches on the object containing the `values` key in the JSON-representation of the Verifiable Credential.
+When used in the context of AnonCreds, the `claims_path` parameter always matches on the contents of the `values` object in the JSON-representation of the Verifiable Credential.
 
 ### Example Credential
 

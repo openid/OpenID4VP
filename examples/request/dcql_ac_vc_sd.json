@@ -8,10 +8,10 @@
       },
       "claims": [
         {
-          "path": ["values", "given_name"]
+          "path": ["given_name"]
         },
         {
-          "path": ["values", "family_name"]
+          "path": ["family_name"]
         }
       ]
     }
