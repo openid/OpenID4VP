@@ -4,7 +4,6 @@
       "id": "example_ldp_vc",
       "format": "ldp_vp",
       "meta": {
-        "proof_type_values": ["Ed25519Signature2018"],
         "type_values": [["IDCredential"]]
       },
       "claims": [

@@ -4,7 +4,6 @@
       "id": "example_jwt_vc",
       "format": "jwt_vp_json",
       "meta": {
-        "proof_type_values": ["JsonWebSignature2020"],
         "type_values": [["IDCredential"]]
       },
       "claims": [
