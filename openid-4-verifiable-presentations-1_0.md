@@ -1337,7 +1337,8 @@ This document also defines the following additional error codes and error descri
 
 Verifiers MUST validate the VP Token in the following manner:
 
-1. Validate the format of the VP Token as defined in (#response-parameters) and check that the set of VPs returned satisfies all required Credential Sets (and optionally other Credential Sets).
+1. Validate the format of the VP Token as defined in (#response-parameters).
+1. Check that the set of VPs returned satisfies all requirements defined in the Verifier's request as described in (#dcql_query_lang_processing_rules).
 1. Validate the integrity, authenticity, and Holder Binding of any Verifiable Presentation provided in the VP Token according to the rules of the respective Presentation format. See (#preventing-replay) for the checks required to prevent replay of a VP.
 1. Perform the checks on the Credential(s) specific to the Credential Format (i.e., validation of the signature(s) on each VC).
 1. Confirm that the returned Credential(s) meet all criteria defined in the query in the Authorization Request (e.g., Claims included in the presentation).
