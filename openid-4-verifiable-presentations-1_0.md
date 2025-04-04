@@ -281,7 +281,7 @@ This specification defines the following new request parameters:
 `dcql_query`:
 : A JSON object containing a DCQL query as defined in (#dcql_query).
 
-Either a `dcql_query` or a `scope` parameter MUST be present in the Authorization Request, but not both.
+Either a `dcql_query` or a `scope` parameter representing a DCQL Query MUST be present in the Authorization Request, but not both.
 
 In the context of an authorization request according to [@RFC6749], parameters containing objects are transferred as JSON-serialized strings (using the application/x-www-form-urlencoded format as usual for request parameters).
 
