@@ -407,8 +407,8 @@ To retrieve the actual request, the wallet might send the following non-normativ
 POST /request/vapof4ql2i7m41m68uep HTTP/1.1
 Host: client.example.org
 Content-Type: application/x-www-form-urlencoded
-wallet_metadata=%7B%22vp_formats_supported%22%3A%7B%22jwt_vc_json%22%3A%7B%22alg_values_supported
-%22%3A%5B%22ES256K%22%2C%22ES384%22%5D%7D%2C%22jwt_vp_json%22%3A%7B%22alg_values_supported%22%3A%
+wallet_metadata=%7B%22vp_formats_supported%22%3A%7B%22jwt_vc_json%22%3A%7B%22alg_values
+%22%3A%5B%22ES256K%22%2C%22ES384%22%5D%7D%2C%22jwt_vp_json%22%3A%7B%22alg_values%22%3A%
 5B%22ES256K%22%2C%22EdDSA%22%5D%7D%7D%7D&
 wallet_nonce=qPmxiNFCR3QTm19POc8u
 ```
@@ -576,8 +576,8 @@ POST /request HTTP/1.1
 Host: client.example.org
 Content-Type: application/x-www-form-urlencoded
 
-  wallet_metadata=%7B%22vp_formats_supported%22%3A%7B%22jwt_vc_json%22%3A%7B%22alg_values_supported
-  %22%3A%5B%22ES256K%22%2C%22ES384%22%5D%7D%2C%22jwt_vp_json%22%3A%7B%22alg_values_supported%22%3A%
+  wallet_metadata=%7B%22vp_formats_supported%22%3A%7B%22jwt_vc_json%22%3A%7B%22alg_values
+  %22%3A%5B%22ES256K%22%2C%22ES384%22%5D%7D%2C%22jwt_vp_json%22%3A%7B%22alg_values%22%3A%
   5B%22ES256K%22%2C%22EdDSA%22%5D%7D%7D%7D&
   wallet_nonce=qPmxiNFCR3QTm19POc8u
 ```
@@ -1361,21 +1361,21 @@ This specification defines how the Verifier can determine Credential formats, pr
 
 This specification defines new metadata parameters according to [@!RFC8414].
 
-* `vp_formats_supported`: REQUIRED. An object containing a list of name/value pairs, where the name is a string identifying a Credential format supported by the Wallet. Valid Credential format identifier values are defined in (#format_specific_parameters). Other values may be used when defined in the profiles of this specification. The value is an object containing a parameter defined below:
-    * `alg_values_supported`: OPTIONAL. An object where the value is an array of case sensitive strings that identify the cryptographic suites that are supported. Parties will need to agree upon the meanings of the values used, which may be context-specific. For specific values that can be used depending on the Credential format, see (#format_specific_parameters). If `alg_values_supported` is omitted, it is unknown what cryptographic suites the wallet supports.
+* `vp_formats_supported`: REQUIRED. An object defining the formats and proof types of Verifiable Presentations and Verifiable Credentials that a Wallet supports. For specific values that can be used, see (#format_specific_parameters).
+Deployments can extend the formats supported, provided Issuers, Holders and Verifiers all understand the new format.
 
 The following is a non-normative example of a `vp_formats_supported` parameter:
 
 ```json
 "vp_formats_supported": {
   "jwt_vc_json": {
-    "alg_values_supported": [
+    "alg_values": [
       "ES256K",
       "ES384"
     ]
   },
   "jwt_vp_json": {
-    "alg_values_supported": [
+    "alg_values": [
       "ES256K",
       "EdDSA"
     ]
@@ -1470,10 +1470,10 @@ The following is a non-normative example of a set of static configuration values
   ],
   "vp_formats_supported": {
     "jwt_vp_json": {
-      "alg_values_supported": ["ES256"]
+      "alg_values": ["ES256"]
     },
     "jwt_vc_json": {
-      "alg_values_supported": ["ES256"]
+      "alg_values": ["ES256"]
     }
   },
   "request_object_signing_alg_values_supported": [
@@ -1760,6 +1760,36 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
     </author>
    <date day="19" month="Nov" year="2019"/>
   </front>
+</reference>
+
+<reference anchor="VC_DATA_INTEGRITY" target="https://www.w3.org/TR/vc-data-integrity/">
+  <front>
+    <title>Verifiable Credential Data Integrity 1.0</title>
+    <author fullname="Manu Sporny">
+      <organization>Digital Bazaar</organization>
+    </author>
+    <author fullname="Ted Thibodeau Jr">
+      <organization>OpenLink Software</organization>
+    </author>
+    <author fullname="Ivan Herman">
+      <organization>W3C</organization>
+    </author>
+    <author fullname="Dave Longley">
+      <organization>Digital Bazaar</organization>
+    </author>
+    <author fullname="Greg Bernstein">
+    </author>
+   <date day="29" month="Mar" year="2025"/>
+  </front>
+</reference>
+
+<reference anchor="IANA.COSE" target="https://www.iana.org/assignments/cose/cose.xhtml">
+        <front>
+          <title>CBOR Object Signing and Encryption (COSE)</title>
+          <author>
+            <organization>IANA</organization>
+          </author>
+        </front>
 </reference>
 
 <reference anchor="SIOPv2" target="https://openid.net/specs/openid-connect-self-issued-v2-1_0.html">
@@ -2214,14 +2244,6 @@ For example, if the DCQL query contains `"type_values": [["ACred", "BCred"], ["C
 
 The `claims_path` parameter in the Credential Query as defined in (#credential_query) is used to specify the claims that the Verifier wants to receive in the Verifiable Presentation. When used in the context of W3C Verifiable Credentials, the `claims_path` parameter always matches on the root of Verifiable Credential (not the Verifiable Presentation). Examples are shown in the following subsections.
 
-### Verifier Metadata
-
-The `vp_formats` parameter of the Verifier metadata MUST have the key `jwt_vp_json` or `ldp_vp` (according to the format, as defined in (#jwt_vc) and (#ldp_vc)), and the value MUST be an object consisting of the following name/value pair:
-
-* `proof_type_values`: OPTIONAL. A JSON array containing types of proofs that
-  the Verifier accepts to be used in the Verifiable Presentation, for example
-  `["RsaSignature2018"]`.
-
 
 ### VC signed as a JWT, not using JSON-LD {#jwt_vc}
 
@@ -2236,6 +2258,16 @@ Cipher suites should use algorithm names defined in [IANA JOSE Algorithms Regist
 The following is a non-normative example of the payload of a JWT-based W3C Verifiable Credential that will be used throughout this section:
 
 <{{examples/credentials/jwt_vc.json}}
+
+#### Metadata
+
+The `vp_formats` parameter of the Verifier metadata or the `vp_formats_supported` parameter of the Wallet metadata MUST have the key `jwt_vp_json` or `jwt_vc_json`, and the value MUST be an object consisting of the following name/value pair:
+
+* `alg_values`: OPTIONAL. A JSON array containing identifiers of cryptographic algorithms supported for a JWT-secured W3C Verifiable Presentation (in case of `jwt_vp_json`) or W3C Verifiable Credential (in case of `jwt_vc_json`). If present, the `alg` JOSE header (as defined in [@!RFC7515]) of the presented Verifiable Credential or Verifiable Presentation MUST match one of the array values.
+
+The following is a non-normative example of `client_metadata` request parameter value in a request to present an W3C Verifiable Presentation.
+
+<{{examples/client_metadata/w3c_jwt_verifier_metadata.json}}
 
 #### Presentation Request
 
@@ -2270,13 +2302,22 @@ This section illustrates presentation of a Credential conformant to [@VC_DATA] t
 
 The Credential format identifiers are `ldp_vc` to request a W3C Verifiable Credential and `ldp_vp` to request a W3C Verifiable Presentation.
 
-Cipher suites should use signature suites names defined in [Linked Data Cryptographic Suite Registry](https://w3c-ccg.github.io/ld-cryptosuite-registry/).
-
 #### Example Credential
 
 The following is a non-normative example of the payload of a Verifiable Credential that will be used throughout this section:
 
 <{{examples/credentials/ldp_vc.json}}
+
+#### Metadata
+
+The `vp_formats` parameter of the Verifier metadata or the `vp_formats_supported` parameter of the Wallet metadata MUST have the key `ldp_vp` or `ldp_vc`, and the value MUST be an object consisting of the following name/value pair:
+
+* `proof_type_values`: OPTIONAL. A JSON array containing identifiers of proof types supported for a Data Integrity secured W3C Verifiable Presentation (in case of `ldp_vp`) or W3C Verifiable Credential (in case of `ldp_vc`). If present, the proof `type` parameter (as defined in [@VC_DATA]) of the presented Verifiable Credential or Verifiable Presentation MUST match one of the array values.
+* `cryptosuite_values`: A JSON array containing identifiers of crypotsuites supported with one of the algorithms listed in `proof_type_values` for a Data Integrity secured W3C Verifiable Presentation (in case of `ldp_vp`) or W3C Verifiable Credential (in case of `ldp_vc`). Note that `cryptosuite_values` MAY be used if one of the algorithms in `proof_type_values` supports multiple cryptosuites. If present, the proof `cryptosuite` parameter (as defined in [@VC_DATA_INTEGRITY]) of the presented Verifiable Credential or Verifiable Presentation MUST match one of the array values.
+
+The following is a non-normative example of `client_metadata` request parameter value in a request to present an W3C Verifiable Presentation.
+
+<{{examples/client_metadata/w3c_ldp_verifier_metadata.json}}
 
 #### Presentation Request
 
@@ -2361,11 +2402,26 @@ ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 [@ISO.23220-4] Ann
 The `SessionTranscript` and `Handover` CBOR structure when the invocation does not use the DC API. Also see (#non-dc-api-invocation).
 * Additional restrictions on Authorization Request and Authorization Response parameters to ensure compliance with ISO/IEC TS 18013-7 [@ISO.18013-7] and ISO/IEC 23220-4 [@ISO.23220-4]. For instance, to comply with ISO/IEC TS 18013-7 [@ISO.18013-7], only the same-device flow is supported, the `request_uri` Authorization Request parameter is required, and the Authorization Response has to be encrypted.
 
+Cipher suites should use algorithm identifiers defined in [IANA COSE Algorithms Registry](https://www.iana.org/assignments/cose/cose.xhtml#algorithms) and curve identifiers defined in [IANA COSE Curve Registry](https://www.iana.org/assignments/cose/cose.xhtml#elliptic-curves).
+
 ### Transaction Data
 
 It is RECOMMENDED that each transaction data type defines a data element (`NameSpace`, `DataElementIdentifier`, `DataElementValue`) to be used to return the processed transaction data. Additionally it is RECOMMENDED that it specifies the processing rules, potentially including any hash function to be applied, and the expected resulting structure.
 
 Some document types support some transaction data ((#transaction_data)) to be protected using mdoc authentication, as part of the `DeviceSigned` data structure [@ISO.18013-5]. In those cases, the specifications of these document types include which transaction data types are supported, and the issuer includes the relevant data elements in the `KeyAuthorizations`. If a Wallet receives a request with a `transaction_data` type whose data element is unauthorized, the Wallet MUST reject the request due to an unsupported transaction data type.
+
+### Metadata
+
+The `vp_formats` parameter of the Verifier metadata or the `vp_formats_supported` parameter of the Wallet metadata MUST have the key `mso_mdoc`, and the value MUST be an object consisting of the following name/value pairs:
+
+* `issuer_signed_alg_values`: OPTIONAL. A JSON array containing identifiers of cryptographic algorithms supported for an `IssuerSigned` CBOR structure of an mdoc. If present, the `alg` COSE header (as defined in [@!RFC8152]) of the `IssuerSigned` structure of the presented mdoc MUST match one of the array values.
+* `issuer_signed_crv_values`: OPTIONAL. A JSON array containing identifiers of cryptographic curves supported with one of the algorithms listed in `issuer_signed_alg_values` for an `IssuerSigned` CBOR structure of an mdoc. Note that `issuer_signed_crv_values` MAY be used if one of the algorithms in `issuer_signed_alg_values` supports multiple curves.
+* `device_signed_alg_values`: OPTIONAL. A JSON array containing identifiers of cryptographic algorithms supported for a `DeviceSigned` CBOR structure of an mdoc. If present, the `alg` COSE header (as defined in [@!RFC8152]) of the `DeviceSigned` structure of the presented mdoc MUST match one of the array values.
+* `device_signed_crv_values`: OPTIONAL. A JSON array containing identifiers of cryptographic curves supported with one of the algorithms listed in `device_signed_alg_values` for a `DeviceSigned` CBOR structure of an mdoc. Note that `device_signed_crv_values` MAY be used if one of the algorithms in `device_signed_alg_values` supports multiple curves.
+
+The following is a non-normative example of `client_metadata` request parameter value in a request to present an ISO/IEC 18013-5 mDOC.
+
+<{{examples/client_metadata/mso_mdoc_verifier_metadata.json}}
 
 ### DCQL
 
@@ -2594,12 +2650,12 @@ The following is one profile that can be included in a transaction data type spe
   * `transaction_data_hashes`: Array of hashes, where each hash is calculated using a hash function over the data in the strings received in the `transaction_data` request parameter. Each hash value ensures the integrity of, and maps to, the respective transaction data object. If `transaction_data_hashes_alg` was specified in the request, the hash function MUST be one of its values. If `transaction_data_hashes_alg` was not specified in the request, the hash function MUST be `sha-256`.
   * `transaction_data_hashes_alg`: REQUIRED when this parameter was present in the `transaction_data` request parameter. String representing the hash algorithm identifier used to calculate hashes in `transaction_data_hashes` response parameter.
 
-### Verifier Metadata
+### Metadata
 
-The `vp_formats` parameter of the Verifier metadata MUST have the key `dc+sd-jwt`, and the value MUST be an object consisting of the following name/value pairs:
+The `vp_formats` parameter of the Verifier metadata or the `vp_formats_supported` parameter of the Wallet metadata MUST have the key `dc+sd-jwt`, and the value MUST be an object consisting of the following name/value pairs:
 
-* `sd-jwt_alg_values`: OPTIONAL. A JSON array containing identifiers of cryptographic algorithms the Verifier supports for signing of an Issuer-signed JWT of an SD-JWT. If present, the `alg` JOSE header (as defined in [@!RFC7515]) of the Issuer-signed JWT of the presented SD-JWT MUST match one of the array values.
-* `kb-jwt_alg_values`: OPTIONAL. A JSON array containing identifiers of cryptographic algorithms the Verifier supports for signing of a Key Binding JWT (KB-JWT). If present, the `alg` JOSE header (as defined in [@!RFC7515]) of the presented KB-JWT MUST match one of the array values.
+* `sd-jwt_alg_values`: OPTIONAL. A JSON array containing identifiers of cryptographic algorithms supported for an Issuer-signed JWT of an SD-JWT. If present, the `alg` JOSE header (as defined in [@!RFC7515]) of the Issuer-signed JWT of the presented SD-JWT MUST match one of the array values.
+* `kb-jwt_alg_values`: OPTIONAL. A JSON array containing identifiers of cryptographic algorithms supported for a Key Binding JWT (KB-JWT). If present, the `alg` JOSE header (as defined in [@!RFC7515]) of the presented KB-JWT MUST match one of the array values.
 
 The following is a non-normative example of `client_metadata` request parameter value in a request to present an IETF SD-JWT VC.
 
