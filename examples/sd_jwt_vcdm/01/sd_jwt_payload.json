@@ -1,0 +1,28 @@
+{
+  "iss": "https://issuer.example.com",
+  "iat": 1683000000,
+  "exp": 1883000000,
+  "vct": "https://credentials.example.com/example_credential",
+  "ld": {
+    "_sd": [
+      "E52TMpEqwLtCS7RxePY4l0LjY3pd6jtOaR4y0-AFy-E"
+    ],
+    "@context": [
+      "https://www.w3.org/ns/credentials/v2",
+      "https://w3id.org/citizenship/v3"
+    ],
+    "type": [
+      "VerifiableCredential",
+      "PermanentResidentCard"
+    ]
+  },
+  "_sd_alg": "sha-256",
+  "cnf": {
+    "jwk": {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "TCAER19Zvu3OHF4j4W4vfSVoHIP1ILilDls7vCeGemc",
+      "y": "ZxjiWWbZMQGHVWKVQ4hbSIirsVfuecCE6t4jT9F2HZQ"
+    }
+  }
+}

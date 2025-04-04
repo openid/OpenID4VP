@@ -2907,50 +2907,15 @@ The following outlines a suggested non-normative set of processing steps for SD-
 
 #### Examples
 
-The following is a non-normative example of an unsecured payload of an SD-JWT VCDM (i.e., before applying the modifications to enable selective disclosure and before adding validity claims). This example is derived from the example of an unsecured payload in Section 3.3 of [@!I-D.ietf-oauth-sd-jwt-vc]:
+The following is a non-normative example of an unsecured payload of an SD-JWT VCDM (i.e., before applying the modifications to enable selective disclosure and before adding validity claims).
 
-```json
-{
-   "vct": "https://credentials.example.com/identity_credential",
-   "ld":{
-      "@context":[
-         "https://www.w3.org/ns/credentials/v2",
-         "https://w3id.org/citizenship/v3",
-      ],
-      "type":[
-         "VerifiableCredential",
-         "PermanentResidentCard"
-      ],
-      "credentialSubject":{
-         "givenName": "John",
-         "familyName": "Doe",
-         "birthDate": "1978-07-17"
-      }
-   }
-}
-```
+<{{examples/sd_jwt_vcdm/01/user_claims.json}}
 
-The following is a non-normative example of the SD-JWT payload after enabling selective disclosure:
-```json
-{
-  "_sd": [
-    "vwUhdFvpylx9Sqi2YNBV1dfVK6lCbhXvkH0nThfKFT0"
-  ],
-  "iss": "https://example.com/issuer",
-  "iat": 1683000000,
-  "exp": 1883000000,
-  "vct": "https://credentials.example.com/identity_credential",
-  "_sd_alg": "sha-256",
-  "cnf": {
-    "jwk": {
-      "kty": "EC",
-      "crv": "P-256",
-      "x": "TCAER19Zvu3OHF4j4W4vfSVoHIP1ILilDls7vCeGemc",
-      "y": "ZxjiWWbZMQGHVWKVQ4hbSIirsVfuecCE6t4jT9F2HZQ"
-    }
-  }
-}    
-```
+The following payload would be used in the SD-JWT after encoding the payload above and enabling selective disclosure on the user-specific claims: 
+
+<{{examples/sd_jwt_vcdm/01/sd_jwt_payload.json}}
+
+Note: The decision which claims to make selectively disclosable is up to the Issuer of the Credential. Considerations can be found in Section 6 and Section 9.7 of [@!draft-ietf-oauth-selective-disclosure-jwt].
 
 ## Combining this specification with SIOPv2
 
