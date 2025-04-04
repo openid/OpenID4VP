@@ -726,7 +726,7 @@ If the Verifier responds with any HTTP error response, the Wallet MUST terminate
 
 ## Attachments in Authorization Requests {#attachments-in-authorization-requests}
 
-This section provides guidance on processing and security considerations for the `attachments` parameter defined in (#new_parameters).
+The attachment data mechanism enables to pass additional information to the Wallet. The Verifier MAY include attachments in the Authorization Request, for example to pass a registration certificate to inform about the registered intended use or an authorization attestation to request a specific credential from the Wallet to comply with the disclosure policy.
 
 ### Proof of Possession
 
