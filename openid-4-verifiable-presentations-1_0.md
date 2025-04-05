@@ -325,7 +325,7 @@ The following is a non-normative example of a transaction data content, after ba
 
     * `format`: REQUIRED: String that identifies the format of the attachment. The specific values are out of scope of this specification. It is RECOMMENDED to use collision-resistant names for type values.
     * `data`: REQUIRED: The structure and content of data are format-dependent and not constrained by this specification.
-    * `credential_ids`: OPTIONAL. Array of strings each referencing a Credential requested by the Verifier for which the attachment is relevant. Each string matches the `id` field in a DCQL Credential Query. If not present, the context defined by the value of `format` will decide if this attachment is relevant for all Credentials requested by the Verifier or is used for another purpose.
+    * `credential_ids`: OPTIONAL. Array of strings each referencing a Credential requested by the Verifier for which the attachment is relevant. Each string matches the `id` field in a DCQL Credential Query. If omitted the attachment is relevant to all requested credentials.
 
 See (#attachments-in-authorization-requests) for more details.
 
@@ -631,7 +631,7 @@ If the Verifier responds with any HTTP error response, the Wallet MUST terminate
 
 ## Attachments in Authorization Requests {#attachments-in-authorization-requests}
 
-The attachment data mechanism enables to pass additional information to the Wallet. The Verifier MAY include attachments in the Authorization Request, for example to pass a registration certificate to inform about the registered intended use or an authorization attestation to request a specific credential from the Wallet to comply with the disclosure policy.
+The attachment data mechanism enables to pass additional information to the Wallet to request credentials. The Verifier MAY include attachments in the Authorization Request, for example to pass a registration certificate to inform about the registered intended use or an authorization attestation to request a specific credential from the Wallet to comply with the embedded disclosure policy.
 
 ### Proof of Possession
 
