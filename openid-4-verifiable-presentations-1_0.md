@@ -320,6 +320,24 @@ The following is a non-normative example of a transaction data content, after ba
 }
 ```
 
+`attachments`:
+: OPTIONAL. Array of objects, where each object includes an extra resource that needs to be passed to the Wallet. These resources are intended to provide additional context to the Wallet or the End-User. The Wallet MUST ignore any unrecognized attachment formats. Each object contains the following parameters:
+
+    * `format`: REQUIRED: String that identifies the format of the attachment. The specific values are out of scope of this specification. It is RECOMMENDED to use collision-resistant names for type values.
+    * `data`: REQUIRED: The structure and content of data are format-dependent and not constrained by this specification.
+    * `credential_ids`: OPTIONAL. Array of strings each referencing a Credential requested by the Verifier for which the attachment is relevant. Each string matches the `id` field in a DCQL Credential Query. If omitted the attachment is relevant to all requested credentials.
+
+See (#attachments-in-authorization-requests) for more details.
+
+The following is a non-normative example of an attachment object:
+
+```
+{
+  "format": "eudi_registration_certificate",
+  "data": "eyJhbGciOiJFUzI1....EF0RBtvPClL71TWHlIQ"
+}
+```
+
 ## Existing Parameters
 
 The following additional considerations are given for pre-existing Authorization Request parameters:
@@ -610,6 +628,20 @@ The Wallet then validates the request as specified in OAuth 2.0 [@RFC6749].
 ### Request URI Error Response
 
 If the Verifier responds with any HTTP error response, the Wallet MUST terminate the process.
+
+## Attachments in Authorization Requests {#attachments-in-authorization-requests}
+
+The attachment data mechanism enables to pass additional information to the Wallet to request credentials. The Verifier MAY include attachments in the Authorization Request, for example to pass a registration certificate to inform about the registered intended use or an authorization attestation to request a specific credential from the Wallet to comply with the embedded disclosure policy.
+
+### Proof of Possession
+
+In some cases, the Verifier may want to include attachments that are bound to a key or require verification of their origin.
+
+It is up to the ecosystem profile to define how proof of possession is conveyed. Verifiers SHOULD use the `nonce` and `client_id` parameter from the Authorization Request in any proof-of-possession mechanism to bind to this transaction. The Wallet MUST validate such proofs if defined by the profile and ignore or reject attachments that fail validation.
+
+### Multi-Relying Party Behavior
+
+In some cases, the Verifier may want to include attachments based on specific ecosystem profiles bound to specific Client Identifier Prefixes. In such a scenario, the Authorization Request MUST sent a signed request in the JWS JSON Serialization format, see (#jws-json-serialization).
 
 # Digital Credentials Query Language (DCQL) {#dcql_query}
 
@@ -2086,6 +2118,7 @@ Out of the Authorization Request parameters defined in [@!RFC6749] and (#vp_toke
 * `request`
 * `transaction_data`
 * `dcql_query`
+* `attachments`
 
 The `client_id` parameter MUST be omitted in unsigned requests defined in (#unsigned_request). The Wallet MUST ignore any `client_id` parameter that is present in an unsigned request.
 
@@ -2139,11 +2172,12 @@ This is an example of the payload of a signed OpenID4VP request used with the W3
 
 #### JWS JSON Serialization
 
-The JWS JSON Serialization [@!RFC7515]) allows the Verifier to use multiple Client Identifiers and corresponding key material to protect the same request. This serves use cases where the Verifier requests Credentials belonging to different trust frameworks and, therefore, needs to authenticate in the context of those trust frameworks.
+The JWS JSON Serialization [@!RFC7515]) allows the Verifier to use multiple Client Identifiers and corresponding key material to protect the same request. This serves use cases where the Verifier requests Credentials belonging to different trust frameworks and, therefore, needs to authenticate in the context of those trust frameworks. It also allows the Verifier to add different attachments for each Client Identifier.
 
 In this case, the following request parameters MUST be present in the protected header of the respective `signature` object in the `signatures` array defined in [@!RFC7515, section 7.2.1]:
 
 * `client_id`
+* `attachments`
 
 All other request parameters MUST be present in the `payload` element of the JWS object.
 
@@ -2866,6 +2900,12 @@ established by [@!RFC7591].
 * Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#client_metadata_parameters) of this specification
 
+### attachments
+
+* Name: `attachments`
+* Parameter Usage Location: authorization request
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
+* Reference: (#new_parameters) of this specification
 
 ## Media Types Registry
 
@@ -2934,7 +2974,7 @@ in the IANA "Uniform Resource Identifier (URI) Schemes" registry [@IANA.URI.Sche
 
 # Acknowledgements {#Acknowledgements}
 
-We would like to thank Richard Barnes, Paul Bastian, Vittorio Bertocci, Christian Bormann, John Bradley, Marcos Caceres, Brian Campbell, Lee Campbell, Tim Cappalli, Gabe Cohen, David Chadwick, Andrii Deinega, Rajvardhan Deshmukh, Giuseppe De Marco, Mark Dobrinic, Daniel Fett, Pedro Felix, George Fletcher, Ryan Galluzzo, Timo Glasta, Sam Goto, Mark Haine, Martijn Haring, Fabian Hauck, Roland Hedberg, Joseph Heenan, Bjorn Hjelm, Alen Horvat, Andrew Hughes, Jacob Ideskog, Łukasz Jaromin, Edmund Jay, Michael B. Jones, Tom Jones, Judith Kahrer, Takahiko Kawasaki, Gaurav Khot, Niels Klomp, Ronald Koenig, Markus Kreusch, Adam Lemmon, Hicham Lozi, Daniel McGrogan, Jeremie Miller, Kenichi Nakamura, Gareth Oliver, Aaron Parecki, Andreea Prian, Rolson Quadras, Javier Ruiz, Nat Sakimura, Arjen van Veen, Steve Venema, Jan Vereecken, David Waite, Jacob Ward, and David Zeuthen for their valuable feedback and contributions to this specification.
+We would like to thank Richard Barnes, Paul Bastian, Vittorio Bertocci, Christian Bormann, John Bradley, Marcos Caceres, Brian Campbell, Lee Campbell, Tim Cappalli, Gabe Cohen, David Chadwick, Andrii Deinega, Rajvardhan Deshmukh, Giuseppe De Marco, Mark Dobrinic, Daniel Fett, Pedro Felix, George Fletcher, Ryan Galluzzo, Timo Glasta, Sam Goto, Mark Haine, Martijn Haring, Fabian Hauck, Roland Hedberg, Joseph Heenan, Bjorn Hjelm, Alen Horvat, Andrew Hughes, Jacob Ideskog, Łukasz Jaromin, Edmund Jay, Michael B. Jones, Tom Jones, Judith Kahrer, Takahiko Kawasaki, Gaurav Khot, Niels Klomp, Ronald Koenig, Markus Kreusch, Adam Lemmon, Hicham Lozi, Daniel McGrogan, Jeremie Miller, Mirko Mollik, Kenichi Nakamura, Gareth Oliver, Aaron Parecki, Andreea Prian, Rolson Quadras, Javier Ruiz, Nat Sakimura, Arjen van Veen, Steve Venema, Jan Vereecken, David Waite, Jacob Ward, and David Zeuthen for their valuable feedback and contributions to this specification.
 
 # Notices
 
@@ -2950,12 +2990,13 @@ The technology described in this specification was made available from contribut
 
    -26
 
-   * renamed "Client ID Scheme" to "Client ID Prefix", and updated metadata (`client_id_prefixes_supported`) and `error_description` to match
+   * renamed "Client ID Scheme" to "Client ID Prefix", and updated metadata (`client_id_prefixes_supported`) and `error_description` to match  
+   * add `attachments` to list of authorization parameters   
    * remove DIF Presentation Exchange as a query language option
    * Changes in the DCQL query parameters specific to W3C VCs and AnonCreds
 
    -25
-
+   
    * clarify value matching in DCQL
    * clarify why requests using redirect_uri scheme cannot be signed
    * add `trusted_authorities` to DCQL  
