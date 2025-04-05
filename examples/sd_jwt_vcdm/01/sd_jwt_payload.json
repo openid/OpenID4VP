@@ -4,9 +4,6 @@
   "exp": 1883000000,
   "vct": "https://credentials.example.com/example_credential",
   "ld": {
-    "_sd": [
-      "E52TMpEqwLtCS7RxePY4l0LjY3pd6jtOaR4y0-AFy-E"
-    ],
     "@context": [
       "https://www.w3.org/ns/credentials/v2",
       "https://w3id.org/citizenship/v3"
@@ -14,7 +11,14 @@
     "type": [
       "VerifiableCredential",
       "PermanentResidentCard"
-    ]
+    ],
+    "credentialSubject": {
+      "_sd": [
+        "6BJdQrO24ejTTMsFI-wGiJJmGrbseWc5IwCCp4NAJ0k",
+        "NTDVsbVAwS9AnUVq-_YG_wv0yGD0bv2JstX-AmvN65I",
+        "ts0pyPntLjD0_NcgNOI3hd_2WjbZw21p2LfqhOC0b-U"
+      ]
+    }
   },
   "_sd_alg": "sha-256",
   "cnf": {

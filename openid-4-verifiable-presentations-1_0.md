@@ -2911,7 +2911,7 @@ The following is a non-normative example of an unsecured payload of an SD-JWT VC
 
 <{{examples/sd_jwt_vcdm/01/user_claims.json}}
 
-The following payload would be used in the SD-JWT after encoding the payload above and enabling selective disclosure on the user-specific claims: 
+The following payload would be used in the SD-JWT after encoding the payload above and enabling selective disclosure on the user-specific claims within `credentialSubject`:
 
 <{{examples/sd_jwt_vcdm/01/sd_jwt_payload.json}}
 

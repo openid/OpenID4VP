@@ -7,7 +7,7 @@ user_claims:
         type:
           - VerifiableCredential
           - PermanentResidentCard
-        !sd credentialSubject:
+        credentialSubject:
           !sd givenName: John
           !sd familyName: Doe
           !sd birthDate: "1978-07-17"
