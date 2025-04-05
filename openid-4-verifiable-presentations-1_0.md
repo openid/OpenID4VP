@@ -256,7 +256,8 @@ Presentation of Verifiable Credentials using OpenID for Verifiable Presentations
 The Authorization Request follows the definition given in [@!RFC6749] taking into account the recommendations given in [@!RFC9700].
 
 The Verifier MAY send an Authorization Request as a Request Object either by value or by reference, as defined in the JWT-Secured Authorization Request (JAR) [@RFC9101]. Verifiers MUST include the `typ` Header Parameter in Request Objects with the value `oauth-authz-req+jwt`, as defined in [@RFC9101]. Wallets MUST NOT process Request Objects where the `typ` Header Parameter is not present or does not have the value `oauth-authz-req+jwt`.
-Note that the `client_id` claim is required as defined below and would be redundant with a possible `iss` claim in the Request Object which is commonly used in JAR. To not break existing JAR implementations, the `iss` claim MAY be present in the Request Object, but MUST ignored by the Wallet if present.
+
+The `client_id` claim is required as defined below and would be redundant with a possible `iss` claim in the Request Object which is commonly used in JAR. To not break existing JAR implementations, the `iss` claim MAY be present in the Request Object. However, even if it is present, the Wallet MUST ignore it.
 
 This specification defines a new mechanism for the cases when the Wallet wants to provide to the Verifier details about its technical capabilities to
 allow the Verifier to generate a request that matches the technical capabilities of that Wallet.
