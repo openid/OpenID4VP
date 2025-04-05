@@ -915,8 +915,8 @@ rules are defined in (#selecting_claims).
 The following section describes the logic that applies for selecting claims 
 and for selecting credentials.
 
-When the same Credential fulfills more than one Credential Query in a request, that Credential MUST contain
-the combination of claims requested by those Credential Queries. However, that Credential MUST NOT contain
+When the same Credential fulfills more than one Credential Query in a request, that Credential MAY contain
+the combination of claims requested by those Credential Queries. However, in this case, the Credential MUST NOT contain
 claims not requested by any of the Credential Queries.
 
 ### Selecting Claims {#selecting_claims}
