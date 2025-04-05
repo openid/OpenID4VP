@@ -2340,9 +2340,17 @@ The following is a non-normative example of a DCQL request for an AnonCreds Cred
 
 ### Presentation Response
 
-The AnonCreds Credential format only allows for a nonce that has to be exactly 80 bit long, whereas other Credential formats allow for the different inputs to be signed over in a proof of possession. For AnonCreds, everything that should be part of input to generate a proof MUST be part of said nonce. Currently, this specification does not support transaction data for AnonCreds and only supports the `nonce` from the Authorization Request and an audience binding as inputs for the proof generation. The audience binding MUST be the value of the Client Identifier, except for requests over the DC API where it MUST be the Origin prefixed with `origin:`, as described in (#dc_api_response).
+The AnonCreds Credential format only allows for a `nonce` that has to be exactly 80 bit long, whereas other Credential formats
+allow for the different inputs to be signed over in a proof of possession for Cryptographic Holder Binding. For AnonCreds, everything that should be part of
+the input to generate that proof MUST be part of the `nonce`. Currently, this specification does not support transaction data
+for AnonCreds and only supports the `nonce` from the Authorization Request and an audience binding as inputs for
+the proof generation. The audience binding MUST be the value of the Client Identifier, except for requests over the DC API where it MUST be
+the Origin prefixed with `origin:`, as described in (#dc_api_response).
 
-To compute to the `nonce` parameter that is used as an input for Prove and Verify operations of AnonCreds, the `nonce` from the Authorization Request must be concatenated with the audience binding (as defined above) and hashed using sha-256. The first 80 bits of that digest are then used as the `nonce` paramter for the AnonCreds proof. This `nonce` MUST then be used as nonce (also called n_1) for the Presentation generation and verification as defined in sections 9.6 and 9.7 of [@Hyperledger.AnonCreds].
+To compute to the `nonce` parameter that is used as an input for the Prove and Verify operations of AnonCreds, the `nonce` from the
+Authorization Request must be concatenated with the audience binding (as defined above) and hashed using sha-256. The first
+80 bits of that digest are then used as the `nonce` paramter for the AnonCreds proof. This computed nonce MUST then be used as nonce (also called n_1) for
+the Presentation generation and verification as defined in sections 9.6 and 9.7 of [@Hyperledger.AnonCreds].
 
 The following is a non-normative example of the content of the credential in the `vp_token` parameter:
 
