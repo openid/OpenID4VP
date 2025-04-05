@@ -1710,7 +1710,7 @@ Implementers should be aware that this specification uses several specifications
 
 - OpenID Federation 1.0 draft -42 [@!OpenID.Federation]
 - SIOPv2 draft -13 [@!SIOPv2]
-- SD-JWT-based Verifiable Credentials (SD-JWT VC) draft -08 [I-D.ietf-oauth-sd-jwt-vc]
+- SD-JWT-based Verifiable Credentials (SD-JWT VC) draft -08 [@!I-D.ietf-oauth-sd-jwt-vc]
 - W3C Digital Credentials API - [@!W3C.Digital_Credentials_API]
 
 While breaking changes to these specifications are not expected, should they occur, OpenID4VP implementations should continue to use the specifically referenced draft versions above in preference to the final versions, unless updated by a profile or new version of this specification.
