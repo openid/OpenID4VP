@@ -1784,15 +1784,6 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
   </front>
 </reference>
 
-<reference anchor="IANA.COSE" target="https://www.iana.org/assignments/cose/cose.xhtml">
-        <front>
-          <title>CBOR Object Signing and Encryption (COSE)</title>
-          <author>
-            <organization>IANA</organization>
-          </author>
-        </front>
-</reference>
-
 <reference anchor="SIOPv2" target="https://openid.net/specs/openid-connect-self-issued-v2-1_0.html">
   <front>
     <title>Self-Issued OpenID Provider V2</title>
