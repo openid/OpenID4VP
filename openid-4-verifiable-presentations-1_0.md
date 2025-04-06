@@ -1626,7 +1626,7 @@ The following is a non-normative example of the payload of a Verifiable Presenta
 
 In the example above, the requested `nonce` value is included as the `nonce` and `client_id` as the `aud` value in the proof of the Verifiable Presentation.
 
-The following is a non-normative example of a Verifiable Presentation of a format identifier `ldp_vp` without a `proof` property:
+The following is a non-normative example of a Verifiable Presentation of a format identifier `ldp_vp` with a `proof` property:
 
 ```json
 {
@@ -1634,13 +1634,14 @@ The following is a non-normative example of a Verifiable Presentation of a forma
   "type": "VerifiablePresentation",
   "verifiableCredential": [ ... ],
   "proof": {
-    "type": "RsaSignature2018",
+    "type": "DataIntegrityProof",
+    "cryptosuite": "ecdsa-rdfc-2019",
     "created": "2018-09-14T21:19:10Z",
     "proofPurpose": "authentication",
     "verificationMethod": "did:example:ebfeb1f712ebc6f1c276e12ec21#keys-1",    
     "challenge": "343s$FSFDa-",
-    "domain": "s6BhdRkqt3",
-    "jws": "eyJhb...nKb78"
+    "domain": "x509_san_dns:client.example.org",
+    "proofValue": "z2iAR...3oj9Q8"
   }
 }
 ```
@@ -2313,7 +2314,7 @@ The following is a non-normative example of the payload of a Verifiable Credenti
 The `vp_formats` parameter of the Verifier metadata or the `vp_formats_supported` parameter of the Wallet metadata MUST have the key `ldp_vp` or `ldp_vc`, and the value MUST be an object consisting of the following name/value pair:
 
 * `proof_type_values`: OPTIONAL. A JSON array containing identifiers of proof types supported for a Data Integrity secured W3C Verifiable Presentation (in case of `ldp_vp`) or W3C Verifiable Credential (in case of `ldp_vc`). If present, the proof `type` parameter (as defined in [@VC_DATA]) of the presented Verifiable Credential or Verifiable Presentation MUST match one of the array values.
-* `cryptosuite_values`: A JSON array containing identifiers of crypotsuites supported with one of the algorithms listed in `proof_type_values` for a Data Integrity secured W3C Verifiable Presentation (in case of `ldp_vp`) or W3C Verifiable Credential (in case of `ldp_vc`). Note that `cryptosuite_values` MAY be used if one of the algorithms in `proof_type_values` supports multiple cryptosuites. If present, the proof `cryptosuite` parameter (as defined in [@VC_DATA_INTEGRITY]) of the presented Verifiable Credential or Verifiable Presentation MUST match one of the array values.
+* `cryptosuite_values`: OPTIONAL. A JSON array containing identifiers of crypotsuites supported with one of the algorithms listed in `proof_type_values` for a Data Integrity secured W3C Verifiable Presentation (in case of `ldp_vp`) or W3C Verifiable Credential (in case of `ldp_vc`). Note that `cryptosuite_values` MAY be used if one of the algorithms in `proof_type_values` supports multiple cryptosuites. If present, the proof `cryptosuite` parameter (as defined in [@VC_DATA_INTEGRITY]) of the presented Verifiable Credential or Verifiable Presentation MUST match one of the array values.
 
 The following is a non-normative example of `client_metadata` request parameter value in a request to present an W3C Verifiable Presentation.
 
