@@ -2303,6 +2303,8 @@ This section illustrates presentation of a Credential conformant to [@VC_DATA] t
 
 The Credential format identifiers are `ldp_vc` to request a W3C Verifiable Credential and `ldp_vp` to request a W3C Verifiable Presentation.
 
+Cipher suites should use Data Integrity compatible securing mechanisms defined in [Verifiable Credential Extensions](https://www.w3.org/TR/vc-extensions/#securing-mechanisms).
+
 #### Example Credential
 
 The following is a non-normative example of the payload of a Verifiable Credential that will be used throughout this section:
