@@ -1,6 +1,7 @@
 {
   "@context": [
-    "https://www.w3.org/2018/credentials/v1"
+    "https://www.w3.org/2018/credentials/v1",
+    "https://w3id.org/security/data-integrity/v2"
   ],
   "type": [
     "VerifiablePresentation"
@@ -9,7 +10,8 @@
     {
       "@context": [
         "https://www.w3.org/2018/credentials/v1",
-        "https://www.w3.org/2018/credentials/examples/v1"
+        "https://www.w3.org/2018/credentials/examples/v1",
+        "https://w3id.org/security/data-integrity/v2"
       ],
       "id": "https://example.com/credentials/1872",
       "type": [
@@ -19,7 +21,7 @@
       "issuer": {
         "id": "did:example:issuer"
       },
-      "issuanceDate": "2010-01-01T19:23:24Z",
+      "issuanceDate": "2025-03-19T00:00:00Z",
       "credentialSubject": {
         "given_name": "Max",
         "family_name": "Mustermann",
@@ -32,9 +34,10 @@
         }
       },
       "proof": {
-        "type": "Ed25519Signature2018",
-        "created": "2021-03-19T15:30:15Z",
-        "jws": "eyJhb...JQdBw",
+        "type": "DataIntegrityProof",
+        "cryptosuite": "eddsa-rdfc-2022",
+        "created": "2025-03-19T15:30:15Z",
+        "proofValue": "z5C5b...EtszK",
         "proofPurpose": "assertionMethod",
         "verificationMethod": "did:example:issuer#keys-1"
       }
@@ -43,11 +46,12 @@
   "id": "ebc6f1c2",
   "holder": "did:example:holder",
   "proof": {
-    "type": "Ed25519Signature2018",
-    "created": "2021-03-19T15:30:15Z",
+    "type": "DataIntegrityProof",
+    "cryptosuite": "eddsa-rdfc-2022",
+    "created": "2025-04-04T10:12:15Z",
     "challenge": "n-0S6_WzA2Mj",
-    "domain": "https://client.example.org/cb",
-    "jws": "eyJhb...IAoDA",
+    "domain": "x509_san_dns:example.com",
+    "proofValue": "z5s8c...AD3a9d",
     "proofPurpose": "authentication",
     "verificationMethod": "did:example:holder#key-1"
   }

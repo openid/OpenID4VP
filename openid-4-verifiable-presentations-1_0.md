@@ -517,9 +517,9 @@ Location: https://wallet.example.org/universal-link?
   &dcql_query=...
   &nonce=n-0S6_WzA2Mj
   &client_metadata=%7B%22vp_formats%22%3A%7B%22jwt_vp_json%22%3A%
-    7B%22alg%22%3A%5B%22EdDSA%22%2C%22ES256K%22%5D%7D%2C%22ldp_vp
-    %22%3A%7B%22proof_type%22%3A%5B%22Ed25519Signature2018%22%5D%
-    7D%7D%7D
+  7B%22alg_values%22%3A%5B%22EdDSA%22%2C%22ES256K%22%5D%7D%2C%22l
+  dp_vp%22%3A%7B%22proof_type_values%22%3A%5B%22Ed25519Signature2
+  020%22%5D%7D%7D%7D
 ```
 
 * `https`: This value indicates that the Client Identifier is an Entity Identifier defined in OpenID Federation [@!OpenID.Federation]. Since the Entity Identifier is already defined to start with `https:`, this Client Identifier Prefix MUST NOT be prefixed additionally. Processing rules given in [@!OpenID.Federation] MUST be followed. Automatic Registration as defined in [@!OpenID.Federation] MUST be used. The Authorization Request MAY also contain a `trust_chain` parameter. The final Verifier metadata is obtained from the Trust Chain after applying the policies, according to [@!OpenID.Federation]. The `client_metadata` parameter, if present in the Authorization Request, MUST be ignored when this Client Identifier Prefix is used. Example Client Identifier: `https://federation-verifier.example.com`.

@@ -14,7 +14,14 @@
       },
       "ldp_vp": {
         "proof_type_values": [
-          "Ed25519Signature2018"
+          "DataIntegrityProof",
+          "Ed25519Signature2020"
+        ],
+        "cryptosuite_values": [
+          "ecdsa-rdfc-2019",
+          "ecdsa-sd-2023",
+          "ecdsa-jcs-2019",
+          "bbs-2023"
         ]
       }
     }

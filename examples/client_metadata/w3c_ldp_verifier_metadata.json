@@ -1,12 +1,28 @@
 {
   "vp_formats": {
     "ldp_vc": {
-      "proof_type_values": ["Ed25519Signature2018", "DataIntegrityProof"],
-      "cryptosuite_values": ["eddsa-jcs-2022", "eddsa-rdfc-202"]
+      "proof_type_values": [
+        "DataIntegrityProof", 
+        "Ed25519Signature2020"
+      ],
+      "cryptosuite_values": [
+        "ecdsa-rdfc-2019",
+        "ecdsa-sd-2023",
+        "ecdsa-jcs-2019",
+        "bbs-2023"
+      ]
     },
     "ldp_vp": {
-      "proof_type_values": ["Ed25519Signature2018", "DataIntegrityProof"],
-      "cryptosuite_values": ["eddsa-jcs-2022", "eddsa-rdfc-202"]
+      "proof_type_values": [
+        "DataIntegrityProof", 
+        "Ed25519Signature2020"
+      ],
+      "cryptosuite_values": [
+        "ecdsa-rdfc-2019",
+        "ecdsa-sd-2023",
+        "ecdsa-jcs-2019",
+        "bbs-2023"
+      ]
     }
   }
 }
