@@ -641,7 +641,7 @@ It is up to the ecosystem profile to define how proof of possession is conveyed.
 
 ### Multi-Relying Party Behavior
 
-In some cases, the Verifier may want to include attachments based on specific ecosystem profiles bound to specific Client Identifier Prefixes. In such a scenario, the Authorization Request MUST sent a signed request in the JWS JSON Serialization format, see (#jws-json-serialization).
+In some cases, the Verifier may want to include attachments based on specific ecosystem profiles bound to specific Client Identifier Prefixes. In such a scenario, the Authorization Request MUST send a signed request in the JWS JSON Serialization format, see (#jws-json-serialization).
 
 # Digital Credentials Query Language (DCQL) {#dcql_query}
 
