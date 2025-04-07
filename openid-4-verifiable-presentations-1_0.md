@@ -1820,7 +1820,7 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
     
 *   **Prevention of Profiling and Tracking:** The wallet's design incorporates data minimization principles, ensuring that only essential information is shared during interactions. This limits opportunities for profiling or linking user activities across different services
 
-### Verifier's Use, Retention and Disclosure Limitation (#verifiers_use_retntion_and_disclosure_limitation)
+### Verifier's Use, Retention and Disclosure Limitation {#verifiers_use_retntion_and_disclosure_limitation}
 
 Verifier should
 
