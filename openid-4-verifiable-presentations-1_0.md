@@ -1330,7 +1330,7 @@ The Wallet MUST ignore any unrecognized parameters.
 
 ## Encrypted Responses {#response_encryption}
 
-This section defines how an Authorization Response containing a VP Token can be encrypted at the application level when the Response Type value is `vp_token` or `vp_token id_token`. Encrypting the Authorization Response can prevent personal data in the Authorization Response from leaking, when the Authorization Response is returned through the front channel (e.g., the browser). For security considerations see (#encrypting_unsigned_response).
+This section defines how an Authorization Response containing a VP Token can be encrypted at the application level when the Response Type value is `vp_token` or `vp_token id_token`. Encrypting the Authorization Response can, for example, prevent personal data in the Authorization Response from leaking. For security considerations see (#encrypting_unsigned_response).
 
 To encrypt the Authorization Response, implementations MUST use an unsigned, encrypted JWT as described in [@!RFC7519]. The `enc` algorithm used MUST be obtained from `authorization_encrypted_response_enc` claim within the `client_metadata`. The `alg` algorithm used MUST be the `alg` value of the chosen `jwk`.
 
