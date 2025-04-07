@@ -1334,7 +1334,7 @@ This section defines how an Authorization Response containing a VP Token can be 
 
 To encrypt the Authorization Response, implementations MUST use an unsigned, encrypted JWT as described in [@!RFC7519]. The `enc` algorithm used MUST be obtained from `authorization_encrypted_response_enc` claim within the `client_metadata`. The `alg` algorithm used MUST be the `alg` value of the chosen `jwk`.
 
-The Verifier's public key for input into the key agreement MUST be obtained from the `jwks` claim within the `client_metadata` request parameter, within the metadata defined in the Entity Configuration when [@!OpenID.Federation] is used, or other mechanisms. The Wallet MAY select any key for which encryption is a valid operation.
+The Verifier's public key for input into the key agreement SHOULD be obtained from the `jwks` claim within the `client_metadata` request parameter, within the metadata defined in the Entity Configuration when [@!OpenID.Federation] is used, or other mechanisms. The Wallet MAY select any key for which encryption is a valid operation.
 
 Note that for the ECDH JWE algorithms (from section 4.6 of [@!RFC7518]), the `apu` and `apv` values are inputs
 into the key derivation process that is used to derive the content encryption key. Regardless of algorithm used, the values are always part of the AEAD tag computation so will still be bound to the encrypted response.
