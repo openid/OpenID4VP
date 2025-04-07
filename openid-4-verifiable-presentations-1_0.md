@@ -1709,6 +1709,24 @@ https://openid.net/certification/conformance-testing-for-openid-for-verifiable-p
 
 # Privacy Considerations
 
+Many privacy considerations are specific to the credential format and associated proof type used in any particular presentation.
+This section focuses on privacy considerations that are specific to the presentation protocol with some treatment also
+given to considerations that apply across some common credential formats.
+
+## Selective Disclosure
+
+Selective disclosure is a data minimization technique that allows for sharing only the specific information needed from
+a credential without revealing everything.
+
+The DCQL helps facilitate selective disclosure by allowing the Verifier to specify the claims it is interested in,
+allowing the Wallet to disclose only the claims that are relevant to the Verifier's request.
+
+Some credential formats support selective disclosure and a salted-hash based approach is one common approach.
+Considerable discourse regarding unlinkability in salted-hash based selective disclosure mechanisms is provided in
+[@?I-D.ietf-oauth-selective-disclosure-jwt, section 10.1]. One technique mentioned to achieve some important
+unlinkability properties is the use of batch issuance, which is supported in [@?OpenID4VCI], with individual credentials
+being presented only once.
+
 ## Authorization Requests with Request URI
 
 If the Wallet is acting within a trust framework that allows the Wallet to determine whether a 'request_uri' belongs to a certain 'client_id', the Wallet is RECOMMENDED to validate the Verifier's authenticity and authorization given by 'client_id' and that the 'request_uri' corresponds to this Verifier. If the link cannot be established in those cases, the Wallet SHOULD refuse the request or ask the End-User for advise.
@@ -1784,6 +1802,16 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
   </front>
 </reference>
 
+<reference anchor="OpenID4VCI" target="https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html">
+  <front>
+    <title>OpenID for Verifiable Credential Issuance - draft 15</title>
+    <author fullname="Torsten Lodderstedt"/>
+    <author fullname="Kristina Yasuda"/>
+    <author fullname="Tobias Looker"/>
+    <date day="19" month="December" year="2024"/>
+  </front>
+</reference>
+
 <reference anchor="SIOPv2" target="https://openid.net/specs/openid-connect-self-issued-v2-1_0.html">
   <front>
     <title>Self-Issued OpenID Provider V2</title>
@@ -1799,6 +1827,8 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
    <date day="28" month="November" year="2023"/>
   </front>
 </reference>
+
+
 
 <reference anchor="OpenID.Core" target="https://openid.net/specs/openid-connect-core-1_0.html">
   <front>
@@ -3001,6 +3031,7 @@ The technology described in this specification was made available from contribut
    -26
 
    * renamed "Client ID Scheme" to "Client ID Prefix", and updated metadata (`client_id_prefixes_supported`) and `error_description` to match
+   * added some more (non-exhaustive) privacy considerations with pointers to SD-JWT and OpenID4VCI
    * remove DIF Presentation Exchange as a query language option
    * Changes in the DCQL query parameters specific to W3C VCs and AnonCreds
 
