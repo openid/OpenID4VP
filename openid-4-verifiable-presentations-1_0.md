@@ -2059,7 +2059,7 @@ Wallet providers and verifiers should:
         <front>
           <title>ISO/IEC 29100:2024 Information technology — Security techniques — Privacy framework</title>
           <author>
-            <organization> ISO/IEC JTC 1/SC 27 Information security, cybersecurity and privacy protection>
+            <organization> ISO/IEC JTC 1/SC 27 Information security, cybersecurity and privacy protection</organization>
           </author>
           <date year="2024"/>
         </front>
