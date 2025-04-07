@@ -320,21 +320,22 @@ The following is a non-normative example of a transaction data content, after ba
 }
 ```
 
-`attachments`:
-: OPTIONAL. Array of objects, where each object includes an extra resource that needs to be passed to the Wallet. These resources are intended to provide additional context to the Wallet or the End-User. The Wallet MUST ignore any unrecognized attachment formats. Each object contains the following parameters:
+`verifier_attestations`:
+: OPTIONAL. An array of signed objects used by the Relying Party (Verifier) to convey attested information relevant to the Credential Request. These attestations MAY include Verifier metadata, policies, trust status, or authorizations. Attestations are intended to support authorization decisions, inform Wallet policy enforcement, or enrich the End-User consent dialog. Each object has the following structure:
 
-    * `format`: REQUIRED: String that identifies the format of the attachment. The specific values are out of scope of this specification. It is RECOMMENDED to use collision-resistant names for type values.
-    * `data`: REQUIRED: The structure and content of data are format-dependent and not constrained by this specification.
-    * `credential_ids`: OPTIONAL. Array of strings each referencing a Credential requested by the Verifier for which the attachment is relevant. Each string matches the `id` field in a DCQL Credential Query. If omitted the attachment is relevant to all requested credentials.
+    * `type`: REQUIRED. A string that identifies the type of the attestation. Ecosystems SHOULD use collision-resistant identifiers.
+    * `data`: REQUIRED. A signed object (e.g. a JWT), whose payload structure is defined by the ecosystem or profile. The Wallet MUST validate this signature and ensure binding.
+    * `credential_ids`: OPTIONAL. Array of strings each referencing a Credential requested by the Verifier for which the attestation is relevant. Each string matches the `id` field in a DCQL Credential Query. If omitted the attestation is relevant to all requested credentials.
 
-See (#attachments-in-authorization-requests) for more details.
+See (#verifier-attestations) for more details.
 
-The following is a non-normative example of an attachment object:
+The following is a non-normative example of an attested object:
 
-```
+```json
 {
-  "format": "eudi_registration_certificate",
-  "data": "eyJhbGciOiJFUzI1....EF0RBtvPClL71TWHlIQ"
+  "type": "eudi_registration_certificate",
+  "data": "eyJhbGciOiJFUzI1...EF0RBtvPClL71TWHlIQ",
+  "credential_ids": [ "id_card" ]
 }
 ```
 
@@ -629,19 +630,28 @@ The Wallet then validates the request as specified in OAuth 2.0 [@RFC6749].
 
 If the Verifier responds with any HTTP error response, the Wallet MUST terminate the process.
 
-## Attachments in Authorization Requests {#attachments-in-authorization-requests}
+## Verifier Attestations {#verifier-attestations}
 
-The attachment data mechanism enables to pass additional information to the Wallet to request credentials. The Verifier MAY include attachments in the Authorization Request, for example to pass a registration certificate to inform about the registered intended use or an authorization attestation to request a specific credential from the Wallet to comply with the embedded disclosure policy.
+Attachments allow the Verifier to provide additional context or metadata as part of the Authorization Request. These inputs can support a variety of use cases, such as helping the Wallet apply policy decisions, validating eligibility, or presenting more meaningful information to the End-User during consent.
+
+Each attachment is an object containing a type identifier and associated data. The format and semantics of these objects are intentionally flexible and defined by ecosystem or profile-specific rules.
+
+For example, a Verifier might include:
+
+- A **registration certificate** issued by a trusted authority, to prove that it is authorized to request certain credentials.
+- An **attestation of intended use**, declaring why a particular credential is being requested.
+- A **policy statement**, such as a signed document describing acceptable use, retention periods, or access rights.
+
+Attachments are optional. Wallets MAY use them to make authorization decisions or to enhance the user experience, but they MUST ignore any unrecognized or unsupported attachment types.
 
 ### Proof of Possession
 
-In some cases, the Verifier may want to include attachments that are bound to a key or require verification of their origin.
+This specification supports two models for proof of possession:
 
-It is up to the ecosystem profile to define how proof of possession is conveyed. Verifiers SHOULD use the `nonce` and `client_id` parameter from the Authorization Request in any proof-of-possession mechanism to bind to this transaction. The Wallet MUST validate such proofs if defined by the profile and ignore or reject attachments that fail validation.
+- **claim-bound attestations**: The attestation is not signed by the Relying Party, but bound to it. The exact binding mechanism is defined by the type of the definition. For example for JWTs, the `sub` claim is including the distinguished name of the Certificate that was used to sign the request. The binding may also include the client_id parameter.
+- **key-bound attestations**: The attestation is signed by the Relying Party and bound to it. To bind the attestation to the presentation request, it should include the `nonce` and `client_id` parameters in the signature.
 
-### Multi-Relying Party Behavior
-
-In some cases, the Verifier may want to include attachments based on specific ecosystem profiles bound to specific Client Identifier Prefixes. In such a scenario, the Authorization Request MUST send a signed request in the JWS JSON Serialization format, see (#jws-json-serialization).
+ The Wallet MUST validate such proofs if defined by the profile and ignore or reject attachments that fail validation.
 
 # Digital Credentials Query Language (DCQL) {#dcql_query}
 
@@ -2118,7 +2128,7 @@ Out of the Authorization Request parameters defined in [@!RFC6749] and (#vp_toke
 * `request`
 * `transaction_data`
 * `dcql_query`
-* `attachments`
+* `verifier_attestations`
 
 The `client_id` parameter MUST be omitted in unsigned requests defined in (#unsigned_request). The Wallet MUST ignore any `client_id` parameter that is present in an unsigned request.
 
@@ -2172,12 +2182,12 @@ This is an example of the payload of a signed OpenID4VP request used with the W3
 
 #### JWS JSON Serialization
 
-The JWS JSON Serialization [@!RFC7515]) allows the Verifier to use multiple Client Identifiers and corresponding key material to protect the same request. This serves use cases where the Verifier requests Credentials belonging to different trust frameworks and, therefore, needs to authenticate in the context of those trust frameworks. It also allows the Verifier to add different attachments for each Client Identifier.
+The JWS JSON Serialization [@!RFC7515]) allows the Verifier to use multiple Client Identifiers and corresponding key material to protect the same request. This serves use cases where the Verifier requests Credentials belonging to different trust frameworks and, therefore, needs to authenticate in the context of those trust frameworks. It also allows the Verifier to add different attestations for each Client Identifier.
 
 In this case, the following request parameters MUST be present in the protected header of the respective `signature` object in the `signatures` array defined in [@!RFC7515, section 7.2.1]:
 
 * `client_id`
-* `attachments`
+* `verifier_attestations`
 
 All other request parameters MUST be present in the `payload` element of the JWS object.
 
@@ -2900,9 +2910,9 @@ established by [@!RFC7591].
 * Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#client_metadata_parameters) of this specification
 
-### attachments
+### verifier_attestations
 
-* Name: `attachments`
+* Name: `verifier_attestations`
 * Parameter Usage Location: authorization request
 * Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#new_parameters) of this specification
@@ -2991,7 +3001,7 @@ The technology described in this specification was made available from contribut
    -26
 
    * renamed "Client ID Scheme" to "Client ID Prefix", and updated metadata (`client_id_prefixes_supported`) and `error_description` to match  
-   * add `attachments` to list of authorization parameters   
+   * add `verifier_attestations` to list of authorization parameters
    * remove DIF Presentation Exchange as a query language option
    * Changes in the DCQL query parameters specific to W3C VCs and AnonCreds
 
