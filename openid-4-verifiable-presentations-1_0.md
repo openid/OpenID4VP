@@ -2314,7 +2314,7 @@ This section illustrates the presentation of a Credential conformant to [@VC_DAT
 
 The Credential Format Identifiers are `jwt_vc_json` to request a W3C Verifiable Credential and `jwt_vp_json` to request a Verifiable Presentation compliant to the [@VC_DATA] specification.
 
-If `jwt_vc_json` is used, the Credential is returned without Holder Binding. Therefore, the Verifier MUST set the `allow_replay` parameter in the Credential Query to `true`. Wallets MUST reject requests with `jwt_vc_json` that do not have the `allow_replay` parameter set to `true`.
+If `jwt_vc_json` is used, the Credential is returned without Holder Binding. Therefore, the Verifier MUST set the `allow_replay` parameter in the Credential Query to `true` if it is using `jwt_vc_json`. Otherwise, `allow_replay` MUST be `false`. Wallets MUST reject requests that do not follow these rules.
 
 Cipher suites should use algorithm names defined in [IANA JOSE Algorithms Registry](https://www.iana.org/assignments/jose/jose.xhtml#web-signature-encryption-algorithms).
 
@@ -2357,7 +2357,7 @@ This section illustrates presentation of a Credential conformant to [@VC_DATA] t
 
 The Credential Format Identifiers are `ldp_vc` to request a W3C Verifiable Credential and `ldp_vp` to request a Verifiable Presentation compliant to the [@VC_DATA] specification.
 
-If `ldp_vc` is used, the Credential is returned without Holder Binding. Therefore, the Verifier MUST set the `allow_replay` parameter in the Credential Query to `true`. Wallets MUST reject requests with `ldp_vc` that do not have the `allow_replay` parameter set to `true`.
+If `ldp_vc` is used, the Credential is returned without Holder Binding. Therefore, the Verifier MUST set the `allow_replay` parameter in the Credential Query to `true` if it is using `ldp_vc`. Otherwise, `allow_replay` MUST be `false`. Wallets MUST reject requests that do not follow these rules.
 
 Cipher suites should use signature suites names defined in [Linked Data Cryptographic Suite Registry](https://w3c-ccg.github.io/ld-cryptosuite-registry/).
 
@@ -3080,7 +3080,7 @@ The technology described in this specification was made available from contribut
    * make example request and example SD-JWT key binding JWT consistent
    * add note that there are a choice of encryption JWE algorithms available, including the HPKE draft
    * add `transaction_data` & `dcql_query` to list of allowed parameters in W3C Digital Credentials API appendix
-   * change credential Format Identifier `vc+sd-jwt` to `dc+sd-jwt` to align with the media type in draft -06 of [@I-D.ietf-oauth-sd-jwt-vc] and update `typ` accordingly in examples
+   * change Credential Format Identifier `vc+sd-jwt` to `dc+sd-jwt` to align with the media type in draft -06 of [@I-D.ietf-oauth-sd-jwt-vc] and update `typ` accordingly in examples
    * remove references to the openid4vci credential format section
    * clarified what profiling OID4VP means
    * moved credential format specific DCQL parameters to the annex
