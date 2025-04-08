@@ -3175,6 +3175,10 @@ The technology described in this specification was made available from contribut
 
    [[ To be removed from the final specification ]]
 
+   -26
+
+   * remove JARM and response signing, using JWT directly for unsigned, encrypted responses.
+
    -25
 
    * clarify value matching in DCQL
@@ -3191,7 +3195,6 @@ The technology described in this specification was made available from contribut
    * clarify that `dcql_query` and `presentation_definition` are passed as JSON objects (not strings) in request objects
    * support returning multiple presentations for a single dcql credential query when requested using `multiple`
    * Added support for multiple Client Identifiers and corresponding Request Signature to the DC API profile
-   * remove JARM and response signing, using JWT directly for unsigned, encrypted responses.
 
    -24
 
