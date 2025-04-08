@@ -321,10 +321,10 @@ The following is a non-normative example of a transaction data content, after ba
 ```
 
 `verifier_attestations`:
-: OPTIONAL. An array of signed objects used by the Verifier to convey attested information relevant to the Credential Request. These attestations MAY include Verifier metadata, policies, trust status, or authorizations. Attestations are intended to support authorization decisions, inform Wallet policy enforcement, or enrich the End-User consent dialog. Each object has the following structure:
+: OPTIONAL. An array of attestations about the Verifier relevant to the Credential Request. These attestations MAY include Verifier metadata, policies, trust status, or authorizations. Attestations are intended to support authorization decisions, inform Wallet policy enforcement, or enrich the End-User consent dialog. Each object has the following structure:
 
     * `type`: REQUIRED. A string that identifies the type of the attestation and how it is encoded. Ecosystems SHOULD use collision-resistant identifiers.
-    * `data`: REQUIRED. An object or string representing an attestation (e.g. a JWT). The payload structure is defined on a per type level. The Wallet MUST validate this signature and ensure binding.
+    * `data`: REQUIRED. An object or string containing an attestation (e.g. a JWT). The payload structure is defined on a per type level. The Wallet MUST validate this signature and ensure binding.
     * `credential_ids`: OPTIONAL. An array of strings each referencing a Credential requested by the Verifier for which the attestation is relevant. Each string matches the `id` field in a DCQL Credential Query. If omitted, the attestation is relevant to all requested credentials.
 
 See (#verifier-attestations) for more details.
@@ -632,13 +632,13 @@ If the Verifier responds with any HTTP error response, the Wallet MUST terminate
 
 ## Verifier Attestations {#verifier-attestations}
 
-Verifier Attestations allow the Verifier to provide additional context or metadata as part of the Authorization Request. These inputs can support a variety of use cases, such as helping the Wallet apply policy decisions, validating eligibility, or presenting more meaningful information to the End-User during consent.
+Verifier Attestations allow the Verifier to provide additional context or metadata as part of the Authorization Request attested by a trusted third party. These inputs can support a variety of use cases, such as helping the Wallet apply policy decisions, validating eligibility, or presenting more meaningful information to the End-User during consent.
 
 Each Verifier Attestation is an object containing a type identifier, associated data and optionally references to credential ids. The format and semantics of these attestations are defined by ecosystems or profiles.
 
 For example, a Verifier might include:
 
-- A **registration certificate** issued by a trusted authority, to prove that it is authorized to request certain credentials.
+- A **registration certificate** issued by a trusted authority, to prove that the verifier has publicly registered its intend to request certain credentials.
 - An **attestation of intended use**, declaring why a particular credential is being requested.
 - A **policy statement**, such as a signed document describing acceptable use, retention periods, or access rights.
 
@@ -649,7 +649,7 @@ Verifier Attestations are optional. Wallets MAY use them to make authorization d
 This specification supports two models for proof of possession:
 
 - **claim-bound attestations**: The attestation is not signed by the Relying Party, but bound to it. The exact binding mechanism is defined by the type of the definition. For example for JWTs, the `sub` claim is including the distinguished name of the Certificate that was used to sign the request. The binding may also include the client_id parameter.
-- **key-bound attestations**: The attestation is signed by the Relying Party and bound to it. To bind the attestation to the presentation request, it should include the `nonce` and `client_id` parameters in the signature.
+- **key-bound attestations**: The attestation is signed by the Relying Party with a key contained or related to the attestation . To bind the signature to the presentation request, the respective signature object should include the `nonce` and `client_id` request parameters.
 
  The Wallet MUST validate such proofs if defined by the profile and ignore or reject attachments that fail validation.
 
