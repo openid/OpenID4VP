@@ -336,6 +336,44 @@ The following additional considerations are given for pre-existing Authorization
 `client_id`:
 : REQUIRED. Defined in [@!RFC6749]. This specification defines additional requirements to enable the use of Client Identifier Prefixes as described in (#client_metadata_management).
 
+`state`:
+: REQUIRED if non-key-bound credentials are requested without usage of the Digital Credentials API, as defined (#nkb-credentials). Otherwise, `state` is OPTIONAL. `state` values MUST only contain ASCII URL safe characters (uppercase and lowercase letters, decimal digits, hyphen, period, underscore, and tilde).
+
+## Requesting Non-Key-Bound Credentials {#nkb-credentials}
+
+The primary use case of this specification is to request and present Verifiable
+Credentials that are bound to the Holder's key material. However, there are use
+cases where the Verifier wants to request presentation of non-key-bound
+credentials. Examples for such use cases include low-security credentials (e.g.,
+a cinema ticket), credentials that are bound to a biometric trait, or
+credentials that are bound to claims (e.g., a diploma). In some cases,
+credentials may support key binding, but the Verifier may not require it.
+
+A Verifier that requests and accepts a presentation of a non-key-bound
+credential accepts that the presented credential may have been replayed: By
+definition, the presentation of a non-key-bound credential does not prove that
+the Holder possesses the private holder binding key belonging to the credential.
+The Verifier accepts that the Holder may have obtained the credential from a
+third party (e.g., by playing the role of a Verifier) and that the Holder may
+not be the subject of the credential.
+
+To request a credential without proof of key binding, the Verifier specifies a
+different format in the DCQL request as defined in (#dcql_query) and
+(#format_specific_parameters).
+
+To ensure that the request and response can be linked securely even in the
+absence of a signed `nonce` parameter in the response, the Verifier MUST
+
+- include a `state` parameter as defined in Section 4.1.1 of [@!RFC6749] in the Authorization Request,
+- ensure that the value is a cryptographically strong pseudo-random number with at least 128 bits of entropy,
+- ensure that the value is chosen fresh for each Authorization Request,
+- store it in the Verifier's session state, and
+- check that the same `state` value is returned in the Authorization Response,
+
+if only non-key-bound credentials are requested and unless the Digital Credentials API is used.
+
+When using Response Mode `direct_post`, also see (#security_considerations_direct_post).
+
 ## Examples
 
 The Verifier MAY send an Authorization Request using either of these 3 options:
@@ -1084,7 +1122,7 @@ When a VP Token is returned, the respective response includes the following para
 `vp_token`:
 : REQUIRED. This is a JSON-encoded object containing entries where the key is the `id` value used for a Credential Query in the DCQL query and the value is an array of one or more Verifiable Presentations that match the respective Credential Query. When `multiple` is omitted, or set to `false`, the array MUST contain only one Verifiable Presentation. There MUST NOT be any entry in the JSON-encoded object for optional Credential Queries when there are no matching Credentials for the respective Credential Query. Each Verifiable Presentation is represented as a string or object, depending on the format as defined in (#format_specific_parameters). The same rules as above apply for encoding the Verifiable Presentations.
 
-Other parameters, such as `state` or `code` (from [@!RFC6749]), or `id_token` (from [@!OpenID.Core]), and `iss` (from [@RFC9207]) can be included in the response as defined in the respective specifications. `state` values MUST only contain ASCII URL safe characters (uppercase and lowercase letters, decimal digits, hyphen, period, underscore, and tilde). For the implementation considerations of a `state` parameter, see (#state_management).
+Other parameters, such `code` (from [@!RFC6749]), or `id_token` (from [@!OpenID.Core]), and `iss` (from [@RFC9207]) can be included in the response as defined in the respective specifications.
 
 Additional response parameters MAY be defined and used,
 as described in [@!RFC6749].
@@ -1485,12 +1523,6 @@ The following is a non-normative example of a set of static configuration values
 ## Nested Verifiable Presentations
 
 This specification does not support presentation of a Verifiable Presentation nested inside another Verifiable Presentation.
-
-## State Management {#state_management}
-
-The `state` parameter defined in Section 4.1.1 of [@!RFC6749] may be used by a verifier to link requests and responses. Also see Section 3.6 and Section 5.3.5 of [@RFC6819], and [@RFC9700].
-
-When using Response Mode `direct_post`, also see (#security_considerations_direct_post).
 
 ## Response Mode `direct_post` {#implementation_considerations_direct_post}
 
@@ -2984,6 +3016,7 @@ The technology described in this specification was made available from contribut
    * added some more (non-exhaustive) privacy considerations with pointers to SD-JWT and OpenID4VCI
    * remove DIF Presentation Exchange as a query language option
    * Changes in the DCQL query parameters specific to W3C VCs and AnonCreds
+   * Introduce ability to present without key binding
 
    -25
 
