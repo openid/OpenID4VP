@@ -1383,7 +1383,7 @@ Verifiers MUST validate the VP Token in the following manner:
 1. Check the individual Presentations according to the specific Credential or Presentation format requested:
    1. Validate the integrity and authenticity of the Presentation and Credential.
    1. Validate that the returned Credential(s) meet all criteria defined in the query in the Authorization Request (e.g., Claims included in the presentation).
-   1. Validate that all Presentations contain a cryptographic proof of Holder Binding (i.e., athat they are Verifiable Presentations), unless specifically requested otherwise.
+   1. Validate that all Presentations contain a cryptographic proof of Holder Binding (i.e., that they are Verifiable Presentations), unless specifically requested otherwise.
    1. For Verifiable Presentations, validate the Holder Binding. See (#preventing-replay) for the checks required to prevent replay of a Verifiable Presentation.
    1. Perform the checks required by the Verifier's policy based on the set of trust requirements such as trust frameworks it belongs to (i.e., revocation checks), if applicable.
 1. Check that the set of Presentations returned satisfies all requirements defined in the Verifier's request as described in (#dcql_query_lang_processing_rules).
