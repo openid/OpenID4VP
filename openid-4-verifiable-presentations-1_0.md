@@ -321,11 +321,11 @@ The following is a non-normative example of a transaction data content, after ba
 ```
 
 `verifier_attestations`:
-: OPTIONAL. An array of signed objects used by the Relying Party (Verifier) to convey attested information relevant to the Credential Request. These attestations MAY include Verifier metadata, policies, trust status, or authorizations. Attestations are intended to support authorization decisions, inform Wallet policy enforcement, or enrich the End-User consent dialog. Each object has the following structure:
+: OPTIONAL. An array of signed objects used by the Verifier to convey attested information relevant to the Credential Request. These attestations MAY include Verifier metadata, policies, trust status, or authorizations. Attestations are intended to support authorization decisions, inform Wallet policy enforcement, or enrich the End-User consent dialog. Each object has the following structure:
 
-    * `type`: REQUIRED. A string that identifies the type of the attestation. Ecosystems SHOULD use collision-resistant identifiers.
-    * `data`: REQUIRED. A signed object (e.g. a JWT), whose payload structure is defined by the ecosystem or profile. The Wallet MUST validate this signature and ensure binding.
-    * `credential_ids`: OPTIONAL. Array of strings each referencing a Credential requested by the Verifier for which the attestation is relevant. Each string matches the `id` field in a DCQL Credential Query. If omitted the attestation is relevant to all requested credentials.
+    * `type`: REQUIRED. A string that identifies the type of the attestation and how it is encoded. Ecosystems SHOULD use collision-resistant identifiers.
+    * `data`: REQUIRED. An object or string representing an attestation (e.g. a JWT). The payload structure is defined on a per type level. The Wallet MUST validate this signature and ensure binding.
+    * `credential_ids`: OPTIONAL. An array of strings each referencing a Credential requested by the Verifier for which the attestation is relevant. Each string matches the `id` field in a DCQL Credential Query. If omitted, the attestation is relevant to all requested credentials.
 
 See (#verifier-attestations) for more details.
 
@@ -632,9 +632,9 @@ If the Verifier responds with any HTTP error response, the Wallet MUST terminate
 
 ## Verifier Attestations {#verifier-attestations}
 
-Attachments allow the Verifier to provide additional context or metadata as part of the Authorization Request. These inputs can support a variety of use cases, such as helping the Wallet apply policy decisions, validating eligibility, or presenting more meaningful information to the End-User during consent.
+Verifier Attestations allow the Verifier to provide additional context or metadata as part of the Authorization Request. These inputs can support a variety of use cases, such as helping the Wallet apply policy decisions, validating eligibility, or presenting more meaningful information to the End-User during consent.
 
-Each attachment is an object containing a type identifier and associated data. The format and semantics of these objects are intentionally flexible and defined by ecosystem or profile-specific rules.
+Each Verifier Attestation is an object containing a type identifier, associated data and optionally references to credential ids. The format and semantics of these attestations are defined by ecosystems or profiles.
 
 For example, a Verifier might include:
 
@@ -642,7 +642,7 @@ For example, a Verifier might include:
 - An **attestation of intended use**, declaring why a particular credential is being requested.
 - A **policy statement**, such as a signed document describing acceptable use, retention periods, or access rights.
 
-Attachments are optional. Wallets MAY use them to make authorization decisions or to enhance the user experience, but they MUST ignore any unrecognized or unsupported attachment types.
+Verifier Attestations are optional. Wallets MAY use them to make authorization decisions or to enhance the user experience, but they SHOULD ignore any unrecognized or unsupported Verifier Attestation types.
 
 ### Proof of Possession
 
