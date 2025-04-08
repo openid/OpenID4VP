@@ -3006,7 +3006,6 @@ The technology described in this specification was made available from contribut
    * Changes in the DCQL query parameters specific to W3C VCs and AnonCreds
 
    -25
-   
    * clarify value matching in DCQL
    * clarify why requests using redirect_uri scheme cannot be signed
    * add `trusted_authorities` to DCQL  
