@@ -46,15 +46,15 @@ organization="Mattr"
 
 .# Abstract
 
-This specification defines a protocol for requesting and presenting Verifiable Credentials. 
+This specification defines a protocol for requesting and presenting Credentials. 
 
 {mainmatter}
 
 # Introduction
 
-This specification defines a mechanism on top of OAuth 2.0 [@!RFC6749] that enables presentation of Verifiable Credentials as Verifiable Presentations. Verifiable Credentials and Verifiable Presentations can be of any format, including, but not limited to W3C Verifiable Credentials Data Model [@VC_DATA], ISO mdoc [@ISO.18013-5], IETF SD-JWT VC [@!I-D.ietf-oauth-sd-jwt-vc], and AnonCreds [@Hyperledger.Indy].
+This specification defines a mechanism on top of OAuth 2.0 [@!RFC6749] for requesting and delivering Presentations of Credentials. Credentials and Presentations can be of any format, including, but not limited to W3C Verifiable Credentials Data Model [@VC_DATA], ISO mdoc [@ISO.18013-5], IETF SD-JWT VC [@!I-D.ietf-oauth-sd-jwt-vc], and AnonCreds [@Hyperledger.Indy].
 
-OAuth 2.0 [@!RFC6749] is used as a base protocol as it provides the required rails to build a simple, secure, and developer-friendly Credential presentation layer on top of it. Moreover, implementers can, in a single interface, support Credential presentation and the issuance of Access Tokens for access to APIs based on Verifiable Credentials in the Wallet. OpenID Connect [@!OpenID.Core] deployments can also extend their implementations using this specification with the ability to transport Verifiable Presentations. 
+OAuth 2.0 [@!RFC6749] is used as a base protocol as it provides the required rails to build a simple, secure, and developer-friendly Credential presentation layer on top of it. Moreover, implementers can, in a single interface, support Credential presentation and the issuance of Access Tokens for access to APIs based on Verifiable Credentials in the Wallet. OpenID Connect [@!OpenID.Core] deployments can also extend their implementations using this specification with the ability to transport Credential Presentations. 
 
 This specification can also be combined with [@!SIOPv2], if implementers require OpenID Connect features, such as the issuance of Self-Issued ID Tokens [@!SIOPv2].
 
@@ -71,35 +71,35 @@ Base64url-encoded denotes the URL-safe base64 encoding without padding defined i
 This specification also defines the following terms. In the case where a term has a definition that differs, the definition below is authoritative.
 
 Biometrics-based Holder Binding:
-: Ability of the Holder to prove legitimate possession of a Verifiable Credential by demonstrating a certain biometric trait, such as a fingerprint or face. One example of a Verifiable Credential with biometric Holder Binding is a mobile driving license [@ISO.18013-5], which contains a portrait of the Holder.
+: Ability of the Holder to prove legitimate possession of a Credential by demonstrating a certain biometric trait, such as a fingerprint or face. One example of a Credential with biometric Holder Binding is a mobile driving license [@ISO.18013-5], which contains a portrait of the Holder.
 
 Claims-based Holder Binding:
-: Ability of the Holder to prove legitimate possession of a Verifiable Credential by proving certain claims, e.g., name and date of birth, for example by presenting another Verifiable Credential. Claims-based Holder Binding allows long-term, cross-device use of a Credential as it does not depend on cryptographic key material stored on a certain device. One example of such a Verifiable Credential could be a Diploma.
+: Ability of the Holder to prove legitimate possession of a Credential by proving certain claims, e.g., name and date of birth, for example by presenting another Credential. Claims-based Holder Binding allows long-term, cross-device use of a Credential as it does not depend on cryptographic key material stored on a certain device. One example of such a Credential could be a Diploma.
 
 Credential:
-: A set of one or more claims about a subject made by a Credential Issuer. Note that the definition of the term “Credential” in this specification is different from that in [@!OpenID.Core].
+: A set of one or more claims about a subject made by a Credential Issuer. In this specification, Credentials are usually Verifiable Credentials (defined below). Note that the definition of the term “Credential” in this specification is different from that in [@!OpenID.Core].
 
 Credential Format Identifier:
 : An identifier to denote a specific Credential Format in the context of this specification. This identifier implies the use of parameters specific to the respective Credential Format.
 
 
 Credential Issuer:
-: An entity that issues Verifiable Credentials. Also called Issuer.
+: An entity that issues Credentials. Also called Issuer.
 
 Cryptographic Holder Binding:
-: Ability of the Holder to prove legitimate possession of a Verifiable Credential by proving control over the same private key during the issuance and presentation. Mechanism might depend on the Credential Format. For example, in jwt_vc_json Credential Format, a Verifiable Credential with Cryptographic Holder Binding contains a public key or a reference to a public key that matches to the private key controlled by the Holder.
+: Ability of the Holder to prove legitimate possession of a Credential by proving control over the same private key during the issuance and presentation. Mechanism might depend on the Credential Format. For example, in jwt_vc_json Credential Format, a Credential with Cryptographic Holder Binding contains a public key or a reference to a public key that matches to the private key controlled by the Holder.
 
 Digital Credentials API:
 : The Digital Credentials API (DC API) refers to the W3C Digital Credentials API [@!W3C.Digital_Credentials_API] on the Web Platform and its equivalent native APIs on App Platforms (such as Credential Manager on Android).
 
 Holder:
-: An entity that receives Verifiable Credentials and has control over them to present them to the Verifiers as Verifiable Presentations.
+: An entity that receives Credentials and has control over them to present them to the Verifiers as Presentations.
 
-Holder Binding:
-: Ability of the Holder to prove legitimate possession of a Verifiable Credential.
+Holder Binding or Key Binding:
+: Ability of the Holder to prove legitimate possession of a Credential.
 
 Issuer-Holder-Verifier Model:
-: A model for exchanging claims, where claims are issued in the form of Verifiable Credentials independent of the process of presenting them as Verifiable Presentation to the Verifiers. An issued Verifiable Credential can (but must not necessarily) be used multiple times.
+: A model for exchanging claims, where claims are issued in the form of Credentials independent of the process of presenting them as Presentations to the Verifiers. An issued Credential may be used multiple times.
 
 Origin:
 : An identifier for the calling website or native application, asserted by the web or app platform. A web origin is the combination of a scheme/protocol, host, and port, with port being omitted when it matches the default port of the scheme. An app platform may use a linked web origin, or use a platform-specific URI for the app origin.
@@ -107,34 +107,28 @@ Origin:
 For example, the verifier for the organization MyExampleOrg is served from https://verify.example.com. The web origin is `https://verify.example.com` with `https` being the scheme, `verify.example.com` being the host, and the port is not explicitly included as `443` is the default port for the protocol `https`. The native applications origin on some platforms will also be `https://verify.example.com` and on other platforms, may be `platform:pkg-key-hash:Z4OFzVVSZrzTRa3eg79hUuHy12MVW0vzPDf4q4zaPs0`.
 
 Presentation:
-: Data that is presented to a specific Verifier, derived from one or more Verifiable Credentials that can be from the same or different Credential Issuers.
+: Data that is presented to a specific Verifier, derived from a Credential. In this specification, Presentations are usually, but not always, Verifiable Presentations (defined below). Exceptions are discussed in (#nkb-credentials).
 
 VP Token:
-: An artifact containing one or more Verifiable Presentations returned as a response to an Authorization Request. The structure of VP Tokens is defined in (#response-parameters).
+: An artifact containing one or more Presentations returned as a response to an Authorization Request. The structure of VP Tokens is defined in (#response-parameters).
 
 Verifier:
-: An entity that requests, receives, and validates Verifiable Presentations. During presentation of Credentials, Verifier acts as an OAuth 2.0 Client towards the Wallet that is acting as an OAuth 2.0 Authorization Server. The Verifier is a specific case of OAuth 2.0 Client, just like Relying Party (RP) in [@OpenID.Core].
+: An entity that requests, receives, and validates Presentations. During presentation of Credentials, Verifier acts as an OAuth 2.0 Client towards the Wallet that is acting as an OAuth 2.0 Authorization Server. The Verifier is a specific case of OAuth 2.0 Client, just like Relying Party (RP) in [@OpenID.Core].
 
 Verifiable Credential (VC):
 : An Issuer-signed Credential whose authenticity can be cryptographically verified. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA] (VCDM), [@ISO.18013-5] (mdoc), [@!I-D.ietf-oauth-sd-jwt-vc] (SD-JWT VC), and [@Hyperledger.Indy] (AnonCreds).
 
 Verifiable Presentation (VP):
-: A Holder-signed Credential whose authenticity can be cryptographically verified to provide Cryptographic Holder Binding. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA] (VCDM), [@ISO.18013-5] (mdoc), [@!I-D.ietf-oauth-sd-jwt-vc] (SD-JWT VC), and [@Hyperledger.Indy] (AnonCreds).
-
-W3C Verifiable Credential:
-: A Verifiable Credential compliant to the [@VC_DATA] specification.
-
-W3C Verifiable Presentation:
-: A Verifiable Presentation compliant to the [@VC_DATA] specification.
+: A Presentation with a cryptographic proof of Holder Binding. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA] (VCDM), [@ISO.18013-5] (mdoc), [@!I-D.ietf-oauth-sd-jwt-vc] (SD-JWT VC), and [@Hyperledger.Indy] (AnonCreds).
 
 Wallet:
-: An entity used by the Holder to receive, store, present, and manage Verifiable Credentials and key material. There is no single deployment model of a Wallet: Verifiable Credentials and keys can both be stored/managed locally, or by using a remote self-hosted service, or a remote third-party service. In the context of this specification, the Wallet acts as an OAuth 2.0 Authorization Server (see [@!RFC6749]) towards the Credential Verifier which acts as the OAuth 2.0 Client.
+: An entity used by the Holder to receive, store, present, and manage Credentials and key material. There is no single deployment model of a Wallet: Credentials and keys can both be stored/managed locally, or by using a remote self-hosted service, or a remote third-party service. In the context of this specification, the Wallet acts as an OAuth 2.0 Authorization Server (see [@!RFC6749]) towards the Credential Verifier which acts as the OAuth 2.0 Client.
 
 # Overview 
 
-This specification defines a mechanism on top of OAuth 2.0 to request and present Verifiable Credentials as Verifiable Presentations.
+This specification defines a mechanism on top of OAuth 2.0 to request and present Credentials as Presentations.
 
-As the primary extension, OpenID for Verifiable Presentations introduces the VP Token as a container to enable End-Users to present Verifiable Presentations to Verifiers using the Wallet. A VP Token contains one or more Verifiable Presentations in the same or different Credential formats.
+As the primary extension, OpenID for Verifiable Presentations introduces the VP Token as a container to enable End-Users to send Presentations to Verifiers using the Wallet. A VP Token contains one or more Presentations in the same or different Credential formats.
 
 This specification supports any Credential format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA] (VCDM), [@ISO.18013-5] (mdoc), [@!I-D.ietf-oauth-sd-jwt-vc] (SD-JWT VC), and [@Hyperledger.Indy] (AnonCreds). Credentials of multiple formats can be presented in the same transaction. The examples given in the main part of this specification use W3C Verifiable Credentials, while examples in other Credential formats are given in (#format_specific_parameters). 
 
@@ -159,7 +153,7 @@ to achieve interoperability. Profiling means defining:
 
 Below is a diagram of a flow where the End-User presents a Credential to a Verifier interacting with the End-User on the same device that the device the Wallet resides on.
 
-The flow utilizes simple redirects to pass Authorization Request and Response between the Verifier and the Wallet. The Verifiable Presentations are returned to the Verifier in the fragment part of the redirect URI, when Response Mode is `fragment`. 
+The flow utilizes simple redirects to pass Authorization Request and Response between the Verifier and the Wallet. The Presentations are returned to the Verifier in the fragment part of the redirect URI, when Response Mode is `fragment`. 
 
 Note: The diagram does not illustrate all the optional features of this specification.
 
@@ -179,7 +173,7 @@ Note: The diagram does not illustrate all the optional features of this specific
         |   End-User Authentication / Consent                                 |
         |                 |                                                   |
         |                 |  (2)   Authorization Response                     |
-        |                 |  (VP Token with Verifiable Presentation(s))       |
+        |                 |  (VP Token with Presentation(s))                  |
         |                 |<--------------------------------------------------|
 ~~~
 !---
@@ -187,13 +181,13 @@ Figure: Same Device Flow
 
 (1) The Verifier sends an Authorization Request to the Wallet. It contains a Digital Credentials Query Language (DCQL, see (#dcql_query)) query that describes the requirements of the Credential(s) that the Verifier is requesting to be presented. Such requirements could include what type of Credential(s), in what format(s), which individual Claims within those Credential(s) (Selective Disclosure), etc. The Wallet processes the Authorization Request and determines what Credentials are available matching the Verifier's request. The Wallet also authenticates the End-User and gathers consent to present the requested Credentials. 
 
-(2) The Wallet prepares the Verifiable Presentation(s) of the Verifiable Credential(s) that the End-User has consented to. It then sends to the Verifier an Authorization Response where the Verifiable Presentation(s) are contained in the `vp_token` parameter.
+(2) The Wallet prepares the Presentation(s) of the Credential(s) that the End-User has consented to. It then sends to the Verifier an Authorization Response where the Presentation(s) are contained in the `vp_token` parameter.
 
 ## Cross Device Flow {#cross_device}
 
 Below is a diagram of a flow where the End-User presents a Credential to a Verifier interacting with the End-User on a different device as the device the Wallet resides on.
 
-In this flow, the Verifier prepares an Authorization Request and renders it as a QR Code. The End-User then uses the Wallet to scan the QR Code. The Verifiable Presentations are sent to the Verifier in a direct HTTP POST request to a URL controlled by the Verifier. The flow uses the Response Type `vp_token` in conjunction with the Response Mode `direct_post`, both defined in this specification. In order to keep the size of the QR Code small and be able to sign and optionally encrypt the Request Object, the actual Authorization Request contains just a Request URI according to [@!RFC9101], which the wallet uses to retrieve the actual Authorization Request data.
+In this flow, the Verifier prepares an Authorization Request and renders it as a QR Code. The End-User then uses the Wallet to scan the QR Code. The Presentations are sent to the Verifier in a direct HTTP POST request to a URL controlled by the Verifier. The flow uses the Response Type `vp_token` in conjunction with the Response Mode `direct_post`, both defined in this specification. In order to keep the size of the QR Code small and be able to sign and optionally encrypt the Request Object, the actual Authorization Request contains just a Request URI according to [@!RFC9101], which the wallet uses to retrieve the actual Authorization Request data.
 
 Note: The diagram does not illustrate all the optional features of this specification.
 
@@ -222,7 +216,7 @@ Note: The usage of the Request URI as defined in [@!RFC9101] does not depend on 
         |   End-User Authentication / Consent                                 |
         |                 |                                                   |
         |                 |  (3)   Authorization Response as HTTP POST        |
-        |                 |  (VP Token with Verifiable Presentation(s))       |
+        |                 |  (VP Token with Presentation(s))                  |
         |                 |<--------------------------------------------------|
 ~~~
 !---
@@ -234,21 +228,21 @@ Figure: Cross Device Flow
 
 (2.5) The HTTP GET response returns the Request Object containing Authorization Request parameters. It contains a DCQL query that describes the requirements of the Credential(s) that the Verifier is requesting to be presented. Such requirements could include what type of Credential(s), in what format(s), which individual Claims within those Credential(s) (Selective Disclosure), etc. The Wallet processes the Request Object and determines what Credentials are available matching the Verifier's request. The Wallet also authenticates the End-User and gathers her consent to present the requested Credentials. 
 
-(3) The Wallet prepares the Verifiable Presentation(s) of the Verifiable Credential(s) that the End-User has consented to. It then sends to the Verifier an Authorization Response where the Verifiable Presentation(s) are contained in the `vp_token` parameter.
+(3) The Wallet prepares the Presentation(s) of the Credential(s) that the End-User has consented to. It then sends to the Verifier an Authorization Response where the Presentation(s) are contained in the `vp_token` parameter.
 
 # Scope
 
 OpenID for Verifiable Presentations extends existing OAuth 2.0 mechanisms as following:
 
-* A new query language, the Digital Credentials Query Language (DCQL), is defined to enable requesting Verifiable Credentials in an easier and more flexible way. See (#dcql_query) for more details.
-* A new `dcql_query` Authorization Request parameter is defined to request presentation of Verifiable Credentials in the JSON-encoded DCQL format. See (#vp_token_request) for more details.
-* A new `vp_token` response parameter is defined to return Verifiable Presentations to the Verifier in either Authorization or Token Response depending on the Response Type. See (#response) for more details. 
-* New Response Types `vp_token` and `vp_token id_token` are defined to request Verifiable Credentials to be returned in the Authorization Response (standalone or along with a Self-Issued ID Token [@!SIOPv2]). See (#response) for more details.
+* A new query language, the Digital Credentials Query Language (DCQL), is defined to enable requesting Credentials in an easier and more flexible way. See (#dcql_query) for more details.
+* A new `dcql_query` Authorization Request parameter is defined to request presentation of Credentials in the JSON-encoded DCQL format. See (#vp_token_request) for more details.
+* A new `vp_token` response parameter is defined to return Presentations to the Verifier in either Authorization or Token Response depending on the Response Type. See (#response) for more details. 
+* New Response Types `vp_token` and `vp_token id_token` are defined to request Credentials to be returned in the Authorization Response (standalone or along with a Self-Issued ID Token [@!SIOPv2]). See (#response) for more details.
 * A new OAuth 2.0 Response Mode `direct_post` is defined to support sending the response across devices, or when the size of the response exceeds the redirect URL character size limitation. See (#response_mode_post) for more details.
 * The `format` parameter is used throughout the protocol in order to enable customization according to the specific needs of a particular Credential format. Examples in (#format_specific_parameters) are given for Credential formats as specified in [@VC_DATA], [@ISO.18013-5], [@!I-D.ietf-oauth-sd-jwt-vc], and [@Hyperledger.Indy].
 * The concept of a Client Identifier Prefix to enable deployments of this specification to use different mechanisms to obtain and validate metadata of the Verifier beyond the scope of [@!RFC6749].
 
-Presentation of Verifiable Credentials using OpenID for Verifiable Presentations can be combined with the End-User authentication using [@SIOPv2], and the issuance of OAuth 2.0 Access Tokens.
+Presentation of Credentials using OpenID for Verifiable Presentations can be combined with the End-User authentication using [@SIOPv2], and the issuance of OAuth 2.0 Access Tokens.
 
 # Authorization Request {#vp_token_request}
 
@@ -263,7 +257,7 @@ that signals to the Wallet that it can make an HTTP POST request to the Verifier
 endpoint with information about its capabilities as defined in (#request_uri_method_post). The Wallet MAY continue with JAR
 when it receives `request_uri_method` parameter with the value `post` but does not support this feature.
 
-The Verifier articulates requirements of the Credential(s) that are requested using the `dcql_query` parameter. Wallet implementations MUST process the DCQL query and select candidate Verifiable Credential(s) using the evaluation process described in (#dcql_query_lang_processing_rules)
+The Verifier articulates requirements of the Credential(s) that are requested using the `dcql_query` parameter. Wallet implementations MUST process the DCQL query and select candidate Credential(s) using the evaluation process described in (#dcql_query_lang_processing_rules)
 
 The Verifier communicates a Client Identifier Prefix that indicate how the Wallet is supposed to interpret the Client Identifier and associated data in the process of Client identification, authentication, and authorization as a prefix in the `client_id` parameter. This enables deployments of this specification to use different mechanisms to obtain and validate Client metadata beyond the scope of [@!RFC6749]. A certain Client Identifier Prefix MAY require the Verifier to sign the Authorization Request as means of authentication and/or pass additional parameters and require the Wallet to process them.
 
@@ -286,7 +280,7 @@ In the context of an authorization request according to [@RFC6749], parameters c
 `client_metadata`:
 : OPTIONAL. A JSON object containing the Verifier metadata values. It MUST be UTF-8 encoded. The following metadata parameters MAY be used:
 
-    * `jwks`: OPTIONAL. A JWKS as defined in [@!RFC7591]. It MAY contain one or more public keys, such as those used by the Wallet as an input to a key agreement that may be used for encryption of the Authorization Response (see (#jarm)), or where the Wallet will require the public key of the Verifier to generate the Verifiable Presentation. This allows the Verifier to pass ephemeral keys specific to this Authorization Request. Public keys included in this parameter MUST NOT be used to verify the signature of signed Authorization Requests.
+    * `jwks`: OPTIONAL. A JWKS as defined in [@!RFC7591]. It MAY contain one or more public keys, such as those used by the Wallet as an input to a key agreement that may be used for encryption of the Authorization Response (see (#jarm)), or where the Wallet will require the public key of the Verifier to generate a Verifiable Presentation. This allows the Verifier to pass ephemeral keys specific to this Authorization Request. Public keys included in this parameter MUST NOT be used to verify the signature of signed Authorization Requests.
     * `vp_formats`: REQUIRED when not available to the Wallet via another mechanism. As defined in (#client_metadata_parameters).
     * `authorization_signed_response_alg`: OPTIONAL. As defined in [@!JARM], with an adjustment to the default behavior when this parameter is absent: instead of defaulting to `RS256`, the Authorization Response is not signed.
     * `authorization_encrypted_response_alg`: OPTIONAL. As defined in [@!JARM].
@@ -305,7 +299,7 @@ This enables the Wallet to assess the Verifier's capabilities, allowing it to tr
 `transaction_data`: 
 : OPTIONAL. Array of strings, where each string is a base64url encoded JSON object that contains a typed parameter set with details about the transaction that the Verifier is requesting the End-User to authorize. See (#transaction_data) for details. The Wallet MUST return an error if a request contains even one unrecognized transaction data type or transaction data not conforming to the respective type definition. In addition to the parameters determined by the type of transaction data, each `transaction_data` object consists of the following parameters defined by this specification:
 
-    * `type`: REQUIRED. String that identifies the type of transaction data . This value determines parameters that can be included in the `transaction_data` object. The specific values are out of scope of this specification. It is RECOMMENDED to use collision-resistant names for `type` values.
+    * `type`: REQUIRED. String that identifies the type of transaction data. This value determines parameters that can be included in the `transaction_data` object. The specific values are out of scope of this specification. It is RECOMMENDED to use collision-resistant names for `type` values.
     * `credential_ids`: REQUIRED. Array of strings each referencing a Credential requested by the Verifier that can be used to authorize this transaction. The string matches the `id` field in the DCQL Credential Query. If there is more than one element in the array, the Wallet MUST use only one of the referenced Credentials for transaction authorization.
 
 Each document specifying details of a transaction data type defines what Credential(s) can be used to authorize those transactions. Those Credential(s) can be issued specifically for the transaction authorization use case or re-use existing Credential(s) used for user identification. A mechanism for Credential Issuers to express that a particular Credential can be used for authorization of transaction data is out of scope for this specification.
@@ -320,12 +314,12 @@ The following is a non-normative example of a transaction data content, after ba
 }
 ```
 
-## Existing Parameters
+## Existing Parameters {#existing_parameters}
 
 The following additional considerations are given for pre-existing Authorization Request parameters:
 
 `nonce`:
-: REQUIRED. Defined in [@!OpenID.Core]. It is used to securely bind the Verifiable Presentation(s) provided by the Wallet to the particular transaction. See (#preventing-replay) for details. Values MUST only contain ASCII URL safe characters (uppercase and lowercase letters, decimal digits, hyphen, period, underscore, and tilde).
+: REQUIRED. Defined in [@!OpenID.Core]. It is used to securely bind Verifiable Presentation(s) provided by the Wallet to the particular transaction. The Verifier MUST create a fresh, cryptographically random number with sufficient entropy for every Authorization Request, store it with its current session, and pass it in the `nonce` Authorization Request Parameter to the Wallet. See (#preventing-replay) for details. Values MUST only contain ASCII URL safe characters (uppercase and lowercase letters, decimal digits, hyphen, period, underscore, and tilde).
 
 `scope`:
 : OPTIONAL. Defined in [@!RFC6749]. The Wallet MAY allow Verifiers to request presentation of Verifiable Credentials by utilizing a pre-defined scope value. See (#request_scope) for more details.
@@ -337,42 +331,47 @@ The following additional considerations are given for pre-existing Authorization
 : REQUIRED. Defined in [@!RFC6749]. This specification defines additional requirements to enable the use of Client Identifier Prefixes as described in (#client_metadata_management).
 
 `state`:
-: REQUIRED if non-key-bound credentials are requested without usage of the Digital Credentials API, as defined (#nkb-credentials). Otherwise, `state` is OPTIONAL. `state` values MUST only contain ASCII URL safe characters (uppercase and lowercase letters, decimal digits, hyphen, period, underscore, and tilde).
+: REQUIRED under the conditions defined in (#nkb-credentials). Otherwise, `state` is OPTIONAL. `state` values MUST only contain ASCII URL safe characters (uppercase and lowercase letters, decimal digits, hyphen, period, underscore, and tilde).
 
-## Requesting Non-Key-Bound Credentials {#nkb-credentials}
+## Requesting Non-Verifiable Presentations {#nkb-credentials}
 
 The primary use case of this specification is to request and present Verifiable
-Credentials that are bound to the Holder's key material. However, there are use
-cases where the Verifier wants to request presentation of non-key-bound
-credentials. Examples for such use cases include low-security credentials (e.g.,
-a cinema ticket), credentials that are bound to a biometric trait, or
-credentials that are bound to claims (e.g., a diploma). In some cases,
-credentials may support key binding, but the Verifier may not require it.
+Presentations, i.e., Presentations that contain a Holder Binding proof.
 
-A Verifier that requests and accepts a presentation of a non-key-bound
-credential accepts that the presented credential may have been replayed: By
-definition, the presentation of a non-key-bound credential does not prove that
-the Holder possesses the private holder binding key belonging to the credential.
-The Verifier accepts that the Holder may have obtained the credential from a
-third party (e.g., by playing the role of a Verifier) and that the Holder may
-not be the subject of the credential.
+However, there are use cases where the Verifier wants to request presentation of
+Credentials without a proof of Holder Binding. Examples for such use cases include
+low-security Credentials that do not support Holder Binding (e.g., a cinema
+ticket), Credentials that are bound to a biometric trait, or Credentials that
+are bound to claims (e.g., a diploma). In some cases, Credentials may support
+Holder Binding, but the Verifier may not require it for the Presentation.
 
-To request a credential without proof of key binding, the Verifier specifies a
+A Verifier that requests and accepts a Presentation of a Credential without a
+proof of Holder Binding accepts that the presented Credential may have been
+replayed, see (#preventing-replay) for details.
+
+To request a Credential without proof of Holder Binding, the Verifier specifies a
 different format in the DCQL request as defined in (#dcql_query) and
 (#format_specific_parameters).
 
-To ensure that the request and response can be linked securely even in the
-absence of a signed `nonce` parameter in the response, the Verifier MUST
+In this protocol, the `nonce` parameter serves to securely link the request and
+response and as a replay protection in the Holder Binding proof. Without the key
+binding proof, `nonce` is not returned in the response. To maintain the binding
+between request and response, the Verifier MUST
 
-- include a `state` parameter as defined in Section 4.1.1 of [@!RFC6749] in the Authorization Request,
-- ensure that the value is a cryptographically strong pseudo-random number with at least 128 bits of entropy,
+- include a `state` parameter as defined in Section 4.1.1 of [@!RFC6749] in the
+  Authorization Request,
+- ensure that the value is a cryptographically strong pseudo-random number with
+  at least 128 bits of entropy,
 - ensure that the value is chosen fresh for each Authorization Request,
 - store it in the Verifier's session state, and
 - check that the same `state` value is returned in the Authorization Response,
 
-if only non-key-bound credentials are requested and unless the Digital Credentials API is used.
+if at least one Presentation without Holder Binding is requested and unless the
+Digital Credentials API is used. The Digital Credentials API uses internal
+mechanisms to maintain the binding.
 
-When using Response Mode `direct_post`, also see (#security_considerations_direct_post).
+When using Response Mode `direct_post`, also see
+(#security_considerations_direct_post).
 
 ## Examples
 
@@ -452,9 +451,9 @@ wallet_nonce=qPmxiNFCR3QTm19POc8u
 ```
 
 
-## Using `scope` Parameter to Request Verifiable Credential(s) {#request_scope}
+## Using `scope` Parameter to Request Presentations {#request_scope}
 
-Wallets MAY support requesting presentation of Verifiable Credentials using OAuth 2.0 scope values.
+Wallets MAY support requesting Presentations using OAuth 2.0 scope values.
 
 Such a `scope` parameter value MUST be an alias for a well-defined DCQL query. Since multiple `scope` values can be used at the same time, the identifiers for credentials (see (#credential_query)) and claims (see (#claims_query)) within the DCQL queries associated with `scope` values MUST be unique. This ensures that there are no collisions between the identifiers used in the DCQL queries and that the Verifier can unambiguously identify the requested Credentials in the response.
 
@@ -652,10 +651,10 @@ If the Verifier responds with any HTTP error response, the Wallet MUST terminate
 # Digital Credentials Query Language (DCQL) {#dcql_query}
 
 The Digital Credentials Query Language (DCQL, pronounced [ˈdakl̩]) is a
-JSON-encoded query language that allows the Verifier to request Verifiable
+JSON-encoded query language that allows the Verifier to request
 Presentations that match the query. The Verifier MAY encode constraints on the
 combinations of credentials and claims that are requested. The Wallet evaluates
-the query against the Verifiable Credentials it holds and returns Verifiable
+the query against the Credentials it holds and returns
 Presentations matching the query.
 
 A valid DCQL query is defined as a JSON-encoded object with the following
@@ -663,11 +662,11 @@ top-level properties:
 
 `credentials`:
 : REQUIRED. A non-empty array of Credential Queries as defined in (#credential_query)
-that specify the requested Verifiable Credentials.
+that specify the requested Credentials.
 
 `credential_sets`:
 : OPTIONAL. A non-empty array of credential set queries as defined in (#credential_set_query)
-that specifies additional constraints on which of the requested Verifiable Credentials to return.
+that specifies additional constraints on which of the requested Credentials to return.
 
 Note: Future extensions may define additional properties both on the top level
 and in the rest of the DCQL data structure. Implementations MUST ignore any
@@ -688,8 +687,7 @@ Within the Authorization Request, the same `id` MUST NOT
 be present more than once.
 
 `format`:
-: REQUIRED. A string that specifies the format of the requested
-Verifiable Credential. Valid Credential Format Identifier values are defined in
+: REQUIRED. A string that specifies the format of the requested Credential. Valid Credential Format Identifier values are defined in
 (#format_specific_parameters).
 
 `multiple`:
@@ -849,7 +847,7 @@ be present more than once.
 
 `path`:
 : REQUIRED The value MUST be a non-empty array representing a claims path pointer that specifies the path to a claim
-within the Verifiable Credential, as defined in (#claims_path_pointer).
+within the Credential, as defined in (#claims_path_pointer).
 
 `values`:
 : OPTIONAL. An array of strings, integers or boolean values that specifies the expected values of the claim.
@@ -974,7 +972,7 @@ response can also leak information about the processing outcome of `values`.
 
 # Claims Path Pointer {#claims_path_pointer}
 
-A claims path pointer is a pointer into the Verifiable Credential, identifying one or more claims.
+A claims path pointer is a pointer into the Credential, identifying one or more claims.
 A claims path pointer MUST be a non-empty array of strings, nulls and non-negative integers.
 A claims path pointer can be processed, which means it is applied to a Credential. The results of
 processing are the referenced claims.
@@ -1083,7 +1081,7 @@ claims:
 
 ## DCQL Examples {#dcql_query_example}
 
-The following is a non-normative example of a DCQL query that requests a Verifiable
+The following is a non-normative example of a DCQL query that requests a
 Credential of the format `dc+sd-jwt` with a type value of
 `https://credentials.example.com/identity_credential` and the claims `last_name`,
 `first_name`, and `address.street_address`:
@@ -1120,7 +1118,7 @@ The behavior with respect to the VP Token is unspecified for any other individua
 When a VP Token is returned, the respective response includes the following parameters:
 
 `vp_token`:
-: REQUIRED. This is a JSON-encoded object containing entries where the key is the `id` value used for a Credential Query in the DCQL query and the value is an array of one or more Verifiable Presentations that match the respective Credential Query. When `multiple` is omitted, or set to `false`, the array MUST contain only one Verifiable Presentation. There MUST NOT be any entry in the JSON-encoded object for optional Credential Queries when there are no matching Credentials for the respective Credential Query. Each Verifiable Presentation is represented as a string or object, depending on the format as defined in (#format_specific_parameters). The same rules as above apply for encoding the Verifiable Presentations.
+: REQUIRED. This is a JSON-encoded object containing entries where the key is the `id` value used for a Credential Query in the DCQL query and the value is an array of one or more Presentations that match the respective Credential Query. When `multiple` is omitted, or set to `false`, the array MUST contain only one Presentation. There MUST NOT be any entry in the JSON-encoded object for optional Credential Queries when there are no matching Credentials for the respective Credential Query. Each Presentation is represented as a string or object, depending on the format as defined in (#format_specific_parameters). The same rules as above apply for encoding the Presentations.
 
 Other parameters, such `code` (from [@!RFC6749]), or `id_token` (from [@!OpenID.Core]), and `iss` (from [@RFC9207]) can be included in the response as defined in the respective specifications.
 
@@ -1166,7 +1164,7 @@ The Response Mode `direct_post` allows the Wallet to send the Authorization Resp
 It has been defined to address the following use cases: 
 
 * Verifier and Wallet are located on different devices; thus, the Wallet cannot send the Authorization Response to the Verifier using a redirect.
-* The Authorization Response size exceeds the URL length limits of user agents, so flows relying only on redirects (such as Response Mode `fragment`) cannot be used. In those cases, the Response Mode `direct_post` is the way to convey the Verifiable Presentations to the Verifier without the need for the Wallet to have a backend.
+* The Authorization Response size exceeds the URL length limits of user agents, so flows relying only on redirects (such as Response Mode `fragment`) cannot be used. In those cases, the Response Mode `direct_post` is the way to convey the Presentations to the Verifier without the need for the Wallet to have a backend.
 
 The Response Mode is defined in accordance with [@!OAuth.Responses] as follows:
 
@@ -1374,11 +1372,15 @@ This document also defines the following additional error codes and error descri
 Verifiers MUST validate the VP Token in the following manner:
 
 1. Validate the format of the VP Token as defined in (#response-parameters).
-1. Check that the set of VPs returned satisfies all requirements defined in the Verifier's request as described in (#dcql_query_lang_processing_rules).
-1. Validate the integrity, authenticity, and Holder Binding of any Verifiable Presentation provided in the VP Token according to the rules of the respective Presentation format. See (#preventing-replay) for the checks required to prevent replay of a VP.
-1. Perform the checks on the Credential(s) specific to the Credential Format (i.e., validation of the signature(s) on each VC).
-1. Confirm that the returned Credential(s) meet all criteria defined in the query in the Authorization Request (e.g., Claims included in the presentation).
-1. Perform the checks required by the Verifier's policy based on the set of trust requirements such as trust frameworks it belongs to (i.e., revocation checks), if applicable.
+1. Check the individual Presentations according to the specific Credential or Presentation format requested:
+   1. Validate the integrity and authenticity of the Presentation and Credential.
+   1. Validate that the returned Credential(s) meet all criteria defined in the query in the Authorization Request (e.g., Claims included in the presentation).
+   1. Validate that all Presentations contain a cryptographic proof of Holder Binding (i.e., are Verifiable Presentations), unless specifically requested otherwise.
+   1. For Verifiable Presentations, validate the Holder Binding. See (#preventing-replay) for the checks required to prevent replay of a Verifiable Presentation.
+   1. Perform the checks required by the Verifier's policy based on the set of trust requirements such as trust frameworks it belongs to (i.e., revocation checks), if applicable.
+1. Check that the set of Presentations returned satisfies all requirements defined in the Verifier's request as described in (#dcql_query_lang_processing_rules).
+
+If any of these checks fails, the VP Token MUST be rejected.
 
 # Wallet Invocation {#wallet-invocation}
 
@@ -1446,7 +1448,7 @@ This specification defines how the Wallet can determine Credential formats, proo
 This specification defines the following new Client metadata parameters according to [@!RFC7591], to be used by the Verifier:
 
 `vp_formats`:
-: REQUIRED. An object defining the formats and proof types of Verifiable Presentations and Verifiable Credentials that a Verifier supports. For specific values that can be used, see (#format_specific_parameters).
+: REQUIRED. An object defining the formats and proof types of Presentations and Credentials that a Verifier supports. For specific values that can be used, see (#format_specific_parameters).
 Deployments can extend the formats supported, provided Issuers, Holders and Verifiers all understand the new format.
 
 Additional Verifier metadata parameters MAY be defined and used,
@@ -1520,9 +1522,9 @@ The following is a non-normative example of a set of static configuration values
 }
 ```
 
-## Nested Verifiable Presentations
+## Nested Presentations
 
-This specification does not support presentation of a Verifiable Presentation nested inside another Verifiable Presentation.
+This specification does not support presentation of a Presentation nested inside another Presentation.
 
 ## Response Mode `direct_post` {#implementation_considerations_direct_post}
 
@@ -1615,21 +1617,33 @@ Note: If the Verifier's Response URI did not return a `redirect_uri` in step (6)
 
 # Security Considerations {#security_considerations}
 
-## Preventing Replay of the VP Token {#preventing-replay} 
+## Preventing Replay of Verifiable Presentations {#preventing-replay} 
 
-An attacker could try to inject a VP Token (or an individual Verifiable Presentation), that was obtained from a previous Authorization Response, into another Authorization Response thus impersonating the End-User that originally presented that VP Token or the respective Verifiable Presentation.
+An attacker could try to inject Presentations obtained from (for example) a previous Authorization Response into another Authorization Response, thus impersonating the End-User that originally presented the respective Verifiable Presentation. Holder Binding aims to prevent such attacks.
 
-Implementers of this specification MUST implement the controls as defined in this section to detect such an attack. 
+### Presentations without Holder Binding
 
-This specification assumes that a Verifiable Credential is always presented with a cryptographic proof of possession which can be a Verifiable Presentation. This cryptographic proof of possession MUST be bound by the Wallet to the intended audience (the Client Identifier of the Verifier) and the respective transaction (identified by the `nonce` parameter in the Authorization Request). The Verifier MUST verify this binding. 
+By definition, Presentations without Holder Binding (see (#nkb-credentials)) do
+not prove that the Holder possesses the private Holder Binding key belonging to
+the Credential. A Verifier that consumes Presentations without Holder Binding
+accepts the risk that the Holder may have obtained the Credential from a third
+party (e.g., by playing the role of a Verifier) and that the Holder may not be
+the subject of the Credential.
 
-The Verifier MUST create a fresh, cryptographically random number with sufficient entropy for every Authorization Request, store it with its current session, and pass it in the `nonce` Authorization Request Parameter to the Wallet.  
+Depending on the use case, the risk assessment of the Verifier, and external
+validation measures that can be taken, this risk may be acceptable.
+
+### Verifiable Presentations
+
+For Verifiable Presentations, implementers of this specification MUST implement the controls as defined in this section to detect and prevent replay attacks.
+
+The cryptographic proof of possession in a Verifiable Presentation MUST be bound by the Wallet to the intended audience (the Client Identifier of the Verifier) and the respective transaction (identified by the `nonce` parameter in the Authorization Request, as defined in (#existing_parameters)). The Verifier MUST verify this binding. 
 
 The Wallet MUST link every Verifiable Presentation returned to the Verifier in the VP Token to the `client_id` and the `nonce` values of the respective Authentication Request. 
 
-The Verifier MUST validate every individual Verifiable Presentation in an Authorization Response and ensure that it is linked to the values of the `client_id` and the `nonce` parameter it had used for the respective Authorization Request. If the response contains multiple Verifiable Presentations which do not contain the same nonce value, the response is rejected.
+The Verifier MUST validate every individual Verifiable Presentation in an Authorization Response and ensure that it is linked to the values of the `client_id` and the `nonce` parameter it had used for the respective Authorization Request. If any Verifiable Presentation in the response does not contain the correct `nonce` value, the response MUST be rejected.
 
-The `client_id` is used to detect the presentation of Verifiable Credentials to a party other than the one intended. This allows Verifiers take appropriate action in that case, such as not accepting the Verifiable Presentation. The `nonce` value binds the Presentation to a certain authentication transaction and allows the Verifier to detect injection of a Presentation in the flow, which is especially important in the flows where the Presentation is passed through the front-channel.
+The `client_id` is used to detect the replay of Verifiable Presentations to a party other than the one intended. This allows Verifiers to reject the Verifiable Presentation. The `nonce` value binds the Verifiable Presentation to a certain authentication transaction and allows the Verifier to detect injection of a Presentation in the flow, which is especially important in the flows where the Presentation is passed through the front-channel.
 
 Note: Different formats for Verifiable Presentations and signature/proof schemes use different ways to represent the intended audience and the session binding. Some use claims to directly represent those values, others include the values into the calculation of cryptographic proofs. There are also different naming conventions across the different formats. The format of the respective presentation is defined by the Verifier in the request.
 
@@ -1683,7 +1697,7 @@ In the example above, the requested `nonce` value is included as the `challenge`
 
 To perform a Session Fixation attack, an attacker would start the process using a Verifier executed on a device under his control, capture the Authorization Request and relay it to the device of a victim. The attacker would then periodically try to conclude the process in his Verifier, which would cause the Verifier on his device to try to fetch and verify the Authorization Response. 
 
-Such an attack is impossible against flows implemented with the Response Mode `fragment` as the Wallet will always send the VP Token to the redirect endpoint on the same device where it resides. This means an attacker could extract a valid Authorization Request from a Verifier on his device and trick a Victim into performing the same Authorization Request on her device. But there is technically no way for an attacker to get hold of the resulting VP Token. 
+Such an attack is impossible against flows implemented with the Response Mode `fragment` as the Wallet will always send the VP Token to the redirect endpoint on the same device where it resides. This means an attacker could extract a valid Authorization Request from a Verifier on his device and trick a Victim into performing the same Authorization Request on her device. But there is usually no way for an attacker to get hold of the resulting VP Token. 
 
 However, the Response Mode `direct_post` is susceptible to such an attack as the result is sent from the Wallet out-of-band to the Verifier's Response URI.
 
@@ -1709,16 +1723,16 @@ The Verifier SHOULD protect its Response URI from inadvertent requests by checki
 
 ### Protection of the Authorization Response Data
 
-This specification assumes that the Verifier's Response URI offers an internal interface to other components of the Verifier to obtain (and subsequently process) Authorization Response data. An attacker could try to obtain Authorization Response Data from a Verifier's Response URI by looking up this data through the internal interface. This could lead to leakage valid Verifiable Presentations containing PII.
+This specification assumes that the Verifier's Response URI offers an internal interface to other components of the Verifier to obtain (and subsequently process) Authorization Response data. An attacker could try to obtain Authorization Response Data from a Verifier's Response URI by looking up this data through the internal interface. This could lead to leakage of valid Presentations containing personally identifiable information.
 
 Implementations of this specification MUST have security mechanisms in place to prevent inadvertent requests against this internal interface. Implementation options to fulfill this requirement include: 
 
 * Authentication between the different parts within the Verifier
 * Two cryptographically random numbers.  The first being used to manage state between the Wallet and Verifier. The second being used to ensure that only a legitimate component of the Verifier can obtain the Authorization Response data.
 
-## End-User Authentication using Verifiable Credentials
+## End-User Authentication using Credentials
 
-Clients intending to authenticate the End-User utilizing a claim in a Verifiable Credential MUST ensure this claim is stable for the End-User as well locally unique and never reassigned within the Credential Issuer to another End-User. Such a claim MUST also only be used in combination with the Credential Issuer identifier to ensure global uniqueness and to prevent attacks where an attacker obtains the same claim from a different Credential Issuer and tries to impersonate the legitimate End-User.
+Clients intending to authenticate the End-User utilizing a claim in a Credential MUST ensure this claim is stable for the End-User as well locally unique and never reassigned within the Credential Issuer to another End-User. Such a claim MUST also only be used in combination with the Credential Issuer identifier to ensure global uniqueness and to prevent attacks where an attacker obtains the same claim from a different Credential Issuer and tries to impersonate the legitimate End-User.
 
 ## Encrypting an Unsigned Response {#encrypting_unsigned_response}
 
@@ -2094,7 +2108,7 @@ This section defines how to use OpenID4VP with the Digital Credentials API.
 
 The name "Digital Credentials API" (DC API) encompasses the W3C Digital Credentials API [@!W3C.Digital_Credentials_API]
 as well as its native App Platform equivalents in operating systems (such as [Credential Manager on Android](https://developer.android.com/jetpack/androidx/releases/credentials)).
-The DC API allows web sites and native apps acting as Verifiers to request the presentation of verifiable credentials.
+The DC API allows web sites and native apps acting as Verifiers to request the presentation of Credentials.
 The API itself is agnostic to the Credential exchange protocol and can be used with different protocols.
 The Web Platform, working in conjunction with other layers, such as the app platform/operating system, and based on the permission of the End-User, will send the request data along with the Origin of the Verifier to the End-User's chosen Wallet.
 
@@ -2256,10 +2270,11 @@ The audience for the response (for example, the `aud` value in a Key Binding JWT
 
 # Credential Format Specific Parameters and Rules {#format_specific_parameters}
 
-OpenID for Verifiable Presentations is Credential Format agnostic, i.e., it is designed to allow applications to request and receive Verifiable Presentations and Verifiable Credentials in any Credential Format. This section defines a set of Credential Format specific parameters and rules for some of the known Credential Formats. For the Credential Formats that are not mentioned in this specification, other specifications or deployments can define their own set of Credential Format specific parameters.
+OpenID for Verifiable Presentations is Credential Format agnostic, i.e., it is designed to allow applications to request and receive Presentations in any Credential Format. This section defines a set of Credential Format specific parameters and rules for some of the known Credential Formats. For the Credential Formats that are not mentioned in this specification, other specifications or deployments can define their own set of Credential Format specific parameters.
 
 ## W3C Verifiable Credentials
 
+The following sections define the Credential Format specific parameters and rules for Verifiable Credentials compliant to the [@VC_DATA] specification.
 
 ### DCQL
 
@@ -2289,7 +2304,7 @@ The `vp_formats` parameter of the Verifier metadata MUST have the key `jwt_vp_js
 
 This section illustrates the presentation of a Credential conformant to [@VC_DATA] that is signed using JWS, and does not use JSON-LD.
 
-The Credential format identifiers are `jwt_vc_json` to request a W3C Verifiable Credential and `jwt_vp_json` to request a W3C Verifiable Presentation.
+The Credential format identifiers are `jwt_vc_json` to request a W3C Verifiable Credential and `jwt_vp_json` to request a Verifiable Presentation compliant to the [@VC_DATA] specification.
 
 Cipher suites should use algorithm names defined in [IANA JOSE Algorithms Registry](https://www.iana.org/assignments/jose/jose.xhtml#web-signature-encryption-algorithms).
 
@@ -2330,7 +2345,7 @@ The following is a non-normative example of the payload of the Verifiable Presen
 
 This section illustrates presentation of a Credential conformant to [@VC_DATA] that is secured using Data Integrity, using JSON-LD.
 
-The Credential format identifiers are `ldp_vc` to request a W3C Verifiable Credential and `ldp_vp` to request a W3C Verifiable Presentation.
+The Credential format identifiers are `ldp_vc` to request a W3C Verifiable Credential and `ldp_vp` to request a Verifiable Presentation compliant to the [@VC_DATA] specification.
 
 Cipher suites should use signature suites names defined in [Linked Data Cryptographic Suite Registry](https://w3c-ccg.github.io/ld-cryptosuite-registry/).
 
