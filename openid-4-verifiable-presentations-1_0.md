@@ -2681,21 +2681,21 @@ The following is a non-normative example of the unsecured payload of the Key Bin
 
 <{{examples/response/kb_jwt_unsecured.json}}
 
-### SD-JWT VCDM {#sd-jwt_vcdm}
+### SD-JWT VCLD {#sd-jwt_vcld}
 
-SD-JWT VCDM (Verifiable Credential Data Model) extends the IETF SD-JWT VC [@!I-D.ietf-oauth-sd-jwt-vc] credential format and allows to incorporate existing data models that use Linked Data, e.g., W3C VCDM [@?VC_DATA], while enabling a consistent and uncomplicated approach to selective disclosure.
+SD-JWT VCLD (SD-JWT Verifiable Credentials with JSON-LD) extends the IETF SD-JWT VC [@!I-D.ietf-oauth-sd-jwt-vc] credential format and allows to incorporate existing data models that use Linked Data, e.g., W3C VCDM [@?VC_DATA], while enabling a consistent and uncomplicated approach to selective disclosure.
 
-Information contained in SD-JWT VCDM credentials can be processed using a JSON-LD [@?JSON-LD] processor after the SD-JWT VC processing.
+Information contained in SD-JWT VCLD credentials can be processed using a JSON-LD [@?JSON-LD] processor after the SD-JWT VC processing.
 
-When IETF SD-JWT VC is mentioned in this specification, SD-JWT VCDM defined in this section MAY be used.
+When IETF SD-JWT VC is mentioned in this specification, SD-JWT VCLD defined in this section MAY be used.
 
 #### Format
 
-SD-JWT VCDM credentials are valid SD-JWT VC credentials and all requirements from [@!I-D.ietf-oauth-sd-jwt-vc] apply. Additionally, the requirements listed in this section apply.
+SD-JWT VCLD credentials are valid SD-JWT VC credentials and all requirements from [@!I-D.ietf-oauth-sd-jwt-vc] apply. Additionally, the requirements listed in this section apply.
 
 For compatibility with JWT processors, the following registered Claims from [@!RFC7519] and [@!I-D.ietf-oauth-sd-jwt-vc] MUST be used instead of any respective counterpart properties from W3C VCDM or elsewhere:
 
-* `exp` and `nbf` to represent the validity period of SD-JWT VCDM (i.e., cryptographic signature).
+* `exp` and `nbf` to represent the validity period of SD-JWT VCLD (i.e., cryptographic signature).
 * `iss` to represent the Credential Issuer.
 * `status` to represent the information to obtain the status of the Credential.
 * `sub` to represent the subject identifier of the Credential.
@@ -2706,13 +2706,13 @@ IETF SD-JWT VC is extended with the following claim:
 
 #### Processing
 
-The following outlines a suggested non-normative set of processing steps for SD-JWT VCDM:
+The following outlines a suggested non-normative set of processing steps for SD-JWT VCLD:
 
 ##### Step 1: SD-JWT VC Processing
 
-- A receiver (holder or verifier) of an SD-JWT VCDM applies the processing rules outlined in Section 4 of [@!I-D.ietf-oauth-sd-jwt-vc], including verifying signatures, validity periods, status information, etc.
-- If the `vct` value is associated with any SD-JWT VC Type Metadata, schema validation of the entire SD-JWT VCDM is performed, including the nested `ld` claim.
-- Additionally, trust framework rules are applied, such as ensuring the Credential Issuer is authorized to issue SD-JWT VCDMs for the specified `vct` value.
+- A receiver (holder or verifier) of an SD-JWT VCLD applies the processing rules outlined in Section 4 of [@!I-D.ietf-oauth-sd-jwt-vc], including verifying signatures, validity periods, status information, etc.
+- If the `vct` value is associated with any SD-JWT VC Type Metadata, schema validation of the entire SD-JWT VCLD is performed, including the nested `ld` claim.
+- Additionally, trust framework rules are applied, such as ensuring the Credential Issuer is authorized to issue SD-JWT VCLDs for the specified `vct` value.
 
 ##### Step 2: Business Logic Processing
 
@@ -2721,13 +2721,13 @@ The following outlines a suggested non-normative set of processing steps for SD-
 
 #### Examples
 
-The following is a non-normative example of an unsecured payload of an SD-JWT VCDM (i.e., before applying the modifications to enable selective disclosure and before adding validity claims).
+The following is a non-normative example of an unsecured payload of an SD-JWT VCLD (i.e., before applying the modifications to enable selective disclosure and before adding validity claims).
 
-<{{examples/sd_jwt_vcdm/01/user_claims.json}}
+<{{examples/sd_jwt_vcld/01/user_claims.json}}
 
 The following payload would be used in the SD-JWT after encoding the payload above and enabling selective disclosure on the user-specific claims within `credentialSubject`:
 
-<{{examples/sd_jwt_vcdm/01/sd_jwt_payload.json}}
+<{{examples/sd_jwt_vcld/01/sd_jwt_payload.json}}
 
 Note: The decision which claims to make selectively disclosable is up to the Issuer of the Credential. Considerations can be found in Section 6 and Section 9.7 of [@!I-D.ietf-oauth-selective-disclosure-jwt].
 
@@ -3032,7 +3032,7 @@ in the IANA "Uniform Resource Identifier (URI) Schemes" registry [@IANA.URI.Sche
 * Claim Name: "ld"
 * Claim Description: JSON-LD object in compact form
 * Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
-* Reference: (#sd-jwt_vcdm) of this specification
+* Reference: (#sd-jwt_vcld) of this specification
 
 # Acknowledgements {#Acknowledgements}
 
@@ -3053,7 +3053,7 @@ The technology described in this specification was made available from contribut
    -26
 
    * renamed "Client ID Scheme" to "Client ID Prefix", and updated metadata (`client_id_prefixes_supported`) and `error_description` to match
-   * add SD-JWT VCDM
+   * add SD-JWT VCDM (now called SD-JWT VC LD)
    * added some more (non-exhaustive) privacy considerations with pointers to SD-JWT and OpenID4VCI
    * remove DIF Presentation Exchange as a query language option
    * Changes in the DCQL query parameters specific to W3C VCs and AnonCreds
