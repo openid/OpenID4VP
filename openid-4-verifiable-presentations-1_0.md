@@ -2087,9 +2087,9 @@ The value `1` MUST be used for the `<version>` field to indicate the request and
 
 The following exchange protocol values are defined by this specification:
 
-* JWS Compact Serialized unsigned requests: `openid4vp-v1-unsigned`
+* Unsigned requests: `openid4vp-v1-unsigned`
 * JWS Compact Serialized signed requests: `openid4vp-v1-signed`
-* JWS JSON Serialized multi RP requests: `openid4vp-v1-multisigned`
+* JWS JSON Serialized multi-signature requests: `openid4vp-v1-multisigned`
 
 ## Request {#dc_api_request}
 
