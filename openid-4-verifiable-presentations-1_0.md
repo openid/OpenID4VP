@@ -1358,7 +1358,7 @@ The following is a non-normative example of a response using the `presentation_s
 
 <{{examples/response/jarm_jwt_vc_json_post.txt}}
 
-The following is a non-normative example of the payload of the JWT used in the example above before base64url encoding and encrypting:
+The following is a non-normative example of the payload of the JWT used in the example above before encrypting and base64url encoding:
 
 <{{examples/response/jarm_jwt_vc_json_body.json}}
 
