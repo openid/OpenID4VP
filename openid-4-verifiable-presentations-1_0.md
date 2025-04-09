@@ -2236,11 +2236,11 @@ OpenID for Verifiable Presentations is Credential Format agnostic, i.e., it is d
 The following is a W3C Verifiable Credentials specific parameter in the `meta` parameter in a Credential Query as defined in (#credential_query):
 
 `type_values`:
-: OPTIONAL. An array of string arrays that specifies the fully expanded types (IRIs) after the `@context` was applied of Verifiable Credentials that the Verifier accepts to be presented in the Verifiable Presentation. Each of the top-level arrays specifies one alternative to match the `type` values of the Verifiable Credential against. Each inner array specifies a set of fully expanded types that MUST be present in the `type` property of the Verifiable Credential, regardless of order or the presence of additional types. 
+: OPTIONAL. An array of string arrays that specifies the fully expanded types (IRIs) after the `@context` was applied that the Verifier accepts to be presented in the Verifiable Presentation. Each of the top-level arrays specifies one alternative to match the `type` values of the Verifiable Credential against. Each inner array specifies a set of fully expanded types that MUST be present in the `type` property of the Verifiable Credential, regardless of order or the presence of additional types. 
 
 The following is a non-normative example of `type_values` within a DCQL query:
 
-```
+```json
 "type_values":[
   [
       "https://www.w3.org/2018/credentials#VerifiableCredential",
@@ -2254,9 +2254,9 @@ The following is a non-normative example of `type_values` within a DCQL query:
 ]
 ```
 
-The following is a non-normative example of a W3C Verifiable Credential that would match the `type_values` DCQL query above (other claims were omitted for readability):
+The following is a non-normative example of a W3C Verifiable Credential that would match the `type_values` DCQL query above (other claims omitted for readability):
 
-```
+```json
 {
   "@context": [
     "https://www.w3.org/2018/credentials/v1",
@@ -2266,9 +2266,9 @@ The following is a non-normative example of a W3C Verifiable Credential that wou
 }
 ```
 
-The following is another non-normative example of a W3C Verifiable Credential that would match the `type_values` DCQL query above (other claims were omitted for readability):
+The following is another non-normative example of a W3C Verifiable Credential that would match the `type_values` DCQL query above (other claims omitted for readability):
 
-```
+```json
 {
   "@context": [
     "https://www.w3.org/2018/credentials/v1",
