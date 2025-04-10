@@ -336,10 +336,10 @@ The following additional considerations are given for pre-existing Authorization
 ## Requesting Presentations without Holder Binding Proofs {#nkb-credentials}
 
 The primary use case of this specification is to request and present Verifiable
-Presentations, i.e., Presentations that contain a Holder Binding proof.
+Presentations, i.e., Presentations that contain a cryptographic Holder Binding proof.
 
 However, there are use cases where the Verifier wants to request presentation of
-Credentials without a proof of Holder Binding. Examples for such use cases include
+Credentials without a proof of cryptographic Holder Binding. Examples for such use cases include
 low-security Credentials that do not support Holder Binding (e.g., a cinema
 ticket), Credentials that are bound to a biometric trait, or Credentials that
 are bound to claims (e.g., a diploma). In some cases, Credentials may support
