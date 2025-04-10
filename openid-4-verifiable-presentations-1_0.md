@@ -1812,27 +1812,6 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
   </front>
 </reference>
 
-<reference anchor="VC_DATA_INTEGRITY" target="https://www.w3.org/TR/vc-data-integrity/">
-  <front>
-    <title>Verifiable Credential Data Integrity 1.0</title>
-    <author fullname="Manu Sporny">
-      <organization>Digital Bazaar</organization>
-    </author>
-    <author fullname="Ted Thibodeau Jr">
-      <organization>OpenLink Software</organization>
-    </author>
-    <author fullname="Ivan Herman">
-      <organization>W3C</organization>
-    </author>
-    <author fullname="Dave Longley">
-      <organization>Digital Bazaar</organization>
-    </author>
-    <author fullname="Greg Bernstein">
-    </author>
-   <date day="29" month="Mar" year="2025"/>
-  </front>
-</reference>
-
 <reference anchor="SIOPv2" target="https://openid.net/specs/openid-connect-self-issued-v2-1_0.html">
   <front>
     <title>Self-Issued OpenID Provider V2</title>
