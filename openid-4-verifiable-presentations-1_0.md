@@ -2695,6 +2695,7 @@ SD-JWT VCLD credentials are valid SD-JWT VC credentials and all requirements fro
 
 For compatibility with JWT processors, the following registered Claims from [@!RFC7519] and [@!I-D.ietf-oauth-sd-jwt-vc] MUST be used instead of any respective counterpart properties from W3C VCDM or elsewhere:
 
+* `vct` to represent the type of the Credential.
 * `exp` and `nbf` to represent the validity period of SD-JWT VCLD (i.e., cryptographic signature).
 * `iss` to represent the Credential Issuer.
 * `status` to represent the information to obtain the status of the Credential.
