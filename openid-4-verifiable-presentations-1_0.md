@@ -287,7 +287,7 @@ In the context of an authorization request according to [@RFC6749], parameters c
 : OPTIONAL. A JSON object containing the Verifier metadata values. It MUST be UTF-8 encoded. The following metadata parameters MAY be used:
 
     * `jwks`: OPTIONAL. A JWKS as defined in [@!RFC7591]. It MAY contain one or more public keys, such as those used by the Wallet as an input to a key agreement that may be used for encryption of the Authorization Response (see (#jarm)), or where the Wallet will require the public key of the Verifier to generate the Verifiable Presentation. This allows the Verifier to pass ephemeral keys specific to this Authorization Request. Public keys included in this parameter MUST NOT be used to verify the signature of signed Authorization Requests.
-    * `vp_formats`: REQUIRED when not available to the Wallet via another mechanism. As defined in (#client_metadata_parameters).
+    * `vp_formats_supported`: REQUIRED when not available to the Wallet via another mechanism. As defined in (#client_metadata_parameters).
     * `authorization_signed_response_alg`: OPTIONAL. As defined in [@!JARM], with an adjustment to the default behavior when this parameter is absent: instead of defaulting to `RS256`, the Authorization Response is not signed.
     * `authorization_encrypted_response_alg`: OPTIONAL. As defined in [@!JARM].
     * `authorization_encrypted_response_enc`: OPTIONAL. As defined in [@!JARM].
@@ -1310,7 +1310,7 @@ This document also defines the following additional error codes and error descri
 
 `vp_formats_not_supported`:
 
-- The Wallet does not support any of the formats requested by the Verifier, such as those included in the `vp_formats` registration parameter.
+- The Wallet does not support any of the formats requested by the Verifier, such as those included in the `vp_formats_supported` registration parameter.
 
 `invalid_request_uri_method`:
 
@@ -1361,7 +1361,7 @@ This specification defines how the Verifier can determine Credential formats, pr
 
 This specification defines new metadata parameters according to [@!RFC8414].
 
-* `vp_formats_supported`: REQUIRED. An object defining the formats and proof types of Verifiable Presentations and Verifiable Credentials that a Wallet supports. For specific values that can be used, see (#format_specific_parameters).
+* `vp_formats_supported`: REQUIRED. An object containing a list of name/value pairs, where the name is a Credential Format Identifier and the value defines format-specific parameters that a Wallet supports. For specific values that can be used, see (#format_specific_parameters).
 Deployments can extend the formats supported, provided Issuers, Holders and Verifiers all understand the new format.
 
 The following is a non-normative example of a `vp_formats_supported` parameter:
@@ -1407,8 +1407,8 @@ This specification defines how the Wallet can determine Credential formats, proo
 
 This specification defines the following new Client metadata parameters according to [@!RFC7591], to be used by the Verifier:
 
-`vp_formats`:
-: REQUIRED. An object defining the formats and proof types of Verifiable Presentations and Verifiable Credentials that a Verifier supports. For specific values that can be used, see (#format_specific_parameters).
+`vp_formats_supported`:
+: REQUIRED. An object containing a list of name/value pairs, where the name is a Credential Format Identifier and the value defines format-specific parameters that a Verifier supports. For specific values that can be used, see (#format_specific_parameters).
 Deployments can extend the formats supported, provided Issuers, Holders and Verifiers all understand the new format.
 
 Additional Verifier metadata parameters MAY be defined and used,
@@ -2271,7 +2271,7 @@ The `claims_path` parameter in the Credential Query as defined in (#credential_q
 
 This section illustrates the presentation of a Credential conformant to [@VC_DATA] that is signed using JWS, and does not use JSON-LD.
 
-The Credential format identifiers are `jwt_vc_json` to request a W3C Verifiable Credential and `jwt_vp_json` to request a W3C Verifiable Presentation.
+The Credential Format Identifiers are `jwt_vc_json` to request a W3C Verifiable Credential and `jwt_vp_json` to request a W3C Verifiable Presentation.
 
 Cipher suites should use algorithm names defined in [IANA JOSE Algorithms Registry](https://www.iana.org/assignments/jose/jose.xhtml#web-signature-encryption-algorithms).
 
@@ -2283,7 +2283,7 @@ The following is a non-normative example of the payload of a JWT-based W3C Verif
 
 #### Metadata
 
-The `vp_formats` parameter of the Verifier metadata or the `vp_formats_supported` parameter of the Wallet metadata MUST have the key `jwt_vp_json` or `jwt_vc_json`, and the value MUST be an object consisting of the following name/value pair:
+The `vp_formats_supported` parameter of the Verifier metadata or Wallet metadata MUST have the Credential Format Identifier as a key, and the value MUST be an object consisting of the following name/value pair:
 
 * `alg_values`: OPTIONAL. A JSON array containing identifiers of cryptographic algorithms supported for a JWT-secured W3C Verifiable Presentation (in case of `jwt_vp_json`) or W3C Verifiable Credential (in case of `jwt_vc_json`). If present, the `alg` JOSE header (as defined in [@!RFC7515]) of the presented Verifiable Credential or Verifiable Presentation MUST match one of the array values.
 
@@ -2322,7 +2322,7 @@ The following is a non-normative example of the payload of the Verifiable Presen
 
 This section illustrates presentation of a Credential conformant to [@VC_DATA] that is secured using Data Integrity, using JSON-LD.
 
-The Credential format identifiers are `ldp_vc` to request a W3C Verifiable Credential and `ldp_vp` to request a W3C Verifiable Presentation.
+The Credential Format Identifiers are `ldp_vc` to request a W3C Verifiable Credential and `ldp_vp` to request a W3C Verifiable Presentation.
 
 Cipher suites should use Data Integrity compatible securing mechanisms defined in [Verifiable Credential Extensions](https://www.w3.org/TR/vc-extensions/#securing-mechanisms).
 
@@ -2334,7 +2334,7 @@ The following is a non-normative example of the payload of a Verifiable Credenti
 
 #### Metadata
 
-The `vp_formats` parameter of the Verifier metadata or the `vp_formats_supported` parameter of the Wallet metadata MUST have the key `ldp_vp` or `ldp_vc`, and the value MUST be an object consisting of the following name/value pair:
+The `vp_formats_supported` parameter of the Verifier metadata or Wallet metadata MUST have the Credential Format Identifier as a key, and the value MUST be an object consisting of the following name/value pair:
 
 * `proof_type_values`: OPTIONAL. A JSON array containing identifiers of proof types supported for a Data Integrity secured W3C Verifiable Presentation (in case of `ldp_vp`) or W3C Verifiable Credential (in case of `ldp_vc`). If present, the proof `type` parameter (as defined in [@VC_DATA]) of the presented Verifiable Credential or Verifiable Presentation MUST match one of the array values.
 * `cryptosuite_values`: OPTIONAL. A JSON array containing identifiers of crypotsuites supported with one of the algorithms listed in `proof_type_values` for a Data Integrity secured W3C Verifiable Presentation (in case of `ldp_vp`) or W3C Verifiable Credential (in case of `ldp_vc`). Note that `cryptosuite_values` MAY be used if one of the algorithms in `proof_type_values` supports multiple cryptosuites. If present, the proof `cryptosuite` parameter (as defined in [@VC_DATA_INTEGRITY]) of the presented Verifiable Credential or Verifiable Presentation MUST match one of the array values.
@@ -2369,7 +2369,7 @@ AnonCreds is a Credential format defined as part of the Hyperledger Indy project
 
 To be able to request AnonCreds, there needs to be a set of identifiers for Verifiable Credentials, Verifiable Presentations ("proofs" in Indy terminology) and crypto schemes.
 
-The Credential format identifier is `ac_vp` to request a Presentation.
+The Credential Format Identifier is `ac_vp` to request a Presentation.
 
 The identifier for the CL-signature crypto scheme used in the examples in this section is `CLSignature2019`.
 
@@ -2414,7 +2414,7 @@ The following is a non-normative example of the content of the credential in the
 
 ISO/IEC 18013-5:2021 [@ISO.18013-5] defines a mobile driving license (mDL) Credential in the mobile document (mdoc) format. Although ISO/IEC 18013-5:2021 [@ISO.18013-5] is specific to mobile driving licenses (mDLs), the Credential format can be utilized with any type of Credential (or mdoc document types). The ISO/IEC 23220 series has extracted components from ISO/IEC 18013-5:2021 [@ISO.18013-5] and ISO/IEC TS 18013-7 [@ISO.18013-7] that are common across document types to facilitate the profiling of the specification for other document types. The core data structures are shared between ISO/IEC 18013-5:2021 [@ISO.18013-5], ISO/IEC 23220-2 [@ISO.23220-2], ISO/IEC 23220-4 [@ISO.23220-4] which are encoded in CBOR and secured using COSE_Sign1.
 
-The Credential format identifier for Credentials in the mdoc format is `mso_mdoc`.
+The Credential Format Identifier for Credentials in the mdoc format is `mso_mdoc`.
 
 ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 [@ISO.23220-4] Annex C define a profile of OpenID4VP for requesting and presenting Credentials in the mdoc format.
 
@@ -2436,7 +2436,7 @@ Some document types support some transaction data ((#transaction_data)) to be pr
 
 ### Metadata
 
-The `vp_formats` parameter of the Verifier metadata or the `vp_formats_supported` parameter of the Wallet metadata MUST have the key `mso_mdoc`, and the value MUST be an object consisting of the following name/value pairs:
+The `vp_formats_supported` parameter of the Verifier metadata or Wallet metadata MUST have the Credential Format Identifier as a key, and the value MUST be an object consisting of the following name/value pair:
 
 * `issuer_signed_alg_values`: OPTIONAL. A JSON array containing identifiers of cryptographic algorithms supported for an `IssuerSigned` CBOR structure of an mdoc. If present, the `alg` COSE header (as defined in [@!RFC8152]) of the `IssuerSigned` structure of the presented mdoc MUST match one of the array values.
 * `issuer_signed_crv_values`: OPTIONAL. A JSON array containing identifiers of cryptographic curves supported with one of the algorithms listed in `issuer_signed_alg_values` for an `IssuerSigned` CBOR structure of an mdoc. Note that `issuer_signed_crv_values` MAY be used if one of the algorithms in `issuer_signed_alg_values` supports multiple curves.
@@ -2615,7 +2615,7 @@ This section defines how Credentials complying with [@!I-D.ietf-oauth-sd-jwt-vc]
 
 ### Format Identifier
 
-The Credential format identifier is `dc+sd-jwt`.
+The Credential Format Identifier is `dc+sd-jwt`.
 
 #### Example Credential
 
@@ -2676,7 +2676,7 @@ The following is one profile that can be included in a transaction data type spe
 
 ### Metadata
 
-The `vp_formats` parameter of the Verifier metadata or the `vp_formats_supported` parameter of the Wallet metadata MUST have the key `dc+sd-jwt`, and the value MUST be an object consisting of the following name/value pairs:
+The `vp_formats_supported` parameter of the Verifier metadata or Wallet metadata MUST have the Credential Format Identifier as a key, and the value MUST be an object consisting of the following name/value pair:
 
 * `sd-jwt_alg_values`: OPTIONAL. A JSON array containing identifiers of cryptographic algorithms supported for an Issuer-signed JWT of an SD-JWT. If present, the `alg` JOSE header (as defined in [@!RFC7515]) of the Issuer-signed JWT of the presented SD-JWT MUST match one of the array values.
 * `kb-jwt_alg_values`: OPTIONAL. A JSON array containing identifiers of cryptographic algorithms supported for a Key Binding JWT (KB-JWT). If present, the `alg` JOSE header (as defined in [@!RFC7515]) of the presented KB-JWT MUST match one of the array values.
@@ -2939,10 +2939,10 @@ This specification registers the following client metadata parameters
 in the IANA "OAuth Dynamic Client Registration Metadata" registry [@IANA.OAuth.Parameters]
 established by [@!RFC7591].
 
-### vp_formats
+### vp_formats_supported
 
-* Client Metadata Name: `vp_formats`
-* Client Metadata Description: An object defining the formats and proof types of Verifiable Presentations and Verifiable Credentials that a Verifier supports
+* Client Metadata Name: `vp_formats_supported`
+* Client Metadata Description: An object containing a list of name/value pairs, where the name is a string identifying a Credential format supported by the Verifier
 * Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#client_metadata_parameters) of this specification
 

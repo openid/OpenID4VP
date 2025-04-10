@@ -1,5 +1,5 @@
 {
-  "vp_formats": {
+  "vp_formats_supported": {
     "mso_mdoc": {
       "issuer_signed_alg_values": [-7, -8],
       "issuer_signed_crv_values": [1, 2, 3, 256, 257, 258, 259, 6, 7],

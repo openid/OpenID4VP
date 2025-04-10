@@ -1,5 +1,5 @@
 {
-  "vp_formats": {
+  "vp_formats_supported": {
     "ldp_vc": {
       "proof_type_values": [
         "DataIntegrityProof", 
