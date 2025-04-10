@@ -2334,7 +2334,7 @@ The following is a non-normative example of the payload of a Verifiable Credenti
 
 #### Metadata
 
-The `vp_formats_supported` parameter of the Verifier metadata or Wallet metadata MUST have the Credential Format Identifier as a key, and the value MUST be an object consisting of the following name/value pair:
+The `vp_formats_supported` parameter of the Verifier metadata or Wallet metadata MUST have the Credential Format Identifier as a key, and the value MUST be an object consisting of the following name/value pairs:
 
 * `proof_type_values`: OPTIONAL. A JSON array containing identifiers of proof types supported for a Data Integrity secured W3C Verifiable Presentation (in case of `ldp_vp`) or W3C Verifiable Credential (in case of `ldp_vc`). If present, the proof `type` parameter (as defined in [@VC_DATA]) of the presented Verifiable Credential or Verifiable Presentation MUST match one of the array values.
 * `cryptosuite_values`: OPTIONAL. A JSON array containing identifiers of crypotsuites supported with one of the algorithms listed in `proof_type_values` for a Data Integrity secured W3C Verifiable Presentation (in case of `ldp_vp`) or W3C Verifiable Credential (in case of `ldp_vc`). Note that `cryptosuite_values` MAY be used if one of the algorithms in `proof_type_values` supports multiple cryptosuites. If present, the proof `cryptosuite` parameter (as defined in [@VC_DATA_INTEGRITY]) of the presented Verifiable Credential or Verifiable Presentation MUST match one of the array values.
@@ -2436,12 +2436,10 @@ Some document types support some transaction data ((#transaction_data)) to be pr
 
 ### Metadata
 
-The `vp_formats_supported` parameter of the Verifier metadata or Wallet metadata MUST have the Credential Format Identifier as a key, and the value MUST be an object consisting of the following name/value pair:
+The `vp_formats_supported` parameter of the Verifier metadata or Wallet metadata MUST have the Credential Format Identifier as a key, and the value MUST be an object consisting of the following name/value pairs:
 
-* `issuer_signed_alg_values`: OPTIONAL. A JSON array containing identifiers of cryptographic algorithms supported for an `IssuerSigned` CBOR structure of an mdoc. If present, the `alg` COSE header (as defined in [@!RFC8152]) of the `IssuerSigned` structure of the presented mdoc MUST match one of the array values.
-* `issuer_signed_crv_values`: OPTIONAL. A JSON array containing identifiers of cryptographic curves supported with one of the algorithms listed in `issuer_signed_alg_values` for an `IssuerSigned` CBOR structure of an mdoc. Note that `issuer_signed_crv_values` MAY be used if one of the algorithms in `issuer_signed_alg_values` supports multiple curves.
-* `device_signed_alg_values`: OPTIONAL. A JSON array containing identifiers of cryptographic algorithms supported for a `DeviceSigned` CBOR structure of an mdoc. If present, the `alg` COSE header (as defined in [@!RFC8152]) of the `DeviceSigned` structure of the presented mdoc MUST match one of the array values.
-* `device_signed_crv_values`: OPTIONAL. A JSON array containing identifiers of cryptographic curves supported with one of the algorithms listed in `device_signed_alg_values` for a `DeviceSigned` CBOR structure of an mdoc. Note that `device_signed_crv_values` MAY be used if one of the algorithms in `device_signed_alg_values` supports multiple curves.
+* `issuer_signed_alg_values`: OPTIONAL. A JSON array containing fully-specified identifiers of cryptographic algorithms (as defined in [@!I-D.ietf-jose-fully-specified-algorithms]) supported for an `IssuerSigned` CBOR structure of an mdoc. If present, the `alg` COSE header (as defined in [@!RFC8152]) of the `IssuerSigned` structure of the presented mdoc MUST match one of the array values. If the `IssuerSigned` structure is not signed with a fully-specified cryptographic algorithm identifier (commonly known as a polymoprhic cryptographic algorithm identifier), the fully-specified algorithm derived from the combination of the `alg` value from the COSE header and the `crv` parameter from the signing key MUST match one of the array values.
+* `device_signed_alg_values`: OPTIONAL. A JSON array containing fully-specified identifiers of cryptographic algorithms (as defined in [@!I-D.ietf-jose-fully-specified-algorithms]) supported for an `DeviceSigned` CBOR structure of an mdoc. If present, the `alg` COSE header (as defined in [@!RFC8152]) of the `DeviceSigned` structure of the presented mdoc MUST match one of the array values. If the `DeviceSigned` structure is not signed with a fully-specified cryptographic algorithm identifier (commonly known as a polymoprhic cryptographic algorithm identifier), the fully-specified algorithm derived from the combination of the `alg` value from the COSE header and the `crv` parameter from the signing key MUST match one of the array values.
 
 The following is a non-normative example of `client_metadata` request parameter value in a request to present an ISO/IEC 18013-5 mDOC.
 
@@ -2676,7 +2674,7 @@ The following is one profile that can be included in a transaction data type spe
 
 ### Metadata
 
-The `vp_formats_supported` parameter of the Verifier metadata or Wallet metadata MUST have the Credential Format Identifier as a key, and the value MUST be an object consisting of the following name/value pair:
+The `vp_formats_supported` parameter of the Verifier metadata or Wallet metadata MUST have the Credential Format Identifier as a key, and the value MUST be an object consisting of the following name/value pairs:
 
 * `sd-jwt_alg_values`: OPTIONAL. A JSON array containing identifiers of cryptographic algorithms supported for an Issuer-signed JWT of an SD-JWT. If present, the `alg` JOSE header (as defined in [@!RFC7515]) of the Issuer-signed JWT of the presented SD-JWT MUST match one of the array values.
 * `kb-jwt_alg_values`: OPTIONAL. A JSON array containing identifiers of cryptographic algorithms supported for a Key Binding JWT (KB-JWT). If present, the `alg` JOSE header (as defined in [@!RFC7515]) of the presented KB-JWT MUST match one of the array values.
