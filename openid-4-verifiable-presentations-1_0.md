@@ -915,7 +915,14 @@ rules are defined in (#selecting_claims).
 The following section describes the logic that applies for selecting claims 
 and for selecting credentials.
 
-For formats supporting selective disclosure, these rules support selecting a minimal dataset to fulfill the Verifier's request in a privacy-friendly manner (see (#privacy-considerations) for additional considerations). Wallets MUST NOT send selectively disclosable claims that have not been selected according to the rules below. A presentation of a credential MAY contain more than the claims selected in the particular DCQL Credential Query if the same credential is selected with the additional claims in a separate Credential Query in the same request.
+For formats supporting selective disclosure, these rules support selecting a minimal
+dataset to fulfill the Verifier's request in a privacy-friendly manner
+(see (#privacy-considerations) for additional considerations). Wallets MUST NOT send
+selectively disclosable claims that have not been selected according to the rules below.
+A single Presentation of a Credential MAY contain more than the claims selected in the
+particular DCQL Credential Query if the same Credential is selected with the additional
+claims in a separate Credential Query in the same request, or the additional claims are
+not selectively disclosable.
 
 ### Selecting Claims {#selecting_claims}
 
