@@ -320,6 +320,25 @@ The following is a non-normative example of a transaction data content, after ba
 }
 ```
 
+`verifier_attestations`:
+: OPTIONAL. An array of attestations about the Verifier relevant to the Credential Request. These attestations MAY include Verifier metadata, policies, trust status, or authorizations. Attestations are intended to support authorization decisions, inform Wallet policy enforcement, or enrich the End-User consent dialog. Each object has the following structure:
+
+    * `format`: REQUIRED. A string that identifies the format of the attestation and how it is encoded. Ecosystems SHOULD use collision-resistant identifiers. Further processing of the attestation is determined by the type of the attestation, which is specified in a format-specific way. 
+    * `data`: REQUIRED. An object or string containing an attestation (e.g. a JWT). The payload structure is defined on a per format level. The Wallet MUST validate this signature and ensure binding.
+    * `credential_ids`: OPTIONAL. An array of strings each referencing a Credential requested by the Verifier for which the attestation is relevant. Each string matches the `id` field in a DCQL Credential Query. If omitted, the attestation is relevant to all requested credentials.
+
+See (#verifier-attestations) for more details.
+
+The following is a non-normative example of an attested object:
+
+```json
+{
+  "format": "jwt",
+  "data": "eyJhbGciOiJFUzI1...EF0RBtvPClL71TWHlIQ",
+  "credential_ids": [ "id_card" ]
+}
+```
+
 ## Existing Parameters
 
 The following additional considerations are given for pre-existing Authorization Request parameters:
@@ -608,6 +627,29 @@ The Wallet then validates the request as specified in OAuth 2.0 [@RFC6749].
 ### Request URI Error Response
 
 If the Verifier responds with any HTTP error response, the Wallet MUST terminate the process.
+
+## Verifier Attestations {#verifier-attestations}
+
+Verifier Attestations allow the Verifier to provide additional context or metadata as part of the Authorization Request attested by a trusted third party. These inputs can support a variety of use cases, such as helping the Wallet apply policy decisions, validating eligibility, or presenting more meaningful information to the End-User during consent.
+
+Each Verifier Attestation is an object containing a type identifier, associated data and optionally references to credential ids. The format and semantics of these attestations are defined by ecosystems or profiles.
+
+For example, a Verifier might include:
+
+- A **registration certificate** issued by a trusted authority, to prove that the verifier has publicly registered its intend to request certain credentials.
+- A **policy statement**, such as a signed document describing acceptable use, retention periods, or access rights.
+- The **confirmation of a role** of the verifier in a certain domain, e.g. the verifier might be a certified payment service provider under the EU's Payment Service Directive 2.
+
+Verifier Attestations are optional. Wallets MAY use them to make authorization decisions or to enhance the user experience, but they SHOULD ignore any unrecognized or unsupported Verifier Attestation types.
+
+### Proof of Possession
+
+This specification supports two models for proof of possession:
+
+- **claim-bound attestations**: The attestation is not signed by the Relying Party, but bound to it. The exact binding mechanism is defined by the type of the definition. For example for JWTs, the `sub` claim is including the distinguished name of the Certificate that was used to sign the request. The binding may also include the client_id parameter.
+- **key-bound attestations**: The attestation's proof of possession is signed by the Relying Party with a key contained or related to the attestation . To bind the signature to the presentation request, the respective signature object should include the `nonce` and `client_id` request parameters. The attestation and the proof of possession have to be passed in the attachment.
+
+ The Wallet MUST validate such proofs if defined by the profile and ignore or reject attachments that fail validation.
 
 # Digital Credentials Query Language (DCQL) {#dcql_query}
 
@@ -2136,6 +2178,7 @@ Out of the Authorization Request parameters defined in [@!RFC6749] and (#vp_toke
 * `request`
 * `transaction_data`
 * `dcql_query`
+* `verifier_attestations`
 
 The `client_id` parameter MUST be omitted in unsigned requests defined in (#unsigned_request). The Wallet MUST ignore any `client_id` parameter that is present in an unsigned request.
 
@@ -2189,11 +2232,12 @@ This is an example of the payload of a signed OpenID4VP request used with the W3
 
 #### JWS JSON Serialization
 
-The JWS JSON Serialization [@!RFC7515]) allows the Verifier to use multiple Client Identifiers and corresponding key material to protect the same request. This serves use cases where the Verifier requests Credentials belonging to different trust frameworks and, therefore, needs to authenticate in the context of those trust frameworks.
+The JWS JSON Serialization [@!RFC7515]) allows the Verifier to use multiple Client Identifiers and corresponding key material to protect the same request. This serves use cases where the Verifier requests Credentials belonging to different trust frameworks and, therefore, needs to authenticate in the context of those trust frameworks. It also allows the Verifier to add different attestations for each Client Identifier.
 
 In this case, the following request parameters MUST be present in the protected header of the respective `signature` object in the `signatures` array defined in [@!RFC7515, section 7.2.1]:
 
 * `client_id`
+* `verifier_attestations`
 
 All other request parameters MUST be present in the `payload` element of the JWS object.
 
@@ -2966,6 +3010,12 @@ established by [@!RFC7591].
 * Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#client_metadata_parameters) of this specification
 
+### verifier_attestations
+
+* Name: `verifier_attestations`
+* Parameter Usage Location: authorization request
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
+* Reference: (#new_parameters) of this specification
 
 ## Media Types Registry
 
@@ -3034,7 +3084,7 @@ in the IANA "Uniform Resource Identifier (URI) Schemes" registry [@IANA.URI.Sche
 
 # Acknowledgements {#Acknowledgements}
 
-We would like to thank Richard Barnes, Paul Bastian, Vittorio Bertocci, Christian Bormann, John Bradley, Marcos Caceres, Brian Campbell, Lee Campbell, Tim Cappalli, Gabe Cohen, David Chadwick, Andrii Deinega, Rajvardhan Deshmukh, Giuseppe De Marco, Mark Dobrinic, Daniel Fett, Pedro Felix, George Fletcher, Ryan Galluzzo, Timo Glasta, Sam Goto, Mark Haine, Martijn Haring, Fabian Hauck, Roland Hedberg, Joseph Heenan, Bjorn Hjelm, Alen Horvat, Andrew Hughes, Jacob Ideskog, Łukasz Jaromin, Edmund Jay, Michael B. Jones, Tom Jones, Judith Kahrer, Takahiko Kawasaki, Gaurav Khot, Niels Klomp, Ronald Koenig, Markus Kreusch, Adam Lemmon, Hicham Lozi, Daniel McGrogan, Jeremie Miller, Kenichi Nakamura, Gareth Oliver, Aaron Parecki, Andreea Prian, Rolson Quadras, Javier Ruiz, Nat Sakimura, Arjen van Veen, Steve Venema, Jan Vereecken, David Waite, Jacob Ward, and David Zeuthen for their valuable feedback and contributions to this specification.
+We would like to thank Richard Barnes, Paul Bastian, Vittorio Bertocci, Christian Bormann, John Bradley, Marcos Caceres, Brian Campbell, Lee Campbell, Tim Cappalli, Gabe Cohen, David Chadwick, Andrii Deinega, Rajvardhan Deshmukh, Giuseppe De Marco, Mark Dobrinic, Daniel Fett, Pedro Felix, George Fletcher, Ryan Galluzzo, Timo Glasta, Sam Goto, Mark Haine, Martijn Haring, Fabian Hauck, Roland Hedberg, Joseph Heenan, Bjorn Hjelm, Alen Horvat, Andrew Hughes, Jacob Ideskog, Łukasz Jaromin, Edmund Jay, Michael B. Jones, Tom Jones, Judith Kahrer, Takahiko Kawasaki, Gaurav Khot, Niels Klomp, Ronald Koenig, Markus Kreusch, Adam Lemmon, Hicham Lozi, Daniel McGrogan, Jeremie Miller, Mirko Mollik, Kenichi Nakamura, Gareth Oliver, Aaron Parecki, Andreea Prian, Rolson Quadras, Javier Ruiz, Nat Sakimura, Arjen van Veen, Steve Venema, Jan Vereecken, David Waite, Jacob Ward, and David Zeuthen for their valuable feedback and contributions to this specification.
 
 # Notices
 
@@ -3050,11 +3100,13 @@ The technology described in this specification was made available from contribut
 
    -26
 
+   * add `verifier_attestations` to list of authorization parameters
    * renamed "Client ID Scheme" to "Client ID Prefix", and updated metadata (`client_id_prefixes_supported`) and `error_description` to match
    * add note that `iss` must be ignored if present in the request object
    * added security considerations for value matching in DCQL
    * require `kid` in JWE response header if present in client_metadata `jwks`
    * added some more (non-exhaustive) privacy considerations with pointers to SD-JWT and OpenID4VCI
+   * add implementation consideration about pre-final specs
    * remove DIF Presentation Exchange as a query language option
    * Changes in the DCQL query parameters specific to W3C VCs and AnonCreds
    * change the identifier for the ETSI trusted list `trusted_authorities` entry from `openid_fed` to `openid_federation`
@@ -3065,7 +3117,6 @@ The technology described in this specification was made available from contribut
 
    -25
 
-   * add implementation consideration about pre-final specs
    * clarify value matching in DCQL
    * clarify why requests using redirect_uri scheme cannot be signed
    * add `trusted_authorities` to DCQL  
