@@ -2249,7 +2249,7 @@ OpenID for Verifiable Presentations is Credential Format agnostic, i.e., it is d
 The following is a W3C Verifiable Credentials specific parameter in the `meta` parameter in a Credential Query as defined in (#credential_query):
 
 `type_values`:
-: OPTIONAL. An array of string arrays that specifies the fully expanded types (IRIs) after the `@context` was applied that the Verifier accepts to be presented in the Verifiable Presentation. Each of the top-level arrays specifies one alternative to match the `type` values of the Verifiable Credential against. Each inner array specifies a set of fully expanded types that MUST be present in the `type` property of the Verifiable Credential, regardless of order or the presence of additional types. 
+: REQUIRED. An array of string arrays that specifies the fully expanded types (IRIs) after the `@context` was applied that the Verifier accepts to be presented in the Verifiable Presentation. Each of the top-level arrays specifies one alternative to match the `type` values of the Verifiable Credential against. Each inner array specifies a set of fully expanded types that MUST be present in the `type` property of the Verifiable Credential, regardless of order or the presence of additional types. 
 
 The following is a non-normative example of `type_values` within a DCQL query:
 
