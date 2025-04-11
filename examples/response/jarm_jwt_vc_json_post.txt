@@ -1,5 +1,0 @@
-POST /post HTTP/1.1
-Host: client.example.org
-Content-Type: application/x-www-form-urlencoded
-
-  response=eyJra...9t2LQ
