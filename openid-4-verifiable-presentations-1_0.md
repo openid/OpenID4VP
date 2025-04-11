@@ -1772,7 +1772,7 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
   </front>
 </reference>
 
-<reference anchor="SIOPv2" target="https://openid.net/specs/openid-connect-self-issued-v2-1_0.html">
+<reference anchor="SIOPv2" target="https://openid.net/specs/openid-connect-self-issued-v2-1_0-13.html">
   <front>
     <title>Self-Issued OpenID Provider V2</title>
     <author fullname="Kristina Yasuda">
@@ -1948,7 +1948,7 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
         </front>
 </reference>
 
-<reference anchor="OpenID.Federation" target="https://openid.net/specs/openid-federation-1_0.html">
+<reference anchor="OpenID.Federation" target="https://openid.net/specs/openid-federation-1_0-42.html">
         <front>
           <title>OpenID Federation 1.0</title>
 		  <author fullname="R. Hedberg, Ed.">
