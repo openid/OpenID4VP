@@ -758,7 +758,7 @@ Below is a non-normative example of such an entry of type `etsi_tl`:
 #### OpenID Federation
 
 Type:
-: `"openid_fed"`
+: `"openid_federation"`
 
 Value:
 : The `Entity Identifier` as defined in Section 1 of [@!OpenID.Federation] that is bound to
@@ -766,10 +766,11 @@ an entity in a federation. While this Entity Identifier could be any entity in
 that ecosystem, this entity would usually have the Entity Configuration of a Trust Anchor.
 A valid trust path, including the given Entity Identifier, must be constructible from a matching credential.
 
-Below is a non-normative example of such an entry of type `openid_fed`: 
+Below is a non-normative example of such an entry of type `openid_federation`:
+
 ```json
 {
-  "type": "openid_fed",
+  "type": "openid_federation",
   "values": ["https://trustanchor.example.com"]
 }
 ```
@@ -3040,6 +3041,8 @@ The technology described in this specification was made available from contribut
    * added some more (non-exhaustive) privacy considerations with pointers to SD-JWT and OpenID4VCI
    * remove DIF Presentation Exchange as a query language option
    * Changes in the DCQL query parameters specific to W3C VCs and AnonCreds
+   * change the identifier for the ETSI trusted list `trusted_authorities` entry from `openid_fed` to `openid_federation`
+   * change openid_fed to openid_federation for Trusted Authorities Query
    * remove JARM and response signing, using JWT directly for unsigned, encrypted responses.
    * make consistent the use of prefixes in the client_id prefixing
    * fix nonce computation for AnonCreds
