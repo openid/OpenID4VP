@@ -3035,6 +3035,8 @@ The technology described in this specification was made available from contribut
    -26
 
    * renamed "Client ID Scheme" to "Client ID Prefix", and updated metadata (`client_id_prefixes_supported`) and `error_description` to match
+   * added security considerations for value matching in DCQL
+   * require `kid` in JWE response header if present in client_metadata `jwks`
    * added some more (non-exhaustive) privacy considerations with pointers to SD-JWT and OpenID4VCI
    * remove DIF Presentation Exchange as a query language option
    * Changes in the DCQL query parameters specific to W3C VCs and AnonCreds
@@ -3057,9 +3059,7 @@ The technology described in this specification was made available from contribut
    * remove x509_san_uri client identifier scheme
    * clarify that `dcql_query` and `presentation_definition` are passed as JSON objects (not strings) in request objects
    * support returning multiple presentations for a single dcql credential query when requested using `multiple`
-   * added security considerations for value matching in DCQL
    * Added support for multiple Client Identifiers and corresponding Request Signature to the DC API profile
-   * require `kid` in JWE response header if present in client_metadata `jwks`
 
    -24
 
