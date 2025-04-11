@@ -2236,9 +2236,47 @@ OpenID for Verifiable Presentations is Credential Format agnostic, i.e., it is d
 The following is a W3C Verifiable Credentials specific parameter in the `meta` parameter in a Credential Query as defined in (#credential_query):
 
 `type_values`:
-: OPTIONAL. An array of string arrays that specifies the types of Verifiable Credentials that the Verifier accepts to be used in the Verifiable Presentation. Each of the top-level arrays specifies one alternative to match the type of the Verifiable Credential against. Each inner array specifies a set of types that must be present in the `type` property of the Verifiable Credential, regardless of order or the presence of additional types. 
+: OPTIONAL. An array of string arrays that specifies the fully expanded types (IRIs) after the `@context` was applied that the Verifier accepts to be presented in the Verifiable Presentation. Each of the top-level arrays specifies one alternative to match the `type` values of the Verifiable Credential against. Each inner array specifies a set of fully expanded types that MUST be present in the `type` property of the Verifiable Credential, regardless of order or the presence of additional types. 
 
-For example, if the DCQL query contains `"type_values": [["ACred", "BCred"], ["CCred"]]`, then a Verifiable Credential with the type `["DCred", "BCred", "ACred"]` would match, but a Verifiable Credential with the type `["BCred"]` would not match.
+The following is a non-normative example of `type_values` within a DCQL query:
+
+```json
+"type_values":[
+  [
+      "https://www.w3.org/2018/credentials#VerifiableCredential",
+      "https://example.org/examples#AlumniCredential",
+      "https://example.org/examples#BachelorDegree"
+  ],
+  [
+      "https://www.w3.org/2018/credentials#VerifiableCredential",
+      "https://example.org/examples#UniversityDegreeCredential"
+  ]
+]
+```
+
+The following is a non-normative example of a W3C Verifiable Credential that would match the `type_values` DCQL query above (other claims omitted for readability):
+
+```json
+{
+  "@context": [
+    "https://www.w3.org/2018/credentials/v1",
+    "https://www.w3.org/2018/credentials/examples/v1"
+  ],
+  "type": ["VerifiableCredential", "UniversityDegreeCredential"]
+}
+```
+
+The following is another non-normative example of a W3C Verifiable Credential that would match the `type_values` DCQL query above (other claims omitted for readability):
+
+```json
+{
+  "@context": [
+    "https://www.w3.org/2018/credentials/v1",
+    "https://www.w3.org/2018/credentials/examples/v1"
+  ],
+  "type": ["VerifiableCredential", "AlumniCredential"]
+}
+```
 
 #### Claims Matching
 
