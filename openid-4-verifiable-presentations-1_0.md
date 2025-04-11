@@ -553,7 +553,7 @@ Location: https://wallet.example.org/universal-link?
   &dcql_query=...
   &nonce=n-0S6_WzA2Mj
   &client_metadata=%7B%22vp_formats%22%3A%7B%22jwt_vp_json%22%3A%
-    7B%22alg%22%3A%5B%22EdDSA%22%2C%22ES256K%22%5D%7D%2C%22ldp_vp
+    7B%22alg%22%3A%5B%22EdDSA%22%2C%22ES256K%22%5D%7D%2C%22ldp_vc
     %22%3A%7B%22proof_type%22%3A%5B%22Ed25519Signature2018%22%5D%
     7D%7D%7D
 ```
@@ -1653,7 +1653,7 @@ The `client_id` is used to detect the replay of Verifiable Presentations to a pa
 
 Note: Different formats for Verifiable Presentations and signature/proof schemes use different ways to represent the intended audience and the session binding. Some use claims to directly represent those values, others include the values into the calculation of cryptographic proofs. There are also different naming conventions across the different formats. The format of the respective presentation is defined by the Verifier in the request.
 
-The following is a non-normative example of the payload of a Verifiable Presentation of a format identifier `jwt_vp_json`:
+The following is a non-normative example of the payload of a Verifiable Presentation following a request with the Credential Format Identifier `jwt_vc_json`:
 
 ```json
 {
@@ -1678,7 +1678,7 @@ The following is a non-normative example of the payload of a Verifiable Presenta
 
 In the example above, the requested `nonce` value is included as the `nonce` and `client_id` as the `aud` value in the proof of the Verifiable Presentation.
 
-The following is a non-normative example of a Verifiable Presentation of a format identifier `ldp_vp` without a `proof` property:
+The following is a non-normative example of a Verifiable Presentation following a request with the Credential Format Identifier `ldp_vc` without a `proof` property:
 
 ```json
 {
@@ -2282,9 +2282,9 @@ OpenID for Verifiable Presentations is Credential Format agnostic, i.e., it is d
 
 The following sections define the Credential Format specific parameters and rules for Verifiable Credentials compliant to the [@VC_DATA] specification.
 
-### DCQL
+If `allow_replay` is not set to `true` in the Credential Query, the Wallet MUST return a Verifiable Presentation of a Verifiable Credential. Otherwise, a Verifiable Credential without Holder Binding MUST be returned.
 
-#### Parameters in the `meta` parameter in Credential Query
+### Parameters in the `meta` parameter in Credential Query
 
 The following is a W3C Verifiable Credentials specific parameter in the `meta` parameter in a Credential Query as defined in (#credential_query):
 
@@ -2293,36 +2293,37 @@ The following is a W3C Verifiable Credentials specific parameter in the `meta` p
 
 For example, if the DCQL query contains `"type_values": [["ACred", "BCred"], ["CCred"]]`, then a Verifiable Credential with the type `["DCred", "BCred", "ACred"]` would match, but a Verifiable Credential with the type `["BCred"]` would not match.
 
-#### Claims Matching
+### Claims Matching
 
 The `claims_path` parameter in the Credential Query as defined in (#credential_query) is used to specify the claims that the Verifier wants to receive in the Presentation. When used in the context of W3C Verifiable Credentials, the `claims_path` parameter always matches on the root of Verifiable Credential (not the Verifiable Presentation). Examples are shown in the following subsections.
 
 ### Verifier Metadata
 
-The `vp_formats` parameter of the Verifier metadata MUST have the keys `jwt_vp_json`, `jwt_vc_json`, `ldp_vp` or `ldp_vc` (according to the format, as defined in (#jwt_vc) and (#ldp_vc)), and for `jwt_vp_json` and `ldp_vp`, the value MUST be an object consisting of the following name/value pair:
+The `vp_formats` parameter of the Verifier metadata MUST have the keys `jwt_vc_json` or `ldp_vc` (according to the format, as defined in (#jwt_vc) and (#ldp_vc)), and the value MUST be an object consisting of the following name/value pair:
 
 * `proof_type_values`: OPTIONAL. A JSON array containing types of proofs that
   the Verifier accepts to be used in the Verifiable Presentation, for example
   `["RsaSignature2018"]`.
 
+### Formats and Examples
 
-### VC signed as a JWT, not using JSON-LD {#jwt_vc}
+#### VC signed as a JWT, not using JSON-LD {#jwt_vc}
 
 This section illustrates the presentation of a Credential conformant to [@VC_DATA] that is signed using JWS, and does not use JSON-LD.
 
-The Credential Format Identifiers are `jwt_vc_json` to request a W3C Verifiable Credential and `jwt_vp_json` to request a Verifiable Presentation compliant to the [@VC_DATA] specification.
+##### Format Identifier and Cipher Suites
 
-If `jwt_vc_json` is used, the Credential is returned without Holder Binding. Therefore, the Verifier MUST set the `allow_replay` parameter in the Credential Query to `true` if it is using `jwt_vc_json`. Otherwise, `allow_replay` MUST be `false`. Wallets MUST reject requests that do not follow these rules.
+The Credential Format Identifiers is `jwt_vc_json` to request a W3C Verifiable Credential compliant to the [@VC_DATA] specification or a Verifiable Presentation of such a credential.
 
 Cipher suites should use algorithm names defined in [IANA JOSE Algorithms Registry](https://www.iana.org/assignments/jose/jose.xhtml#web-signature-encryption-algorithms).
 
-#### Example Credential
+##### Example Credential
 
 The following is a non-normative example of the payload of a JWT-based W3C Verifiable Credential that will be used throughout this section:
 
 <{{examples/credentials/jwt_vc.json}}
 
-#### Presentation Request
+##### Presentation Request
 
 The requirements regarding the Credential to be presented are conveyed in the `dcql_query` parameter.
 
@@ -2330,7 +2331,7 @@ The following is a non-normative example of the contents of this parameter:
 
 <{{examples/request/dcql_jwt_vc.json}}
 
-#### Presentation Response
+##### Presentation Response
 
 The following requirements apply to the `nonce` and `aud` claims of the Verifiable Presentation:
 
@@ -2347,25 +2348,25 @@ The following is a non-normative example of the VP Token provided in the respons
 
 The following is a non-normative example of the payload of the Verifiable Presentation in the VP Token in the last example:
 
-<{{examples/response/jwt_vp.json}}
+<{{examples/response/jwt_vc.json}}
 
-### LDP VCs {#ldp_vc}
+#### LDP VCs {#ldp_vc}
 
 This section illustrates presentation of a Credential conformant to [@VC_DATA] that is secured using Data Integrity, using JSON-LD.
 
-The Credential Format Identifiers are `ldp_vc` to request a W3C Verifiable Credential and `ldp_vp` to request a Verifiable Presentation compliant to the [@VC_DATA] specification.
+##### Format Identifier and Cipher Suites
 
-If `ldp_vc` is used, the Credential is returned without Holder Binding. Therefore, the Verifier MUST set the `allow_replay` parameter in the Credential Query to `true` if it is using `ldp_vc`. Otherwise, `allow_replay` MUST be `false`. Wallets MUST reject requests that do not follow these rules.
+The Credential Format Identifiers are `ldp_vc` to request a W3C Verifiable Credential request a Verifiable Presentation compliant to the [@VC_DATA] specification or a Verifiable Presentation of such a credential.
 
 Cipher suites should use signature suites names defined in [Linked Data Cryptographic Suite Registry](https://w3c-ccg.github.io/ld-cryptosuite-registry/).
 
-#### Example Credential
+##### Example Credential
 
 The following is a non-normative example of the payload of a Verifiable Credential that will be used throughout this section:
 
 <{{examples/credentials/ldp_vc.json}}
 
-#### Presentation Request
+##### Presentation Request
 
 The requirements regarding the Credential to be presented are conveyed in the `dcql_query` parameter.
 
@@ -2373,7 +2374,7 @@ The following is a non-normative example of the contents of this parameter:
 
 <{{examples/request/dcql_ldp_vc.json}}
 
-#### Presentation Response
+##### Presentation Response
 
 The following requirements apply to the `challenge` and `domain` claims within the `proof` object in the Verifiable Presentation:
 
@@ -2382,7 +2383,7 @@ The following requirements apply to the `challenge` and `domain` claims within t
 
 The following is a non-normative example of the Verifiable Presentation in the `vp_token` parameter:
 
-<{{examples/response/ldp_vp.json}}
+<{{examples/response/ldp_vc.json}}
 
 
 ## AnonCreds
@@ -2391,13 +2392,13 @@ AnonCreds is a Credential format defined as part of the Hyperledger Indy project
 
 To be able to request AnonCreds, there needs to be a set of identifiers for Verifiable Credentials, Verifiable Presentations ("proofs" in Indy terminology) and crypto schemes.
 
-The Credential Format Identifier is `ac_vp` to request a Verifiable Presentation. Wallets MUST reject requests with this format identifier where `allow_replay` is set to `true`, as Presentations without Holder Binding are not supported for this format.
-
 The identifier for the CL-signature crypto scheme used in the examples in this section is `CLSignature2019`.
 
-### DCQL
+### Format Identifier
 
-#### Parameters in the `meta` parameter in Credential Query {#anoncreds_meta_parameter}
+The Credential Format Identifier is `ac_vp` to request a Verifiable Presentation. Wallets MUST reject requests with this format identifier where `allow_replay` is set to `true`, as Presentations without Holder Binding are not supported for this format.
+
+### Parameters in the `meta` parameter in Credential Query {#anoncreds_meta_parameter}
 
 The following are AnonCreds specific parameters in the `meta` parameter in a Credential Query as defined in (#credential_query):
 
@@ -2407,7 +2408,7 @@ The following are AnonCreds specific parameters in the `meta` parameter in a Cre
 `cred_def_id_values`:
 : OPTIONAL. An array of strings that specifies the allowed values for the `cred_def_id` of the requested Verifiable Credential. It MUST be a valid credential definition identifier as defined in [@Hyperledger.Indy].
 
-#### Claims Matching
+### Claims Matching
 
 When used in the context of AnonCreds, the `claims_path` parameter always matches on the contents of the `values` object in the JSON-representation of the Verifiable Credential.
 
@@ -2454,11 +2455,7 @@ It is RECOMMENDED that each transaction data type defines a data element (`NameS
 
 Some document types support some transaction data ((#transaction_data)) to be protected using mdoc authentication, as part of the `DeviceSigned` data structure [@ISO.18013-5]. In those cases, the specifications of these document types include which transaction data types are supported, and the issuer includes the relevant data elements in the `KeyAuthorizations`. If a Wallet receives a request with a `transaction_data` type whose data element is unauthorized, the Wallet MUST reject the request due to an unsupported transaction data type.
 
-### DCQL
-
-This section defines ISO mdoc specific DCQL Query parameters.
-
-#### Parameter in the `meta` parameter in Credential Query {#mdocs_meta_parameter}
+### Parameter in the `meta` parameter in Credential Query {#mdocs_meta_parameter}
 
 The following is an ISO mdoc specific parameter in the `meta` parameter in a Credential Query as defined in (#credential_query).
 
@@ -2467,7 +2464,7 @@ The following is an ISO mdoc specific parameter in the `meta` parameter in a Cre
 doctype of the requested Verifiable Credential. It MUST
 be a valid doctype identifier as defined in [@ISO.18013-5].
 
-#### Parameter in the Claims Query {#mdocs_claims_query}
+### Parameter in the Claims Query {#mdocs_claims_query}
 
 The following are ISO mdoc specific parameters to be used in a Claims Query as defined in (#claims_query).
 
@@ -2627,7 +2624,7 @@ If `allow_replay` is set to `true`, an SD-JWT without the Key Binding JWT MUST b
 
 The Credential Format Identifier is `dc+sd-jwt`.
 
-#### Example Credential
+### Example Credential
 
 The following is a non-normative example of the unsecured payload of an IETF SD-JWT VC that will be used throughout this section:
 
@@ -2695,11 +2692,7 @@ The following is a non-normative example of `client_metadata` request parameter 
 
 <{{examples/client_metadata/sd_jwt_vc_verifier_metadata.json}}
 
-### DCQL
-
-This section defines SD-JWT VC specific DCQL Query parameters.
-
-#### Parameter in the `meta` parameter in Credential Query {#sd_jwt_vc_meta_parameter}
+### Parameter in the `meta` parameter in Credential Query {#sd_jwt_vc_meta_parameter}
 
 The following is an SD-JWT VC specific parameter in the `meta` parameter in a Credential Query as defined in (#credential_query).
 
