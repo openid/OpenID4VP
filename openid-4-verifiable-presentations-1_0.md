@@ -2620,9 +2620,12 @@ If the presentation request is invoked via other methods, the rules for generati
 
 This section defines how Credentials complying with [@!I-D.ietf-oauth-sd-jwt-vc] can be presented to the Verifier using this specification.
 
+If `allow_replay` is not set to `true` in the Credential Query, the Wallet MUST return an SD-JWT [@!I-D.ietf-oauth-selective-disclosure-jwt] with a Key Binding JWT (SD-JWT+KB) as the Verifiable Presentation. SD-JWTs that do not support Holder Binding (i.e., do not have a `cnf` Claim) cannot be returned in this case.
+If `allow_replay` is set to `true`, an SD-JWT without the Key Binding JWT MUST be returned.
+
 ### Format Identifier
 
-The Credential Format Identifier is `dc+sd-jwt`. By default, an SD-JWT [@!I-D.ietf-oauth-selective-disclosure-jwt] with a Key Binding JWT (SD-JWT+KB) is returned as the Verifiable Presentation. If `allow_replay` is set to `true` in the Credential Query, an SD-JWT without the Key Binding JWT is returned.
+The Credential Format Identifier is `dc+sd-jwt`.
 
 #### Example Credential
 
