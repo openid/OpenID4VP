@@ -649,7 +649,7 @@ Verifier Attestations are optional. Wallets MAY use them to make authorization d
 This specification supports two models for proof of possession:
 
 - **claim-bound attestations**: The attestation is not signed by the Relying Party, but bound to it. The exact binding mechanism is defined by the type of the definition. For example for JWTs, the `sub` claim is including the distinguished name of the Certificate that was used to sign the request. The binding may also include the client_id parameter.
-- **key-bound attestations**: The attestation is signed by the Relying Party with a key contained or related to the attestation . To bind the signature to the presentation request, the respective signature object should include the `nonce` and `client_id` request parameters.
+- **key-bound attestations**: The attestation's proof of possession is signed by the Relying Party with a key contained or related to the attestation . To bind the signature to the presentation request, the respective signature object should include the `nonce` and `client_id` request parameters. The attestation and the proof of possession have to be passed in the attachment.
 
  The Wallet MUST validate such proofs if defined by the profile and ignore or reject attachments that fail validation.
 
