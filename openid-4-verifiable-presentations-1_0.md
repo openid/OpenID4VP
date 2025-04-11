@@ -286,11 +286,9 @@ In the context of an authorization request according to [@RFC6749], parameters c
 `client_metadata`:
 : OPTIONAL. A JSON object containing the Verifier metadata values. It MUST be UTF-8 encoded. The following metadata parameters MAY be used:
 
-    * `jwks`: OPTIONAL. A JWKS as defined in [@!RFC7591]. It MAY contain one or more public keys, such as those used by the Wallet as an input to a key agreement that may be used for encryption of the Authorization Response (see (#jarm)), or where the Wallet will require the public key of the Verifier to generate the Verifiable Presentation. This allows the Verifier to pass ephemeral keys specific to this Authorization Request. Public keys included in this parameter MUST NOT be used to verify the signature of signed Authorization Requests.
+    * `jwks`: OPTIONAL. A JSON Web Key Set, as defined in [@!RFC7591], that contains one or more public keys, such as those used by the Wallet as an input to a key agreement that may be used for encryption of the Authorization Response (see (#response_encryption)), or where the Wallet will require the public key of the Verifier to generate the Verifiable Presentation. This allows the Verifier to pass ephemeral keys specific to this Authorization Request. Public keys included in this parameter MUST NOT be used to verify the signature of signed Authorization Requests. Each JWK in the set MUST have a `kid` (Key ID) parameter that uniquely identifies the key within the context of the request.
+    * `authorization_encrypted_response_enc`: OPTIONAL. As defined in [@!JARM]. The JWE [@!RFC7516] `enc` algorithm is used to convey the requested content encryption algorithm for encrypting the authorization response. When a `response_mode` requiring encryption of the Authorization Response (such as `dc_api.jwt` or `direct_post.jwt`) is specified this MUST be present for anything other than the default value of `A128CBC-HS256`. Otherwise this SHOULD be absent. Note that because the response can be encrypted (see (#response_encryption)) but not signed, most of the general mechanisms of JARM do not apply. However, the  `authorization_encrypted_response_enc` metadata parameter from JARM is reused to avoid redefining it.
     * `vp_formats`: REQUIRED when not available to the Wallet via another mechanism. As defined in (#client_metadata_parameters).
-    * `authorization_signed_response_alg`: OPTIONAL. As defined in [@!JARM], with an adjustment to the default behavior when this parameter is absent: instead of defaulting to `RS256`, the Authorization Response is not signed.
-    * `authorization_encrypted_response_alg`: OPTIONAL. As defined in [@!JARM].
-    * `authorization_encrypted_response_enc`: OPTIONAL. As defined in [@!JARM].
 
     Authoritative data the Wallet is able to obtain about the Client from other sources, for example those from an OpenID Federation Entity Statement, take precedence over the values passed in `client_metadata`.
 
@@ -331,7 +329,7 @@ The following additional considerations are given for pre-existing Authorization
 : OPTIONAL. Defined in [@!RFC6749]. The Wallet MAY allow Verifiers to request presentation of Verifiable Credentials by utilizing a pre-defined scope value. See (#request_scope) for more details.
 
 `response_mode`:
-: REQUIRED. Defined in [@!OAuth.Responses]. This parameter is used (through the new Response Mode `direct_post`) to ask the Wallet to send the response to the Verifier via an HTTPS connection (see (#response_mode_post) for more details). It is also used to request signing and encrypting (see (#jarm) for more details). 
+: REQUIRED. Defined in [@!OAuth.Responses]. This parameter can be used (through the new Response Mode `direct_post`) to ask the Wallet to send the response to the Verifier via an HTTPS connection (see (#response_mode_post) for more details). It can also be used to request that the resulting response be encrypted (see (#response_encryption) for more details).
 
 `client_id`:
 : REQUIRED. Defined in [@!RFC6749]. This specification defines additional requirements to enable the use of Client Identifier Prefixes as described in (#client_metadata_management).
@@ -1224,53 +1222,57 @@ Note: In the Response Mode `direct_post` or `direct_post.jwt`, the Wallet can ch
 Additional parameters MAY be defined and used in the response from the Response Endpoint to the Wallet.
 The Wallet MUST ignore any unrecognized parameters.
 
-## Signed and/or Encrypted Responses {#jarm}
+## Encrypted Responses {#response_encryption}
 
-This section defines how an Authorization Response containing a VP Token can be signed and/or encrypted at the application level when the Response Type value is `vp_token` or `vp_token id_token`. Encrypting the Authorization Response can prevent personal data in the Authorization Response from leaking, when the Authorization Response is returned through the front channel (e.g., the browser).
+This section defines how an Authorization Response containing a VP Token (such as when the Response Type value is `vp_token` or `vp_token id_token`) can be encrypted at the application level using [@!RFC7518] where the payload of the JWE is a JSON object containing the Authorization Response parameters. Encrypting the Authorization Response can prevent personal data in the Authorization Response from leaking, when the Authorization Response is returned through the front channel (e.g., the browser).
 
-To sign, encrypt, or both sign and encrypt the Authorization Response, implementations MUST use the JWT Secured Authorization Response Mode for OAuth 2.0 (JARM) [@!JARM], and when only encrypting, the JARM extension described below.
+To encrypt the Authorization Response, implementations MUST use an unsigned, encrypted JWT as described in [@!RFC7519].
 
-This specification also defines how to encrypt an unsigned Authorization Response by adapting the mechanisms defined in [@!JARM]. The JSON containing the Authorization Response parameters can be encrypted as the payload of the JWE.
+To obtain the Verifier's public key to which to encrypt the Authorization Response, the Wallet uses keys from client metadata, such as the `jwks` member within the `client_metadata` request parameter, the metadata defined in the Entity Configuration if OpenID Federation is used, or other mechanisms.
+Using what it supports and its preferences, the Wallet selects the public key to encrypt the Authorization Response based on information about each key, such as the `kty` (Key Type), `use` (Public Key Use), `alg` (Algorithm), and other JWK parameters.
+The JWE `alg` algorithm used MUST the `alg` value of the chosen `jwk`, if present, or otherwise make sense to use with the selected key.
+If the selected public key contains a `kid` parameter, the JWE MUST include the same value in the `kid` JWE Header Parameter (as defined in [@!RFC7516, Section 4.1.6]) of the encrypted response. This enables the Verifier to easily identify the specific public key that used to encrypt the response.
+The JWE `enc` content encryption algorithm used is obtained from the `authorization_encrypted_response_enc` parameter of client metadata, such as the `client_metadata` request parameter, allowing for the default value of `A128CBC-HS256` when not explictiy set.
 
-The advantage of an encrypted but not signed Authorization Response is that it prevents the signing key from being used as a correlation factor. It can also be a challenge to establish trust in the signing key to ensure authenticity. For security considerations with encrypted but unsigned responses, see (#encrypting_unsigned_response).
+The payload of the encrypted JWT response MUST include the contents of the response as defined in (#response-parameters) as top-level JSON members.
 
-If the JWT is only a JWE, the following processing rules MUST be followed:
+The following is a non-normative example of the payload of a JWT used in an encrypted Authorization Response:
 
-- `iss`, `exp` and `aud` MUST be omitted in the JWT Claims Set of the JWE, and the processing rules as per [@!JARM] Section 2.4 related to these claims do not apply.
-- The processing rules as per [@!JARM] Section 2.4 related to JWS processing MUST be ignored.
+```json
+{
+ "vp_token": {"example_credential_id": ["eyJhb...YMetA"]}
+}
+```
 
 Note that for the ECDH JWE algorithms (from Section 4.6 of [@!RFC7518]), the `apu` and `apv` values are inputs
 into the key derivation process that is used to derive the content encryption key. Regardless of algorithm used, the values are always part of the AEAD tag computation so will still be bound to the encrypted response.
-
-The following is a non-normative example of the payload of a JWT used in an Authorization Response that is encrypted and not signed:
-
-<{{examples/response/jarm_jwt_enc_only_vc_json_body.json}}
-
-The JWT response document MUST include the `vp_token` as defined in (#response-parameters).
-
-The key material used for encryption and signing SHOULD be determined using existing metadata mechanisms. 
-
-To obtain Verifier's public key for the input to the key agreement to encrypt the Authorization Response, the Wallet MUST use `jwks` claim within the `client_metadata` request parameter, or within the metadata defined in the Entity Configuration when [@!OpenID.Federation] is used, or other mechanisms. If the selected public key contains a `kid` parameter, the JWE MUST include the same value in the `kid` JWE Header Parameter (as defined in Section 4.1.6 of [@!RFC7516]) of the encrypted response. This enables the Verifier to identify the specific public key used to encrypt the response.
-
-To sign the Authorization Response, the Wallet MUST use a private key that corresponds to a public key made available in its metadata.
 
 Note: For encryption, implementers have a variety of options available through JOSE, including the use of Hybrid Public Key Encryption (HPKE) as detailed in [@I-D.ietf-jose-hpke-encrypt]. 
 
 ### Response Mode "direct_post.jwt" {#direct_post_jwt}
 
-This specification also defines a new Response Mode `direct_post.jwt`, which allows for JARM to be used with Response Mode `direct_post` defined in (#response_mode_post).
+This specification also defines a new Response Mode `direct_post.jwt`, which allows for encryption to be used with Response Mode `direct_post` defined in (#response_mode_post).
 
-The Response Mode `direct_post.jwt` causes the Wallet to send the Authorization Response using an HTTP POST request instead of redirecting back to the Verifier as defined in (#response_mode_post). The Wallet adds the `response` parameter containing the JWT as defined in Section 4.1. of [@!JARM] and (#jarm) in the body of an HTTP POST request using the `application/x-www-form-urlencoded` content type. The names and values in the body MUST be encoded using UTF-8.
+The Response Mode `direct_post.jwt` causes the Wallet to send the Authorization Response using an HTTP POST request instead of redirecting back to the Verifier as defined in (#response_mode_post). The Wallet adds the `response` parameter containing the JWT as defined in (#response_encryption) in the body of an HTTP POST request using the `application/x-www-form-urlencoded` content type. The names and values in the body MUST be encoded using UTF-8.
 
-If a Wallet is unable to generate a JARM response, it MAY send an error response without using JARM as per (#response_mode_post).
+If a Wallet is unable to generate an encrypted response, it MAY send an error response without as per (#response_mode_post).
 
-The following is a non-normative example of a response using the `vp_token` values from (#jwt_vc) (line breaks for display purposes only):
+The following is a non-normative example of a response (omitted content shown with ellipses for display purposes only):
+```
+POST /post HTTP/1.1
+Host: client.example.org
+Content-Type: application/x-www-form-urlencoded
 
-<{{examples/response/jarm_jwt_vc_json_post.txt}}
+response=eyJra...9t2LQ
+```
 
-The following is a non-normative example of the payload of the JWT used in the example above before base64url encoding and signing:
+The following is a non-normative example of the payload of the JWT used in the example above before encrypting and base64url encoding (omitted content shown with ellipses for display purposes only):
 
-<{{examples/response/jarm_jwt_vc_json_body.json}}
+```
+{
+  "vp_token": {"example_jwt_vc": ["eY...QMA"]}
+}
+```
 
 ## Transaction Data {#transaction_data}
 
@@ -1673,7 +1675,7 @@ The Wallet MUST ensure the data in the Authorization Response cannot leak throug
 
 ### Protection of the Response URI
 
-The Verifier SHOULD protect its Response URI from inadvertent requests by checking that the value of the received `state` parameter corresponds to a recent Authorization Request. It MAY also use JARM [@!JARM] to authenticate the originator of the request. 
+The Verifier SHOULD protect its Response URI from inadvertent requests by checking that the value of the received `state` parameter corresponds to a recent Authorization Request.
 
 ### Protection of the Authorization Response Data
 
@@ -1688,9 +1690,9 @@ Implementations of this specification MUST have security mechanisms in place to 
 
 Clients intending to authenticate the End-User utilizing a claim in a Verifiable Credential MUST ensure this claim is stable for the End-User as well locally unique and never reassigned within the Credential Issuer to another End-User. Such a claim MUST also only be used in combination with the Credential Issuer identifier to ensure global uniqueness and to prevent attacks where an attacker obtains the same claim from a different Credential Issuer and tries to impersonate the legitimate End-User.
 
-## Encrypting an Unsigned Response {#encrypting_unsigned_response}
+## Encrypting an Unsigned Response
 
-If an encrypted Authorization Response has no additional integrity protection, an attacker might be able to alter Authorization Response parameters and generate a new encrypted Authorization Response for the Verifier, as encryption is performed using the public key of the Verifier which is likely to be widely known. Note this includes injecting a new VP Token. Since the contents of the VP Token are integrity protected, tampering the VP Token is detectable by the Verifier. For details, see (#preventing-replay).
+Because an encrypted Authorization Response has no additional integrity protection, an attacker might be able to alter Authorization Response parameters and generate a new encrypted Authorization Response for the Verifier, as encryption is performed using the public key of the Verifier (which is likely to be widely known when not ephemeral to the request/response). Note this includes injecting a new VP Token. Since the contents of the VP Token are integrity protected, tampering the VP Token is detectable by the Verifier. For details, see (#preventing-replay).
 
 ##  TLS Requirements
 
@@ -2123,7 +2125,7 @@ Parameters defined by a specific client identifier scheme (such as the `trust_ch
 
 The `client_id` parameter MUST be present in signed requests defined in (#signed_request), as it communicates to the wallet which Client Identifier Scheme and Client Identifier to use when authenticating the client through verification of the request signature or retrieving client metadata.
 
-The value of the `response_mode` parameter MUST be `dc_api` when the response is neither signed nor encrypted and `dc_api.jwt` when the response is signed and/or encrypted as defined in (#jarm).
+The value of the `response_mode` parameter MUST be `dc_api` when the response is not encrypted and `dc_api.jwt` when the response is encrypted as defined in (#response_encryption).
 
 In addition to the above-mentioned parameters, a new parameter is introduced for OpenID4VP over the W3C Digital Credentials API:
 
@@ -2984,6 +2986,7 @@ The technology described in this specification was made available from contribut
    * added some more (non-exhaustive) privacy considerations with pointers to SD-JWT and OpenID4VCI
    * remove DIF Presentation Exchange as a query language option
    * Changes in the DCQL query parameters specific to W3C VCs and AnonCreds
+   * remove JARM and response signing, using JWT directly for unsigned, encrypted responses.
 
    -25
 
