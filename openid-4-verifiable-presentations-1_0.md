@@ -639,7 +639,6 @@ Each Verifier Attestation is an object containing a type identifier, associated 
 For example, a Verifier might include:
 
 - A **registration certificate** issued by a trusted authority, to prove that the verifier has publicly registered its intend to request certain credentials.
-- An **attestation of intended use**, declaring why a particular credential is being requested.
 - A **policy statement**, such as a signed document describing acceptable use, retention periods, or access rights.
 - The **conformation of a role** of the verifier in a certain domain, e.g. the verifier might be a certified payment service provider under the EU's Payment Service Directive 2.
 
