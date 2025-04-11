@@ -709,11 +709,11 @@ Note that Relying Parties must verify that the issuer of a received presentation
 trusted on their own and this feature mainly aims to help data minimization by not
 revealing information that would likely be rejected.
 
-`allow_replay`:
-: OPTIONAL. A boolean which indicates whether the Verifier requires a Holder Binding
-proof. The default value is `false`, i.e., a Verifiable Presentation with Holder Binding
-is requested. If set to `true`, the Verifier accepts a Credential without Holder Binding
-proof. The Wallet MUST NOT include a Holder Binding proof in this case.
+`require_cryptographic_holder_binding`:
+: OPTIONAL. A boolean which indicates whether the Verifier requires a Cryptographic Holder Binding
+proof. The default value is `true`, i.e., a Verifiable Presentation with Cryptographic Holder Binding
+is required. If set to `false`, the Verifier accepts a Credential without Cryptographic Holder Binding
+proof.
 
 `claims`:
 : OPTIONAL. A non-empty array of objects as defined in (#claims_query) that specifies
