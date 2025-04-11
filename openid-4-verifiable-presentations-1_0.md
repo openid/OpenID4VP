@@ -52,7 +52,7 @@ This specification defines a protocol for requesting and presenting Verifiable C
 
 # Introduction
 
-This specification defines a mechanism on top of OAuth 2.0 [@!RFC6749] that enables presentation of Verifiable Credentials as Verifiable Presentations. Verifiable Credentials and Verifiable Presentations can be of any format, including, but not limited to W3C Verifiable Credentials Data Model [@VC_DATA], ISO mdoc [@ISO.18013-5], IETF SD-JWT VC [@!I-D.ietf-oauth-sd-jwt-vc], and AnonCreds [@Hyperledger.Indy].
+This specification defines a mechanism on top of OAuth 2.0 [@!RFC6749] that enables presentation of Verifiable Credentials as Verifiable Presentations. Verifiable Credentials and Verifiable Presentations can be of any format, including, but not limited to W3C Verifiable Credentials Data Model [@VC_DATA], ISO mdoc [@ISO.18013-5], IETF SD-JWT VC [@!I-D.ietf-oauth-sd-jwt-vc], and AnonCreds [@Hyperledger.AnonCreds].
 
 OAuth 2.0 [@!RFC6749] is used as a base protocol as it provides the required rails to build a simple, secure, and developer-friendly Credential presentation layer on top of it. Moreover, implementers can, in a single interface, support Credential presentation and the issuance of Access Tokens for access to APIs based on Verifiable Credentials in the Wallet. OpenID Connect [@!OpenID.Core] deployments can also extend their implementations using this specification with the ability to transport Verifiable Presentations. 
 
@@ -116,10 +116,10 @@ Verifier:
 : An entity that requests, receives, and validates Verifiable Presentations. During presentation of Credentials, Verifier acts as an OAuth 2.0 Client towards the Wallet that is acting as an OAuth 2.0 Authorization Server. The Verifier is a specific case of OAuth 2.0 Client, just like Relying Party (RP) in [@OpenID.Core].
 
 Verifiable Credential (VC):
-: An Issuer-signed Credential whose authenticity can be cryptographically verified. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA] (VCDM), [@ISO.18013-5] (mdoc), [@!I-D.ietf-oauth-sd-jwt-vc] (SD-JWT VC), and [@Hyperledger.Indy] (AnonCreds).
+: An Issuer-signed Credential whose authenticity can be cryptographically verified. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA] (VCDM), [@ISO.18013-5] (mdoc), [@!I-D.ietf-oauth-sd-jwt-vc] (SD-JWT VC), and [@Hyperledger.AnonCreds] (AnonCreds).
 
 Verifiable Presentation (VP):
-: A Holder-signed Credential whose authenticity can be cryptographically verified to provide Cryptographic Holder Binding. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA] (VCDM), [@ISO.18013-5] (mdoc), [@!I-D.ietf-oauth-sd-jwt-vc] (SD-JWT VC), and [@Hyperledger.Indy] (AnonCreds).
+: A Holder-signed Credential whose authenticity can be cryptographically verified to provide Cryptographic Holder Binding. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA] (VCDM), [@ISO.18013-5] (mdoc), [@!I-D.ietf-oauth-sd-jwt-vc] (SD-JWT VC), and [@Hyperledger.AnonCreds] (AnonCreds).
 
 W3C Verifiable Credential:
 : A Verifiable Credential compliant to the [@VC_DATA] specification.
@@ -136,7 +136,7 @@ This specification defines a mechanism on top of OAuth 2.0 to request and presen
 
 As the primary extension, OpenID for Verifiable Presentations introduces the VP Token as a container to enable End-Users to present Verifiable Presentations to Verifiers using the Wallet. A VP Token contains one or more Verifiable Presentations in the same or different Credential formats.
 
-This specification supports any Credential format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA] (VCDM), [@ISO.18013-5] (mdoc), [@!I-D.ietf-oauth-sd-jwt-vc] (SD-JWT VC), and [@Hyperledger.Indy] (AnonCreds). Credentials of multiple formats can be presented in the same transaction. The examples given in the main part of this specification use W3C Verifiable Credentials, while examples in other Credential formats are given in (#format_specific_parameters). 
+This specification supports any Credential format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA] (VCDM), [@ISO.18013-5] (mdoc), [@!I-D.ietf-oauth-sd-jwt-vc] (SD-JWT VC), and [@Hyperledger.AnonCreds] (AnonCreds). Credentials of multiple formats can be presented in the same transaction. The examples given in the main part of this specification use W3C Verifiable Credentials, while examples in other Credential formats are given in (#format_specific_parameters).
 
 Implementations can use any pre-existing OAuth 2.0 Grant Type and Response Type in conjunction with this specification to support different deployment architectures.
 
@@ -245,7 +245,7 @@ OpenID for Verifiable Presentations extends existing OAuth 2.0 mechanisms as fol
 * A new `vp_token` response parameter is defined to return Verifiable Presentations to the Verifier in either Authorization or Token Response depending on the Response Type. See (#response) for more details. 
 * New Response Types `vp_token` and `vp_token id_token` are defined to request Verifiable Credentials to be returned in the Authorization Response (standalone or along with a Self-Issued ID Token [@!SIOPv2]). See (#response) for more details.
 * A new OAuth 2.0 Response Mode `direct_post` is defined to support sending the response across devices, or when the size of the response exceeds the redirect URL character size limitation. See (#response_mode_post) for more details.
-* The `format` parameter is used throughout the protocol in order to enable customization according to the specific needs of a particular Credential format. Examples in (#format_specific_parameters) are given for Credential formats as specified in [@VC_DATA], [@ISO.18013-5], [@!I-D.ietf-oauth-sd-jwt-vc], and [@Hyperledger.Indy].
+* The `format` parameter is used throughout the protocol in order to enable customization according to the specific needs of a particular Credential format. Examples in (#format_specific_parameters) are given for Credential formats as specified in [@VC_DATA], [@ISO.18013-5], [@!I-D.ietf-oauth-sd-jwt-vc], and [@Hyperledger.AnonCreds].
 * The concept of a Client Identifier Prefix to enable deployments of this specification to use different mechanisms to obtain and validate metadata of the Verifier beyond the scope of [@!RFC6749].
 
 Presentation of Verifiable Credentials using OpenID for Verifiable Presentations can be combined with the End-User authentication using [@SIOPv2], and the issuance of OAuth 2.0 Access Tokens.
@@ -1710,6 +1710,24 @@ https://openid.net/certification/conformance-testing-for-openid-for-verifiable-p
 
 # Privacy Considerations
 
+Many privacy considerations are specific to the credential format and associated proof type used in any particular presentation.
+This section focuses on privacy considerations that are specific to the presentation protocol with some treatment also
+given to considerations that apply across some common credential formats.
+
+## Selective Disclosure
+
+Selective disclosure is a data minimization technique that allows for sharing only the specific information needed from
+a credential without revealing everything.
+
+The DCQL helps facilitate selective disclosure by allowing the Verifier to specify the claims it is interested in,
+allowing the Wallet to disclose only the claims that are relevant to the Verifier's request.
+
+Some credential formats support selective disclosure and a salted-hash based approach is one common approach.
+Considerable discourse regarding unlinkability in salted-hash based selective disclosure mechanisms is provided in
+[@?I-D.ietf-oauth-selective-disclosure-jwt, section 10.1]. One technique mentioned to achieve some important
+unlinkability properties is the use of batch issuance, which is supported in [@?OpenID4VCI], with individual credentials
+being presented only once.
+
 ## Authorization Requests with Request URI
 
 If the Wallet is acting within a trust framework that allows the Wallet to determine whether a 'request_uri' belongs to a certain 'client_id', the Wallet is RECOMMENDED to validate the Verifier's authenticity and authorization given by 'client_id' and that the 'request_uri' corresponds to this Verifier. If the link cannot be established in those cases, the Wallet SHOULD refuse the request or ask the End-User for advise.
@@ -1764,6 +1782,16 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
   </front>
 </reference>
 
+<reference anchor="OpenID4VCI" target="https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html">
+  <front>
+    <title>OpenID for Verifiable Credential Issuance - draft 15</title>
+    <author fullname="Torsten Lodderstedt"/>
+    <author fullname="Kristina Yasuda"/>
+    <author fullname="Tobias Looker"/>
+    <date day="19" month="December" year="2024"/>
+  </front>
+</reference>
+
 <reference anchor="SIOPv2" target="https://openid.net/specs/openid-connect-self-issued-v2-1_0.html">
   <front>
     <title>Self-Issued OpenID Provider V2</title>
@@ -1779,6 +1807,8 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
    <date day="28" month="November" year="2023"/>
   </front>
 </reference>
+
+
 
 <reference anchor="OpenID.Core" target="https://openid.net/specs/openid-connect-core-1_0.html">
   <front>
@@ -1838,13 +1868,13 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
   </front>
 </reference>
 
-<reference anchor="Hyperledger.Indy" target="https://www.hyperledger.org/use/hyperledger-indy">
+<reference anchor="Hyperledger.AnonCreds" target="https://hyperledger.github.io/anoncreds-spec/">
         <front>
-          <title>Hyperledger Indy Project</title>
+          <title>Hyperledger AnonCreds Specification</title>
           <author>
-            <organization>Hyperledger Indy Project</organization>
+            <organization>Hyperledger AnonCreds Project</organization>
           </author>
-          <date year="2022"/>
+          <date year="2024"/>
         </front>
 </reference>
 
@@ -2208,9 +2238,47 @@ OpenID for Verifiable Presentations is Credential Format agnostic, i.e., it is d
 The following is a W3C Verifiable Credentials specific parameter in the `meta` parameter in a Credential Query as defined in (#credential_query):
 
 `type_values`:
-: OPTIONAL. An array of string arrays that specifies the types of Verifiable Credentials that the Verifier accepts to be used in the Verifiable Presentation. Each of the top-level arrays specifies one alternative to match the type of the Verifiable Credential against. Each inner array specifies a set of types that must be present in the `type` property of the Verifiable Credential, regardless of order or the presence of additional types. 
+: OPTIONAL. An array of string arrays that specifies the fully expanded types (IRIs) after the `@context` was applied that the Verifier accepts to be presented in the Verifiable Presentation. Each of the top-level arrays specifies one alternative to match the `type` values of the Verifiable Credential against. Each inner array specifies a set of fully expanded types that MUST be present in the `type` property of the Verifiable Credential, regardless of order or the presence of additional types. 
 
-For example, if the DCQL query contains `"type_values": [["ACred", "BCred"], ["CCred"]]`, then a Verifiable Credential with the type `["DCred", "BCred", "ACred"]` would match, but a Verifiable Credential with the type `["BCred"]` would not match.
+The following is a non-normative example of `type_values` within a DCQL query:
+
+```json
+"type_values":[
+  [
+      "https://www.w3.org/2018/credentials#VerifiableCredential",
+      "https://example.org/examples#AlumniCredential",
+      "https://example.org/examples#BachelorDegree"
+  ],
+  [
+      "https://www.w3.org/2018/credentials#VerifiableCredential",
+      "https://example.org/examples#UniversityDegreeCredential"
+  ]
+]
+```
+
+The following is a non-normative example of a W3C Verifiable Credential that would match the `type_values` DCQL query above (other claims omitted for readability):
+
+```json
+{
+  "@context": [
+    "https://www.w3.org/2018/credentials/v1",
+    "https://www.w3.org/2018/credentials/examples/v1"
+  ],
+  "type": ["VerifiableCredential", "UniversityDegreeCredential"]
+}
+```
+
+The following is another non-normative example of a W3C Verifiable Credential that would match the `type_values` DCQL query above (other claims omitted for readability):
+
+```json
+{
+  "@context": [
+    "https://www.w3.org/2018/credentials/v1",
+    "https://www.w3.org/2018/credentials/examples/v1"
+  ],
+  "type": ["VerifiableCredential", "AlumniCredential"]
+}
+```
 
 #### Claims Matching
 
@@ -2302,9 +2370,9 @@ The following is a non-normative example of the Verifiable Presentation in the `
 
 ## AnonCreds
 
-AnonCreds is a Credential format defined as part of the Hyperledger Indy project [@Hyperledger.Indy].
+AnonCreds is a Credential format defined as part of the Hyperledger Anoncreds project and formerly the Hyperledger Indy project [@Hyperledger.AnonCreds].
 
-To be able to request AnonCreds, there needs to be a set of identifiers for Verifiable Credentials, Verifiable Presentations ("proofs" in Indy terminology) and crypto schemes.
+To be able to request AnonCreds, there needs to be a set of identifiers for Verifiable Credentials, Verifiable Presentations ("proofs" in AnonCreds terminology) and crypto schemes.
 
 The Credential format identifier is `ac_vp` to request a Presentation.
 
@@ -2317,10 +2385,10 @@ The identifier for the CL-signature crypto scheme used in the examples in this s
 The following are AnonCreds specific parameters in the `meta` parameter in a Credential Query as defined in (#credential_query):
 
 `schema_id_values`:
-: OPTIONAL. An array of strings that specifies the allowed values for the `schema_id` of the requested Verifiable Credential. It MUST be a valid scheme identifier as defined in [@Hyperledger.Indy].
+: OPTIONAL. An array of strings that specifies the allowed values for the `schema_id` of the requested Verifiable Credential. It MUST be a valid scheme identifier as defined in [@Hyperledger.AnonCreds].
 
 `cred_def_id_values`:
-: OPTIONAL. An array of strings that specifies the allowed values for the `cred_def_id` of the requested Verifiable Credential. It MUST be a valid credential definition identifier as defined in [@Hyperledger.Indy].
+: OPTIONAL. An array of strings that specifies the allowed values for the `cred_def_id` of the requested Verifiable Credential. It MUST be a valid credential definition identifier as defined in [@Hyperledger.AnonCreds].
 
 #### Claims Matching
 
@@ -2341,6 +2409,18 @@ The following is a non-normative example of a DCQL request for an AnonCreds Cred
 <{{examples/request/dcql_ac_vc_sd.json}}
 
 ### Presentation Response
+
+The AnonCreds Credential format only allows for a `nonce` that has to be exactly 80 bit long, whereas other Credential formats
+allow for the different inputs to be signed over in a proof of possession for Cryptographic Holder Binding. For AnonCreds, everything that should be part of
+the input to generate that proof MUST be part of the `nonce`. Currently, this specification does not support transaction data
+for AnonCreds and only supports the `nonce` from the Authorization Request and an audience binding as inputs for
+the proof generation. The audience binding MUST be the value of the Client Identifier, except for requests over the DC API where it MUST be
+the Origin prefixed with `origin:`, as described in (#dc_api_response).
+
+To compute to the `nonce` parameter that is used as an input for the Prove and Verify operations of AnonCreds, the `nonce` from the
+Authorization Request must be concatenated with the audience binding (as defined above) and hashed using sha-256. The first
+80 bits of that digest are then used as the `nonce` paramter for the AnonCreds proof. This computed nonce MUST then be used as nonce (also called n_1) for
+the Presentation generation and verification as defined in sections 9.6 and 9.7 of [@Hyperledger.AnonCreds].
 
 The following is a non-normative example of the content of the credential in the `vp_token` parameter:
 
@@ -2954,8 +3034,10 @@ The technology described in this specification was made available from contribut
 
    * renamed "Client ID Scheme" to "Client ID Prefix", and updated metadata (`client_id_prefixes_supported`) and `error_description` to match
    * add note that `iss` must be ignored if present in the request object
+   * added some more (non-exhaustive) privacy considerations with pointers to SD-JWT and OpenID4VCI
    * remove DIF Presentation Exchange as a query language option
    * Changes in the DCQL query parameters specific to W3C VCs and AnonCreds
+   * fix nonce computation for AnonCreds
 
    -25
 
