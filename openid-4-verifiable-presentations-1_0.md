@@ -349,7 +349,7 @@ A Verifier that requests and accepts a Presentation of a Credential without a
 proof of Holder Binding accepts that the presented Credential may have been
 replayed. (#preventing-replay) contains additional considerations for this case.
 
-To request a Credential without proof of Holder Binding, the Verifier uses the `allow_replay` parameter in the DCQL request as defined in (#dcql_query) and
+To request a Credential without proof of Holder Binding, the Verifier uses the `require_cryptographic_holder_binding` parameter in the DCQL request as defined in (#dcql_query) and
 (#format_specific_parameters).
 
 In this protocol, the `nonce` parameter serves to securely link the request and
@@ -2293,7 +2293,7 @@ OpenID for Verifiable Presentations is Credential Format agnostic, i.e., it is d
 
 The following sections define the Credential Format specific parameters and rules for W3C Verifiable Credentials compliant to the [@VC_DATA] specification and for W3C Verifiable Presenations of such Credentials.
 
-If `allow_replay` is not set to `true` in the Credential Query, the Wallet MUST return a Verifiable Presentation of a Verifiable Credential. Otherwise, a Verifiable Credential without Holder Binding MUST be returned.
+If `require_cryptographic_holder_binding` is set to `true` in the Credential Query, the Wallet MUST return a Verifiable Presentation of a Verifiable Credential. Otherwise, a Verifiable Credential without Holder Binding MUST be returned.
 
 ### Parameters in the `meta` parameter in Credential Query
 
@@ -2445,7 +2445,7 @@ The identifier for the CL-signature crypto scheme used in the examples in this s
 
 ### Format Identifier
 
-The Credential Format Identifier is `ac_vp` to request a Verifiable Presentation. Wallets MUST reject requests with this format identifier where `allow_replay` is set to `true`, as Presentations without Holder Binding are not supported for this format.
+The Credential Format Identifier is `ac_vp` to request a Verifiable Presentation. Wallets MUST reject requests with this format identifier where `require_cryptographic_holder_binding` is set to `false`, as Presentations without Holder Binding are not supported for this format.
 
 ### Parameters in the `meta` parameter in Credential Query {#anoncreds_meta_parameter}
 
@@ -2498,7 +2498,7 @@ The following is a non-normative example of the content of the credential in the
 
 ISO/IEC 18013-5:2021 [@ISO.18013-5] defines a mobile driving license (mDL) Credential in the mobile document (mdoc) format. Although ISO/IEC 18013-5:2021 [@ISO.18013-5] is specific to mobile driving licenses (mDLs), the Credential format can be utilized with any type of Credential (or mdoc document types). The ISO/IEC 23220 series has extracted components from ISO/IEC 18013-5:2021 [@ISO.18013-5] and ISO/IEC TS 18013-7 [@ISO.18013-7] that are common across document types to facilitate the profiling of the specification for other document types. The core data structures are shared between ISO/IEC 18013-5:2021 [@ISO.18013-5], ISO/IEC 23220-2 [@ISO.23220-2], ISO/IEC 23220-4 [@ISO.23220-4] which are encoded in CBOR and secured using COSE_Sign1.
 
-The Credential Format Identifier for Credentials in the mdoc format is `mso_mdoc`. Wallets MUST reject requests with this format identifier where `allow_replay` is set to `true`, as Presentations without Holder Binding are not supported for this format.
+The Credential Format Identifier for Credentials in the mdoc format is `mso_mdoc`.
 
 ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 [@ISO.23220-4] Annex C define a profile of OpenID4VP for requesting and presenting Credentials in the mdoc format.
 
@@ -2678,8 +2678,8 @@ If the presentation request is invoked via other methods, the rules for generati
 
 This section defines how Credentials complying with [@!I-D.ietf-oauth-sd-jwt-vc] can be presented to the Verifier using this specification.
 
-If `allow_replay` is not set to `true` in the Credential Query, the Wallet MUST return an SD-JWT [@!I-D.ietf-oauth-selective-disclosure-jwt] with a Key Binding JWT (SD-JWT+KB) as the Verifiable Presentation. SD-JWTs that do not support Holder Binding (i.e., do not have a `cnf` Claim) cannot be returned in this case.
-If `allow_replay` is set to `true`, an SD-JWT without the Key Binding JWT MUST be returned.
+If `require_cryptographic_holder_binding` is set to `true` in the Credential Query, the Wallet MUST return an SD-JWT [@!I-D.ietf-oauth-selective-disclosure-jwt] with a Key Binding JWT (SD-JWT+KB) as the Verifiable Presentation. SD-JWTs that do not support Holder Binding (i.e., do not have a `cnf` Claim) cannot be returned in this case.
+If `require_cryptographic_holder_binding` is set to `false`, an SD-JWT without the Key Binding JWT MAY be returned.
 
 ### Format Identifier
 
@@ -2730,7 +2730,7 @@ __Claim `birthdate`__:
 
 It is RECOMMENDED that each transaction data type defines a top level claim parameter to be used in the Key Binding JWT to return the processed transaction data. Additionally, it is RECOMMENDED that it specifies the processing rules, potentially including any hash function to be applied, and the expected resulting structure.
 
-The transaction data mechanism requires use of an SD-JWT VC with Cryptographic Holder Binding. Wallets MUST reject requests with transaction data types that have the `allow_replay` parameter set to `true`.
+The transaction data mechanism requires use of an SD-JWT VC with Cryptographic Holder Binding. Wallets MUST reject requests with transaction data types that have the `require_cryptographic_holder_binding` parameter set to `false`.
 
 #### A Profile of Transaction Data in SD-JWT VC
 
@@ -3101,7 +3101,7 @@ The technology described in this specification was made available from contribut
    * added some more (non-exhaustive) privacy considerations with pointers to SD-JWT and OpenID4VCI
    * remove DIF Presentation Exchange as a query language option
    * Changes in the DCQL query parameters specific to W3C VCs and AnonCreds
-   * Introduce ability to present without key binding, including a new parameter `allow_replay` in the Credential Query
+   * Introduce ability to present without key binding, including a new parameter `require_cryptographic_holder_binding` in the Credential Query
    * Adapt usage of "Verifiable Presentation" to only refer to Presentations with Holder Binding and "Presentation" to refer to all types of credential presentations
    * change the identifier for the ETSI trusted list `trusted_authorities` entry from `openid_fed` to `openid_federation`
    * change openid_fed to openid_federation for Trusted Authorities Query
