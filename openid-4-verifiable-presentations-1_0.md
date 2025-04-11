@@ -792,12 +792,7 @@ array of identifiers which reference elements in `credentials`.
 : OPTIONAL. A boolean which indicates whether this set of Credentials is required
 to satisfy the particular use case at the Verifier. If omitted, the default value is `true`.
 
-`purpose`
-: OPTIONAL. A string, number or object specifying the purpose of the
-query. This specification does not define a specific structure or specific values
-for this property. The purpose is intended to be used by the Verifier to
-communicate the reason for the query to the Wallet. The Wallet MAY use this
-information to show the user the reason for the request.
+Before sending the presentation request, the Verifier SHOULD display to the End-User the purpose, context, or reason for the query to the Wallet.
 
 ## Claims Query {#claims_query}
 
