@@ -52,7 +52,7 @@ This specification defines a protocol for requesting and presenting Credentials.
 
 # Introduction
 
-This specification defines a mechanism on top of OAuth 2.0 [@!RFC6749] for requesting and delivering Presentations of Credentials. Credentials and Presentations can be of any format, including, but not limited to W3C Verifiable Credentials Data Model [@VC_DATA], ISO mdoc [@ISO.18013-5], IETF SD-JWT VC [@!I-D.ietf-oauth-sd-jwt-vc], and AnonCreds [@Hyperledger.AnonCreds].
+This specification defines a mechanism on top of OAuth 2.0 [@!RFC6749] for requesting and delivering Presentations of Credentials. Credentials and Presentations can be of any format, including, but not limited to W3C Verifiable Credentials Data Model [@VC_DATA], ISO mdoc [@ISO.18013-5], and IETF SD-JWT VC [@!I-D.ietf-oauth-sd-jwt-vc].
 
 OAuth 2.0 [@!RFC6749] is used as a base protocol as it provides the required rails to build a simple, secure, and developer-friendly Credential presentation layer on top of it. Moreover, implementers can, in a single interface, support Credential presentation and the issuance of Access Tokens for access to APIs based on Credentials in the Wallet. OpenID Connect [@!OpenID.Core] deployments can also extend their implementations using this specification with the ability to transport Credential Presentations. 
 
@@ -116,10 +116,10 @@ Verifier:
 : An entity that requests, receives, and validates Presentations. During presentation of Credentials, Verifier acts as an OAuth 2.0 Client towards the Wallet that is acting as an OAuth 2.0 Authorization Server. The Verifier is a specific case of OAuth 2.0 Client, just like Relying Party (RP) in [@OpenID.Core].
 
 Verifiable Credential (VC):
-: An Issuer-signed Credential whose authenticity can be cryptographically verified. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA] (VCDM), [@ISO.18013-5] (mdoc), [@!I-D.ietf-oauth-sd-jwt-vc] (SD-JWT VC), and [@Hyperledger.AnonCreds] (AnonCreds).
+: An Issuer-signed Credential whose authenticity can be cryptographically verified. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA] (VCDM), [@ISO.18013-5] (mdoc), and [@!I-D.ietf-oauth-sd-jwt-vc] (SD-JWT VC).
 
 Verifiable Presentation (VP):
-: A Presentation with a cryptographic proof of Holder Binding. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA] (VCDM), [@ISO.18013-5] (mdoc), [@!I-D.ietf-oauth-sd-jwt-vc] (SD-JWT VC), and [@Hyperledger.AnonCreds] (AnonCreds).
+: A Presentation with a cryptographic proof of Holder Binding. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA] (VCDM), [@ISO.18013-5] (mdoc), and [@!I-D.ietf-oauth-sd-jwt-vc] (SD-JWT VC).
 
 Wallet:
 : An entity used by the Holder to receive, store, present, and manage Credentials and key material. There is no single deployment model of a Wallet: Credentials and keys can both be stored/managed locally, or by using a remote self-hosted service, or a remote third-party service. In the context of this specification, the Wallet acts as an OAuth 2.0 Authorization Server (see [@!RFC6749]) towards the Credential Verifier which acts as the OAuth 2.0 Client.
@@ -130,7 +130,7 @@ This specification defines a mechanism on top of OAuth 2.0 to request and presen
 
 As the primary extension, OpenID for Verifiable Presentations introduces the VP Token as a container to enable End-Users to send Verifiable Presentations and Presentations without Holder Binding to Verifiers using the Wallet. A VP Token contains one or more Presentations in the same or different Credential formats.
 
-This specification supports any Credential format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA] (VCDM), [@ISO.18013-5] (mdoc), [@!I-D.ietf-oauth-sd-jwt-vc] (SD-JWT VC), and [@Hyperledger.AnonCreds] (AnonCreds). Credentials of multiple formats can be presented in the same transaction. The examples given in the main part of this specification use W3C Verifiable Credentials, while examples in other Credential formats are given in (#format_specific_parameters).
+This specification supports any Credential format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA] (VCDM), [@ISO.18013-5] (mdoc), and [@!I-D.ietf-oauth-sd-jwt-vc] (SD-JWT VC). Credentials of multiple formats can be presented in the same transaction. The examples given in the main part of this specification use W3C Verifiable Credentials, while examples in other Credential formats are given in (#format_specific_parameters).
 
 Implementations can use any pre-existing OAuth 2.0 Grant Type and Response Type in conjunction with this specification to support different deployment architectures.
 
@@ -239,7 +239,7 @@ OpenID for Verifiable Presentations extends existing OAuth 2.0 mechanisms as fol
 * A new `vp_token` response parameter is defined to return Presentations with or without Holder Binding to the Verifier in either Authorization or Token Response depending on the Response Type. See (#response) for more details. 
 * New Response Types `vp_token` and `vp_token id_token` are defined to request Credentials to be returned in the Authorization Response (standalone or along with a Self-Issued ID Token [@!SIOPv2]). See (#response) for more details.
 * A new OAuth 2.0 Response Mode `direct_post` is defined to support sending the response across devices, or when the size of the response exceeds the redirect URL character size limitation. See (#response_mode_post) for more details.
-* The `format` parameter is used throughout the protocol in order to enable customization according to the specific needs of a particular Credential format. Examples in (#format_specific_parameters) are given for Credential formats as specified in [@VC_DATA], [@ISO.18013-5], [@!I-D.ietf-oauth-sd-jwt-vc], and [@Hyperledger.AnonCreds].
+* The `format` parameter is used throughout the protocol in order to enable customization according to the specific needs of a particular Credential format. Examples in (#format_specific_parameters) are given for Credential formats as specified in [@VC_DATA], [@ISO.18013-5], and [@!I-D.ietf-oauth-sd-jwt-vc].
 * The concept of a Client Identifier Prefix to enable deployments of this specification to use different mechanisms to obtain and validate metadata of the Verifier beyond the scope of [@!RFC6749].
 
 Presentation of Credentials using OpenID for Verifiable Presentations can be combined with the End-User authentication using [@SIOPv2], and the issuance of OAuth 2.0 Access Tokens.
@@ -1977,16 +1977,6 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
   </front>
 </reference>
 
-<reference anchor="Hyperledger.AnonCreds" target="https://hyperledger.github.io/anoncreds-spec/">
-        <front>
-          <title>Hyperledger AnonCreds Specification</title>
-          <author>
-            <organization>Hyperledger AnonCreds Project</organization>
-          </author>
-          <date year="2024"/>
-        </front>
-</reference>
-
 <reference anchor="JARM" target="https://openid.net/specs/oauth-v2-jarm-final.html">
         <front>
           <title>JWT Secured Authorization Response Mode for OAuth 2.0 (JARM)</title>
@@ -2484,65 +2474,6 @@ The following requirements apply to the `challenge` and `domain` claims within t
 The following is a non-normative example of the Verifiable Presentation in the `vp_token` parameter:
 
 <{{examples/response/ldp_vc.json}}
-
-
-## AnonCreds
-
-AnonCreds is a Credential format defined as part of the Hyperledger Anoncreds project and formerly the Hyperledger Indy project [@Hyperledger.AnonCreds].
-
-To be able to request AnonCreds, there needs to be a set of identifiers for Verifiable Credentials, Verifiable Presentations ("proofs" in AnonCreds terminology) and crypto schemes.
-
-The identifier for the CL-signature crypto scheme used in the examples in this section is `CLSignature2019`.
-
-### Format Identifier
-
-The Credential Format Identifier is `ac_vp` to request a Verifiable Presentation. Wallets MUST reject requests with this format identifier where `require_cryptographic_holder_binding` is set to `false`, as Presentations without Holder Binding are not supported for this format.
-
-### Parameters in the `meta` parameter in Credential Query {#anoncreds_meta_parameter}
-
-The following are AnonCreds specific parameters in the `meta` parameter in a Credential Query as defined in (#credential_query):
-
-`schema_id_values`:
-: OPTIONAL. An array of strings that specifies the allowed values for the `schema_id` of the requested Verifiable Credential. It MUST be a valid scheme identifier as defined in [@Hyperledger.AnonCreds].
-
-`cred_def_id_values`:
-: OPTIONAL. An array of strings that specifies the allowed values for the `cred_def_id` of the requested Verifiable Credential. It MUST be a valid credential definition identifier as defined in [@Hyperledger.AnonCreds].
-
-### Claims Matching
-
-When used in the context of AnonCreds, the `claims_path` parameter always matches on the contents of the `values` object in the JSON-representation of the Verifiable Credential.
-
-### Example Credential
-
-The following is a non-normative example of an AnonCred Credential that will be used throughout this section. 
-
-<{{examples/credentials/ac_vc.json}}
-
-The most important parts for the purpose of this section are `schema_id` parameter and `values` parameter that contains the actual End-User claims. 
-
-#### Presentation Request 
-
-The following is a non-normative example of a DCQL request for an AnonCreds Credential:
-
-<{{examples/request/dcql_ac_vc_sd.json}}
-
-### Presentation Response
-
-The AnonCreds Credential format only allows for a `nonce` that has to be exactly 80 bit long, whereas other Credential formats
-allow for the different inputs to be signed over in a proof of possession for Cryptographic Holder Binding. For AnonCreds, everything that should be part of
-the input to generate that proof MUST be part of the `nonce`. Currently, this specification does not support transaction data
-for AnonCreds and only supports the `nonce` from the Authorization Request and an audience binding as inputs for
-the proof generation. The audience binding MUST be the value of the Client Identifier, except for requests over the DC API where it MUST be
-the Origin prefixed with `origin:`, as described in (#dc_api_response).
-
-To compute to the `nonce` parameter that is used as an input for the Prove and Verify operations of AnonCreds, the `nonce` from the
-Authorization Request must be concatenated with the audience binding (as defined above) and hashed using sha-256. The first
-80 bits of that digest are then used as the `nonce` paramter for the AnonCreds proof. This computed nonce MUST then be used as nonce (also called n_1) for
-the Presentation generation and verification as defined in sections 9.6 and 9.7 of [@Hyperledger.AnonCreds].
-
-The following is a non-normative example of the content of the credential in the `vp_token` parameter:
-
-<{{examples/response/ac_vp_sd.json}}
 
 
 ## Mobile Documents or mdocs (ISO/IEC 18013 and ISO/IEC 23220 series) {#mdocs}
@@ -3167,6 +3098,7 @@ The technology described in this specification was made available from contribut
    * remove JARM and response signing, using JWT directly for unsigned, encrypted responses.
    * make consistent the use of prefixes in the client_id prefixing
    * fix nonce computation for AnonCreds
+   * remove AnonCreds
 
    -25
 
