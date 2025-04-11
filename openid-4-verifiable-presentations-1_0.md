@@ -715,8 +715,6 @@ proof. The default value is `false`, i.e., a Verifiable Presentation with Holder
 is requested. If set to `true`, the Verifier accepts a Credential without Holder Binding
 proof. The Wallet MUST NOT include a Holder Binding proof in this case.
 
-Depending on the Credential format, a different Credential Format Identifier may be required to request Presentations without Holder Binding. Details are defined in (#format_specific_parameters). 
-
 `claims`:
 : OPTIONAL. A non-empty array of objects as defined in (#claims_query) that specifies
 claims in the requested Credential. Verifiers MUST NOT point to the same claim more than
@@ -2280,7 +2278,7 @@ OpenID for Verifiable Presentations is Credential Format agnostic, i.e., it is d
 
 ## W3C Verifiable Credentials
 
-The following sections define the Credential Format specific parameters and rules for Verifiable Credentials compliant to the [@VC_DATA] specification.
+The following sections define the Credential Format specific parameters and rules for W3C Verifiable Credentials compliant to the [@VC_DATA] specification and for W3C Verifiable Presenations of such Credentials.
 
 If `allow_replay` is not set to `true` in the Credential Query, the Wallet MUST return a Verifiable Presentation of a Verifiable Credential. Otherwise, a Verifiable Credential without Holder Binding MUST be returned.
 
@@ -2313,7 +2311,7 @@ This section illustrates the presentation of a Credential conformant to [@VC_DAT
 
 ##### Format Identifier and Cipher Suites
 
-The Credential Format Identifiers is `jwt_vc_json` to request a W3C Verifiable Credential compliant to the [@VC_DATA] specification or a Verifiable Presentation of such a credential.
+The Credential Format Identifier is `jwt_vc_json` to request a W3C Verifiable Credential compliant to the [@VC_DATA] specification or a Verifiable Presentation of such a Credential.
 
 Cipher suites should use algorithm names defined in [IANA JOSE Algorithms Registry](https://www.iana.org/assignments/jose/jose.xhtml#web-signature-encryption-algorithms).
 
@@ -2356,7 +2354,7 @@ This section illustrates presentation of a Credential conformant to [@VC_DATA] t
 
 ##### Format Identifier and Cipher Suites
 
-The Credential Format Identifiers are `ldp_vc` to request a W3C Verifiable Credential request a Verifiable Presentation compliant to the [@VC_DATA] specification or a Verifiable Presentation of such a credential.
+The Credential Format Identifier is `ldp_vc` to request a W3C Verifiable Credential compliant to the [@VC_DATA] specification or a Verifiable Presentation of such a Credential.
 
 Cipher suites should use signature suites names defined in [Linked Data Cryptographic Suite Registry](https://w3c-ccg.github.io/ld-cryptosuite-registry/).
 
