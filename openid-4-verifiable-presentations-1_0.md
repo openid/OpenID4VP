@@ -107,7 +107,7 @@ Origin:
 For example, the verifier for the organization MyExampleOrg is served from https://verify.example.com. The web origin is `https://verify.example.com` with `https` being the scheme, `verify.example.com` being the host, and the port is not explicitly included as `443` is the default port for the protocol `https`. The native applications origin on some platforms will also be `https://verify.example.com` and on other platforms, may be `platform:pkg-key-hash:Z4OFzVVSZrzTRa3eg79hUuHy12MVW0vzPDf4q4zaPs0`.
 
 Presentation:
-: Data that is presented to a specific Verifier, derived from a Credential. In this specification, Presentations are usually, but not always, Verifiable Presentations (defined below). Exceptions are discussed in (#nkb-credentials).
+: Data that is presented to a specific Verifier, derived from a Credential. In this specification, Presentations are usually Verifiable Presentations including Holder Binding (as defined below), but may also be Presentations without Holder Binding (discussed in (#nkb-credentials)).
 
 VP Token:
 : An artifact containing one or more Presentations returned as a response to an Authorization Request. The structure of VP Tokens is defined in (#response-parameters).
@@ -235,7 +235,7 @@ Figure: Cross Device Flow
 OpenID for Verifiable Presentations extends existing OAuth 2.0 mechanisms as following:
 
 * A new query language, the Digital Credentials Query Language (DCQL), is defined to enable requesting Presentations in an easier and more flexible way. See (#dcql_query) for more details.
-* A new `dcql_query` Authorization Request parameter is defined to request presentation of Credentials in the JSON-encoded DCQL format. See (#vp_token_request) for more details.
+* A new `dcql_query` Authorization Request parameter is defined to request Presentation of Credentials in the JSON-encoded DCQL format. See (#vp_token_request) for more details.
 * A new `vp_token` response parameter is defined to return Presentations with or without Holder Binding to the Verifier in either Authorization or Token Response depending on the Response Type. See (#response) for more details. 
 * New Response Types `vp_token` and `vp_token id_token` are defined to request Credentials to be returned in the Authorization Response (standalone or along with a Self-Issued ID Token [@!SIOPv2]). See (#response) for more details.
 * A new OAuth 2.0 Response Mode `direct_post` is defined to support sending the response across devices, or when the size of the response exceeds the redirect URL character size limitation. See (#response_mode_post) for more details.
@@ -349,8 +349,7 @@ A Verifier that requests and accepts a Presentation of a Credential without a
 proof of Holder Binding accepts that the presented Credential may have been
 replayed. (#preventing-replay) contains additional considerations for this case.
 
-To request a Credential without proof of Holder Binding, the Verifier specifies a
-different format in the DCQL request as defined in (#dcql_query) and
+To request a Credential without proof of Holder Binding, the Verifier uses the `allow_replay` parameter in the DCQL request as defined in (#dcql_query) and
 (#format_specific_parameters).
 
 In this protocol, the `nonce` parameter serves to securely link the request and
@@ -1380,7 +1379,7 @@ This document also defines the following additional error codes and error descri
 Verifiers MUST validate the VP Token in the following manner:
 
 1. Validate the format of the VP Token as defined in (#response-parameters).
-1. Check the individual Presentations according to the specific Credential or Presentation format requested:
+1. Check the individual Presentations according to the specific Credential Format requested:
    1. Validate the integrity and authenticity of the Presentation and Credential.
    1. Validate that the returned Credential(s) meet all criteria defined in the query in the Authorization Request (e.g., Claims included in the presentation).
    1. Validate that all Presentations contain a cryptographic proof of Holder Binding (i.e., that they are Verifiable Presentations), unless specifically requested otherwise.
@@ -1632,8 +1631,7 @@ An attacker could try to inject Presentations obtained from (for example) a prev
 ### Presentations without Holder Binding Proofs
 
 By definition, Presentations without Holder Binding (see (#nkb-credentials)) do
-not prove that the Holder possesses the private Holder Binding key belonging to
-the Credential. A Verifier that consumes Presentations without Holder Binding
+not provide protection against replay. A Verifier that consumes Presentations without Holder Binding
 accepts the risk that the Holder may have obtained the Credential from a third
 party (e.g., by playing the role of a Verifier) and that the Holder may not be
 the subject of the Credential.
