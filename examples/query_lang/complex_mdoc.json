@@ -79,14 +79,12 @@
   ],
   "credential_sets": [
     {
-      "purpose": "Identification",
       "options": [
         [ "mdl-id" ],
         [ "photo_card-id" ]
       ]
     },
     {
-      "purpose": "Proof of address",
       "required": false,
       "options": [
         [ "mdl-address" ],
