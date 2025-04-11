@@ -1222,7 +1222,7 @@ Note: In the Response Mode `direct_post` or `direct_post.jwt`, the Wallet can ch
 Additional parameters MAY be defined and used in the response from the Response Endpoint to the Wallet.
 The Wallet MUST ignore any unrecognized parameters.
 
-## Encrypted Responses {#response_encryption}
+## Response Encryption {#response_encryption}
 
 This section defines how an Authorization Response containing a VP Token (such as when the Response Type value is `vp_token` or `vp_token id_token`) can be encrypted at the application level using [@!RFC7518] where the payload of the JWE is a JSON object containing the Authorization Response parameters. Encrypting the Authorization Response can, for example, prevent personal data in the Authorization Response from leaking, when the Authorization Response is returned through the front channel (e.g., the browser).
 
@@ -1232,11 +1232,77 @@ To obtain the Verifier's public key to which to encrypt the Authorization Respon
 Using what it supports and its preferences, the Wallet selects the public key to encrypt the Authorization Response based on information about each key, such as the `kty` (Key Type), `use` (Public Key Use), `alg` (Algorithm), and other JWK parameters.
 The JWE `alg` algorithm used MUST the `alg` value of the chosen `jwk`, if present, or otherwise make sense to use with the selected key.
 If the selected public key contains a `kid` parameter, the JWE MUST include the same value in the `kid` JWE Header Parameter (as defined in [@!RFC7516, Section 4.1.6]) of the encrypted response. This enables the Verifier to easily identify the specific public key that used to encrypt the response.
-The JWE `enc` content encryption algorithm used is obtained from the `authorization_encrypted_response_enc` parameter of client metadata, such as the `client_metadata` request parameter, allowing for the default value of `A128CBC-HS256` when not explictiy set.
+The JWE `enc` content encryption algorithm used is obtained from the `authorization_encrypted_response_enc` parameter of client metadata, such as the `client_metadata` request parameter, allowing for the Wallet to use a content encryption algorithm of its choosing when not explicitly set.
 
 The payload of the encrypted JWT response MUST include the contents of the response as defined in (#response-parameters) as top-level JSON members.
 
-The following is a non-normative example of the payload of a JWT used in an encrypted Authorization Response:
+The following shows a non-normative example of the content of a request that is asking for an encrypted response while providing
+a few public keys for encryption in the `jwks` member of the `client_metadata` request parameter:
+
+```json
+{
+ "response_type": "vp_token",
+ "response_mode": "dc_api.jwt",
+ "nonce": "xyz123ltcaccescbwc777",
+ "dcql_query": {...},
+ "client_metadata": {
+   "jwks": {
+    "keys": [
+    {
+     "kty":"EC", "kid":"ac", "use":"enc", "crv":"P-256",
+     "x":"YO4epjifD-KWeq1sL2tNmm36BhXnkJ0He-WqMYrp9Fk",
+     "y":"Hekpm0zfK7C-YccH5iBjcIXgf6YdUvNUac_0At55Okk"
+    },
+    {
+     "kty":"OKP","kid":"jc","use":"enc","crv":"X25519",
+     "x":"WPX7wnwq10hFNK9aDSyG1QlLswE_CJY14LdhcFUIVVc"
+    },
+    {
+     "kty":"EC","kid":"lc","use":"enc","crv":"P-384",
+     "x":"iHytgLNtXjEyYMAIGwfgjINZRmLfObYbmjPhkaPD8OiTkJtRHjegTNdH31Mxg4nV",
+     "y":"MizXWSqNB7sSt_SNjg3spvaJnmjB-LpxsPpLUaea33rvINL3Mq-gEaANErRQpbLx"
+    },
+    {
+     "kty":"OKP","kid":"bc","use":"enc","crv":"X448",
+     "x":"pK5IRpLlX-8XcsRYWHejpzkfsHoDOmAYuBzAC7aTpewWOw_QFHSa64t9p2kuommI8JQQLohS2AIA"
+    }
+   ]
+  },
+  "authorization_encrypted_response_enc": "A128GCM"
+ }
+}
+```
+
+A non-normative example response to the above request, having been encrypted to the first key, might look like the following
+(with added line breaks for display purposes only):
+
+```
+{
+ "response" : "eyJhbGciOiJFQ0RILUVTIiwiZW5jIjoiQTEyOEdDTSIsImtpZCI6ImFjIiwiZXBrIjp7Imt
+    0eSI6IkVDIiwieCI6Im5ubVZwbTNWM2piaGNhZlFhUkJrU1ZOSGx3Wkh3dC05ck9wSnVmeVlJdWsiLCJ5I
+    joicjRmakRxd0p5czlxVU9QLV9iM21SNVNaRy0tQ3dPMm1pYzVWU05UWU45ZyIsImNydiI6IlAtMjU2In1
+    9..uAYcHRUSSn2X0WPX.yVzlGSYG4qbg0bq18JcUiDRw56yVnbKR8E7S7YlEtzT00RqE3Pw5oTpUG3hdLN
+    4taHZ9gC1kwak8JOnJgQ.1wR024_3-qtAlx1oFIUpQQ"
+}
+```
+
+The following shows the decoded header of the above encrypted Authorization Response example:
+
+```json
+{
+  "alg": "ECDH-ES",
+  "enc": "A128GCM",
+  "kid": "ac",
+  "epk": {
+    "kty": "EC",
+    "x": "nnmVpm3V3jbhcafQaRBkSVNHlwZHwt-9rOpJufyYIuk",
+    "y": "r4fjDqwJys9qUOP-_b3mR5SZG--CwO2mic5VSNTYN9g",
+    "crv": "P-256"
+  }
+}
+```
+
+While this shows the payload of the above encrypted Authorization Response example:
 
 ```json
 {
