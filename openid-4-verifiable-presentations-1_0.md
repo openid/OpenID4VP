@@ -2236,7 +2236,7 @@ OpenID for Verifiable Presentations is Credential Format agnostic, i.e., it is d
 The following is a W3C Verifiable Credentials specific parameter in the `meta` parameter in a Credential Query as defined in (#credential_query):
 
 `type_values`:
-: OPTIONAL. An array of string arrays that specifies the types of Verifiable Credentials that the Verifier accepts to be used in the Verifiable Presentation. Each of the top-level arrays specifies one alternative to match the type of the Verifiable Credential against. Each inner array specifies a set of types that must be present in the `type` property of the Verifiable Credential, regardless of order or the presence of additional types. 
+: REQUIRED. An array of string arrays that specifies the types of Verifiable Credentials that the Verifier accepts to be used in the Verifiable Presentation. Each of the top-level arrays specifies one alternative to match the type of the Verifiable Credential against. Each inner array specifies a set of types that must be present in the `type` property of the Verifiable Credential, regardless of order or the presence of additional types. 
 
 For example, if the DCQL query contains `"type_values": [["ACred", "BCred"], ["CCred"]]`, then a Verifiable Credential with the type `["DCred", "BCred", "ACred"]` would match, but a Verifiable Credential with the type `["BCred"]` would not match.
 
@@ -2345,10 +2345,10 @@ The identifier for the CL-signature crypto scheme used in the examples in this s
 The following are AnonCreds specific parameters in the `meta` parameter in a Credential Query as defined in (#credential_query):
 
 `schema_id_values`:
-: OPTIONAL. An array of strings that specifies the allowed values for the `schema_id` of the requested Verifiable Credential. It MUST be a valid scheme identifier as defined in [@Hyperledger.Indy].
+: REQUIRED when `cred_def_id_values` is not present. An array of strings that specifies the allowed values for the `schema_id` of the requested Verifiable Credential. It MUST be a valid scheme identifier as defined in [@Hyperledger.Indy].
 
 `cred_def_id_values`:
-: OPTIONAL. An array of strings that specifies the allowed values for the `cred_def_id` of the requested Verifiable Credential. It MUST be a valid credential definition identifier as defined in [@Hyperledger.Indy].
+: REQUIRED when `schema_id_values` is not present. An array of strings that specifies the allowed values for the `cred_def_id` of the requested Verifiable Credential. It MUST be a valid credential definition identifier as defined in [@Hyperledger.Indy].
 
 #### Claims Matching
 
