@@ -256,6 +256,8 @@ The Authorization Request follows the definition given in [@!RFC6749] taking int
 
 The Verifier MAY send an Authorization Request as a Request Object either by value or by reference, as defined in the JWT-Secured Authorization Request (JAR) [@RFC9101]. Verifiers MUST include the `typ` Header Parameter in Request Objects with the value `oauth-authz-req+jwt`, as defined in [@RFC9101]. Wallets MUST NOT process Request Objects where the `typ` Header Parameter is not present or does not have the value `oauth-authz-req+jwt`.
 
+The `client_id` claim is required as defined below and would be redundant with a possible `iss` claim in the Request Object which is commonly used in JAR. To not break existing JAR implementations, the `iss` claim MAY be present in the Request Object. However, even if it is present, the Wallet MUST ignore it.
+
 This specification defines a new mechanism for the cases when the Wallet wants to provide to the Verifier details about its technical capabilities to
 allow the Verifier to generate a request that matches the technical capabilities of that Wallet.
 To enable this, the Authorization Request can contain a `request_uri_method` parameter with the value `post`
@@ -3041,6 +3043,7 @@ The technology described in this specification was made available from contribut
    -26
 
    * renamed "Client ID Scheme" to "Client ID Prefix", and updated metadata (`client_id_prefixes_supported`) and `error_description` to match
+   * add note that `iss` must be ignored if present in the request object
    * added security considerations for value matching in DCQL
    * require `kid` in JWE response header if present in client_metadata `jwks`
    * added some more (non-exhaustive) privacy considerations with pointers to SD-JWT and OpenID4VCI
