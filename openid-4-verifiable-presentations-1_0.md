@@ -2985,6 +2985,7 @@ The technology described in this specification was made available from contribut
    * added some more (non-exhaustive) privacy considerations with pointers to SD-JWT and OpenID4VCI
    * remove DIF Presentation Exchange as a query language option
    * Changes in the DCQL query parameters specific to W3C VCs and AnonCreds
+   * change the identifier for the ETSI trusted list `trusted_authorities` entry from `openid_fed` to `openid_federation`
 
    -25
 
