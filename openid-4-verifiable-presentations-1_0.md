@@ -819,7 +819,7 @@ If the `values` property is present, the Wallet SHOULD return the claim only if 
 type and value of the claim both match exactly for at least one of the elements in the array. Details of the processing
 rules are defined in (#selecting_claims).
 
-If a Wallet implements value matching and the credential to match against is
+If a Wallet implements value matching and the Credential to match against is
 an ISO mdoc-based credential, the following rules apply:
 
 - If the value to match against is a string, only claims encoded as a `tstr` (major
