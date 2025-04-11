@@ -314,6 +314,25 @@ The following is a non-normative example of a transaction data content, after ba
 }
 ```
 
+`verifier_attestations`:
+: OPTIONAL. An array of attestations about the Verifier relevant to the Credential Request. These attestations MAY include Verifier metadata, policies, trust status, or authorizations. Attestations are intended to support authorization decisions, inform Wallet policy enforcement, or enrich the End-User consent dialog. Each object has the following structure:
+
+    * `format`: REQUIRED. A string that identifies the format of the attestation and how it is encoded. Ecosystems SHOULD use collision-resistant identifiers. Further processing of the attestation is determined by the type of the attestation, which is specified in a format-specific way. 
+    * `data`: REQUIRED. An object or string containing an attestation (e.g. a JWT). The payload structure is defined on a per format level. The Wallet MUST validate this signature and ensure binding.
+    * `credential_ids`: OPTIONAL. An array of strings each referencing a Credential requested by the Verifier for which the attestation is relevant. Each string matches the `id` field in a DCQL Credential Query. If omitted, the attestation is relevant to all requested credentials.
+
+See (#verifier-attestations) for more details.
+
+The following is a non-normative example of an attested object:
+
+```json
+{
+  "format": "jwt",
+  "data": "eyJhbGciOiJFUzI1...EF0RBtvPClL71TWHlIQ",
+  "credential_ids": [ "id_card" ]
+}
+```
+
 ## Existing Parameters {#existing_parameters}
 
 The following additional considerations are given for pre-existing Authorization Request parameters:
@@ -534,10 +553,6 @@ If a `:` character is present in the Client Identifier but the value preceding i
 
 From this definition, it follows that pre-registered clients MUST NOT contain a `:` character preceded immediately by a supported Client Identifier Prefix value in the first part of their Client Identifier.
 
-### Security Considerations
-
-Confusing Verifiers using a Client Identifier Prefix with those using none can lead to attacks. Therefore, Wallets MUST always use the full Client Identifier, including the prefix if provided, within the context of the Wallet or its responses to identify the client. This refers in particular to places where the Client Identifier is used in [@!RFC6749] and in the presentation returned to the Verifier.
-
 ### Defined Client Identifier Prefixes {#client_identifier_prefixes}
 
 This specification defines the following Client Identifier Prefixes, followed by the examples where applicable: 
@@ -560,7 +575,7 @@ Location: https://wallet.example.org/universal-link?
     7D%7D%7D
 ```
 
-* `openid_federation`: This prefix value indicates that the original Client Identifier (the part without the prefix `openid_federation:`) is an Entity Identifier defined in OpenID Federation [@!OpenID.Federation]. Processing rules given in [@!OpenID.Federation] MUST be followed. Automatic Registration as defined in [@!OpenID.Federation] MUST be used. The Authorization Request MAY also contain a `trust_chain` parameter. The final Verifier metadata is obtained from the Trust Chain after applying the policies, according to [@!OpenID.Federation]. The `client_metadata` parameter, if present in the Authorization Request, MUST be ignored when this Client Identifier Prefix is used. Example Client Identifier: `openid_federation:https://federation-verifier.example.com`.
+* `openid_federation`: This prefix value indicates that the original Client Identifier (the part without the prefix `openid_federation:`) is an Entity Identifier defined in OpenID Federation [@!OpenID.Federation]. Processing rules given in [@!OpenID.Federation] MUST be followed. The Authorization Request MAY also contain a `trust_chain` parameter. The final Verifier metadata is obtained from the Trust Chain after applying the policies, according to [@!OpenID.Federation]. The `client_metadata` parameter, if present in the Authorization Request, MUST be ignored when this Client Identifier Prefix is used. Example Client Identifier: `openid_federation:https://federation-verifier.example.com`.
 
 * `decentralized_identifier`: This prefix value indicates that the original Client Identifier (the part without the prefix `decentralized_identifier:`) is a Decentralized Identifier as defined in [@!DID-Core]. The request MUST be signed with a private key associated with the DID. A public key to verify the signature MUST be obtained from the `verificationMethod` property of a DID Document. Since DID Document may include multiple public keys, a particular public key used to sign the request in question MUST be identified by the `kid` in the JOSE Header. To obtain the DID Document, the Wallet MUST use DID Resolution defined by the DID method used by the Verifier. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter as defined in (#new_parameters). Example Client Identifier: `decentralized_identifier:did:example:123`.
 
@@ -649,6 +664,29 @@ The Wallet then validates the request as specified in OAuth 2.0 [@RFC6749].
 
 If the Verifier responds with any HTTP error response, the Wallet MUST terminate the process.
 
+## Verifier Attestations {#verifier-attestations}
+
+Verifier Attestations allow the Verifier to provide additional context or metadata as part of the Authorization Request attested by a trusted third party. These inputs can support a variety of use cases, such as helping the Wallet apply policy decisions, validating eligibility, or presenting more meaningful information to the End-User during consent.
+
+Each Verifier Attestation is an object containing a type identifier, associated data and optionally references to credential ids. The format and semantics of these attestations are defined by ecosystems or profiles.
+
+For example, a Verifier might include:
+
+- A **registration certificate** issued by a trusted authority, to prove that the verifier has publicly registered its intend to request certain credentials.
+- A **policy statement**, such as a signed document describing acceptable use, retention periods, or access rights.
+- The **confirmation of a role** of the verifier in a certain domain, e.g. the verifier might be a certified payment service provider under the EU's Payment Service Directive 2.
+
+Verifier Attestations are optional. Wallets MAY use them to make authorization decisions or to enhance the user experience, but they SHOULD ignore any unrecognized or unsupported Verifier Attestation types.
+
+### Proof of Possession
+
+This specification supports two models for proof of possession:
+
+- **claim-bound attestations**: The attestation is not signed by the Relying Party, but bound to it. The exact binding mechanism is defined by the type of the definition. For example for JWTs, the `sub` claim is including the distinguished name of the Certificate that was used to sign the request. The binding may also include the client_id parameter.
+- **key-bound attestations**: The attestation's proof of possession is signed by the Relying Party with a key contained or related to the attestation . To bind the signature to the presentation request, the respective signature object should include the `nonce` and `client_id` request parameters. The attestation and the proof of possession have to be passed in the attachment.
+
+ The Wallet MUST validate such proofs if defined by the profile and ignore or reject attachments that fail validation.
+
 # Digital Credentials Query Language (DCQL) {#dcql_query}
 
 The Digital Credentials Query Language (DCQL, pronounced [ˈdakl̩]) is a
@@ -727,7 +765,7 @@ once in a single query. Wallets SHOULD ignore such duplicate claim queries.
 elements in `claims` that specifies which combinations of `claims` for the Credential are requested.
 The rules for selecting claims to send are defined in (#selecting_claims).
 
-Note that multiple Credential Queries in a request MAY request a presentation of the same Credential.
+Multiple Credential Queries in a request MAY request a presentation of the same Credential.
 
 ### Trusted Authorities Query {#dcql_trusted_authorities}
 
@@ -858,12 +896,21 @@ If the `values` property is present, the Wallet SHOULD return the claim only if 
 type and value of the claim both match exactly for at least one of the elements in the array. Details of the processing
 rules are defined in (#selecting_claims).
 
-### Selecting Claims and Credentials {#dcql_query_lang_processing_rules}
+## Selecting Claims and Credentials {#dcql_query_lang_processing_rules}
 
 The following section describes the logic that applies for selecting claims 
-and for selecting credentials. 
+and for selecting credentials.
 
-#### Selecting Claims {#selecting_claims}
+For formats supporting selective disclosure, these rules support selecting a minimal
+dataset to fulfill the Verifier's request in a privacy-friendly manner
+(see (#privacy-considerations) for additional considerations). Wallets MUST NOT send
+selectively disclosable claims that have not been selected according to the rules below.
+A single Presentation of a Credential MAY contain more than the claims selected in the
+particular DCQL Credential Query if the same Credential is selected with the additional
+claims in a separate Credential Query in the same request, or the additional claims are
+not selectively disclosable.
+
+### Selecting Claims {#selecting_claims}
 
 The following rules apply for selecting claims via `claims` and `claim_sets`:
 
@@ -905,7 +952,7 @@ since that is the preferred option from the Verifier. However, there can be reas
 deviate. Non-exhaustive examples of such reasons are:
 
 - scenarios where the Verifier did not order the options according to least information disclosure
-- operational reasons why returning a different option than the first option has UX benefits for the Wallet. 
+- operational reasons why returning a different option than the first option has UX benefits for the Wallet.
 
 If the Wallet cannot deliver all claims requested by the Verifier
 according to these rules, it MUST NOT return the respective Credential.
@@ -914,7 +961,7 @@ For Credential Formats that do not support selective disclosure, the case of bot
 and `claim_sets` being absent is interpreted as requesting a presentation of the "full credential"
 since all claims are mandatory to present.
 
-#### Selecting Credentials
+### Selecting Credentials
 
 The following rules apply for selecting Credentials via `credentials` and `credential_sets`:
 
@@ -935,7 +982,7 @@ they would not exist in the Wallet.
 If the Wallet cannot deliver all non-optional Credentials requested by the
 Verifier according to these rules, it MUST NOT return any Credential(s).
 
-#### User Interface Considerations {#dcql_query_ui}
+### User Interface Considerations {#dcql_query_ui}
 
 While this specification provides the mechanisms for requesting different sets
 of claims and Credentials, it does not define details about the user interface
@@ -943,35 +990,6 @@ of the Wallet, for example, if and how users can select which combination of
 Credentials to present. However, it is typically expected that the Wallet
 presents the End-User with a choice of which Credential(s) to present if
 multiple of the sets of Credentials in `options` can satisfy the request.
-
-#### Security and Privacy Considerations {#dcql_query_security}
-
-##### Enforcing Constraints
-
-While the Verifier can specify various constraints both on the claims level and
-the Credential level as shown above, it MUST NOT rely on the Wallet to enforce
-these constraints. The Wallet is not controlled by the Verifier and the Verifier
-MUST perform its own security checks on the returned Credentials and
-presentations.
-
-##### Value Matching
-
-When using `values` to match the expected values of claims, the fact that a
-claim within a certain credential matched a value or did not match a value might
-already leak information about the claim value. Therefore, Wallets MUST take
-precautions against leaking information about the claim value when processing
-`values`. This SHOULD include, in particular:
-
-- ensuring that a Verifier, in the response, cannot distinguish between the case where a user did
-  not consent to releasing the credential and the case where the claim value did
-  not match the expected value, and
-- preventing repeated or "silent" requests leaking data to the Verifier without
-  the user's consent by ensuring that all requests, even if no response can be
-  sent by the Wallet due to a `values` mismatch, require some form of user
-  interaction before a response is sent.
-
-In both cases listed here, it needs to be considered that returning an error
-response can also leak information about the processing outcome of `values`.
 
 # Claims Path Pointer {#claims_path_pointer}
 
@@ -1768,6 +1786,37 @@ The OpenID Foundation provides tools that can be used to confirm that an impleme
 
 https://openid.net/certification/conformance-testing-for-openid-for-verifiable-presentations/
 
+## Always Use the Full Client Identifier
+
+Confusing Verifiers using a Client Identifier Prefix with those using none can lead to attacks. Therefore, Wallets MUST always use the full Client Identifier, including the prefix if provided, within the context of the Wallet or its responses to identify the client. This refers in particular to places where the Client Identifier is used in [@!RFC6749] and in the presentation returned to the Verifier.
+
+## Security Checks on the Returned Credentials and Presentations {#dcql_query_security}
+
+While the Verifier can specify various constraints both on the claims level and
+the Credential level as shown in (#dcql_query_lang_processing_rules), it MUST NOT rely on the Wallet to enforce
+these constraints. The Wallet is not controlled by the Verifier and the Verifier
+MUST perform its own security checks on the returned Credentials and
+Presentations.
+
+## DCQL Value Matching
+
+When using DCQL `values` to match the expected values of claims, the fact that a
+claim within a certain credential matched a value or did not match a value might
+already leak information about the claim value. Therefore, Wallets MUST take
+precautions against leaking information about the claim value when processing
+`values`. This SHOULD include, in particular:
+
+- ensuring that a Verifier, in the response, cannot distinguish between the case where a user did
+  not consent to releasing the credential and the case where the claim value did
+  not match the expected value, and
+- preventing repeated or "silent" requests leaking data to the Verifier without
+  the user's consent by ensuring that all requests, even if no response can be
+  sent by the Wallet due to a `values` mismatch, require some form of user
+  interaction before a response is sent.
+
+In both cases listed here, it needs to be considered that returning an error
+response can also leak information about the processing outcome of `values`.
+
 # Privacy Considerations
 
 Many privacy considerations are specific to the credential format and associated proof type used in any particular presentation.
@@ -2179,6 +2228,7 @@ Out of the Authorization Request parameters defined in [@!RFC6749] and (#vp_toke
 * `request`
 * `transaction_data`
 * `dcql_query`
+* `verifier_attestations`
 
 The `client_id` parameter MUST be omitted in unsigned requests defined in (#unsigned_request). The Wallet MUST ignore any `client_id` parameter that is present in an unsigned request.
 
@@ -2232,11 +2282,12 @@ This is an example of the payload of a signed OpenID4VP request used with the W3
 
 #### JWS JSON Serialization
 
-The JWS JSON Serialization [@!RFC7515]) allows the Verifier to use multiple Client Identifiers and corresponding key material to protect the same request. This serves use cases where the Verifier requests Credentials belonging to different trust frameworks and, therefore, needs to authenticate in the context of those trust frameworks.
+The JWS JSON Serialization [@!RFC7515]) allows the Verifier to use multiple Client Identifiers and corresponding key material to protect the same request. This serves use cases where the Verifier requests Credentials belonging to different trust frameworks and, therefore, needs to authenticate in the context of those trust frameworks. It also allows the Verifier to add different attestations for each Client Identifier.
 
 In this case, the following request parameters MUST be present in the protected header of the respective `signature` object in the `signatures` array defined in [@!RFC7515, section 7.2.1]:
 
 * `client_id`
+* `verifier_attestations`
 
 All other request parameters MUST be present in the `payload` element of the JWS object.
 
@@ -3010,6 +3061,12 @@ established by [@!RFC7591].
 * Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#client_metadata_parameters) of this specification
 
+### verifier_attestations
+
+* Name: `verifier_attestations`
+* Parameter Usage Location: authorization request
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
+* Reference: (#new_parameters) of this specification
 
 ## Media Types Registry
 
@@ -3078,7 +3135,7 @@ in the IANA "Uniform Resource Identifier (URI) Schemes" registry [@IANA.URI.Sche
 
 # Acknowledgements {#Acknowledgements}
 
-We would like to thank Richard Barnes, Paul Bastian, Vittorio Bertocci, Christian Bormann, John Bradley, Marcos Caceres, Brian Campbell, Lee Campbell, Tim Cappalli, Gabe Cohen, David Chadwick, Andrii Deinega, Rajvardhan Deshmukh, Giuseppe De Marco, Mark Dobrinic, Daniel Fett, Pedro Felix, George Fletcher, Ryan Galluzzo, Timo Glasta, Sam Goto, Mark Haine, Martijn Haring, Fabian Hauck, Roland Hedberg, Joseph Heenan, Bjorn Hjelm, Alen Horvat, Andrew Hughes, Jacob Ideskog, Łukasz Jaromin, Edmund Jay, Michael B. Jones, Tom Jones, Judith Kahrer, Takahiko Kawasaki, Gaurav Khot, Niels Klomp, Ronald Koenig, Markus Kreusch, Adam Lemmon, Hicham Lozi, Daniel McGrogan, Jeremie Miller, Kenichi Nakamura, Gareth Oliver, Aaron Parecki, Andreea Prian, Rolson Quadras, Javier Ruiz, Nat Sakimura, Arjen van Veen, Steve Venema, Jan Vereecken, David Waite, Jacob Ward, and David Zeuthen for their valuable feedback and contributions to this specification.
+We would like to thank Richard Barnes, Paul Bastian, Vittorio Bertocci, Christian Bormann, John Bradley, Marcos Caceres, Brian Campbell, Lee Campbell, Tim Cappalli, Gabe Cohen, David Chadwick, Andrii Deinega, Rajvardhan Deshmukh, Giuseppe De Marco, Mark Dobrinic, Daniel Fett, Pedro Felix, George Fletcher, Ryan Galluzzo, Timo Glasta, Sam Goto, Mark Haine, Martijn Haring, Fabian Hauck, Roland Hedberg, Joseph Heenan, Bjorn Hjelm, Alen Horvat, Andrew Hughes, Jacob Ideskog, Łukasz Jaromin, Edmund Jay, Michael B. Jones, Tom Jones, Judith Kahrer, Takahiko Kawasaki, Gaurav Khot, Niels Klomp, Ronald Koenig, Markus Kreusch, Adam Lemmon, Hicham Lozi, Daniel McGrogan, Jeremie Miller, Mirko Mollik, Kenichi Nakamura, Gareth Oliver, Aaron Parecki, Andreea Prian, Rolson Quadras, Javier Ruiz, Nat Sakimura, Arjen van Veen, Steve Venema, Jan Vereecken, David Waite, Jacob Ward, and David Zeuthen for their valuable feedback and contributions to this specification.
 
 # Notices
 
@@ -3094,11 +3151,13 @@ The technology described in this specification was made available from contribut
 
    -26
 
+   * add `verifier_attestations` to list of authorization parameters
    * renamed "Client ID Scheme" to "Client ID Prefix", and updated metadata (`client_id_prefixes_supported`) and `error_description` to match
    * add note that `iss` must be ignored if present in the request object
    * added security considerations for value matching in DCQL
    * require `kid` in JWE response header if present in client_metadata `jwks`
    * added some more (non-exhaustive) privacy considerations with pointers to SD-JWT and OpenID4VCI
+   * add implementation consideration about pre-final specs
    * remove DIF Presentation Exchange as a query language option
    * Changes in the DCQL query parameters specific to W3C VCs and AnonCreds
    * Introduce ability to present without key binding, including a new parameter `require_cryptographic_holder_binding` in the Credential Query
@@ -3111,7 +3170,6 @@ The technology described in this specification was made available from contribut
 
    -25
 
-   * add implementation consideration about pre-final specs
    * clarify value matching in DCQL
    * clarify why requests using redirect_uri scheme cannot be signed
    * add `trusted_authorities` to DCQL  
