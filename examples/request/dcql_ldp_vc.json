@@ -2,7 +2,7 @@
   "credentials": [ 
     {
       "id": "example_ldp_vc",
-      "format": "ldp_vp",
+      "format": "ldp_vc",
       "meta": {
         "type_values": [["IDCredential"]]
       },
