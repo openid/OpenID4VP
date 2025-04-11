@@ -250,6 +250,8 @@ The Authorization Request follows the definition given in [@!RFC6749] taking int
 
 The Verifier MAY send an Authorization Request as a Request Object either by value or by reference, as defined in the JWT-Secured Authorization Request (JAR) [@RFC9101]. Verifiers MUST include the `typ` Header Parameter in Request Objects with the value `oauth-authz-req+jwt`, as defined in [@RFC9101]. Wallets MUST NOT process Request Objects where the `typ` Header Parameter is not present or does not have the value `oauth-authz-req+jwt`.
 
+The `client_id` claim is required as defined below and would be redundant with a possible `iss` claim in the Request Object which is commonly used in JAR. To not break existing JAR implementations, the `iss` claim MAY be present in the Request Object. However, even if it is present, the Wallet MUST ignore it.
+
 This specification defines a new mechanism for the cases when the Wallet wants to provide to the Verifier details about its technical capabilities to
 allow the Verifier to generate a request that matches the technical capabilities of that Wallet.
 To enable this, the Authorization Request can contain a `request_uri_method` parameter with the value `post`
@@ -1620,6 +1622,16 @@ Note: If the Verifier's Response URI did not return a `redirect_uri` in step (6)
 
 (10) The Verifier checks whether the `nonce` received in the Credential(s) in the VP Token in step (9) corresponds to the `nonce` value from the session. The Verifier then consumes the VP Token and invalidates the `transaction-id`, `request-id` and `nonce` in the session.
 
+## Pre-Final Specifications
+
+Implementers should be aware that this specification uses several specifications that are not yet final specifications. Those specifications are:
+
+- OpenID Federation 1.0 draft -42 [@!OpenID.Federation]
+- SIOPv2 draft -13 [@!SIOPv2]
+- SD-JWT-based Verifiable Credentials (SD-JWT VC) draft -08 [@!I-D.ietf-oauth-sd-jwt-vc]
+
+While breaking changes to the specifications referenced in this specification are not expected, should they occur, OpenID4VP implementations should continue to use the specifically referenced versions above in preference to the final versions, unless updated by a profile or new version of this specification.
+
 # Security Considerations {#security_considerations}
 
 ## Preventing Replay of Verifiable Presentations {#preventing-replay} 
@@ -1826,7 +1838,7 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
     <author fullname="David Chadwick">
       <organization>University of Kent</organization>
     </author>
-   <date day="19" month="Nov" year="2019"/>
+   <date day="03" month="March" year="2022"/>
   </front>
 </reference>
 
@@ -1840,7 +1852,7 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
   </front>
 </reference>
 
-<reference anchor="SIOPv2" target="https://openid.net/specs/openid-connect-self-issued-v2-1_0.html">
+<reference anchor="SIOPv2" target="https://openid.net/specs/openid-connect-self-issued-v2-1_0-13.html">
   <front>
     <title>Self-Issued OpenID Provider V2</title>
     <author fullname="Kristina Yasuda">
@@ -1880,7 +1892,7 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
   </front>
 </reference>
 
-<reference anchor="DID-Core" target="https://www.w3.org/TR/2021/PR-did-core-20210803/">
+<reference anchor="DID-Core" target="https://www.w3.org/TR/2022/REC-did-core-20220719/">
         <front>
         <title>Decentralized Identifiers (DIDs) v1.0</title>
         <author fullname="Manu Sporny">
@@ -1895,7 +1907,7 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
         <author fullname="Drummond Reed">
             <organization>Evernym</organization>
         </author>
-        <date day="3" month="Aug" year="2021"/>
+        <date day="19" month="July" year="2022"/>
         </front>
 </reference>
 
@@ -2018,7 +2030,7 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
         </front>
 </reference>
 
-<reference anchor="OpenID.Federation" target="https://openid.net/specs/openid-federation-1_0.html">
+<reference anchor="OpenID.Federation" target="https://openid.net/specs/openid-federation-1_0-42.html">
         <front>
           <title>OpenID Federation 1.0</title>
 		  <author fullname="R. Hedberg, Ed.">
@@ -2039,7 +2051,7 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
           <author fullname="Vladimir Dzhuvinov">
             <organization>Connect2id</organization>
           </author>
-          <date day="15" month="September" year="2024"/>
+          <date day="05" month="March" year="2025"/>
         </front>
 </reference>
 
@@ -2138,7 +2150,8 @@ The value `1` MUST be used for the `<version>` field to indicate the request and
 The following exchange protocol values are defined by this specification:
 
 * Unsigned requests: `openid4vp-v1-unsigned`
-* Signed requests: `openid4vp-v1-signed`
+* Signed requests (JWS Compact Serialization): `openid4vp-v1-signed`
+* Multi-signed requests (JWS JSON Serialization): `openid4vp-v1-multisigned`
 
 ## Request {#dc_api_request}
 
@@ -2287,7 +2300,7 @@ If `allow_replay` is not set to `true` in the Credential Query, the Wallet MUST 
 The following is a W3C Verifiable Credentials specific parameter in the `meta` parameter in a Credential Query as defined in (#credential_query):
 
 `type_values`:
-: OPTIONAL. An array of string arrays that specifies the fully expanded types (IRIs) after the `@context` was applied that the Verifier accepts to be presented in the Presentation. Each of the top-level arrays specifies one alternative to match the `type` values of the Verifiable Credential against. Each inner array specifies a set of fully expanded types that MUST be present in the `type` property of the Verifiable Credential, regardless of order or the presence of additional types. 
+: REQUIRED. An array of string arrays that specifies the fully expanded types (IRIs) after the `@context` was applied that the Verifier accepts to be presented in the Presentation. Each of the top-level arrays specifies one alternative to match the `type` values of the Verifiable Credential against. Each inner array specifies a set of fully expanded types that MUST be present in the `type` property of the Verifiable Credential, regardless of order or the presence of additional types. 
 
 The following is a non-normative example of `type_values` within a DCQL query:
 
@@ -3082,6 +3095,7 @@ The technology described in this specification was made available from contribut
    -26
 
    * renamed "Client ID Scheme" to "Client ID Prefix", and updated metadata (`client_id_prefixes_supported`) and `error_description` to match
+   * add note that `iss` must be ignored if present in the request object
    * added security considerations for value matching in DCQL
    * require `kid` in JWE response header if present in client_metadata `jwks`
    * added some more (non-exhaustive) privacy considerations with pointers to SD-JWT and OpenID4VCI
@@ -3097,6 +3111,7 @@ The technology described in this specification was made available from contribut
 
    -25
 
+   * add implementation consideration about pre-final specs
    * clarify value matching in DCQL
    * clarify why requests using redirect_uri scheme cannot be signed
    * add `trusted_authorities` to DCQL  
