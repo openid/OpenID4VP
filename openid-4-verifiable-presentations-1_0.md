@@ -915,9 +915,7 @@ rules are defined in (#selecting_claims).
 The following section describes the logic that applies for selecting claims 
 and for selecting credentials.
 
-When the same Credential fulfills more than one Credential Query in a request, that Credential MAY contain
-the combination of claims requested by those Credential Queries. However, in this case, the Credential MUST NOT contain
-claims not requested by any of the Credential Queries.
+For formats supporting selective disclosure, these rules support selecting a minimal dataset to fulfill the Verifier's request in a privacy-friendly manner (see (#privacy-considerations) for additional considerations). Wallets MUST NOT send selectively disclosable claims that have not been selected according to the rules below. A presentation of a credential MAY contain more than the claims selected in the particular DCQL Credential Query if the same credential is selected with the additional claims in a separate Credential Query in the same request.
 
 ### Selecting Claims {#selecting_claims}
 
