@@ -323,8 +323,8 @@ The following is a non-normative example of a transaction data content, after ba
 `verifier_attestations`:
 : OPTIONAL. An array of attestations about the Verifier relevant to the Credential Request. These attestations MAY include Verifier metadata, policies, trust status, or authorizations. Attestations are intended to support authorization decisions, inform Wallet policy enforcement, or enrich the End-User consent dialog. Each object has the following structure:
 
-    * `type`: REQUIRED. A string that identifies the type of the attestation and how it is encoded. Ecosystems SHOULD use collision-resistant identifiers.
-    * `data`: REQUIRED. An object or string containing an attestation (e.g. a JWT). The payload structure is defined on a per type level. The Wallet MUST validate this signature and ensure binding.
+    * `format`: REQUIRED. A string that identifies the format of the attestation and how it is encoded. Ecosystems SHOULD use collision-resistant identifiers. Further processing of the attestation is determined by the type of the attestation, which is specified in a format-specific way. 
+    * `data`: REQUIRED. An object or string containing an attestation (e.g. a JWT). The payload structure is defined on a per format level. The Wallet MUST validate this signature and ensure binding.
     * `credential_ids`: OPTIONAL. An array of strings each referencing a Credential requested by the Verifier for which the attestation is relevant. Each string matches the `id` field in a DCQL Credential Query. If omitted, the attestation is relevant to all requested credentials.
 
 See (#verifier-attestations) for more details.
@@ -333,7 +333,7 @@ The following is a non-normative example of an attested object:
 
 ```json
 {
-  "type": "eudi_registration_certificate",
+  "format": "jwt",
   "data": "eyJhbGciOiJFUzI1...EF0RBtvPClL71TWHlIQ",
   "credential_ids": [ "id_card" ]
 }
