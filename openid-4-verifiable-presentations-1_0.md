@@ -3152,7 +3152,7 @@ The technology described in this specification was made available from contribut
    -26
 
    * add `verifier_attestations` to list of authorization parameters
-   * renamed "Client ID Scheme" to "Client ID Prefix", and updated metadata (`client_id_prefixes_supported`) and `error_description` to match
+   * renamed "Client ID Scheme" to "Client ID Prefix", and updated metadata (`client_id_prefixes_supported`) and an example `error_description` to match
    * add note that `iss` must be ignored if present in the request object
    * added security considerations for value matching in DCQL
    * require `kid` in JWE response header if present in client_metadata `jwks`
@@ -3165,8 +3165,16 @@ The technology described in this specification was made available from contribut
    * change the identifier for the ETSI trusted list `trusted_authorities` entry from `openid_fed` to `openid_federation`
    * change openid_fed to openid_federation for Trusted Authorities Query
    * remove JARM and response signing, using JWT directly for unsigned, encrypted responses.
-   * make consistent the use of prefixes in the client_id prefixing
+   * make consistent the use of prefixes in the client_id prefixing, defining new `openid_federation:` and `decentralized_identifier:` prefixes
    * fix nonce computation for AnonCreds
+   * For w3c vc, DCQL `type_values` now matches against expanded type values
+   * For ISO mdoc, `doctype_value` is now mandatory in DCQL query `meta` parameter
+   * For SD-JWT VC, `vct_values` is now mandatory in DCQL query `meta` parameter
+   * For W3C VC, `type_values` is now mandatory in DCQL query `meta` parameter
+   * `purpose` element removed from DCQL `credential_sets`
+   * Add new DC API `openid4vp-v1-multisigned` protocol identifier for requests with JWS JSON Serialization
+   * Remove incorrect requirement for automatic registration when using OpenID Federation
+   * Change DCQL processing rules to allow the same credential to fulfil different queries
 
    -25
 
