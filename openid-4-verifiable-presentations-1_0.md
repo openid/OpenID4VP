@@ -3080,6 +3080,10 @@ The technology described in this specification was made available from contribut
 
    [[ To be removed from the final specification ]]
 
+   -27
+
+   * remove AnonCreds
+
    -26
 
    * add `verifier_attestations` to list of authorization parameters
@@ -3106,7 +3110,6 @@ The technology described in this specification was made available from contribut
    * Add new DC API `openid4vp-v1-multisigned` protocol identifier for requests with JWS JSON Serialization
    * Remove incorrect requirement for automatic registration when using OpenID Federation
    * Change DCQL processing rules to allow the same credential to fulfil different queries
-   * remove AnonCreds
 
    -25
 
