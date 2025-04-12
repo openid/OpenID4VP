@@ -897,8 +897,8 @@ type and value of the claim both match exactly for at least one of the elements 
 rules are defined in (#selecting_claims).
 
 If a Wallet implements value matching and the Credential to match against is
-an ISO mdoc-based credential, the the CBOR value to match against MUST first be converted to JSON, following the advice 
-given in Section 6.1 of [@RFC8949]. The resulting JSON value is then be used to match against the values property as specified above.
+an ISO mdoc-based credential, the CBOR value to match against MUST first be converted to JSON, following the advice 
+given in Section 6.1 of [@RFC8949]. The resulting JSON value is then to be used to match against the values property as specified above.
 
 ## Selecting Claims and Credentials {#dcql_query_lang_processing_rules}
 
