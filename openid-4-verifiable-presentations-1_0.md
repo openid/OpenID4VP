@@ -3165,7 +3165,7 @@ The technology described in this specification was made available from contribut
    * change the identifier for the ETSI trusted list `trusted_authorities` entry from `openid_fed` to `openid_federation`
    * change openid_fed to openid_federation for Trusted Authorities Query
    * remove JARM and response signing, using JWT directly for unsigned, encrypted responses.
-   * make consistent the use of prefixes in the client_id prefixing
+   * make consistent the use of prefixes in the client_id prefixing, defining new `openid_federation:` and `decentralized_identifier:` prefixes
    * fix nonce computation for AnonCreds
    * For w3c vc, DCQL `type_values` now matches against expanded type values
    * For ISO mdoc, `doctype_value` is now mandatory in DCQL query `meta` parameter
