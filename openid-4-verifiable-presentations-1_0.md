@@ -3082,7 +3082,7 @@ The technology described in this specification was made available from contribut
 
    -27
 
-   * remove AnonCreds
+   * remove AnonCreds for now as we're lacking implementation experience
 
    -26
 
