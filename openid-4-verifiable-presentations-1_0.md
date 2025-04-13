@@ -1244,7 +1244,22 @@ a few public keys for encryption in the `jwks` member of the `client_metadata` r
  "response_type": "vp_token",
  "response_mode": "dc_api.jwt",
  "nonce": "xyz123ltcaccescbwc777",
- "dcql_query": {...},
+ "dcql_query": {
+  "credentials": [
+   {
+    "id": "my_credential",
+    "format": "dc+sd-jwt",
+    "meta": {
+      "vct_values": ["https://credentials.example.com/identity_credential"]
+    },
+    "claims": [
+      {"path": ["last_name"]},
+      {"path": ["first_name"]},
+      {"path": ["address", "postal_code"]}
+     ]
+    }
+   ]
+ },
  "client_metadata": {
    "jwks": {
     "keys": [
