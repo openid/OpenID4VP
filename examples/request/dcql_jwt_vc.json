@@ -2,7 +2,7 @@
   "credentials": [
     {
       "id": "example_jwt_vc",
-      "format": "jwt_vp_json",
+      "format": "jwt_vc_json",
       "meta": {
         "type_values": [["IDCredential"]]
       },
