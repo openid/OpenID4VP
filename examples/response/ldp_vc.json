@@ -14,16 +14,22 @@
       "id": "https://example.com/credentials/1872",
       "type": [
         "VerifiableCredential",
-        "IDCardCredential"
+        "IDCredential"
       ],
       "issuer": {
         "id": "did:example:issuer"
       },
       "issuanceDate": "2010-01-01T19:23:24Z",
       "credentialSubject": {
-        "given_name": "Fredrik",
-        "family_name": "Strömberg",
-        "birthdate": "1949-01-22"
+        "given_name": "Max",
+        "family_name": "Mustermann",
+        "birthdate": "1998-01-11",
+        "address": {
+          "street_address": "Sandanger 25",
+          "locality": "Musterstadt",
+          "postal_code": "123456",
+          "country": "DE"
+        }
       },
       "proof": {
         "type": "Ed25519Signature2018",
@@ -40,8 +46,8 @@
     "type": "Ed25519Signature2018",
     "created": "2021-03-19T15:30:15Z",
     "challenge": "n-0S6_WzA2Mj",
-    "domain": "https://client.example.org/cb",
-    "jws": "eyJhbG...IAoDA",
+    "domain": "x509_san_dns:client.example.org",
+    "jws": "eyJhb...IAoDA",
     "proofPurpose": "authentication",
     "verificationMethod": "did:example:holder#key-1"
   }

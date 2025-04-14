@@ -1,0 +1,15 @@
+{
+  "credentials": [
+    {
+      "id": "example_jwt_vc",
+      "format": "jwt_vc_json",
+      "meta": {
+        "type_values": [["IDCredential"]]
+      },
+      "claims": [
+        {"path": ["credentialSubject", "family_name"]},
+        {"path": ["credentialSubject", "given_name"]}
+      ]
+    }
+  ]
+}
