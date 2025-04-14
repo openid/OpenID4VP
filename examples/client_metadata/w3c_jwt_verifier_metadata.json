@@ -2,9 +2,6 @@
   "vp_formats_supported": {
     "jwt_vc_json": {
       "alg_values": ["ES256", "ES384"]
-    },
-    "jwt_vp_json": {
-      "alg_values": ["ES256", "ES384"]
     }
   }
 }
