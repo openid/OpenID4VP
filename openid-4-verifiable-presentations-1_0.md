@@ -58,7 +58,7 @@ OAuth 2.0 [@!RFC6749] is used as a base protocol as it provides the required rai
 
 This specification can also be combined with [@!SIOPv2], if implementers require OpenID Connect features, such as the issuance of Self-Issued ID Tokens [@!SIOPv2].
 
-Additionally, it specifies a separate mechanism for the Digital Credentials API [@!W3C.Digital_Credentials_API] that utilizes certain aspects of OAuth 2.0 [@!RFC6749]. 
+Additionally, it defines how to use OpenID4VP in conjunction with the Digital Credentials API (DC API) [@!W3C.Digital_Credentials_API]. See section (#dc_api) for all requirements applicable to implementers of OpenID4VP over the DC API.
 
 ## Requirements Notation and Conventions
 
@@ -136,7 +136,7 @@ Wallet:
 
 This specification defines a mechanism to request and present Verifiable Credentials as Verifiable Presentations. The baseline of the protocol uses HTTPS messages and redirects as defined in OAuth 2.0. Additionally, the specification defines a separate mechanism where OpenID4VP messages are sent and received over the Digital Credentials API (DC API) [@!W3C.Digital_Credentials_API] instead of HTTPS messages and redirects.  
 
-As the primary extension, OpenID for Verifiable Presentations introduces the new response type `vp_token`, which allows Verifier to request and receive Verifiable Presentations in a contain designated as VP Token. A VP Token contains one or more Verifiable Presentations in the same or different Credential formats. Consequently, the result of a OpenID4VP interaction is one or more Verifiable Presentations instead of an Access Token. 
+As the primary extension, OpenID for Verifiable Presentations introduces the new response type `vp_token`, which allows Verifier to request and receive Verifiable Presentations in a container designated as VP Token. A VP Token contains one or more Verifiable Presentations in the same or different Credential formats. Consequently, the result of a OpenID4VP interaction is one or more Verifiable Presentations instead of an Access Token. 
 
 This specification supports any Credential format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA] (VCDM), [@ISO.18013-5] (mdoc), [@!I-D.ietf-oauth-sd-jwt-vc] (SD-JWT VC), and [@Hyperledger.Indy] (AnonCreds). Credentials of multiple formats can be presented in the same transaction. The examples given in the main part of this specification use W3C Verifiable Credentials, while examples in other Credential formats are given in (#format_specific_parameters). 
 
@@ -193,7 +193,7 @@ Figure: Same Device Flow
 
 Below is a diagram of a flow where the End-User presents a Credential to a Verifier interacting with the End-User on a different device as the device the Wallet resides on.
 
-The flow uses the Response Type `vp_token` in conjunction with the Response Mode `direct_post`, both defined in this specification. However, in the DC API, as defined in [#dc_api], the cross-device flow differs.
+The flow uses the Response Type `vp_token` in conjunction with the Response Mode `direct_post`, both defined in this specification.
 
 In this flow, the Verifier prepares an Authorization Request and renders it as a QR Code. The End-User then uses the Wallet to scan the QR Code. The Verifiable Presentations are sent to the Verifier in a direct HTTP POST request to a URL controlled by the Verifier. In order to keep the size of the QR Code small and be able to sign and optionally encrypt the Request Object, the actual Authorization Request contains just a Request URI according to [@!RFC9101], which the wallet uses to retrieve the actual Authorization Request data.
 
@@ -247,8 +247,8 @@ OpenID for Verifiable Presentations extends existing OAuth 2.0 mechanisms as fol
 * A new `dcql_query` Authorization Request parameter is defined to request presentation of Verifiable Credentials in the JSON-encoded DCQL format. See (#vp_token_request) for more details.
 * A new `vp_token` response parameter is defined to return Verifiable Presentations to the Verifier in either Authorization or Token Response depending on the Response Type. See (#response) for more details. 
 * New Response Types `vp_token` and `vp_token id_token` are defined to request Verifiable Credentials to be returned in the Authorization Response (standalone or along with a Self-Issued ID Token [@!SIOPv2]). See (#response) for more details.
-* A new OAuth 2.0 Response Mode `direct_post` is defined to support sending the response across devices, or when the size of the response exceeds the redirect URL character size limitation. See (#response_mode_post) for more details.
-* A new OAuth 2.0 Response Mode, `dc_api`, is defined to facilitate request and response exchanges using the DC API, as specified in (#dc_api). Note that when using this Response Mode, only the aspects of OAuth 2.0 explicitly defined in (#dc_api) apply.
+* A new OAuth 2.0 Response Mode, `direct_post`, is defined to support sending the response across devices, or when the size of the response exceeds the redirect URL character size limitation. See (#response_mode_post) for more details.
+* A new OAuth 2.0 Response Mode, `dc_api`, is defined to facilitate request and response exchanges using the DC API, as specified in (#dc_api).
 * The `format` parameter is used throughout the protocol in order to enable customization according to the specific needs of a particular Credential format. Examples in (#format_specific_parameters) are given for Credential formats as specified in [@VC_DATA], [@ISO.18013-5], [@!I-D.ietf-oauth-sd-jwt-vc], and [@Hyperledger.Indy].
 * The concept of a Client Identifier Scheme to enable deployments of this specification to use different mechanisms to obtain and validate metadata of the Verifier beyond the scope of [@!RFC6749].
 
@@ -256,7 +256,7 @@ Presentation of Verifiable Credentials using OpenID for Verifiable Presentations
 
 # Authorization Request {#vp_token_request}
 
-The Authorization Request follows the definition given in [@!RFC6749] taking into account the recommendations given in [@!RFC9700] where applicable. However, in the DC API, only the aspects explicitly referenced in (#dc_api) apply.
+The Authorization Request follows the definition given in [@!RFC6749] taking into account the recommendations given in [@!RFC9700] where applicable.
 
 The Verifier MAY send an Authorization Request as a Request Object either by value or by reference, as defined in the JWT-Secured Authorization Request (JAR) [@RFC9101]. Verifiers MUST include the `typ` Header Parameter in Request Objects with the value `oauth-authz-req+jwt`, as defined in [@RFC9101]. Wallets MUST NOT process Request Objects where the `typ` Header Parameter is not present or does not have the value `oauth-authz-req+jwt`.
 
