@@ -510,8 +510,6 @@ There are use-cases when the Authorization Request is being displayed on a devic
 
 The usage of the Response Mode `direct_post` (see (#response_mode_post)) in conjunction with `request_uri` is RECOMMENDED, since Authorization Request size might be large and might not fit in a QR code.
 
-This section does not apply to DC API.
-
 ## `aud` of a Request Object
 
 When the Verifier is sending a Request Object as defined in [@!RFC9101], the `aud` Claim value depends on whether the recipient of the request can be identified by the Verifier or not:
