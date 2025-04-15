@@ -348,7 +348,7 @@ The following additional considerations are given for pre-existing Authorization
 : REQUIRED. Defined in [@!OAuth.Responses]. This parameter can be used (through the new Response Mode `direct_post`) to ask the Wallet to send the response to the Verifier via an HTTPS connection (see (#response_mode_post) for more details). It can also be used to request that the resulting response be encrypted (see (#response_encryption) for more details).
 
 `client_id`:
-: REQUIRED for non-DC API implementations. Defined in [@!RFC6749]. This specification defines additional requirements to enable the use of Client Identifier Prefixes as described in (#client_metadata_management).
+: REQUIRED for non-DC API implementations. Defined in [@!RFC6749]. This specification defines additional requirements to enable the use of Client Identifier Prefixes as described in (#client_metadata_management). The Client Identifier can be created by other parties than the Wallet but is unique in the context of the Wallet.
 
 `state`:
 : REQUIRED under the conditions defined in (#nkb-credentials). Otherwise, `state` is OPTIONAL. `state` values MUST only contain ASCII URL safe characters (uppercase and lowercase letters, decimal digits, hyphen, period, underscore, and tilde).
