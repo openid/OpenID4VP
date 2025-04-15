@@ -8,10 +8,6 @@
       "https://www.w3.org/ns/credentials/v2",
       "https://w3id.org/citizenship/v3"
     ],
-    "type": [
-      "VerifiableCredential",
-      "PermanentResidentCard"
-    ],
     "credentialSubject": {
       "givenName": "John"
     }
