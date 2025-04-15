@@ -3191,6 +3191,11 @@ The technology described in this specification was made available from contribut
 
    [[ To be removed from the final specification ]]
 
+   -27
+   * rename `vp_formats` to `vp_format_supported` in Verifier Metadata
+   * update the `vp_formats_supported` metadata to always be format specific, and explicitly define the structure for `mso_mdoc`, `jwt_vc_json` and `ldp_vc`.
+   * require fully-specified COSE and JOSE algoriths for `mso_mdoc` and `dc+sd-jwt` formats in `vp_formats_supported` metadata
+
    -26
 
    * add `verifier_attestations` to list of authorization parameters
