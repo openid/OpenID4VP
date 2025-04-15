@@ -896,6 +896,11 @@ If the `values` property is present, the Wallet SHOULD return the claim only if 
 type and value of the claim both match exactly for at least one of the elements in the array. Details of the processing
 rules are defined in (#selecting_claims).
 
+If a Wallet implements value matching and the credential being matched is
+an ISO mdoc-based credential, the CBOR value used for matching MUST first be converted to JSON, following the advice 
+given in Section 6.1 of [@RFC8949]. The resulting JSON value is then used to match against the `values` property as specified above.
+When conversion according to these rules is not clearly defined, behavior is out of scope of this specification.
+
 ## Selecting Claims and Credentials {#dcql_query_lang_processing_rules}
 
 The following section describes the logic that applies for selecting claims 
