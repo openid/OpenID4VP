@@ -1264,21 +1264,21 @@ a few public keys for encryption in the `jwks` member of the `client_metadata` r
    "jwks": {
     "keys": [
     {
-     "kty":"EC", "kid":"ac", "use":"enc", "crv":"P-256",
+     "kty":"EC", "kid":"ac", "use":"enc", "crv":"P-256","alg":"ECDH-ES",
      "x":"YO4epjifD-KWeq1sL2tNmm36BhXnkJ0He-WqMYrp9Fk",
      "y":"Hekpm0zfK7C-YccH5iBjcIXgf6YdUvNUac_0At55Okk"
     },
     {
-     "kty":"OKP","kid":"jc","use":"enc","crv":"X25519",
+     "kty":"OKP","kid":"jc","use":"enc","crv":"X25519", "alg":"ECDH-ES",
      "x":"WPX7wnwq10hFNK9aDSyG1QlLswE_CJY14LdhcFUIVVc"
     },
     {
-     "kty":"EC","kid":"lc","use":"enc","crv":"P-384",
+     "kty":"EC","kid":"lc","use":"enc","crv":"P-384","alg":"ECDH-ES",
      "x":"iHytgLNtXjEyYMAIGwfgjINZRmLfObYbmjPhkaPD8OiTkJtRHjegTNdH31Mxg4nV",
      "y":"MizXWSqNB7sSt_SNjg3spvaJnmjB-LpxsPpLUaea33rvINL3Mq-gEaANErRQpbLx"
     },
     {
-     "kty":"OKP","kid":"bc","use":"enc","crv":"X448",
+     "kty":"OKP","kid":"bc","use":"enc","crv":"X448","alg":"ECDH-ES",
      "x":"pK5IRpLlX-8XcsRYWHejpzkfsHoDOmAYuBzAC7aTpewWOw_QFHSa64t9p2kuommI8JQQLohS2AIA"
     }
    ]
