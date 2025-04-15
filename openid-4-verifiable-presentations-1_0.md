@@ -1392,8 +1392,6 @@ This document also defines the following additional error codes and error descri
 
 - The Wallet appears to be unavailable and therefore unable to respond to the request. It can be useful in situations where the user agent cannot invoke the Wallet and another component receives the request while the End-User wishes to continue the journey on the Verifier website. For example, this applies when using claimed HTTPS URIs handled by the Wallet provider in case the platform cannot or does not translate the URI into a platform intent to invoke the Wallet. In this case, the Wallet provider would return the Authorization Error Response to the Verifier and might redirect the user agent back to the Verifier website.
 
-For DC API, as defined in (#dc_api), only the error response parameters and respective encoding rules from section 4.1.2.1 of [@!RFC6749] apply.
-
 ## VP Token Validation
 
 Verifiers MUST validate the VP Token in the following manner:
@@ -1456,25 +1454,6 @@ The following is a non-normative example of a `vp_formats_supported` parameter:
 Additional wallet metadata parameters MAY be defined and used,
 as described in [@!RFC8414].
 The Verifier MUST ignore any unrecognized parameters.
-
-The following is a non-normative example of a Wallet Metadata for a Wallet that supports DC API:
-
-```json
-{
-  "response_types_supported": [
-    "vp_token"
-  ],
-  "vp_formats_supported": {
-    "mso_mdoc": {}
-  },
-  "response_modes_supported": [
-    "dc_api.jwt"
-  ],
-  "client_id_schemes_supported": [
-    "web-origin"
-  ]
-}
-```
 
 ## Obtaining Wallet's Metadata
 
@@ -1677,7 +1656,7 @@ While breaking changes to the specifications referenced in this specification ar
 
 An attacker could try to inject Presentations obtained from (for example) a previous Authorization Response into another Authorization Response, thus impersonating the End-User that originally presented the respective Verifiable Presentation. Holder Binding aims to prevent such attacks.
 
-### Presentations without Holder Binding Proofs
+### Presentations without Holder Binding Proofs {#presentations-without-holder-binding}
 
 By definition, Presentations without Holder Binding (see (#nkb-credentials)) do
 not provide protection against replay. A Verifier that consumes Presentations without Holder Binding
@@ -1688,7 +1667,7 @@ the subject of the Credential.
 Depending on the use case, the risk assessment of the Verifier, and external
 validation measures that can be taken, this risk may be acceptable.
 
-### Verifiable Presentations
+### Verifiable Presentations {#verifiable-presentations-considerations}
 
 For Verifiable Presentations, implementers of this specification MUST implement the controls as defined in this section to detect and prevent replay attacks.
 
@@ -1750,8 +1729,6 @@ In the example above, the requested `nonce` value is included as the `challenge`
 
 ## Session Fixation {#session_fixation}
 
-This section does not apply to DC API as defined in (#dc_api).
-
 To perform a Session Fixation attack, an attacker would start the process using a Verifier executed on a device under his control, capture the Authorization Request and relay it to the device of a victim. The attacker would then periodically try to conclude the process in his Verifier, which would cause the Verifier on his device to try to fetch and verify the Authorization Response. 
 
 Such an attack is impossible against flows implemented with the Response Mode `fragment` as the Wallet will always send the VP Token to the redirect endpoint on the same device where it resides. This means an attacker could extract a valid Authorization Request from a Verifier on his device and trick a Victim into performing the same Authorization Request on her device. But there is usually no way for an attacker to get hold of the resulting VP Token. 
@@ -1787,7 +1764,7 @@ Implementations of this specification MUST have security mechanisms in place to 
 * Authentication between the different parts within the Verifier
 * Two cryptographically random numbers.  The first being used to manage state between the Wallet and Verifier. The second being used to ensure that only a legitimate component of the Verifier can obtain the Authorization Response data.
 
-## End-User Authentication using Credentials
+## End-User Authentication using Credentials {#end-user-authentication-using-credentials}
 
 Clients intending to authenticate the End-User utilizing a claim in a Credential MUST ensure this claim is stable for the End-User as well locally unique and never reassigned within the Credential Issuer to another End-User. Such a claim MUST also only be used in combination with the Credential Issuer identifier to ensure global uniqueness and to prevent attacks where an attacker obtains the same claim from a different Credential Issuer and tries to impersonate the legitimate End-User.
 
@@ -1795,7 +1772,7 @@ Clients intending to authenticate the End-User utilizing a claim in a Credential
 
 Because an encrypted Authorization Response has no additional integrity protection, an attacker might be able to alter Authorization Response parameters and generate a new encrypted Authorization Response for the Verifier, as encryption is performed using the public key of the Verifier (which is likely to be widely known when not ephemeral to the request/response). Note this includes injecting a new VP Token. Since the contents of the VP Token are integrity protected, tampering the VP Token is detectable by the Verifier. For details, see (#preventing-replay).
 
-##  TLS Requirements
+##  TLS Requirements {#tls-requirements}
 
 Implementations MUST follow [@!BCP195].
 
@@ -1809,7 +1786,7 @@ The OpenID Foundation provides tools that can be used to confirm that an impleme
 
 https://openid.net/certification/conformance-testing-for-openid-for-verifiable-presentations/
 
-## Always Use the Full Client Identifier
+## Always Use the Full Client Identifier {#full-client-identifier}
 
 Confusing Verifiers using a Client Identifier Prefix with those using none can lead to attacks. Therefore, Wallets MUST always use the full Client Identifier, including the prefix if provided, within the context of the Wallet or its responses to identify the client. This refers in particular to places where the Client Identifier is used in [@!RFC6749] and in the presentation returned to the Verifier.
 
@@ -1821,7 +1798,7 @@ these constraints. The Wallet is not controlled by the Verifier and the Verifier
 MUST perform its own security checks on the returned Credentials and
 Presentations.
 
-## DCQL Value Matching
+## DCQL Value Matching {#dcql-value-matching}
 
 When using DCQL `values` to match the expected values of claims, the fact that a
 claim within a certain credential matched a value or did not match a value might
@@ -1846,7 +1823,7 @@ Many privacy considerations are specific to the credential format and associated
 This section focuses on privacy considerations that are specific to the presentation protocol with some treatment also
 given to considerations that apply across some common credential formats.
 
-## Selective Disclosure
+## Selective Disclosure {#seletive-disclosure}
 
 Selective disclosure is a data minimization technique that allows for sharing only the specific information needed from
 a credential without revealing everything.
@@ -2227,7 +2204,7 @@ The following exchange protocol values are defined by this specification:
 
 ## Request {#dc_api_request}
 
-The Verifier MAY send an Authorization Request, as defined in (#vp_token_request), to the DC API.
+The Verifier MAY send a request, as defined in (#vp_token_request), to the DC API.
 
 The following is a non-normative example of an unsigned OpenID4VP request (when advanced security features of OpenID4VP are not used) that can be sent over the DC API:
 
@@ -2358,6 +2335,25 @@ Every OpenID4VP Authorization Request results in a response being provided throu
 The security properties that are normally provided by the Client Identifier are achieved by binding the response to the Origin it was received from.
 
 The audience for the response (for example, the `aud` value in a Key Binding JWT) MUST be the Origin, prefixed with `origin:`, for example `origin:https://verifier.example.com/`. This is the case even for signed requests. Therefore, when using OpenID4VP over the DC API, the Client Identifier is not used as the audience for the response.
+
+## Security Considerations {#dc_api_security_considerations}
+
+The following security considerations from OpenID4VP apply:
+
+* Preventing Replay of Verifiable Presentations as described in (#preventing-replay), with the difference that the origin is used instead of the Client Identifier to bind the response to the Client.
+* End-User Authentication using Credentials as described in (#end-user-authentication-using-credentials).
+* Encrypting an Unsigned Response as described in (#encrypting_unsigned_response).
+* TLS Requirements as described in (#tls-requirements).
+* Always Use the Full Client Identifier as described in (#full-client-identifier) for signed requests.
+* Security Checks on the Returned Credentials and Presentations as described in (#dcql_query_security).
+* DCQL Value Matching as described in (#dcql-value-matching).
+
+## Privacy Considerations {#dc_api_privacy_considerations}
+
+The following privacy considerations from OpenID4VP apply:
+
+* Selective Disclosure as described in (#seletive-disclosure).
+* Privacy implications of mechanisms to establish trust in Issuers as described in (#privacy_trusted_authorities).
 
 # Credential Format Specific Parameters and Rules {#format_specific_parameters}
 
@@ -3198,6 +3194,7 @@ The technology described in this specification was made available from contribut
    * Add new DC API `openid4vp-v1-multisigned` protocol identifier for requests with JWS JSON Serialization
    * Remove incorrect requirement for automatic registration when using OpenID Federation
    * Change DCQL processing rules to allow the same credential to fulfil different queries
+   * Update specification to make DC API consistent with the rest of the specification
 
    -25
 
