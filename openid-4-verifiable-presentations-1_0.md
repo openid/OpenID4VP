@@ -1886,7 +1886,7 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
   </front>
 </reference>
 
-<reference anchor="VC_DATA_INTEGRITY" target="https://www.w3.org/TR/vc-data-integrity/">
+<reference anchor="VC_DATA_INTEGRITY" target="https://www.w3.org/TR/2025/PR-vc-data-integrity-20250320/">
   <front>
     <title>Verifiable Credential Data Integrity 1.0</title>
     <author fullname="Manu Sporny">
