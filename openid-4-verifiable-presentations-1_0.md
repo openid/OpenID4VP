@@ -2099,7 +2099,7 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
         </front>
 </reference>
 
-<reference anchor="W3C.Digital_Credentials_API" target="https://wicg.github.io/digital-credentials/">
+<reference anchor="W3C.Digital_Credentials_API" target="https://w3c-fedid.github.io/digital-credentials/">
         <front>
           <title>Digital Credentials API</title>
 		  <author fullname="Marcos Caceres">
