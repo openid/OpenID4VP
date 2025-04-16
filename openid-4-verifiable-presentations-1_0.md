@@ -2283,6 +2283,7 @@ In this case, the following request parameters MUST be present in the protected 
 
 * `client_id`
 * `verifier_attestations`
+* parameters that are specific to the Client Identifier Prefix used, e.g., `trust_chain` JWS header parameter for `openid_federation:` Client Identifier Prefix 
 
 All other request parameters MUST be present in the `payload` element of the JWS object.
 
