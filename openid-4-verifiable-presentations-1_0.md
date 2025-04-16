@@ -128,7 +128,7 @@ Wallet:
 
 # Overview 
 
-This specification defines a mechanism to request and present Credentials as Presentations. The baseline of the protocol uses HTTPS messages and redirects as defined in OAuth 2.0. Additionally, the specification defines a separate mechanism where OpenID4VP messages are sent and received over the Digital Credentials API (DC API) [@!W3C.Digital_Credentials_API] instead of HTTPS messages and redirects.  
+This specification defines a mechanism to request and present Credentials. The baseline of the protocol uses HTTPS messages and redirects as defined in OAuth 2.0. Additionally, the specification defines a separate mechanism where OpenID4VP messages are sent and received over the Digital Credentials API (DC API) [@!W3C.Digital_Credentials_API] instead of HTTPS messages and redirects.  
 
 As the primary extension, OpenID for Verifiable Presentations introduces the new response type `vp_token`, which allows Verifier to request and receive Verifiable Presentations and Presentations in a container designated as VP Token. A VP Token contains one or more Verifiable Presentations and/or Presentations in the same or different Credential formats. Consequently, the result of a OpenID4VP interaction is one or more Verifiable Presentations and/or Presentations instead of an Access Token. 
 
@@ -140,7 +140,6 @@ OpenID for Verifiable Presentations supports scenarios where the Authorization R
 This specification supports the response being sent using a redirect but also using an HTTP POST request. This enables the response to be sent across devices, or when the response size exceeds the redirect URL character size limitation.
 
 
-Any of the OAuth 2.0 related specifications, such as [@RFC9126] and [@RFC9101], and Best Current Practice (BCP) documents, such as [@RFC8252] and [@RFC9700], can be implemented on top of certain parts of this specification.
 
 In summary, OpenID for Verifiable Presentations is a framework that requires profiling
 to achieve interoperability. Profiling means defining:
@@ -339,7 +338,7 @@ The following is a non-normative example of an attested object:
 The following additional considerations are given for pre-existing Authorization Request parameters:
 
 `nonce`:
-: REQUIRED. A case-sensitive String representing a value to securely bind Verifiable Presentation(s) provided by the Wallet to the particular transaction. The Verifier MUST create a fresh, cryptographically random number with sufficient entropy for every Authorization Request, store it with its current session, and pass it in the `nonce` Authorization Request Parameter to the Wallet. See (#preventing-replay) for details. Values MUST only contain ASCII URL safe characters (uppercase and lowercase letters, decimal digits, hyphen, period, underscore, and tilde). If OpenID Connect is used, refer to its definition in [@!OpenID.Core].
+: REQUIRED. A case-sensitive String representing a value to securely bind Verifiable Presentation(s) provided by the Wallet to the particular transaction. The Verifier MUST create a fresh, cryptographically random number with sufficient entropy for every Authorization Request, store it with its current session, and pass it in the `nonce` Authorization Request Parameter to the Wallet. See (#preventing-replay) for details. Values MUST only contain ASCII URL safe characters (uppercase and lowercase letters, decimal digits, hyphen, period, underscore, and tilde). 
 
 `scope`:
 : OPTIONAL. Defined in [@!RFC6749]. The Wallet MAY allow Verifiers to request Presentations by utilizing a pre-defined scope value. See (#request_scope) for more details.
