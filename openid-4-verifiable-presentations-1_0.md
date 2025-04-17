@@ -1522,7 +1522,6 @@ The following is a list of profiles that define static configuration values of W
 
 - [OpenID4VC High Assurance Interoperability Profile](https://openid.net/specs/openid4vc-high-assurance-interoperability-profile-1_0.html)
 - [JWT VC Presentation Profile](https://identity.foundation/jwt-vc-presentation-profile/)
-- [@ISO.18013-7](https://www.iso.org/standard/82772.html)
 
 ### A Set of Static Configuration Values bound to `openid4vp://` {#openid4vp-scheme}
 
@@ -2024,16 +2023,6 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
         </front>
 </reference>
 
-<reference anchor="ISO.18013-7" target="https://www.iso.org/standard/82772.html">
-        <front>
-          <title>ISO/IEC DTS 18013-7 Personal identification — ISO-compliant driving license — Part 7: Mobile driving license (mDL) add-on functions</title>
-          <author>
-            <organization> ISO/IEC JTC 1/SC 17 Cards and security devices for personal identification</organization>
-          </author>
-          <date year="2024"/>
-        </front>
-</reference>
-
 <reference anchor="ISO.23220-2" target="https://www.iso.org/standard/86782.html">
         <front>
           <title>ISO/IEC DTS 23220-2 Personal identification — Building blocks for identity management via mobile devices, Part 2: Data objects and encoding rules for generic eID systems</title>
@@ -2515,21 +2504,9 @@ The following is a non-normative example of the Verifiable Presentation in the `
 
 ## Mobile Documents or mdocs (ISO/IEC 18013 and ISO/IEC 23220 series) {#mdocs}
 
-ISO/IEC 18013-5:2021 [@ISO.18013-5] defines a mobile driving license (mDL) Credential in the mobile document (mdoc) format. Although ISO/IEC 18013-5:2021 [@ISO.18013-5] is specific to mobile driving licenses (mDLs), the Credential format can be utilized with any type of Credential (or mdoc document types). The ISO/IEC 23220 series has extracted components from ISO/IEC 18013-5:2021 [@ISO.18013-5] and ISO/IEC TS 18013-7 [@ISO.18013-7] that are common across document types to facilitate the profiling of the specification for other document types. The core data structures are shared between ISO/IEC 18013-5:2021 [@ISO.18013-5], ISO/IEC 23220-2 [@ISO.23220-2], ISO/IEC 23220-4 [@ISO.23220-4] which are encoded in CBOR and secured using COSE_Sign1.
+ISO/IEC 18013-5:2021 [@ISO.18013-5] defines a mobile driving license (mDL) Credential in the mobile document (mdoc) format. Although ISO/IEC 18013-5:2021 [@ISO.18013-5] is specific to mobile driving licenses (mDLs), the Credential format can be utilized with any type of Credential (or mdoc document types). The ISO/IEC 23220 series has extracted components from ISO/IEC 18013-5:2021 [@ISO.18013-5] that are common across document types to facilitate the profiling of the specification for other document types. The core data structures are shared between ISO/IEC 18013-5:2021 [@ISO.18013-5], ISO/IEC 23220-2 [@ISO.23220-2], ISO/IEC 23220-4 [@ISO.23220-4] which are encoded in CBOR and secured using COSE_Sign1.
 
 The Credential Format Identifier for Credentials in the mdoc format is `mso_mdoc`.
-
-ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 [@ISO.23220-4] Annex C define a profile of OpenID4VP for requesting and presenting Credentials in the mdoc format.
-
-[@ISO.18013-7] defines the following elements:
-
-* Rules for the `presentation_definition` Authorization Request parameter and the `presentation_submission` Authorization Response parameter (which were supported until draft -25 of this specification)
-* Wallet invocation using the `mdoc-openid4vp://` custom URI scheme.
-* Required Wallet and Verifier Metadata parameters and their values when OpenID4VP is used with the `mdoc-openid4vp://` custom URI scheme.
-The `SessionTranscript` and `Handover` CBOR structure when the invocation does not use the DC API. Also see (#non-dc-api-invocation).
-* Additional restrictions on Authorization Request and Authorization Response parameters to ensure compliance with ISO/IEC TS 18013-7 [@ISO.18013-7] and ISO/IEC 23220-4 [@ISO.23220-4]. For instance, to comply with ISO/IEC TS 18013-7 [@ISO.18013-7], only the same-device flow is supported, the `request_uri` Authorization Request parameter is required, and the Authorization Response has to be encrypted.
-
-Cipher suites should use algorithm identifiers defined in [IANA COSE Algorithms Registry](https://www.iana.org/assignments/cose/cose.xhtml#algorithms) and curve identifiers defined in [IANA COSE Curve Registry](https://www.iana.org/assignments/cose/cose.xhtml#elliptic-curves).
 
 ### Transaction Data
 
@@ -2575,8 +2552,6 @@ An example DCQL query using the mdoc format is shown in (#more_dcql_query_exampl
 ```
 
 The VP Token contains the base64url-encoded `DeviceResponse` CBOR structure as defined in ISO/IEC 18013-5 [@ISO.18013-5] or ISO/IEC 23220-4 [@ISO.23220-4]. Essentially, the `DeviceResponse` CBOR structure contains a signature or MAC over the `SessionTranscript` CBOR structure including the OpenID4VP-specific `Handover` CBOR structure.
-
-See ISO/IEC TS 18013-7 Annex B [@ISO.18013-7] and ISO/IEC 23220-4 Annex C [@ISO.23220-4] for how the `client_id` and `nonce` are used in the `SessionTranscript`.
 
 ### `Handover` and `SessionTranscript` Definitions
 
@@ -2701,10 +2676,6 @@ CBOR diagnostic:
       b8c69e371d5d68cea09cb4c48ca6 #       "¸Æ\x9e7\x1d]hÎ\xa0\x9c´Ä\x8c¦"
       daab761a                     #       "Ú«v\x1a"
 ```
-
-#### Invocation via other methods {#non-dc-api-invocation}
-
-If the presentation request is invoked via other methods, the rules for generating the `SessionTranscript` and `Handover` CBOR structure are specified in ISO/IEC 18013-7 [@ISO.18013-7], ISO/IEC 18013-5 [@ISO.18013-5] and ISO/IEC 23220-4 [@ISO.23220-4].
 
 ## IETF SD-JWT VC
 
