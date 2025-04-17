@@ -684,8 +684,8 @@ Verifier Attestations are optional. Wallets MAY use them to make authorization d
 
 This specification supports two models for proof of possession:
 
-- **claim-bound attestations**: The attestation is not signed by the Relying Party, but bound to it. The exact binding mechanism is defined by the type of the definition. For example for JWTs, the `sub` claim is including the distinguished name of the Certificate that was used to sign the request. The binding may also include the client_id parameter.
-- **key-bound attestations**: The attestation's proof of possession is signed by the Relying Party with a key contained or related to the attestation . To bind the signature to the presentation request, the respective signature object should include the `nonce` and `client_id` request parameters. The attestation and the proof of possession have to be passed in the attachment.
+- **claim-bound attestations**: The attestation is not signed by the Verifier, but bound to it. The exact binding mechanism is defined by the type of the definition. For example for JWTs, the `sub` claim is including the distinguished name of the Certificate that was used to sign the request. The binding may also include the client_id parameter.
+- **key-bound attestations**: The attestation's proof of possession is signed by the Verifier with a key contained or related to the attestation . To bind the signature to the presentation request, the respective signature object should include the `nonce` and `client_id` request parameters. The attestation and the proof of possession have to be passed in the attachment.
 
  The Wallet MUST validate such proofs if defined by the profile and ignore or reject attachments that fail validation.
 
@@ -747,7 +747,7 @@ specifies expected authorities or trust frameworks that certify Issuers, that th
 Verifier will accept. Every Credential returned by the Wallet SHOULD match at least
 one of the conditions present in the corresponding `trusted_authorities` array if present.
 
-Note that Relying Parties must verify that the issuer of a received presentation is
+Note that Verifiers must verify that the issuer of a received presentation is
 trusted on their own and this feature mainly aims to help data minimization by not
 revealing information that would likely be rejected.
 
