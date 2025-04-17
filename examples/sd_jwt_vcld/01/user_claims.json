@@ -1,0 +1,14 @@
+{
+  "vct": "https://credentials.example.com/example_credential",
+  "ld": {
+    "@context": [
+      "https://www.w3.org/ns/credentials/v2",
+      "https://w3id.org/citizenship/v3"
+    ],
+    "credentialSubject": {
+      "givenName": "John",
+      "familyName": "Doe",
+      "birthDate": "1978-07-17"
+    }
+  }
+}

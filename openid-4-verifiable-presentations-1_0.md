@@ -1868,6 +1868,21 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
 
 {backmatter}
 
+<reference anchor="JSON-LD" target="https://www.w3.org/TR/json-ld11/">
+  <front>
+    <title>JSON-LD 1.1</title>
+    <author fullname="Gregg Kellogg">      
+    </author>
+    <author fullname="Pierre-Antoine Champin">
+      <organization>LIRIS - Université de Lyon</organization>
+    </author>
+    <author fullname="Dave Longley">
+      <organization>Digital Bazaar</organization>
+    </author>
+   <date day="16" month="Jul" year="2020"/>
+  </front>
+</reference>
+
 <reference anchor="VC_DATA" target="https://www.w3.org/TR/2022/REC-vc-data-model-20220303/">
   <front>
     <title>Verifiable Credentials Data Model 1.1</title>
@@ -2784,6 +2799,57 @@ The following is a non-normative example of the unsecured payload of the Key Bin
 
 <{{examples/response/kb_jwt_unsecured.json}}
 
+### SD-JWT VCLD {#sd-jwt_vcld}
+
+SD-JWT VCLD (SD-JWT Verifiable Credentials with JSON-LD) extends the IETF SD-JWT VC [@!I-D.ietf-oauth-sd-jwt-vc] credential format and allows to incorporate existing data models that use Linked Data, e.g., W3C VCDM [@?VC_DATA], while enabling a consistent and uncomplicated approach to selective disclosure.
+
+Information contained in SD-JWT VCLD credentials can be processed using a JSON-LD [@?JSON-LD] processor after the SD-JWT VC processing.
+
+When IETF SD-JWT VC is mentioned in this specification, SD-JWT VCLD defined in this section MAY be used.
+
+#### Format
+
+SD-JWT VCLD credentials are valid SD-JWT VC credentials and all requirements from [@!I-D.ietf-oauth-sd-jwt-vc] apply. Additionally, the requirements listed in this section apply.
+
+For compatibility with JWT processors, the following registered Claims from [@!RFC7519] and [@!I-D.ietf-oauth-sd-jwt-vc] MUST be used instead of any respective counterpart properties from W3C VCDM or elsewhere:
+
+* `vct` to represent the type of the Credential.
+* `exp` and `nbf` to represent the validity period of SD-JWT VCLD (i.e., cryptographic signature).
+* `iss` to represent the Credential Issuer.
+* `status` to represent the information to obtain the status of the Credential.
+* `sub` to represent the subject identifier of the Credential.
+
+IETF SD-JWT VC is extended with the following claim:
+
+* `ld`: OPTIONAL. Contains a JSON-LD [@!JSON-LD] object in compact form, e.g., [@?VC_DATA].
+
+#### Processing
+
+The following outlines a suggested non-normative set of processing steps for SD-JWT VCLD:
+
+##### Step 1: SD-JWT VC Processing
+
+- A receiver (holder or verifier) of an SD-JWT VCLD applies the processing rules outlined in Section 4 of [@!I-D.ietf-oauth-sd-jwt-vc], including verifying signatures, validity periods, status information, etc.
+- If the `vct` value is associated with any SD-JWT VC Type Metadata, schema validation of the entire SD-JWT VCLD is performed, including the nested `ld` claim.
+- Additionally, trust framework rules are applied, such as ensuring the Credential Issuer is authorized to issue SD-JWT VCLDs for the specified `vct` value.
+
+##### Step 2: Business Logic Processing
+
+- Once the SD-JWT VC is verified and trusted by the SD-JWT VC processor, and if the `ld` claim is present, the receiver extracts the JSON-LD object from the `ld` claim and uses this for the business logic object. If the `ld` claim is not present, the entire SD-JWT VC is considered to represent the business logic object.
+- The business logic object is then passed on for further use case-specific processing and validation. The business logic assumes that all security-critical functions (e.g., signature verification, trusted issuer) have already been performed during the previous step. Additional schema validation is applied if provided in the `ld` claim, e.g., to support SHACL schemas. Note that while a `vct` claim is required, SD-JWT VC type metadata resolution and related schema validation is optional in certain cases.
+
+#### Examples
+
+The following is a non-normative example of an unsecured payload of an SD-JWT VCLD (i.e., before applying the modifications to enable selective disclosure and before adding validity claims).
+
+<{{examples/sd_jwt_vcld/01/user_claims.json}}
+
+The following payload would be used in the SD-JWT after encoding the payload above and enabling selective disclosure on the user-specific claims within `credentialSubject`:
+
+<{{examples/sd_jwt_vcld/01/sd_jwt_payload.json}}
+
+Note: The decision which claims to make selectively disclosable is up to the Issuer of the Credential. Considerations can be found in Section 6 and Section 9.7 of [@!I-D.ietf-oauth-selective-disclosure-jwt].
+
 # Combining this specification with SIOPv2
 
 This section shows how SIOP and OpenID for Verifiable Presentations can be combined to present Credentials and pseudonymously authenticate an End-User using subject controlled key material.
@@ -3086,6 +3152,13 @@ in the IANA "Uniform Resource Identifier (URI) Schemes" registry [@IANA.URI.Sche
 * Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#openid4vp-scheme) of this specification
 
+## JSON Web Token Claims Registration
+
+* Claim Name: "ld"
+* Claim Description: JSON-LD object in compact form
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
+* Reference: (#sd-jwt_vcld) of this specification
+
 # Acknowledgements {#Acknowledgements}
 
 We would like to thank Richard Barnes, Paul Bastian, Vittorio Bertocci, Christian Bormann, John Bradley, Marcos Caceres, Brian Campbell, Lee Campbell, Tim Cappalli, Gabe Cohen, David Chadwick, Andrii Deinega, Rajvardhan Deshmukh, Giuseppe De Marco, Mark Dobrinic, Daniel Fett, Pedro Felix, George Fletcher, Ryan Galluzzo, Timo Glasta, Sam Goto, Mark Haine, Martijn Haring, Fabian Hauck, Roland Hedberg, Joseph Heenan, Bjorn Hjelm, Alen Horvat, Andrew Hughes, Jacob Ideskog, Łukasz Jaromin, Edmund Jay, Michael B. Jones, Tom Jones, Judith Kahrer, Takahiko Kawasaki, Gaurav Khot, Niels Klomp, Ronald Koenig, Markus Kreusch, Adam Lemmon, Hicham Lozi, Daniel McGrogan, Jeremie Miller, Mirko Mollik, Kenichi Nakamura, Gareth Oliver, Aaron Parecki, Andreea Prian, Rolson Quadras, Javier Ruiz, Nat Sakimura, Arjen van Veen, Steve Venema, Jan Vereecken, David Waite, Jacob Ward, and David Zeuthen for their valuable feedback and contributions to this specification.
@@ -3112,6 +3185,7 @@ The technology described in this specification was made available from contribut
 
    -26
 
+   * add SD-JWT VCDM (now called SD-JWT VC LD)
    * add `verifier_attestations` to list of authorization parameters
    * renamed "Client ID Scheme" to "Client Identifier Prefix", and updated metadata (`client_id_prefixes_supported`) and an example `error_description` to match
    * add note that `iss` must be ignored if present in the request object
