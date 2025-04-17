@@ -2362,7 +2362,7 @@ If `require_cryptographic_holder_binding` is set to `true` in the Credential Que
 The following is a W3C Verifiable Credentials specific parameter in the `meta` parameter in a Credential Query as defined in (#credential_query):
 
 `type_values`:
-: REQUIRED. An array of string arrays that specifies the fully expanded types (IRIs) after the `@context` was applied that the Verifier accepts to be presented in the Presentation. Each of the top-level arrays specifies one alternative to match the `type` values of the Verifiable Credential against. Each inner array specifies a set of fully expanded types that MUST be present in the `type` property of the Verifiable Credential, regardless of order or the presence of additional types. 
+: REQUIRED. An array of string arrays that specifies the fully expanded types (IRIs) after the `@context` was applied that the Verifier accepts to be presented in the Presentation. If a type value was not defined by any `@context`, its value stays the same. This works fine in practice, even if it's not strictly JSON-LD compliant. Implementations can use alternative mechanisms that produce the same outcome as applying the `@context`, provided that the result is equivalent. Each of the top-level arrays specifies one alternative to match the `type` values of the Verifiable Credential against. Each inner array specifies a set of fully expanded types that MUST be present in the `type` property of the Verifiable Credential, regardless of order or the presence of additional types. 
 
 The following is a non-normative example of `type_values` within a DCQL query:
 
