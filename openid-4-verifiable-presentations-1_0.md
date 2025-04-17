@@ -151,12 +151,13 @@ to achieve interoperability. Profiling means defining:
 
 ## Same Device Flow {#same_device}
 
-Below is a diagram of a flow where the End-User presents a Credential to a Verifier interacting with the End-User on the same device that the device the Wallet resides on.
+(#same_device_figure) is a diagram of a flow where the End-User presents a Credential to a Verifier interacting with the End-User on the same device that the device the Wallet resides on.
 
 The flow utilizes simple redirects to pass Authorization Request and Response between the Verifier and the Wallet. The Presentations are returned to the Verifier in the fragment part of the redirect URI, when Response Mode is `fragment`. 
 
 Note: The diagram does not illustrate all the optional features of this specification.
 
+{#same_device_figure}
 !---
 ~~~ ascii-art
 +--------------+   +--------------+                                    +--------------+
@@ -185,7 +186,7 @@ Figure: Same Device Flow
 
 ## Cross Device Flow {#cross_device}
 
-Below is a diagram of a flow where the End-User presents a Credential to a Verifier interacting with the End-User on a different device as the device the Wallet resides on.
+(#cross_device_figure) is a diagram of a flow where the End-User presents a Credential to a Verifier interacting with the End-User on a different device as the device the Wallet resides on.
 
 In this flow, the Verifier prepares an Authorization Request and renders it as a QR Code. The End-User then uses the Wallet to scan the QR Code. The Presentations are sent to the Verifier in a direct HTTP POST request to a URL controlled by the Verifier. The flow uses the Response Type `vp_token` in conjunction with the Response Mode `direct_post`, both defined in this specification. In order to keep the size of the QR Code small and be able to sign and optionally encrypt the Request Object, the actual Authorization Request contains just a Request URI according to [@!RFC9101], which the wallet uses to retrieve the actual Authorization Request data.
 
@@ -193,6 +194,7 @@ Note: The diagram does not illustrate all the optional features of this specific
 
 Note: The usage of the Request URI as defined in [@!RFC9101] does not depend on any other choices made in the protocol extensibility points, i.e., it can be used in the Same Device Flow, too.
 
+{#cross_device_figure}
 !---
 ~~~ ascii-art
 +--------------+   +--------------+                                    +--------------+
@@ -1556,8 +1558,9 @@ The design of the interactions between the different components of the Verifier 
 
 In order to support implementers, this section outlines a possible design that fulfills the Security Considerations given in (#security_considerations). 
 
-The design is illustrated in the following sequence diagram:
+(#direct_post_reference_design) illustrates a sequence diagram of the design:
 
+{#direct_post_reference_design}
 !---
 ~~~ ascii-art
 +--------+   +------------+           +---------------------+                 +----------+
