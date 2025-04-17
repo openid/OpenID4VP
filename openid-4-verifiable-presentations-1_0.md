@@ -3165,7 +3165,7 @@ The technology described in this specification was made available from contribut
 
    * clarify value matching in DCQL
    * clarify why requests using redirect_uri scheme cannot be signed
-   * add `trusted_authorities` to DCQL  
+   * add `trusted_authorities` to DCQL
    * add note introducing cbor and cddl
    * clarify DCQL case of `claims` and `claim_sets` being absent
    * add language on client ID and nonce binding for ISO mdocs and W3C VCs
