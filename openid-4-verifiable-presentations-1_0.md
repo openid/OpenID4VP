@@ -557,7 +557,7 @@ From this definition, it follows that pre-registered clients MUST NOT contain a 
 
 This specification defines the following Client Identifier Prefixes, followed by the examples where applicable: 
 
-* `redirect_uri`: This prefix value indicates that the original Client Identifier part (without the prefix `redirect_uri:`) is the Verifier's Redirect URI (or Response URI when Response Mode `direct_post` is used). The Verifier MAY omit the `redirect_uri` Authorization Request parameter (or `response_uri` when Response Mode `direct_post` is used). All Verifier metadata parameters MUST be passed using the `client_metadata` parameter defined in (#new_parameters). An example Client Identifier value is `redirect_uri:https://client.example.org/cb`. Requests using the `redirect_uri` Client Identifier Prefix cannot be signed because there is no method for the Wallet to obtain a trusted key for verification. Therefore, implementations requiring signed requests cannot use the `redirect_uri` Client ID Prefix.
+* `redirect_uri`: This prefix value indicates that the original Client Identifier part (without the prefix `redirect_uri:`) is the Verifier's Redirect URI (or Response URI when Response Mode `direct_post` is used). The Verifier MAY omit the `redirect_uri` Authorization Request parameter (or `response_uri` when Response Mode `direct_post` is used). All Verifier metadata parameters MUST be passed using the `client_metadata` parameter defined in (#new_parameters). An example Client Identifier value is `redirect_uri:https://client.example.org/cb`. Requests using the `redirect_uri` Client Identifier Prefix cannot be signed because there is no method for the Wallet to obtain a trusted key for verification. Therefore, implementations requiring signed requests cannot use the `redirect_uri` Client Identifier Prefix.
 
 The following is a non-normative example of an unsigned request with the `redirect_uri` Client Identifier Prefix:
 
@@ -3137,7 +3137,7 @@ The technology described in this specification was made available from contribut
    -26
 
    * add `verifier_attestations` to list of authorization parameters
-   * renamed "Client ID Scheme" to "Client ID Prefix", and updated metadata (`client_id_prefixes_supported`) and an example `error_description` to match
+   * renamed "Client ID Scheme" to "Client Identifier Prefix", and updated metadata (`client_id_prefixes_supported`) and an example `error_description` to match
    * add note that `iss` must be ignored if present in the request object
    * added security considerations for value matching in DCQL
    * require `kid` in JWE response header if present in client_metadata `jwks`
