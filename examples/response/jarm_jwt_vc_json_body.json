@@ -1,6 +1,0 @@
-{
-  "iss": "did:example:ebfeb1f712ebc6f1c276e12ec21",
-  "aud": "redirect_uri:https://client.example.org/cb",
-  "exp": 1573029723,
-  "vp_token": {"example_jwt_vc": ["eY...QMA"]}
-}
