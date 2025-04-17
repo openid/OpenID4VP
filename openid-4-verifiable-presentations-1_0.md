@@ -2291,6 +2291,7 @@ In this case, the following request parameters MUST be present in the protected 
 
 * `client_id`
 * `verifier_attestations`
+* parameters that are specific to a Client Identifier Prefix, e.g., the `trust_chain` JWS header parameter for the `openid_federation` Client Identifier Prefix 
 
 All other request parameters MUST be present in the `payload` element of the JWS object.
 
@@ -3107,6 +3108,7 @@ The technology described in this specification was made available from contribut
    * update the `vp_formats_supported` metadata to always be format specific, and explicitly define the structure for `mso_mdoc`, `jwt_vc_json` and `ldp_vc`.
    * require fully-specified COSE and JOSE algoriths for `mso_mdoc` and `dc+sd-jwt` formats in `vp_formats_supported` metadata
    * remove AnonCreds for now as we're lacking implementation experience
+   * clarify that client identifier prefix specific parameters got to the header in multi RP DC API requests 
 
    -26
 
