@@ -2817,7 +2817,6 @@ For compatibility with JWT processors, the following registered Claims from [@!R
 * `exp` and `nbf` to represent the validity period of SD-JWT VCLD (i.e., cryptographic signature).
 * `iss` to represent the Credential Issuer.
 * `status` to represent the information to obtain the status of the Credential.
-* `sub` to represent the subject identifier of the Credential.
 
 IETF SD-JWT VC is extended with the following claim:
 
