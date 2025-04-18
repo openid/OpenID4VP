@@ -464,9 +464,10 @@ To retrieve the actual request, the wallet might send the following non-normativ
 POST /request/vapof4ql2i7m41m68uep HTTP/1.1
 Host: client.example.org
 Content-Type: application/x-www-form-urlencoded
-wallet_metadata=%7B%22vp_formats_supported%22%3A%7B%22jwt_vc_json%22%3A%7B%22alg_values
-%22%3A%5B%22ES256K%22%2C%22ES384%22%5D%7D%2C%22jwt_vp_json%22%3A%7B%22alg_values%22%3A%
-5B%22ES256K%22%2C%22EdDSA%22%5D%7D%7D%7D&
+
+wallet_metadata=%7B%22vp_formats_supported%22%3A%7B%22dc%2Bsd-jwt%22%3A%7B%22sd-jwt_alg
+_values%22%3A%20%5B%22ES256%22%5D%2C%22kb-jwt_alg_values%22%3A%20%5B%22ES256%22%5D%7D%7
+D%7D&
 wallet_nonce=qPmxiNFCR3QTm19POc8u
 ```
 
@@ -571,10 +572,9 @@ Location: https://wallet.example.org/universal-link?
   &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
   &dcql_query=...
   &nonce=n-0S6_WzA2Mj
-  &client_metadata=%7B%22vp_formats%22%3A%7B%22jwt_vp_json%22%3A%
-    7B%22alg%22%3A%5B%22EdDSA%22%2C%22ES256K%22%5D%7D%2C%22ldp_vc
-    %22%3A%7B%22proof_type_values%22%3A%5B%22Ed25519Signature2020%22%5D%
-    7D%7D%7D
+  &client_metadata=%7B%22vp_formats_supported%22%3A%7B%22dc%2Bsd-jwt%22%3A%7B%22sd-jwt_
+  alg_values%22%3A%20%5B%22ES256%22%5D%2C%22kb-jwt_alg_values%22%3A%20%5B%22ES256%22%5D
+  %7D%7D%7D
 ```
 
 * `openid_federation`: This prefix value indicates that the original Client Identifier (the part without the prefix `openid_federation:`) is an Entity Identifier defined in OpenID Federation [@!OpenID.Federation]. Processing rules given in [@!OpenID.Federation] MUST be followed. The Authorization Request MAY also contain a `trust_chain` parameter. The final Verifier metadata is obtained from the Trust Chain after applying the policies, according to [@!OpenID.Federation]. The `client_metadata` parameter, if present in the Authorization Request, MUST be ignored when this Client Identifier Prefix is used. Example Client Identifier: `openid_federation:https://federation-verifier.example.com`.
@@ -631,10 +631,10 @@ POST /request HTTP/1.1
 Host: client.example.org
 Content-Type: application/x-www-form-urlencoded
 
-  wallet_metadata=%7B%22vp_formats_supported%22%3A%7B%22jwt_vc_json%22%3A%7B%22alg_values
-  %22%3A%5B%22ES256K%22%2C%22ES384%22%5D%7D%2C%22jwt_vp_json%22%3A%7B%22alg_values%22%3A%
-  5B%22ES256K%22%2C%22EdDSA%22%5D%7D%7D%7D&
-  wallet_nonce=qPmxiNFCR3QTm19POc8u
+wallet_metadata=%7B%22vp_formats_supported%22%3A%7B%22dc%2Bsd-jwt%22%3A%7B%22sd-jwt_a
+lg_values%22%3A%20%5B%22ES256%22%5D%2C%22kb-jwt_alg_values%22%3A%20%5B%22ES256%22%5D%
+7D%7D%7D&
+wallet_nonce=qPmxiNFCR3QTm19POc8u
 ```
 
 ### Request URI Response
@@ -1534,11 +1534,13 @@ The following is a non-normative example of a set of static configuration values
     "vp_token"
   ],
   "vp_formats_supported": {
-    "jwt_vp_json": {
-      "alg_values": ["ES256"]
-    },
-    "jwt_vc_json": {
-      "alg_values": ["ES256"]
+    "dc+sd-jwt": {
+      "sd-jwt_alg_values": [
+        "ES256"
+      ],
+      "kb-jwt_alg_values": [
+        "ES256"
+      ]
     }
   },
   "request_object_signing_alg_values_supported": [
