@@ -1412,7 +1412,7 @@ Verifiers MUST validate the VP Token in the following manner:
    1. Perform the checks required by the Verifier's policy based on the set of trust requirements such as trust frameworks it belongs to (e.g., revocation checks), if applicable.
 1. Check that the set of Presentations returned satisfies all requirements defined in the Verifier's request as described in (#dcql_query_lang_processing_rules).
 
-If any of these checks fails, the relevant Presentations MUST be rejected.
+If any of the checks related to an individual Presentation fail, the effected Presentation MUST be discarded. If any of the checks pertaining to the VP Token, or the overall response fails, the VP Token MUST be rejected.
 
 # Wallet Invocation {#wallet-invocation}
 
