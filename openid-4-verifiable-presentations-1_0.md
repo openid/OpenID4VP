@@ -3199,9 +3199,14 @@ The technology described in this specification was made available from contribut
 
    * rename `vp_formats` to `vp_format_supported` in Verifier Metadata
    * update the `vp_formats_supported` metadata to always be format specific, and explicitly define the structure for `mso_mdoc`, `jwt_vc_json` and `ldp_vc`.
-   * require fully-specified COSE and JOSE algoriths for `mso_mdoc` and `dc+sd-jwt` formats in `vp_formats_supported` metadata
+   * require fully-specified COSE and JOSE algorithms for `mso_mdoc` and `dc+sd-jwt` formats in `vp_formats_supported` metadata
    * remove AnonCreds for now as we're lacking implementation experience
-   * clarify that client identifier prefix specific parameters got to the header in multi RP DC API requests 
+   * clarify that client identifier prefix specific parameters go in the header in multi RP DC API requests
+   * wallets must verify `expected_origins` in signed requested over the Digital Credentials API
+   * add "SD-JWT VCLD" section to SD-JWT VC Credential Format appendix
+   * clarify rules around rejecting presentations that fail checks
+   * remove references to ISO 18013-7 due it referencing an older version of the VP specification
+   * specify value matching for mdocs via a reference to cbor-to-json
 
    -26
 
