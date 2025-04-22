@@ -1410,10 +1410,10 @@ Verifiers MUST validate the VP Token in the following manner:
    1. Validate that the returned Credential(s) meet all criteria defined in the query in the Authorization Request (e.g., Claims included in the presentation).
    1. Validate that all Presentations contain a cryptographic proof of Holder Binding (i.e., that they are Verifiable Presentations), unless specifically requested otherwise.
    1. For Verifiable Presentations, validate the Holder Binding, including the checks required to present replay described in (#preventing-replay).
-   1. Perform the checks required by the Verifier's policy based on the set of trust requirements such as trust frameworks it belongs to (i.e., revocation checks), if applicable.
+   1. Perform the checks required by the Verifier's policy based on the set of trust requirements such as trust frameworks it belongs to (e.g., revocation checks), if applicable.
 1. Check that the set of Presentations returned satisfies all requirements defined in the Verifier's request as described in (#dcql_query_lang_processing_rules).
 
-If any of these checks fails, the VP Token MUST be rejected.
+If any of the checks related to an individual Presentation fail, the effected Presentation MUST be discarded. If any of the checks pertaining to the VP Token, or the overall response fails, the VP Token MUST be rejected.
 
 # Wallet Invocation {#wallet-invocation}
 
