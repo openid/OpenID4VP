@@ -58,6 +58,8 @@ OAuth 2.0 [@!RFC6749] is used as a base protocol as it provides the required rai
 
 This specification can also be combined with [@!SIOPv2], if implementers require OpenID Connect features, such as the issuance of Self-Issued ID Tokens [@!SIOPv2].
 
+Additionally, it defines how to use OpenID4VP in conjunction with the Digital Credentials API (DC API) [@!W3C.Digital_Credentials_API]. See section (#dc_api) for all requirements applicable to implementers of OpenID4VP over the DC API. Except where it explicitly references other sections of this specification, that section is self-contained, and its implementers can ignore the rest of the specification.
+
 ## Requirements Notation and Conventions
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 [@!RFC2119] [@!RFC8174] when, and only when, they appear in all capitals, as shown here.
@@ -113,7 +115,7 @@ VP Token:
 : An artifact containing one or more Presentations returned as a response to an Authorization Request. The structure of VP Tokens is defined in (#response-parameters).
 
 Verifier:
-: An entity that requests, receives, and validates Presentations. During presentation of Credentials, Verifier acts as an OAuth 2.0 Client towards the Wallet that is acting as an OAuth 2.0 Authorization Server. The Verifier is a specific case of OAuth 2.0 Client, just like Relying Party (RP) in [@OpenID.Core].
+: An entity that requests, receives, and validates Presentations. The Verifier is a specific case of an OAuth 2.0 Client, just like a Relying Party (RP) in [@OpenID.Core].
 
 Verifiable Credential (VC):
 : An Issuer-signed Credential whose authenticity can be cryptographically verified. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA] (VCDM), [@ISO.18013-5] (mdoc), and [@!I-D.ietf-oauth-sd-jwt-vc] (SD-JWT VC).
@@ -122,25 +124,22 @@ Verifiable Presentation (VP):
 : A Presentation with a cryptographic proof of Holder Binding. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA] (VCDM), [@ISO.18013-5] (mdoc), and [@!I-D.ietf-oauth-sd-jwt-vc] (SD-JWT VC).
 
 Wallet:
-: An entity used by the Holder to receive, store, present, and manage Credentials and key material. There is no single deployment model of a Wallet: Credentials and keys can both be stored/managed locally, or by using a remote self-hosted service, or a remote third-party service. In the context of this specification, the Wallet acts as an OAuth 2.0 Authorization Server (see [@!RFC6749]) towards the Credential Verifier which acts as the OAuth 2.0 Client.
+: An entity used by the Holder to receive, store, present, and manage Credentials and key material. There is no single deployment model of a Wallet: Credentials and keys can both be stored/managed locally, or by using a remote self-hosted service, or a remote third-party service.
 
 # Overview 
 
-This specification defines a mechanism on top of OAuth 2.0 to request and present Credentials as Presentations.
+This specification defines a mechanism to request and present Credentials. The baseline of the protocol uses HTTPS messages and redirects as defined in OAuth 2.0. Additionally, the specification defines a separate mechanism where OpenID4VP messages are sent and received over the Digital Credentials API (DC API) [@!W3C.Digital_Credentials_API] instead of HTTPS messages and redirects.  
 
-As the primary extension, OpenID for Verifiable Presentations introduces the VP Token as a container to enable End-Users to send Verifiable Presentations and Presentations without Holder Binding to Verifiers using the Wallet. A VP Token contains one or more Presentations in the same or different Credential formats.
+As the primary extension, OpenID for Verifiable Presentations introduces the new response type `vp_token`, which allows a Verifier to request and receive Verifiable Presentations and Presentations in a container designated as VP Token. A VP Token contains one or more Verifiable Presentations and/or Presentations in the same or different Credential formats. Consequently, the result of a OpenID4VP interaction is one or more Verifiable Presentations and/or Presentations instead of an Access Token. 
 
 This specification supports any Credential format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in [@VC_DATA] (VCDM), [@ISO.18013-5] (mdoc), and [@!I-D.ietf-oauth-sd-jwt-vc] (SD-JWT VC). Credentials of multiple formats can be presented in the same transaction. The examples given in the main part of this specification use W3C Verifiable Credentials, while examples in other Credential formats are given in (#format_specific_parameters).
 
-Implementations can use any pre-existing OAuth 2.0 Grant Type and Response Type in conjunction with this specification to support different deployment architectures.
 
 OpenID for Verifiable Presentations supports scenarios where the Authorization Request is sent both when the Verifier is interacting with the End-User using the device that is the same or different from the device on which requested Credential(s) are stored.
 
 This specification supports the response being sent using a redirect but also using an HTTP POST request. This enables the response to be sent across devices, or when the response size exceeds the redirect URL character size limitation.
 
-Implementations can also be built on top of OpenID Connect Core, which is also based on OAuth 2.0. To benefit from the Self-Issued ID Token feature, this specification can also be combined with the Self-Issued OP v2 specification [@SIOPv2].
 
-Any of the OAuth 2.0 related specifications, such as [@RFC9126] and [@RFC9101], and Best Current Practice (BCP) documents, such as [@RFC8252] and [@RFC9700], can be implemented on top of this specification.
 
 In summary, OpenID for Verifiable Presentations is a framework that requires profiling
 to achieve interoperability. Profiling means defining:
@@ -243,12 +242,13 @@ OpenID for Verifiable Presentations extends existing OAuth 2.0 mechanisms as fol
 * A new OAuth 2.0 Response Mode `direct_post` is defined to support sending the response across devices, or when the size of the response exceeds the redirect URL character size limitation. See (#response_mode_post) for more details.
 * The `format` parameter is used throughout the protocol in order to enable customization according to the specific needs of a particular Credential format. Examples in (#format_specific_parameters) are given for Credential formats as specified in [@VC_DATA], [@ISO.18013-5], and [@!I-D.ietf-oauth-sd-jwt-vc].
 * The concept of a Client Identifier Prefix to enable deployments of this specification to use different mechanisms to obtain and validate metadata of the Verifier beyond the scope of [@!RFC6749].
+* A mechanism specifying the use of OpenID4VP with the Digital Credentials API (see (#dc_api)).
 
 Presentation of Credentials using OpenID for Verifiable Presentations can be combined with the End-User authentication using [@SIOPv2], and the issuance of OAuth 2.0 Access Tokens.
 
 # Authorization Request {#vp_token_request}
 
-The Authorization Request follows the definition given in [@!RFC6749] taking into account the recommendations given in [@!RFC9700].
+The Authorization Request follows the definition given in [@!RFC6749] taking into account the recommendations given in [@!RFC9700] where applicable.
 
 The Verifier MAY send an Authorization Request as a Request Object either by value or by reference, as defined in the JWT-Secured Authorization Request (JAR) [@RFC9101]. Verifiers MUST include the `typ` Header Parameter in Request Objects with the value `oauth-authz-req+jwt`, as defined in [@RFC9101]. Wallets MUST NOT process Request Objects where the `typ` Header Parameter is not present or does not have the value `oauth-authz-req+jwt`.
 
@@ -269,7 +269,7 @@ Depending on the Client Identifier Prefix, the Verifier can communicate a JSON o
 
 Additional request parameters, other than those defined in this section, MAY be defined and used, as described in [@!RFC6749].
 The Wallet MUST ignore any unrecognized parameters, other than the `transaction_data` parameter.
-One exception to this rule is `transaction_data` parameter, and the wallets that do not support this parameter MUST reject requests that contain it.
+One exception to this rule is the `transaction_data` parameter. Wallets that do not support this parameter MUST reject requests that contain it.
 
 ## New Parameters {#new_parameters}
 This specification defines the following new request parameters:
@@ -340,7 +340,7 @@ The following is a non-normative example of an attested object:
 The following additional considerations are given for pre-existing Authorization Request parameters:
 
 `nonce`:
-: REQUIRED. Defined in [@!OpenID.Core]. It is used to securely bind Verifiable Presentation(s) provided by the Wallet to the particular transaction. The Verifier MUST create a fresh, cryptographically random number with sufficient entropy for every Authorization Request, store it with its current session, and pass it in the `nonce` Authorization Request Parameter to the Wallet. See (#preventing-replay) for details. Values MUST only contain ASCII URL safe characters (uppercase and lowercase letters, decimal digits, hyphen, period, underscore, and tilde).
+: REQUIRED. A case-sensitive String representing a value to securely bind Verifiable Presentation(s) provided by the Wallet to the particular transaction. The Verifier MUST create a fresh, cryptographically random number with sufficient entropy for every Authorization Request, store it with its current session, and pass it in the `nonce` Authorization Request Parameter to the Wallet. See (#preventing-replay) for details. Values MUST only contain ASCII URL safe characters (uppercase and lowercase letters, decimal digits, hyphen, period, underscore, and tilde).
 
 `scope`:
 : OPTIONAL. Defined in [@!RFC6749]. The Wallet MAY allow Verifiers to request Presentations by utilizing a pre-defined scope value. See (#request_scope) for more details.
@@ -349,7 +349,7 @@ The following additional considerations are given for pre-existing Authorization
 : REQUIRED. Defined in [@!OAuth.Responses]. This parameter can be used (through the new Response Mode `direct_post`) to ask the Wallet to send the response to the Verifier via an HTTPS connection (see (#response_mode_post) for more details). It can also be used to request that the resulting response be encrypted (see (#response_encryption) for more details).
 
 `client_id`:
-: REQUIRED. Defined in [@!RFC6749]. This specification defines additional requirements to enable the use of Client Identifier Prefixes as described in (#client_metadata_management).
+: REQUIRED. Defined in [@!RFC6749]. This specification defines additional requirements to enable the use of Client Identifier Prefixes as described in (#client_metadata_management). The Client Identifier can be created by other parties than the Wallet and it is considered unique within the context of the Wallet when used in combination with the Client Identifier Prefix.
 
 `state`:
 : REQUIRED under the conditions defined in (#nkb-credentials). Otherwise, `state` is OPTIONAL. `state` values MUST only contain ASCII URL safe characters (uppercase and lowercase letters, decimal digits, hyphen, period, underscore, and tilde).
@@ -594,7 +594,7 @@ Body
 
 * `verifier_attestation`: This Client Identifier Prefix allows the Verifier to authenticate using a JWT that is bound to a certain public key as defined in (#verifier_attestation_jwt). When the Client Identifier Prefix is `verifier_attestation`, the original Client Identifier (the part without the `verifier_attestation:` prefix) MUST equal the `sub` claim value in the Verifier attestation JWT. The request MUST be signed with the private key corresponding to the public key in the `cnf` claim in the Verifier attestation JWT. This serves as proof of possession of this key. The Verifier attestation JWT MUST be added to the `jwt` JOSE Header of the request object (see (#verifier_attestation_jwt)). The Wallet MUST validate the signature on the Verifier attestation JWT. The `iss` claim value of the Verifier Attestation JWT MUST identify a party the Wallet trusts for issuing Verifier Attestation JWTs. If the Wallet cannot establish trust, it MUST refuse the request. If the issuer of the Verifier Attestation JWT adds a `redirect_uris` claim to the attestation, the Wallet MUST ensure the `redirect_uri` request parameter value exactly matches one of the `redirect_uris` claim entries. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter. Example Client Identifier: `verifier_attestation:verifier.example`.
 
-* `x509_san_dns`: When the Client Identifier Prefix is `x509_san_dns`, the original Client Identifier (the part after the `x509_san_dns:` prefix) MUST be a DNS name and match a `dNSName` Subject Alternative Name (SAN) [@!RFC5280] entry in the leaf certificate passed with the request. The request MUST be signed with the private key corresponding to the public key in the leaf X.509 certificate of the certificate chain added to the request in the `x5c` JOSE header [@!RFC7515] of the signed request object. The Wallet MUST validate the signature and the trust chain of the X.509 certificate. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter. If the Wallet can establish trust in the Client Identifier authenticated through the certificate, e.g. because the Client Identifier is contained in a list of trusted Client Identifiers, it may allow the client to freely choose the `redirect_uri` value. If not, the FQDN of the `redirect_uri` value MUST match the Client Identifier without the prefix `x509_san_dns:`. Example Client Identifier: `x509_san_dns:client.example.org`.
+* `x509_san_dns`: When the Client Identifier Prefix is `x509_san_dns`, the original Client Identifier (the part after the `x509_san_dns:` prefix) MUST be a DNS name and match a `dNSName` Subject Alternative Name (SAN) [@!RFC5280] entry in the leaf certificate passed with the request. The request MUST be signed with the private key corresponding to the public key in the leaf X.509 certificate of the certificate chain added to the request in the `x5c` JOSE header [@!RFC7515] of the signed request object. The Wallet MUST validate the signature and the trust chain of the X.509 certificate. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter. The following requirement applies unless the interaction is using the DC API as defined in (#dc_api): If the Wallet can establish trust in the Client Identifier authenticated through the certificate, e.g. because the Client Identifier is contained in a list of trusted Client Identifiers, it may allow the client to freely choose the `redirect_uri` value. If not, the FQDN of the `redirect_uri` value MUST match the Client Identifier without the prefix `x509_san_dns:`. Example Client Identifier: `x509_san_dns:client.example.org`.
 
 * `x509_hash`: When the Client Identifier Prefix is `x509_hash`, the original Client Identifier (the part without the `x509_hash:` prefix) MUST be a hash and match the hash of the leaf certificate passed with the request. The request MUST be signed with the private key corresponding to the public key in the leaf X.509 certificate of the certificate chain added to the request in the `x5c` JOSE header parameter [@!RFC7515] of the signed request object. The value of `x509_hash` is the base64url encoded value of the SHA-256 hash of the DER-encoded X.509 certificate. The Wallet MUST validate the signature and the trust chain of the X.509 leaf certificate. All verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter. Example Client Identifier: `x509_hash:Uvo3HtuIxuhC92rShpgqcT3YXwrqRxWEviRiA0OZszk`
 
@@ -1660,7 +1660,7 @@ While breaking changes to the specifications referenced in this specification ar
 
 An attacker could try to inject Presentations obtained from (for example) a previous Authorization Response into another Authorization Response, thus impersonating the End-User that originally presented the respective Verifiable Presentation. Holder Binding aims to prevent such attacks.
 
-### Presentations without Holder Binding Proofs
+### Presentations without Holder Binding Proofs {#presentations-without-holder-binding}
 
 By definition, Presentations without Holder Binding (see (#nkb-credentials)) do
 not provide protection against replay. A Verifier that consumes Presentations without Holder Binding
@@ -1671,7 +1671,7 @@ the subject of the Credential.
 Depending on the use case, the risk assessment of the Verifier, and external
 validation measures that can be taken, this risk may be acceptable.
 
-### Verifiable Presentations
+### Verifiable Presentations {#verifiable-presentations-considerations}
 
 For Verifiable Presentations, implementers of this specification MUST implement the controls as defined in this section to detect and prevent replay attacks.
 
@@ -1769,7 +1769,7 @@ Implementations of this specification MUST have security mechanisms in place to 
 * Authentication between the different parts within the Verifier
 * Two cryptographically random numbers.  The first being used to manage state between the Wallet and Verifier. The second being used to ensure that only a legitimate component of the Verifier can obtain the Authorization Response data.
 
-## End-User Authentication using Credentials
+## End-User Authentication using Credentials {#end-user-authentication-using-credentials}
 
 Clients intending to authenticate the End-User utilizing a claim in a Credential MUST ensure this claim is stable for the End-User as well locally unique and never reassigned within the Credential Issuer to another End-User. Such a claim MUST also only be used in combination with the Credential Issuer identifier to ensure global uniqueness and to prevent attacks where an attacker obtains the same claim from a different Credential Issuer and tries to impersonate the legitimate End-User.
 
@@ -1777,7 +1777,7 @@ Clients intending to authenticate the End-User utilizing a claim in a Credential
 
 Because an encrypted Authorization Response has no additional integrity protection, an attacker might be able to alter Authorization Response parameters and generate a new encrypted Authorization Response for the Verifier, as encryption is performed using the public key of the Verifier (which is likely to be widely known when not ephemeral to the request/response). Note this includes injecting a new VP Token. Since the contents of the VP Token are integrity protected, tampering the VP Token is detectable by the Verifier. For details, see (#preventing-replay).
 
-##  TLS Requirements
+##  TLS Requirements {#tls-requirements}
 
 Implementations MUST follow [@!BCP195].
 
@@ -1791,7 +1791,7 @@ The OpenID Foundation provides tools that can be used to confirm that an impleme
 
 https://openid.net/certification/conformance-testing-for-openid-for-verifiable-presentations/
 
-## Always Use the Full Client Identifier
+## Always Use the Full Client Identifier {#full-client-identifier}
 
 Confusing Verifiers using a Client Identifier Prefix with those using none can lead to attacks. Therefore, Wallets MUST always use the full Client Identifier, including the prefix if provided, within the context of the Wallet or its responses to identify the client. This refers in particular to places where the Client Identifier is used in [@!RFC6749] and in the presentation returned to the Verifier.
 
@@ -1803,7 +1803,7 @@ these constraints. The Wallet is not controlled by the Verifier and the Verifier
 MUST perform its own security checks on the returned Credentials and
 Presentations.
 
-## DCQL Value Matching
+## DCQL Value Matching {#dcql-value-matching}
 
 When using DCQL `values` to match the expected values of claims, the fact that a
 claim within a certain credential matched a value or did not match a value might
@@ -1828,7 +1828,7 @@ Many privacy considerations are specific to the credential format and associated
 This section focuses on privacy considerations that are specific to the presentation protocol with some treatment also
 given to considerations that apply across some common credential formats.
 
-## Selective Disclosure
+## Selective Disclosure {#seletive-disclosure}
 
 Selective disclosure is a data minimization technique that allows for sharing only the specific information needed from
 a credential without revealing everything.
@@ -2225,9 +2225,9 @@ The following exchange protocol values are defined by this specification:
 
 ## Request {#dc_api_request}
 
-The Verifier MAY send all the OpenID4VP request parameters to the Digital Credentials API (DC API).
+The Verifier MAY send a request, as defined in (#vp_token_request), to the DC API.
 
-The following is a non-normative example of an unsigned OpenID4VP request (when advanced security features of OpenID4VP are not used) that can be sent over the DC API :
+The following is a non-normative example of an unsigned OpenID4VP request (when advanced security features of OpenID4VP are not used) that can be sent over the DC API:
 
 ```js
 {
@@ -2256,8 +2256,7 @@ The `client_id` parameter MUST be omitted in unsigned requests defined in (#unsi
 Parameters defined by a specific Client Identifier Prefix (such as the `trust_chain` parameter for the OpenID Federation Client Identifier Prefix) are also supported over the W3C Digital Credentials API.
 
 The `client_id` parameter MUST be present in signed requests defined in (#signed_request), as it communicates to the wallet which Client Identifier Prefix and Client Identifier to use when authenticating the client through verification of the request signature or retrieving client metadata.
-
-The value of the `response_mode` parameter MUST be `dc_api` when the response is not encrypted and `dc_api.jwt` when the response is encrypted as defined in (#response_encryption).
+The value of the `response_mode` parameter MUST be `dc_api` when the response is not encrypted and `dc_api.jwt` when the response is encrypted as defined in (#response_encryption). The Response Mode `dc_api` causes the Wallet to send the Authorization Response via the DC API. For Response Mode `dc_api.jwt`, the Wallet includes the `response` parameter, which contains an encrypted JWT encapsulating the Authorization Response, as defined in (#response_encryption).
 
 In addition to the above-mentioned parameters, a new parameter is introduced for OpenID4VP over the W3C Digital Credentials API:
 
@@ -2267,7 +2266,7 @@ The transport of the request and Origin to the Wallet is platform-specific and i
 
 Additional request parameters MAY be defined and used with OpenID4VP over the DC API.
 
-The Wallet MUST ignore any unrecognized parameters.
+The Wallet MUST ignore any unrecognized parameters. For example, since the `state` parameter is not defined for the DC API, the Verifier cannot expect it to be included in the response.
 
 ## Signed and Unsigned Requests
 
@@ -2357,6 +2356,25 @@ Every OpenID4VP Authorization Request results in a response being provided throu
 The security properties that are normally provided by the Client Identifier are achieved by binding the response to the Origin it was received from.
 
 The audience for the response (for example, the `aud` value in a Key Binding JWT) MUST be the Origin, prefixed with `origin:`, for example `origin:https://verifier.example.com/`. This is the case even for signed requests. Therefore, when using OpenID4VP over the DC API, the Client Identifier is not used as the audience for the response.
+
+## Security Considerations {#dc_api_security_considerations}
+
+The following security considerations from OpenID4VP apply:
+
+* Preventing Replay of Verifiable Presentations as described in (#preventing-replay), with the difference that the origin is used instead of the Client Identifier to bind the response to the Client.
+* End-User Authentication using Credentials as described in (#end-user-authentication-using-credentials).
+* Encrypting an Unsigned Response as described in (#encrypting_unsigned_response).
+* TLS Requirements as described in (#tls-requirements).
+* Always Use the Full Client Identifier as described in (#full-client-identifier) for signed requests.
+* Security Checks on the Returned Credentials and Presentations as described in (#dcql_query_security).
+* DCQL Value Matching as described in (#dcql-value-matching).
+
+## Privacy Considerations {#dc_api_privacy_considerations}
+
+The following privacy considerations from OpenID4VP apply:
+
+* Selective Disclosure as described in (#seletive-disclosure).
+* Privacy implications of mechanisms to establish trust in Issuers as described in (#privacy_trusted_authorities).
 
 # Credential Format Specific Parameters and Rules {#format_specific_parameters}
 
@@ -3213,6 +3231,7 @@ The technology described in this specification was made available from contribut
    * Add new DC API `openid4vp-v1-multisigned` protocol identifier for requests with JWS JSON Serialization
    * Remove incorrect requirement for automatic registration when using OpenID Federation
    * Change DCQL processing rules to allow the same credential to fulfil different queries
+   * Update specification to make DC API consistent with the rest of the specification
 
    -25
 
