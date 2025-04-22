@@ -1867,7 +1867,7 @@ The more narrow a request is, the more information is revealed. Some examples:
  * A request with which can only be satisfied by a single trusted authority. This will reveal the user has a credential from a particular authority, from which other attributes may be inferred. 
  * A request with value matching. This will reveal the claim value of the field. 
 
-Wallet implementations should balance the value of error detection to the maintenance and scaling of the verifier ecosystem with the information that is revealed. When handling errors, implementations may opt to cancel the flow (the details of which are platform specific) rather than return a protocol-specific error. This will make the result indistinguishable from other platform aborts, preventing any information being revealed. It is RECOMMENDED that this is done for any errors before consent when processing a request containing value matching to avoid revealing values of claims without consent. 
+Wallet implementations should balance the value of error detection to the maintenance and scaling of the verifier ecosystem with the information that is revealed. When handling errors, implementations may opt to cancel the flow (the details of which are platform specific) rather than return a protocol-specific error. This will make the result indistinguishable from other platform aborts, preventing any information from being revealed. It is RECOMMENDED that this is done for any errors occurring before user consent when processing a request containing value matching to avoid revealing values of claims without consent. 
 
 ## Privacy implications of mechanisms to establish trust in Issuers {#privacy_trusted_authorities}
 
