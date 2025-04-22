@@ -1860,12 +1860,12 @@ In the event that another component is invoked instead of the Wallet, the End-Us
 
 Returning any protocol error, regardless of content, may reveal additional information about the user’s underlying credentials in a way that is unique to the Digital Credentials API. For an improved user experience, platform implementations only allow wallets to be selected that satisfy the request. Protocol error responses can only be returned by a Wallet and so always reveal that the user is in possession of credentials that satisfy the request. This is in contrast to other engagement methods, where the Wallet receives the request before learning if it can be fulfilled. What is revealed by a wallet in those cases depends on how each individual wallet processes a request.
 
-The more narrow a request is, the more information is revealed. Some examples: 
+The more narrow a request is, the more information is revealed: 
 
- * A request that can be fulfilled by a broad range of documents. This will reveal only that the user has a credential from a large set of documents.
- * A request for a single document type. This will reveal the user is in possession of that credential. How sensitive this is would depend on the particular credential.
- * A request with which can only be satisfied by a single trusted authority. This will reveal the user has a credential from a particular authority, from which other attributes may be inferred. 
- * A request with value matching. This will reveal the claim value of the field. 
+ * A request that can be fulfilled by a broad range of documents will only reveal that the user has a Credential from a large set of documents.
+ * A request for a single document type will reveal the user is in possession of that Credential. How sensitive this is would depend on the particular Credential.
+ * A request with which can only be satisfied by a single trusted authority will reveal that the user has a Credential from a particular authority, from which other attributes may be inferred. 
+ * A request with value matching (as defined in (#selecting_claims)) will reveal specific value of that claim/attribute. 
 
 Wallet implementations should balance the value of error detection to the maintenance and scaling of the verifier ecosystem with the information that is revealed. When handling errors, implementations may opt to cancel the flow (the details of which are platform specific) rather than return a protocol-specific error. This will make the result indistinguishable from other platform aborts, preventing any information from being revealed. It is RECOMMENDED that this is done for any errors occurring before user consent when processing a request containing value matching to avoid revealing values of claims without consent. 
 
