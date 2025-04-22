@@ -58,7 +58,7 @@ OAuth 2.0 [@!RFC6749] is used as a base protocol as it provides the required rai
 
 This specification can also be combined with [@!SIOPv2], if implementers require OpenID Connect features, such as the issuance of Self-Issued ID Tokens [@!SIOPv2].
 
-Additionally, it defines how to use OpenID4VP in conjunction with the Digital Credentials API (DC API) [@!W3C.Digital_Credentials_API]. See section (#dc_api) for all requirements applicable to implementers of OpenID4VP over the DC API.
+Additionally, it defines how to use OpenID4VP in conjunction with the Digital Credentials API (DC API) [@!W3C.Digital_Credentials_API]. See section (#dc_api) for all requirements applicable to implementers of OpenID4VP over the DC API. Except where it explicitly references other sections of this specification, that section is self-contained, and its implementers can ignore the rest of the specification.
 
 ## Requirements Notation and Conventions
 
