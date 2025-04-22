@@ -1863,7 +1863,7 @@ Returning any protocol error, regardless of content, may reveal additional infor
 The more narrow a request is, the more information is revealed. Some examples: 
 
  * A request that can be fulfilled by a broad range of documents. This will reveal only that the user has a credential from a large set of documents.
- * A request that requests a single document type. This will reveal the user is in possession of that credential. How sensitive this is would depend on the particular credential.
+ * A request for a single document type. This will reveal the user is in possession of that credential. How sensitive this is would depend on the particular credential.
  * A request with which can only be satisfied by a single trusted authority. This will reveal the user has a credential from a particular authority, from which other attributes may be inferred. 
  * A request with value matching. This will reveal the claim value of the field. 
 
