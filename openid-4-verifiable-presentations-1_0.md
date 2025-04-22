@@ -267,7 +267,7 @@ Depending on the Client Identifier Prefix, the Verifier can communicate a JSON o
 
 Additional request parameters, other than those defined in this section, MAY be defined and used, as described in [@!RFC6749].
 The Wallet MUST ignore any unrecognized parameters, other than the `transaction_data` parameter.
-One exception to this rule is `transaction_data` parameter, and the Wallets that do not support this parameter MUST reject requests that contain it.
+One exception to this rule is the `transaction_data` parameter. Wallets that do not support this parameter MUST reject requests that contain it.
 
 ## New Parameters {#new_parameters}
 This specification defines the following new request parameters:
