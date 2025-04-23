@@ -1858,7 +1858,7 @@ In the event that another component is invoked instead of the Wallet, the End-Us
 
 ## Digital Credential API Error Responses {#privacy-dc-api-error}
 
-Returning any protocol error, regardless of content, may reveal additional information about the user’s underlying credentials in a way that is unique to the Digital Credentials API. For an improved user experience, platform implementations only allow wallets to be selected that satisfy the request. Protocol error responses can only be returned by a Wallet and so always reveal that the user is in possession of credentials that satisfy the request. This is in contrast to other engagement methods, where the Wallet receives the request before learning if it can be fulfilled. What is revealed by a wallet in those cases depends on how each individual wallet processes a request.
+Returning any protocol error, regardless of content, may reveal additional information about the user’s underlying Credentials or Wallet in a way that is unique to the Digital Credentials API. For an improved user experience, platform implementations only allow Wallets to be selected that satisfy the request. Protocol error responses can only be returned by a Wallet and thus always reveal that the user is in possession of Credentials that satisfy the request. This is in contrast to other engagement methods, where the Wallet receives the request before learning if it can be fulfilled. What is revealed by a Wallet in those cases depends on how each individual Wallet processes a request.
 
 The more narrow a request is, the more information is revealed: 
 
