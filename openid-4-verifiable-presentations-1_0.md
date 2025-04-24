@@ -1137,8 +1137,7 @@ The expected behavior is summarized in the following table:
 |`vp_token`|Authorization Response|
 |`vp_token id_token`|Authorization Response|
 |`code`|Token Response|
-
-Table 1: OpenID for Verifiable Presentations `response_type` values
+Table: OpenID for Verifiable Presentations `response_type` values
 
 The behavior with respect to the VP Token is unspecified for any other individual Response Type value, or a combination of Response Type values.
 
@@ -2197,6 +2196,16 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
         </front>
 </reference>
 
+<reference anchor="IANA.COSE" target="https://www.iana.org/assignments/cose">
+        <front>
+          <title>CBOR Object Signing and Encryption (COSE)</title>
+          <author>
+            <organization>IANA</organization>
+          </author>
+        </front>
+</reference>
+
+
 <reference anchor="IANA.Hash.Algorithms" target="https://www.iana.org/assignments/named-information/named-information.xhtml">
         <front>
           <title>Named Information Hash Algorithm Registry</title>
@@ -2579,8 +2588,23 @@ Some document types support some transaction data ((#transaction_data)) to be pr
 
 The `vp_formats_supported` parameter of the Verifier metadata or Wallet metadata MUST have the Credential Format Identifier as a key, and the value MUST be an object consisting of the following name/value pairs:
 
-* `issuer_signed_alg_values`: OPTIONAL. A JSON array containing fully-specified identifiers of cryptographic algorithms (as defined in [@!I-D.ietf-jose-fully-specified-algorithms]) supported for an `IssuerSigned` CBOR structure of an mdoc. If present, the `alg` COSE header (as defined in [@!RFC8152]) of the `IssuerSigned` structure of the presented mdoc MUST match one of the array values. If the `IssuerSigned` structure is not signed with a fully-specified cryptographic algorithm identifier (commonly known as a polymoprhic cryptographic algorithm identifier), the fully-specified algorithm derived from the combination of the `alg` value from the COSE header and the `crv` parameter from the signing key MUST match one of the array values.
-* `device_signed_alg_values`: OPTIONAL. A JSON array containing fully-specified identifiers of cryptographic algorithms (as defined in [@!I-D.ietf-jose-fully-specified-algorithms]) supported for an `DeviceSigned` CBOR structure of an mdoc. If present, the `alg` COSE header (as defined in [@!RFC8152]) of the `DeviceSigned` structure of the presented mdoc MUST match one of the array values. If the `DeviceSigned` structure is not signed with a fully-specified cryptographic algorithm identifier (commonly known as a polymoprhic cryptographic algorithm identifier), the fully-specified algorithm derived from the combination of the `alg` value from the COSE header and the `crv` parameter from the signing key MUST match one of the array values.
+* `issuerauth_alg_values`: OPTIONAL. A JSON array containing cryptographic algorithm identifiers. The Credential MUST be considered to fulfill requirement(s) expressed in this parameter if one of the following is true: 1) The value in the array matches the 'alg' value in the IssuerAuth COSE header. 2) The value in the array is a fully specified algorithm according to [@!I-D.ietf-jose-fully-specified-algorithms] and the combination of the `alg` value in the `IssuerAuth` COSE header and the curve used by the signing key of the COSE structure matches the combination of the algorithm and curve identified by the fully specified algorithm. As an example, if the `IssuerAuth` structure contains an `alg` header with value `-7` (which stands for ECDSA with SHA-256 in [@IANA.COSE]) and is signed by a P-256 key, then it matches an `issuerauth_alg_values` element of `-7` and `-9` (which stands for ECDSA using P-256 curve and SHA-256 in [@!I-D.ietf-jose-fully-specified-algorithms]).
+* `deviceauth_alg_values`: OPTIONAL. A JSON array containing cryptographic algorithm identifiers. The Credential MUST be considered to fulfill requirement(s) expressed in this parameter if one of the following is true: 1) The value in the array matches the 'alg' value in the `DeviceSignature` or `DeviceMac` COSE header. 2) The value in the array is a fully specified algorithm according to [@!I-D.ietf-jose-fully-specified-algorithms] and the combination of the `alg` value in the `DeviceSignature` COSE header and the curve used by the signing key of the COSE structure matches the combination of the algorithm and curve identified by the fully specified algorithm. 3) The value in the array is the `alg` of the `DeviceMac` COSE header is `HMAC 256/256` (as described in Section 9.1.3.5 of [@ISO.18013-5]) and the curve of the device key (from Table 22 of [@ISO.18013-5]) matches one of the values defined in the following table:
+
+| Curve Name | Value |
+|:--- |:--- |
+| Curve P-256 | -65537 |
+| Curve P-384 | -65538 |
+| Curve P-521 | -65539 |
+| X25519 | -65540 |
+| X448 | -65541 |
+| brainpoolP256r1 | -65542 |
+| brainpoolP320r1 | -65543 |
+| brainpoolP384r1 | -65544 |
+| brainpoolP512r1 | -65545 |
+Table: Mapping of curves to `alg` identifiers used for the `HMAC 256/256` case
+
+Note: These are specified in OpenID4VP only for private use in this parameter in this specification, and might be superseded by a future registration in IANA.
 
 The following is a non-normative example of `client_metadata` request parameter value in a request to present an ISO/IEC 18013-5 mDOC.
 
@@ -3218,8 +3242,10 @@ The technology described in this specification was made available from contribut
 # Document History
 
    [[ To be removed from the final specification ]]
+
    -28
 
+   * rename `issuer_signed_alg_values` and `device_signed_alg_values` and add support for HMAC variants 
    * Replace the JARM `authorization_encrypted_response_enc` with a new `encrypted_response_enc_values_supported` that allows the client to specify an array of acceptable `enc` values for the JWE
 
    -27
