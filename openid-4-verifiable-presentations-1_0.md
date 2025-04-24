@@ -2362,7 +2362,7 @@ If `require_cryptographic_holder_binding` is set to `true` in the Credential Que
 The following is a W3C Verifiable Credentials specific parameter in the `meta` parameter in a Credential Query as defined in (#credential_query):
 
 `type_values`:
-: REQUIRED. An array of string arrays that specifies the fully expanded types (IRIs) after the `@context` was applied that the Verifier accepts to be presented in the Presentation. If a type value was not defined by any `@context`, its value stays the same as it is effectively a relative IRI. Implementations can use alternative mechanisms that produce the same outcome as applying the `@context`, provided that the result is equivalent. Each of the top-level arrays specifies one alternative to match the `type` values of the Verifiable Credential against. Each inner array specifies a set of fully expanded types that MUST be present in the `type` property of the Verifiable Credential, regardless of order or the presence of additional types. 
+: REQUIRED. An array of string arrays specifying the fully expanded types (IRIs) that the Verifier accepts in a Presentation, after applying the `@context` to the Verifiable Credential. If a `type` value in a Verifiable Credential is not defined in any `@context`, it remains unchanged and is remains as a relative IRI after JSON-LD processing. For this reason, JSON-LD processing MAY be skipped in such cases and the relative IRI is considered to be the fully expanded type, as applying the `@context` would not alter the value. Implementations MAY use alternative mechanisms to obtain the fully expanded types, as long as the results are equivalent to those produced by JSON-LD processing. Each of the top-level arrays specifies one alternative to match the `type` values of the Verifiable Credential against. Each inner array specifies a set of fully expanded types that MUST be present in the `type` property of the Verifiable Credential, regardless of order or the presence of additional types. 
 
 The following is a non-normative example of `type_values` within a DCQL query:
 
@@ -2376,7 +2376,10 @@ The following is a non-normative example of `type_values` within a DCQL query:
   [
       "https://www.w3.org/2018/credentials#VerifiableCredential",
       "https://example.org/examples#UniversityDegreeCredential"
-  ]
+  ],
+  [
+      "IdentityCredential"
+  ]  
 ]
 ```
 
@@ -2401,6 +2404,17 @@ The following is another non-normative example of a W3C Verifiable Credential th
     "https://www.w3.org/2018/credentials/examples/v1"
   ],
   "type": ["VerifiableCredential", "AlumniCredential"]
+}
+```
+
+The following is another non-normative example of a W3C Verifiable Credential that would match the `type_values` DCQL query above (other claims omitted for readability):
+
+```json
+{
+  "@context": [
+    "https://www.w3.org/2018/credentials/v1"
+  ],
+  "type": ["VerifiableCredential", "IdentityCredential"]
 }
 ```
 
