@@ -1,9 +1,9 @@
 {
   "vp_formats_supported": {
     "mso_mdoc": {
-      "issuer_signed_alg_values": [-9, -50],
+      "issuerauth_alg_values": [-9, -50],
 
-      "device_signed_alg_values": [-9, -50]
+      "deviceauth_alg_values": [-9, -50]
     }
   }
 }
