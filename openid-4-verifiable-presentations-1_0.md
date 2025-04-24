@@ -3242,13 +3242,11 @@ The technology described in this specification was made available from contribut
 # Document History
 
    [[ To be removed from the final specification ]]
-   -28
-
-   * Replace the JARM `authorization_encrypted_response_enc` with a new `encrypted_response_enc_values_supported` that allows the client to specify an array of acceptable `enc` values for the JWE
 
    -28
 
    * clarify issuer_signed_alg_values and device_signed_alg_values to also allow for HMAC variants 
+   * Replace the JARM `authorization_encrypted_response_enc` with a new `encrypted_response_enc_values_supported` that allows the client to specify an array of acceptable `enc` values for the JWE
 
    -27
 
