@@ -1134,8 +1134,7 @@ The expected behavior is summarized in the following table:
 |`vp_token`|Authorization Response|
 |`vp_token id_token`|Authorization Response|
 |`code`|Token Response|
-
-Table 1: OpenID for Verifiable Presentations `response_type` values
+Table: OpenID for Verifiable Presentations `response_type` values
 
 The behavior with respect to the VP Token is unspecified for any other individual Response Type value, or a combination of Response Type values.
 
@@ -2169,6 +2168,16 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
         </front>
 </reference>
 
+<reference anchor="IANA.COSE" target="https://www.iana.org/assignments/cose">
+        <front>
+          <title>CBOR Object Signing and Encryption (COSE)</title>
+          <author>
+            <organization>IANA</organization>
+          </author>
+        </front>
+</reference>
+
+
 <reference anchor="IANA.Hash.Algorithms" target="https://www.iana.org/assignments/named-information/named-information.xhtml">
         <front>
           <title>Named Information Hash Algorithm Registry</title>
@@ -2541,17 +2550,18 @@ The `vp_formats_supported` parameter of the Verifier metadata or Wallet metadata
 * `issuerauth_alg_values`: OPTIONAL. A JSON array containing cryptographic algorithm identifiers. The Credential MUST be considered to fulfill requirement(s) expressed in this parameter if one of the following is true: 1) The value in the array matches the 'alg' value in the IssuerAuth COSE header. 2) The value in the array is a fully specified algorithm according to [@!I-D.ietf-jose-fully-specified-algorithms] and the combination of the `alg` value in the `IssuerAuth` COSE header and the curve used by the signing key of the COSE structure matches the combination of the algorithm and curve identified by the fully specified algorithm. As an example, if the `IssuerAuth` structure contains an `alg` header with value `-7` (which stands for ECDSA with SHA-256 in [@IANA.COSE]) and is signed by a P-256 key, then it matches an `issuerauth_alg_values` element of `-7` and `-9` (which stands for ECDSA using P-256 curve and SHA-256 in [@!I-D.ietf-jose-fully-specified-algorithms]).
 * `deviceauth_alg_values`: OPTIONAL. A JSON array containing cryptographic algorithm identifiers. The Credential MUST be considered to fulfill requirement(s) expressed in this parameter if one of the following is true: 1) The value in the array matches the 'alg' value in the `DeviceAuth` COSE header. 2) The value in the array is a fully specified algorithm according to [@!I-D.ietf-jose-fully-specified-algorithms] and the combination of the `alg` value in the `DeviceAuth` COSE header and the curve used by the signing key of the COSE structure matches the combination of the algorithm and curve identified by the fully specified algorithm. 3) The value in the array is the `alg` of the COSE header is `HMAC 256/256` (as described in Section 9.1.3.5 of [@ISO.18013-5]) and the curve of the device key (from Table 22 of [@ISO.18013-5]) matches one of the values defined in the following table:
 
-| Curve Name | Value | 
-| --- | --- | 
-| Curve P-256 |  -65537 |  
-| Curve P-384 | -65538 | 
-| Curve P-521 | -65539 | 
-| X25519 | -65540 | 
-| X448 |  -65541 | 
+| Curve Name | Value |
+|:--- |:--- |
+| Curve P-256 | -65537 |
+| Curve P-384 | -65538 |
+| Curve P-521 | -65539 |
+| X25519 | -65540 |
+| X448 | -65541 |
 | brainpoolP256r1 | -65542 |
-| brainpoolP320r1 | -65543 | 
+| brainpoolP320r1 | -65543 |
 | brainpoolP384r1 | -65544 |
 | brainpoolP512r1 | -65545 |
+Table: Mapping of curves to `alg` identifiers used for the `HMAC 256/256` case
 
 Note: These are specified in OpenID4VP only for private use in this parameter in this specification, and might be superseded by a future registration in IANA.
 
@@ -3140,6 +3150,10 @@ The technology described in this specification was made available from contribut
 # Document History
 
    [[ To be removed from the final specification ]]
+
+   -28
+
+   * clarify issuer_signed_alg_values and device_signed_alg_values to also allow for HMAC variants 
 
    -27
 
