@@ -3197,6 +3197,7 @@ The technology described in this specification was made available from contribut
    [[ To be removed from the final specification ]]
    -28
 
+   * Replace the JARM `authorization_encrypted_response_enc` with a new `encrypted_response_enc_values_supported` that allows the client to specify an array of acceptable `enc` values for the JWE
 
    -27
 
@@ -3227,7 +3228,7 @@ The technology described in this specification was made available from contribut
    * Adapt usage of "Verifiable Presentation" to only refer to Presentations with Holder Binding and "Presentation" to refer to all types of credential presentations
    * change the identifier for the ETSI trusted list `trusted_authorities` entry from `openid_fed` to `openid_federation`
    * change openid_fed to openid_federation for Trusted Authorities Query
-   * remove JARM and response signing, using JWT directly for unsigned, encrypted responses.
+   * remove JARM and response signing, using JWT directly for unsigned, encrypted responses, including changes to allow the client to indicate a set of acceptable `alg` values for the JWE using the `alg` value in the JWKS instead of the JARM `authorization_encrypted_response_alg`
    * make consistent the use of prefixes in the client_id prefixing, defining new `openid_federation:` and `decentralized_identifier:` prefixes
    * fix nonce computation for AnonCreds
    * For w3c vc, DCQL `type_values` now matches against expanded type values
