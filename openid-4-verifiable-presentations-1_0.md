@@ -1301,7 +1301,6 @@ The JWE `alg` algorithm used MUST be equal to the `alg` value of the chosen `jwk
 If the selected public key contains a `kid` parameter, the JWE MUST include the same value in the `kid` JWE Header Parameter (as defined in [@!RFC7516, Section 4.1.6]) of the encrypted response. This enables the Verifier to easily identify the specific public key that was used to encrypt the response.
 The JWE `enc` content encryption algorithm used is obtained from the `encrypted_response_enc_values_supported` parameter of client metadata, such as the `client_metadata` request parameter, allowing for the default value of `A128GCM` when not explicitly set.
 
-
 The payload of the encrypted JWT response MUST include the contents of the response as defined in (#response-parameters) as top-level JSON members.
 
 The following shows a non-normative example of the content of a request that is asking for an encrypted response while providing
