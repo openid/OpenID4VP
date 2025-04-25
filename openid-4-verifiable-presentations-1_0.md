@@ -1222,7 +1222,7 @@ Note: In the Response Mode `direct_post` or `direct_post.jwt`, the Wallet can ch
 Additional parameters MAY be defined and used in the response from the Response Endpoint to the Wallet.
 The Wallet MUST ignore any unrecognized parameters.
 
-## Response Encryption {#response_encryption}
+## Encrypted Responses {#response_encryption}
 
 This section defines how an Authorization Response containing a VP Token (such as when the Response Type value is `vp_token` or `vp_token id_token`) can be encrypted at the application level using [@!RFC7518] where the payload of the JWE is a JSON object containing the Authorization Response parameters. Encrypting the Authorization Response can, for example, prevent personal data in the Authorization Response from leaking, when the Authorization Response is returned through the front channel (e.g., the browser).
 
