@@ -1269,7 +1269,7 @@ a few public keys for encryption in the `jwks` member of the `client_metadata` r
      "y":"Hekpm0zfK7C-YccH5iBjcIXgf6YdUvNUac_0At55Okk"
     },
     {
-     "kty":"OKP","kid":"jc","use":"enc","crv":"X25519", "alg":"ECDH-ES",
+     "kty":"OKP","kid":"jc","use":"enc","crv":"X25519","alg":"ECDH-ES",
      "x":"WPX7wnwq10hFNK9aDSyG1QlLswE_CJY14LdhcFUIVVc"
     },
     {
