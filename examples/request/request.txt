@@ -1,7 +1,0 @@
-GET /authorize?
-  response_type=vp_token
-  &client_id=x509_san_dns%3Aclient.example.org
-  &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
-  &dcql_query=%7B...%7D
-  &nonce=n-0S6_WzA2Mj HTTP/1.1
-Host: wallet.example.com
