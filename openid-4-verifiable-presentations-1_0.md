@@ -1283,7 +1283,7 @@ a few public keys for encryption in the `jwks` member of the `client_metadata` r
     }
    ]
   },
-  "authorization_encrypted_response_enc": "A128GCM"
+  "encrypted_response_enc_values_supported": ["A128GCM", "A128CBC-HS256"]
  }
 }
 ```
