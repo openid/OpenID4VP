@@ -1,0 +1,22 @@
+user_claims:
+    vct: https://credentials.example.com/example_credential
+    ld:
+        "@context":
+          - https://www.w3.org/ns/credentials/v2
+          - https://w3id.org/citizenship/v3
+        credentialSubject:
+          !sd givenName: John
+          !sd familyName: Doe
+          !sd birthDate: "1978-07-17"
+
+
+holder_disclosed_claims:
+  ld:
+    credentialSubject:
+      givenName: true
+
+add_decoy_claims: false
+key_binding: true
+
+extra_header_parameters:
+  typ: "dc+sd-jwt"
