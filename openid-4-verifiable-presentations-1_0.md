@@ -1301,6 +1301,17 @@ A non-normative example response to the above request, having been encrypted to 
 }
 ```
 
+For illustrative purposes, the following JWK includes the private key `d` parameter value and can be used to decrypt the above encrypted Authorization Response example.
+
+```json
+{
+  "kty":"EC", "kid":"ac", "use":"enc", "crv":"P-256","alg":"ECDH-ES",
+  "x":"YO4epjifD-KWeq1sL2tNmm36BhXnkJ0He-WqMYrp9Fk",
+  "y":"Hekpm0zfK7C-YccH5iBjcIXgf6YdUvNUac_0At55Okk",
+  "d":"Et-3ce0omz8_TuZ96Df9lp0GAaaDoUnDe6X-CRO7Aww"
+}
+```
+
 The following shows the decoded header of the above encrypted Authorization Response example:
 
 ```json
