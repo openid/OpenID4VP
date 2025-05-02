@@ -3268,7 +3268,7 @@ The technology described in this specification was made available from contribut
 
    -27
 
-   * rename `vp_formats` to `vp_format_supported` in Verifier Metadata
+   * rename `vp_formats` to `vp_formats_supported` in Verifier Metadata
    * update the `vp_formats_supported` metadata to always be format specific, and explicitly define the structure for `mso_mdoc`, `jwt_vc_json` and `ldp_vc`.
    * require fully-specified COSE and JOSE algorithms for `mso_mdoc` and `dc+sd-jwt` formats in `vp_formats_supported` metadata
    * remove AnonCreds for now as we're lacking implementation experience
