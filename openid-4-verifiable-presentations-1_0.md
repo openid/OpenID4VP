@@ -3155,6 +3155,13 @@ This specification registers the following client metadata parameters
 in the IANA "OAuth Dynamic Client Registration Metadata" registry [@IANA.OAuth.Parameters]
 established by [@!RFC7591].
 
+### encrypted_response_enc_values_supported
+
+* Client Metadata Name: `encrypted_response_enc_values_supported`
+* Client Metadata Description: Array of strings, where each string is a JWE [@!RFC7516] `enc` algorithm that can be used as the content encryption algorithm for encrypting the Response
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
+* Reference: (#new_parameters) of this specification
+
 ### vp_formats_supported
 
 * Client Metadata Name: `vp_formats_supported`
