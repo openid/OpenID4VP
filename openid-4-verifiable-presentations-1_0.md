@@ -2035,19 +2035,6 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
   </front>
 </reference>
 
-<reference anchor="JARM" target="https://openid.net/specs/oauth-v2-jarm-final.html">
-        <front>
-          <title>JWT Secured Authorization Response Mode for OAuth 2.0 (JARM)</title>
-		  <author fullname="Torsten Lodderstedt">
-            <organization>yes.com</organization>
-          </author>
-          <author fullname="Brian Campbell">
-            <organization>Ping Identity</organization>
-          </author>
-          <date day="9" month="Nov" year="2022"/>
-        </front>
- </reference>
-
 <reference anchor="ISO.18013-5" target="https://www.iso.org/standard/69084.html">
         <front>
           <title>ISO/IEC 18013-5:2021 Personal identification — ISO-compliant driving license — Part 5: Mobile driving license (mDL)  application</title>
