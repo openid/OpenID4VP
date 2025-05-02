@@ -3099,6 +3099,13 @@ established by [@!RFC6749].
 * Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#response-parameters) of this specification
 
+### verifier_attestations
+
+* Name: `verifier_attestations`
+* Parameter Usage Location: authorization request
+* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
+* Reference: (#new_parameters) of this specification
+
 ### expected_origins
 
 * Name: `expected_origins`
@@ -3168,13 +3175,6 @@ established by [@!RFC7591].
 * Client Metadata Description: An object containing a list of name/value pairs, where the name is a string identifying a Credential format supported by the Verifier
 * Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#client_metadata_parameters) of this specification
-
-### verifier_attestations
-
-* Name: `verifier_attestations`
-* Parameter Usage Location: authorization request
-* Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
-* Reference: (#new_parameters) of this specification
 
 ## Media Types Registry
 
