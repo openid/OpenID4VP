@@ -285,7 +285,7 @@ In the context of an authorization request according to [@RFC6749], parameters c
 : OPTIONAL. A JSON object containing the Verifier metadata values. It MUST be UTF-8 encoded. The following metadata parameters MAY be used:
 
     * `jwks`: OPTIONAL. A JSON Web Key Set, as defined in [@!RFC7591], that contains one or more public keys, such as those used by the Wallet as an input to a key agreement that may be used for encryption of the Authorization Response (see (#response_encryption)), or where the Wallet will require the public key of the Verifier to generate a Verifiable Presentation. This allows the Verifier to pass ephemeral keys specific to this Authorization Request. Public keys included in this parameter MUST NOT be used to verify the signature of signed Authorization Requests. Each JWK in the set MUST have a `kid` (Key ID) parameter that uniquely identifies the key within the context of the request.
-    * `encrypted_response_enc_values_supported`: OPTIONAL. Array of strings, where each string is a JWE [@!RFC7516] `enc` algorithm that can be used as the content encryption algorithm for encrypting the Response. When a `response_mode` requiring encryption of the Response (such as `dc_api.jwt` or `direct_post.jwt`) is specified, this MUST be present for anything other than the default single value of `A128GCM`. Otherwise, this SHOULD be absent.
+    * `encrypted_response_enc_values_supported`: OPTIONAL. Non-empty array of strings, where each string is a JWE [@!RFC7516] `enc` algorithm that can be used as the content encryption algorithm for encrypting the Response. When a `response_mode` requiring encryption of the Response (such as `dc_api.jwt` or `direct_post.jwt`) is specified, this MUST be present for anything other than the default single value of `A128GCM`. Otherwise, this SHOULD be absent.
     * `vp_formats_supported`: REQUIRED when not available to the Wallet via another mechanism. As defined in (#client_metadata_parameters).
 
     Authoritative data the Wallet is able to obtain about the Client from other sources, for example those from an OpenID Federation Entity Statement, take precedence over the values passed in `client_metadata`.
@@ -299,10 +299,10 @@ If the Verifier set the `request_uri_method` parameter value to `post` and there
 This enables the Wallet to assess the Verifier's capabilities, allowing it to transmit only the relevant capabilities through the `wallet_metadata` parameter in the Request URI POST request.
 
 `transaction_data`: 
-: OPTIONAL. Array of strings, where each string is a base64url encoded JSON object that contains a typed parameter set with details about the transaction that the Verifier is requesting the End-User to authorize. See (#transaction_data) for details. The Wallet MUST return an error if a request contains even one unrecognized transaction data type or transaction data not conforming to the respective type definition. In addition to the parameters determined by the type of transaction data, each `transaction_data` object consists of the following parameters defined by this specification:
+: OPTIONAL. Non-empty array of strings, where each string is a base64url encoded JSON object that contains a typed parameter set with details about the transaction that the Verifier is requesting the End-User to authorize. See (#transaction_data) for details. The Wallet MUST return an error if a request contains even one unrecognized transaction data type or transaction data not conforming to the respective type definition. In addition to the parameters determined by the type of transaction data, each `transaction_data` object consists of the following parameters defined by this specification:
 
     * `type`: REQUIRED. String that identifies the type of transaction data. This value determines parameters that can be included in the `transaction_data` object. The specific values are out of scope of this specification. It is RECOMMENDED to use collision-resistant names for `type` values.
-    * `credential_ids`: REQUIRED. Array of strings each referencing a Credential requested by the Verifier that can be used to authorize this transaction. The string matches the `id` field in the DCQL Credential Query. If there is more than one element in the array, the Wallet MUST use only one of the referenced Credentials for transaction authorization.
+    * `credential_ids`: REQUIRED. Non-empty array of strings each referencing a Credential requested by the Verifier that can be used to authorize this transaction. The string matches the `id` field in the DCQL Credential Query. If there is more than one element in the array, the Wallet MUST use only one of the referenced Credentials for transaction authorization.
 
 Each document specifying details of a transaction data type defines what Credential(s) can be used to authorize those transactions. Those Credential(s) can be issued specifically for the transaction authorization use case or re-use existing Credential(s) used for user identification. A mechanism for Credential Issuers to express that a particular Credential can be used for authorization of transaction data is out of scope for this specification.
 
@@ -317,11 +317,11 @@ The following is a non-normative example of a transaction data content, after ba
 ```
 
 `verifier_attestations`:
-: OPTIONAL. An array of attestations about the Verifier relevant to the Credential Request. These attestations MAY include Verifier metadata, policies, trust status, or authorizations. Attestations are intended to support authorization decisions, inform Wallet policy enforcement, or enrich the End-User consent dialog. Each object has the following structure:
+: OPTIONAL. A non-empty array of attestations about the Verifier relevant to the Credential Request. These attestations MAY include Verifier metadata, policies, trust status, or authorizations. Attestations are intended to support authorization decisions, inform Wallet policy enforcement, or enrich the End-User consent dialog. Each object has the following structure:
 
     * `format`: REQUIRED. A string that identifies the format of the attestation and how it is encoded. Ecosystems SHOULD use collision-resistant identifiers. Further processing of the attestation is determined by the type of the attestation, which is specified in a format-specific way. 
     * `data`: REQUIRED. An object or string containing an attestation (e.g. a JWT). The payload structure is defined on a per format level. The Wallet MUST validate this signature and ensure binding.
-    * `credential_ids`: OPTIONAL. An array of strings each referencing a Credential requested by the Verifier for which the attestation is relevant. Each string matches the `id` field in a DCQL Credential Query. If omitted, the attestation is relevant to all requested credentials.
+    * `credential_ids`: OPTIONAL. A non-empty array of strings each referencing a Credential requested by the Verifier for which the attestation is relevant. Each string matches the `id` field in a DCQL Credential Query. If omitted, the attestation is relevant to all requested credentials.
 
 See (#verifier-attestations) for more details.
 
@@ -788,7 +788,7 @@ Each entry in `trusted_authorities` MUST be an object with the following propert
 Types defined by this specification are listed below.
 
 `values`:
-: REQUIRED. An array of strings, where each string (value) contains information specific to the
+: REQUIRED. A non-empty array of strings, where each string (value) contains information specific to the
 used Trusted Authorities Query type that allows to identify an issuer, trust framework, or a federation that an
 issuer belongs to.
 
@@ -869,8 +869,8 @@ Each entry in `credential_sets` MUST be an object with the following properties:
 `options`
 : REQUIRED: A non-empty array, where each value in the array is a list
 of Credential Query identifiers representing one set of Credentials that
-satisfies the use case. The value of each element in the `options` array is an
-array of identifiers which reference elements in `credentials`.
+satisfies the use case. The value of each element in the `options` array is a
+non-empty array of identifiers which reference elements in `credentials`.
 
 `required`
 : OPTIONAL. A boolean which indicates whether this set of Credentials is required
@@ -894,7 +894,7 @@ be present more than once.
 within the Credential, as defined in (#claims_path_pointer).
 
 `values`:
-: OPTIONAL. An array of strings, integers or boolean values that specifies the expected values of the claim.
+: OPTIONAL. A non-empty array of strings, integers or boolean values that specifies the expected values of the claim.
 If the `values` property is present, the Wallet SHOULD return the claim only if the
 type and value of the claim both match exactly for at least one of the elements in the array. Details of the processing
 rules are defined in (#selecting_claims).
@@ -1451,7 +1451,7 @@ The following is a non-normative example of a `vp_formats_supported` parameter:
 ```
 
 `client_id_prefixes_supported`:
-: OPTIONAL. Array of strings containing the values of the Client Identifier Prefixes that the Wallet supports. The values defined by this specification are `pre-registered` (which represents the behavior when no Client Identifier Prefix is used), `redirect_uri`, `openid_federation`, `verifier_attestation`, `decentralized_identifier`, `x509_san_dns` and `x509_hash`. If omitted, the default value is `pre-registered`. Other values may be used when defined in the profiles or extensions of this specification.
+: OPTIONAL. Non-empty array of strings containing the values of the Client Identifier Prefixes that the Wallet supports. The values defined by this specification are `pre-registered` (which represents the behavior when no Client Identifier Prefix is used), `redirect_uri`, `openid_federation`, `verifier_attestation`, `decentralized_identifier`, `x509_san_dns` and `x509_hash`. If omitted, the default value is `pre-registered`. Other values may be used when defined in the profiles or extensions of this specification.
 
 Additional wallet metadata parameters MAY be defined and used,
 as described in [@!RFC8414].
@@ -2287,7 +2287,7 @@ The value of the `response_mode` parameter MUST be `dc_api` when the response is
 
 In addition to the above-mentioned parameters, a new parameter is introduced for OpenID4VP over the W3C Digital Credentials API:
 
-* `expected_origins`: REQUIRED when signed requests defined in (#signed_request) are used with the Digital Credentials API (DC API). An array of strings, each string representing an Origin of the Verifier that is making the request. The Wallet MUST compare values in this parameter to the Origin to detect replay of the request from a malicious Verifier. If the Origin does not match any of the entries in `expected_origins`, the Wallet MUST return an error. This error SHOULD be an `invalid_request` error. This parameter is not for use in unsigned requests and therefore a Wallet MUST ignore this parameter if it is present in an unsigned request.
+* `expected_origins`: REQUIRED when signed requests defined in (#signed_request) are used with the Digital Credentials API (DC API). A non-empty array of strings, each string representing an Origin of the Verifier that is making the request. The Wallet MUST compare values in this parameter to the Origin to detect replay of the request from a malicious Verifier. If the Origin does not match any of the entries in `expected_origins`, the Wallet MUST return an error. This error SHOULD be an `invalid_request` error. This parameter is not for use in unsigned requests and therefore a Wallet MUST ignore this parameter if it is present in an unsigned request.
 
 The transport of the request and Origin to the Wallet is platform-specific and is out of scope of OpenID4VP over the Digital Credentials API.
 
@@ -2424,7 +2424,7 @@ If `require_cryptographic_holder_binding` is set to `true` in the Credential Que
 The following is a W3C Verifiable Credentials specific parameter in the `meta` parameter in a Credential Query as defined in (#credential_query):
 
 `type_values`:
-: REQUIRED. An array of string arrays specifying the fully expanded types (IRIs) that the Verifier accepts in a Presentation, after applying the `@context` to the Verifiable Credential. If a `type` value in a Verifiable Credential is not defined in any `@context`, it remains unchanged, i.e., remains a relative IRI after JSON-LD processing. For this reason, JSON-LD processing MAY be skipped in such cases and the relative IRI is considered to be the fully expanded type, as applying the `@context` would not alter the value. Implementations MAY use alternative mechanisms to obtain the fully expanded types, as long as the results are equivalent to those produced by JSON-LD processing. Each of the top-level arrays specifies one alternative to match the fully expanded `type` values of the Verifiable Credential against. Each inner array specifies a set of fully expanded types that MUST be present in the fully expanded types in the `type` property of the Verifiable Credential, regardless of order or the presence of additional types. 
+: REQUIRED. A non-empty array of string arrays specifying the fully expanded types (IRIs) that the Verifier accepts in a Presentation, after applying the `@context` to the Verifiable Credential. If a `type` value in a Verifiable Credential is not defined in any `@context`, it remains unchanged, i.e., remains a relative IRI after JSON-LD processing. For this reason, JSON-LD processing MAY be skipped in such cases and the relative IRI is considered to be the fully expanded type, as applying the `@context` would not alter the value. Implementations MAY use alternative mechanisms to obtain the fully expanded types, as long as the results are equivalent to those produced by JSON-LD processing. Each of the top-level arrays specifies one alternative to match the fully expanded `type` values of the Verifiable Credential against. Each inner array specifies a set of fully expanded types that MUST be present in the fully expanded types in the `type` property of the Verifiable Credential, regardless of order or the presence of additional types. 
 
 The following is a non-normative example of `type_values` within a DCQL query:
 
@@ -2506,7 +2506,7 @@ The following is a non-normative example of the payload of a JWT-based W3C Verif
 
 The `vp_formats_supported` parameter of the Verifier metadata or Wallet metadata MUST have the Credential Format Identifier as a key, and the value MUST be an object consisting of the following name/value pair:
 
-* `alg_values`: OPTIONAL. A JSON array containing identifiers of cryptographic algorithms supported for a JWT-secured W3C Verifiable Credential or W3C Verifiable Presentation. If present, the `alg` JOSE header (as defined in [@!RFC7515]) of the presented Verifiable Credential or Verifiable Presentation MUST match one of the array values.
+* `alg_values`: OPTIONAL. A non-empty array containing identifiers of cryptographic algorithms supported for a JWT-secured W3C Verifiable Credential or W3C Verifiable Presentation. If present, the `alg` JOSE header (as defined in [@!RFC7515]) of the presented Verifiable Credential or Verifiable Presentation MUST match one of the array values.
 
 The following is a non-normative example of `client_metadata` request parameter value in a request to present an W3C Verifiable Presentation.
 
@@ -2559,8 +2559,8 @@ The following is a non-normative example of the payload of a Verifiable Credenti
 
 The `vp_formats_supported` parameter of the Verifier metadata or Wallet metadata MUST have the Credential Format Identifier as a key, and the value MUST be an object consisting of the following name/value pairs:
 
-* `proof_type_values`: OPTIONAL. A JSON array containing identifiers of proof types supported for a Data Integrity secured W3C Verifiable Presentation or W3C Verifiable Credential. If present, the proof `type` parameter (as defined in [@VC_DATA]) of the presented Verifiable Credential or Verifiable Presentation MUST match one of the array values.
-* `cryptosuite_values`: OPTIONAL. A JSON array containing identifiers of crypotsuites supported with one of the algorithms listed in `proof_type_values` for a Data Integrity secured W3C Verifiable Presentation or W3C Verifiable Credential. Note that `cryptosuite_values` MAY be used if one of the algorithms in `proof_type_values` supports multiple cryptosuites. If present, the proof `cryptosuite` parameter (as defined in [@VC_DATA_INTEGRITY]) of the presented Verifiable Credential or Verifiable Presentation MUST match one of the array values.
+* `proof_type_values`: OPTIONAL. A non-empty array containing identifiers of proof types supported for a Data Integrity secured W3C Verifiable Presentation or W3C Verifiable Credential. If present, the proof `type` parameter (as defined in [@VC_DATA]) of the presented Verifiable Credential or Verifiable Presentation MUST match one of the array values.
+* `cryptosuite_values`: OPTIONAL. A non-empty array containing identifiers of crypotsuites supported with one of the algorithms listed in `proof_type_values` for a Data Integrity secured W3C Verifiable Presentation or W3C Verifiable Credential. Note that `cryptosuite_values` MAY be used if one of the algorithms in `proof_type_values` supports multiple cryptosuites. If present, the proof `cryptosuite` parameter (as defined in [@VC_DATA_INTEGRITY]) of the presented Verifiable Credential or Verifiable Presentation MUST match one of the array values.
 
 The following is a non-normative example of `client_metadata` request parameter value in a request to present an W3C Verifiable Presentation.
 
@@ -2602,8 +2602,8 @@ Some document types support some transaction data ((#transaction_data)) to be pr
 
 The `vp_formats_supported` parameter of the Verifier metadata or Wallet metadata MUST have the Credential Format Identifier as a key, and the value MUST be an object consisting of the following name/value pairs:
 
-* `issuerauth_alg_values`: OPTIONAL. A JSON array containing cryptographic algorithm identifiers. The Credential MUST be considered to fulfill requirement(s) expressed in this parameter if one of the following is true: 1) The value in the array matches the 'alg' value in the IssuerAuth COSE header. 2) The value in the array is a fully specified algorithm according to [@!I-D.ietf-jose-fully-specified-algorithms] and the combination of the `alg` value in the `IssuerAuth` COSE header and the curve used by the signing key of the COSE structure matches the combination of the algorithm and curve identified by the fully specified algorithm. As an example, if the `IssuerAuth` structure contains an `alg` header with value `-7` (which stands for ECDSA with SHA-256 in [@IANA.COSE]) and is signed by a P-256 key, then it matches an `issuerauth_alg_values` element of `-7` and `-9` (which stands for ECDSA using P-256 curve and SHA-256 in [@!I-D.ietf-jose-fully-specified-algorithms]).
-* `deviceauth_alg_values`: OPTIONAL. A JSON array containing cryptographic algorithm identifiers. The Credential MUST be considered to fulfill requirement(s) expressed in this parameter if one of the following is true: 1) The value in the array matches the 'alg' value in the `DeviceSignature` or `DeviceMac` COSE header. 2) The value in the array is a fully specified algorithm according to [@!I-D.ietf-jose-fully-specified-algorithms] and the combination of the `alg` value in the `DeviceSignature` COSE header and the curve used by the signing key of the COSE structure matches the combination of the algorithm and curve identified by the fully specified algorithm. 3) The value in the array is the `alg` of the `DeviceMac` COSE header is `HMAC 256/256` (as described in Section 9.1.3.5 of [@ISO.18013-5]) and the curve of the device key (from Table 22 of [@ISO.18013-5]) matches one of the values defined in the following table:
+* `issuerauth_alg_values`: OPTIONAL. A non-empty array containing cryptographic algorithm identifiers. The Credential MUST be considered to fulfill requirement(s) expressed in this parameter if one of the following is true: 1) The value in the array matches the 'alg' value in the IssuerAuth COSE header. 2) The value in the array is a fully specified algorithm according to [@!I-D.ietf-jose-fully-specified-algorithms] and the combination of the `alg` value in the `IssuerAuth` COSE header and the curve used by the signing key of the COSE structure matches the combination of the algorithm and curve identified by the fully specified algorithm. As an example, if the `IssuerAuth` structure contains an `alg` header with value `-7` (which stands for ECDSA with SHA-256 in [@IANA.COSE]) and is signed by a P-256 key, then it matches an `issuerauth_alg_values` element of `-7` and `-9` (which stands for ECDSA using P-256 curve and SHA-256 in [@!I-D.ietf-jose-fully-specified-algorithms]).
+* `deviceauth_alg_values`: OPTIONAL. A non-empty array containing cryptographic algorithm identifiers. The Credential MUST be considered to fulfill requirement(s) expressed in this parameter if one of the following is true: 1) The value in the array matches the 'alg' value in the `DeviceSignature` or `DeviceMac` COSE header. 2) The value in the array is a fully specified algorithm according to [@!I-D.ietf-jose-fully-specified-algorithms] and the combination of the `alg` value in the `DeviceSignature` COSE header and the curve used by the signing key of the COSE structure matches the combination of the algorithm and curve identified by the fully specified algorithm. 3) The value in the array is the `alg` of the `DeviceMac` COSE header is `HMAC 256/256` (as described in Section 9.1.3.5 of [@ISO.18013-5]) and the curve of the device key (from Table 22 of [@ISO.18013-5]) matches one of the values defined in the following table:
 
 | Curve Name | Value |
 |:--- |:--- |
@@ -2839,17 +2839,17 @@ The transaction data mechanism requires use of an SD-JWT VC with Cryptographic H
 The following is one profile that can be included in a transaction data type specification:
 
 * The `transaction_data` request parameter includes the following parameter, in addition to `type` and `credential_ids` from (#new_parameters):
-  * `transaction_data_hashes_alg`: OPTIONAL. Array of strings each representing a hash algorithm identifier, one of which MUST be used to calculate hashes in `transaction_data_hashes` response parameter. The value of the identifier MUST be a hash algorithm value from the "Hash Name String" column in the IANA "Named Information Hash Algorithm" registry [@IANA.Hash.Algorithms] or a value defined in another specification and/or profile of this specification. If this parameter is not present, a default value of `sha-256` MUST be used. To promote interoperability, implementations MUST support the sha-256 hash algorithm.
+  * `transaction_data_hashes_alg`: OPTIONAL. Non-empty array of strings each representing a hash algorithm identifier, one of which MUST be used to calculate hashes in `transaction_data_hashes` response parameter. The value of the identifier MUST be a hash algorithm value from the "Hash Name String" column in the IANA "Named Information Hash Algorithm" registry [@IANA.Hash.Algorithms] or a value defined in another specification and/or profile of this specification. If this parameter is not present, a default value of `sha-256` MUST be used. To promote interoperability, implementations MUST support the sha-256 hash algorithm.
 * The Key Binding JWT in the response includes the following top level parameters:
-  * `transaction_data_hashes`: Array of hashes, where each hash is calculated using a hash function over the data in the strings received in the `transaction_data` request parameter. Each hash value ensures the integrity of, and maps to, the respective transaction data object. If `transaction_data_hashes_alg` was specified in the request, the hash function MUST be one of its values. If `transaction_data_hashes_alg` was not specified in the request, the hash function MUST be `sha-256`.
+  * `transaction_data_hashes`: Non-empty array of hashes, where each hash is calculated using a hash function over the data in the strings received in the `transaction_data` request parameter. Each hash value ensures the integrity of, and maps to, the respective transaction data object. If `transaction_data_hashes_alg` was specified in the request, the hash function MUST be one of its values. If `transaction_data_hashes_alg` was not specified in the request, the hash function MUST be `sha-256`.
   * `transaction_data_hashes_alg`: REQUIRED when this parameter was present in the `transaction_data` request parameter. String representing the hash algorithm identifier used to calculate hashes in `transaction_data_hashes` response parameter.
 
 ### Metadata
 
 The `vp_formats_supported` parameter of the Verifier metadata or Wallet metadata MUST have the Credential Format Identifier as a key, and the value MUST be an object consisting of the following name/value pairs:
 
-* `sd-jwt_alg_values`: OPTIONAL. A JSON array containing fully-specified identifiers of cryptographic algorithms (as defined in [@!I-D.ietf-jose-fully-specified-algorithms]) supported for an Issuer-signed JWT of an SD-JWT.
-* `kb-jwt_alg_values`: OPTIONAL. A JSON array containing fully-specified identifiers of cryptographic algorithms (as defined in [@!I-D.ietf-jose-fully-specified-algorithms]) supported for a Key Binding JWT (KB-JWT).
+* `sd-jwt_alg_values`: OPTIONAL. A non-empty array containing fully-specified identifiers of cryptographic algorithms (as defined in [@!I-D.ietf-jose-fully-specified-algorithms]) supported for an Issuer-signed JWT of an SD-JWT.
+* `kb-jwt_alg_values`: OPTIONAL. A non-empty array containing fully-specified identifiers of cryptographic algorithms (as defined in [@!I-D.ietf-jose-fully-specified-algorithms]) supported for a Key Binding JWT (KB-JWT).
 
 The following is a non-normative example of `client_metadata` request parameter value in a request to present an IETF SD-JWT VC.
 
@@ -2860,7 +2860,7 @@ The following is a non-normative example of `client_metadata` request parameter 
 The following is an SD-JWT VC specific parameter in the `meta` parameter in a Credential Query as defined in (#credential_query).
 
 `vct_values`:
-: REQUIRED. An array of strings that specifies allowed values for
+: REQUIRED. A non-empty array of strings that specifies allowed values for
 the type of the requested Verifiable Credential. All elements in the array MUST
 be valid type identifiers as defined in [@!I-D.ietf-oauth-sd-jwt-vc]. The Wallet
 MAY return credentials that inherit from any of the specified types, following
@@ -3158,7 +3158,7 @@ established by [@!RFC7591].
 ### encrypted_response_enc_values_supported
 
 * Client Metadata Name: `encrypted_response_enc_values_supported`
-* Client Metadata Description: Array of strings, where each string is a JWE [@!RFC7516] `enc` algorithm that can be used as the content encryption algorithm for encrypting the Response
+* Client Metadata Description: Non-empty array of strings, where each string is a JWE [@!RFC7516] `enc` algorithm that can be used as the content encryption algorithm for encrypting the Response
 * Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#new_parameters) of this specification
 
@@ -3266,7 +3266,7 @@ The technology described in this specification was made available from contribut
 
    -29
 
-   * TBC
+   * explicitly state that various arrays need to be non-empty
 
    -28
 
