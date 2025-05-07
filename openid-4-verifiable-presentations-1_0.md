@@ -735,10 +735,10 @@ be present more than once.
 `multiple`:
 : OPTIONAL. A boolean which indicates whether multiple Credentials can be returned for this Credential Query. If omitted, the default value is `false`.
 
-`meta`: 
-: OPTIONAL. An object defining additional properties requested by the Verifier that
+`meta`:
+: REQUIRED. An object defining additional properties requested by the Verifier that
 apply to the metadata and validity data of the Credential. The properties of
-this object are defined per Credential Format. Examples of those are in (#sd_jwt_vc_meta_parameter) and (#mdocs_meta_parameter). If omitted,
+this object are defined per Credential Format. Examples of those are in (#sd_jwt_vc_meta_parameter) and (#mdocs_meta_parameter). If empty,
 no specific constraints are placed on the metadata or validity of the requested
 Credential.
 
@@ -3253,7 +3253,7 @@ The technology described in this specification was made available from contribut
 
    -29
 
-   * TBC
+   * make the `meta` parameter mandatory in DCQL query
 
    -28
 
