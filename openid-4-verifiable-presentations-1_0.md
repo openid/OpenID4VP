@@ -1303,7 +1303,99 @@ The JWE `enc` content encryption algorithm used is obtained from the `encrypted_
 
 The payload of the encrypted JWT response MUST include the contents of the response as defined in (#response-parameters) as top-level JSON members.
 
-The following is a non-normative example of the payload of a JWT used in an encrypted Authorization Response:
+The following shows a non-normative example of the content of a request that is asking for an encrypted response while providing
+a few public keys for encryption in the `jwks` member of the `client_metadata` request parameter:
+
+```json
+{
+ "response_type": "vp_token",
+ "response_mode": "dc_api.jwt",
+ "nonce": "xyz123ltcaccescbwc777",
+ "dcql_query": {
+  "credentials": [
+   {
+    "id": "my_credential",
+    "format": "dc+sd-jwt",
+    "meta": {
+      "vct_values": ["https://credentials.example.com/identity_credential"]
+    },
+    "claims": [
+      {"path": ["last_name"]},
+      {"path": ["first_name"]},
+      {"path": ["address", "postal_code"]}
+     ]
+    }
+   ]
+ },
+ "client_metadata": {
+   "jwks": {
+    "keys": [
+    {
+     "kty":"EC", "kid":"ac", "use":"enc", "crv":"P-256","alg":"ECDH-ES",
+     "x":"YO4epjifD-KWeq1sL2tNmm36BhXnkJ0He-WqMYrp9Fk",
+     "y":"Hekpm0zfK7C-YccH5iBjcIXgf6YdUvNUac_0At55Okk"
+    },
+    {
+     "kty":"OKP","kid":"jc","use":"enc","crv":"X25519","alg":"ECDH-ES",
+     "x":"WPX7wnwq10hFNK9aDSyG1QlLswE_CJY14LdhcFUIVVc"
+    },
+    {
+     "kty":"EC","kid":"lc","use":"enc","crv":"P-384","alg":"ECDH-ES",
+     "x":"iHytgLNtXjEyYMAIGwfgjINZRmLfObYbmjPhkaPD8OiTkJtRHjegTNdH31Mxg4nV",
+     "y":"MizXWSqNB7sSt_SNjg3spvaJnmjB-LpxsPpLUaea33rvINL3Mq-gEaANErRQpbLx"
+    },
+    {
+     "kty":"OKP","kid":"bc","use":"enc","crv":"X448","alg":"ECDH-ES",
+     "x":"pK5IRpLlX-8XcsRYWHejpzkfsHoDOmAYuBzAC7aTpewWOw_QFHSa64t9p2kuommI8JQQLohS2AIA"
+    }
+   ]
+  },
+  "encrypted_response_enc_values_supported": ["A128GCM", "A128CBC-HS256"]
+ }
+}
+```
+
+A non-normative example response to the above request, having been encrypted to the first key, might look like the following
+(with added line breaks for display purposes only):
+
+```
+{
+ "response" : "eyJhbGciOiJFQ0RILUVTIiwiZW5jIjoiQTEyOEdDTSIsImtpZCI6ImFjIiwiZXBrIjp7Imt
+    0eSI6IkVDIiwieCI6Im5ubVZwbTNWM2piaGNhZlFhUkJrU1ZOSGx3Wkh3dC05ck9wSnVmeVlJdWsiLCJ5I
+    joicjRmakRxd0p5czlxVU9QLV9iM21SNVNaRy0tQ3dPMm1pYzVWU05UWU45ZyIsImNydiI6IlAtMjU2In1
+    9..uAYcHRUSSn2X0WPX.yVzlGSYG4qbg0bq18JcUiDRw56yVnbKR8E7S7YlEtzT00RqE3Pw5oTpUG3hdLN
+    4taHZ9gC1kwak8JOnJgQ.1wR024_3-qtAlx1oFIUpQQ"
+}
+```
+
+For illustrative purposes, the following JWK includes the private key `d` parameter value and can be used to decrypt the above encrypted Authorization Response example.
+
+```json
+{
+  "kty":"EC", "kid":"ac", "use":"enc", "crv":"P-256","alg":"ECDH-ES",
+  "x":"YO4epjifD-KWeq1sL2tNmm36BhXnkJ0He-WqMYrp9Fk",
+  "y":"Hekpm0zfK7C-YccH5iBjcIXgf6YdUvNUac_0At55Okk",
+  "d":"Et-3ce0omz8_TuZ96Df9lp0GAaaDoUnDe6X-CRO7Aww"
+}
+```
+
+The following shows the decoded header of the above encrypted Authorization Response example:
+
+```json
+{
+  "alg": "ECDH-ES",
+  "enc": "A128GCM",
+  "kid": "ac",
+  "epk": {
+    "kty": "EC",
+    "x": "nnmVpm3V3jbhcafQaRBkSVNHlwZHwt-9rOpJufyYIuk",
+    "y": "r4fjDqwJys9qUOP-_b3mR5SZG--CwO2mic5VSNTYN9g",
+    "crv": "P-256"
+  }
+}
+```
+
+While this shows the payload of the above encrypted Authorization Response example:
 
 ```json
 {
