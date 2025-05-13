@@ -2047,7 +2047,7 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
 
 <reference anchor="ISO.23220-2" target="https://www.iso.org/standard/86782.html">
         <front>
-          <title>ISO/IEC DTS 23220-2 Personal identification — Building blocks for identity management via mobile devices, Part 2: Data objects and encoding rules for generic eID systems</title>
+          <title>ISO/IEC TS 23220-2 Personal identification — Building blocks for identity management via mobile devices, Part 2: Data objects and encoding rules for generic eID systems</title>
           <author>
             <organization> ISO/IEC JTC 1/SC 17 Cards and security devices for personal identification</organization>
           </author>
