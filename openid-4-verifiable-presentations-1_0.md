@@ -2321,7 +2321,7 @@ And lastly, as part of the request, the Wallet is provided with information abou
 
 To use OpenID4VP with the Digital Credentials API (DC API), the exchange protocol value has the following format: `openid4vp-v<version>-<request-type>`. The `<version>` field is a numeric value, and `<request-type>` explicitly specifies the type of request. This approach eliminates the need for Wallets to perform implicit parameter matching to accurately identify the version and the expected request and response parameters.
 
-The value `1` MUST be used for the `<version>` field to indicate the request and response are compatible with this version of the specification. For `<request-type>`, unsigned requests, as defined in (#unsigned_request), MUST use `unsigned`, and signed requests, as defined in (#signed_request), MUST use `signed`.
+The value `1` MUST be used for the `<version>` field to indicate the request and response are compatible with this version of the specification. For `<request-type>`, unsigned requests, as defined in (#unsigned_request), MUST use `unsigned`, signed requests, as defined in (#single_signed_request), MUST use `signed`, and multi-signed requests, as defined in (#multi_signed_request), MUST use `multisigned`.
 
 The following exchange protocol values are defined by this specification:
 
@@ -2392,7 +2392,7 @@ The signed Request Object MAY contain all the parameters listed in (#dc_api_requ
 
 Verifiers SHOULD format signed Requests using JWS Compact Serialization but MAY use JWS JSON Serialization [@!RFC7515]) to cater for use cases described below. 
 
-#### JWS Compact Serialization
+#### JWS Compact Serialization {#single_signed_request}
 
 When the JWS Compact Serialization is used to send the request, the Verifier can convey only one Trust Framework, i.e., the Verifier should know which trust frameworks the wallet supports. All request parameters are encoded in a request object as defined in (#vp_token_request) and the JWS object is used as the value of the `request` claim in the `data` element of the API call. 
 
@@ -2406,7 +2406,7 @@ This is an example of the payload of a signed OpenID4VP request used with the W3
 
 <{{examples/digital_credentials_api/signed_request_payload_compact.json}} 
 
-#### JWS JSON Serialization
+#### JWS JSON Serialization {#multi_signed_request}
 
 The JWS JSON Serialization [@!RFC7515]) allows the Verifier to use multiple Client Identifiers and corresponding key material to protect the same request. This serves use cases where the Verifier requests Credentials belonging to different trust frameworks and, therefore, needs to authenticate in the context of those trust frameworks. It also allows the Verifier to add different attestations for each Client Identifier.
 
