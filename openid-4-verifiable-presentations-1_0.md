@@ -1634,7 +1634,8 @@ The following is a non-normative example of a set of static configuration values
       "kb-jwt_alg_values": [
         "ES256"
       ]
-    }
+    },
+    "mso_mdoc": {}
   },
   "request_object_signing_alg_values_supported": [
     "ES256"
