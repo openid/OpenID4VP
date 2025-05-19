@@ -531,7 +531,7 @@ The Client Identifier Prefix is a string that MAY be communicated by the Verifie
 
 ### Syntax
 
-In the `client_id` Authorization Request parameter and other places where the Client Identifier is used, the Client Identifiers are prefixed to the usual Client Identifier, separated by a `:` (colon) character:
+In the `client_id` Authorization Request parameter and other places where the Client Identifier is used, the Client Identifier Prefixes are prefixed to the usual Client Identifier, separated by a `:` (colon) character:
 
 ```
 <client_id_prefix>:<orig_client_id>
