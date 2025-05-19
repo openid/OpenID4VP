@@ -2733,6 +2733,41 @@ The VP Token contains the base64url-encoded `DeviceResponse` CBOR structure as d
 
 ### `Handover` and `SessionTranscript` Definitions
 
+#### Invocation via Redirects and HTTP POST
+
+If the presentation request is invoked using the Digital Credentials API, the `SessionTranscript` CBOR structure as defined in Section 9.1.5.1 in [@ISO.18013-5] MUST be used with the following changes:
+
+* `DeviceEngagementBytes` MUST be `null`.
+* `EReaderKeyBytes` MUST be `null`.
+* `Handover` MUST be the `OpenID4VPHandover` CBOR structure as defined below.
+
+OpenID4VPHandover = [
+  "OpenID4VPHandover", ; A fixed identifier for this handover type
+  OpenID4VPHandoverInfoHash ; A cryptographic hash of OpenID4VPHandoverInfo
+]
+
+; Contains the sha-256 hash of OpenID4VPHandoverInfoBytes
+OpenID4VPHandoverInfoHash = bstr
+
+; Contains the bytes of OpenID4VPHandoverInfo encoded as CBOR
+OpenID4VPHandoverInfoBytes = bstr .cbor OpenID4VPHandoverInfo
+
+OpenID4VPHandoverInfo = [
+  clientId,
+  nonce,
+  responseUri,
+  jwk_thumbprint
+] ; Array containing handover parameters
+
+clientId = tstr
+
+nonce = tstr
+
+responseUri = tstr
+
+jwk_thumbprint = bstr
+```
+
 #### Invocation via the Digital Credentials API
 
 If the presentation request is invoked using the Digital Credentials API, the `SessionTranscript` CBOR structure as defined in Section 9.1.5.1 in [@ISO.18013-5] MUST be used with the following changes:
