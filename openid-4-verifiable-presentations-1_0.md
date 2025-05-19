@@ -2733,14 +2733,15 @@ The VP Token contains the base64url-encoded `DeviceResponse` CBOR structure as d
 
 ### `Handover` and `SessionTranscript` Definitions
 
-#### Invocation via Redirects and HTTP POST
+#### Invocation via Redirects
 
-If the presentation request is invoked using the Digital Credentials API, the `SessionTranscript` CBOR structure as defined in Section 9.1.5.1 in [@ISO.18013-5] MUST be used with the following changes:
+If the presentation request is invoked using redirects, the `SessionTranscript` CBOR structure as defined in Section 9.1.5.1 in [@ISO.18013-5] MUST be used with the following changes:
 
 * `DeviceEngagementBytes` MUST be `null`.
 * `EReaderKeyBytes` MUST be `null`.
 * `Handover` MUST be the `OpenID4VPHandover` CBOR structure as defined below.
 
+```cddl
 OpenID4VPHandover = [
   "OpenID4VPHandover", ; A fixed identifier for this handover type
   OpenID4VPHandoverInfoHash ; A cryptographic hash of OpenID4VPHandoverInfo
@@ -2755,20 +2756,112 @@ OpenID4VPHandoverInfoBytes = bstr .cbor OpenID4VPHandoverInfo
 OpenID4VPHandoverInfo = [
   clientId,
   nonce,
-  responseUri,
-  jwk_thumbprint
+  jwk_thumbprint,
+  responseUri  
 ] ; Array containing handover parameters
 
 clientId = tstr
 
 nonce = tstr
 
-responseUri = tstr
-
 jwk_thumbprint = bstr
+
+responseUri = tstr
 ```
 
-#### Invocation via the Digital Credentials API
+The `OpenID4VPHandover` structure has the following elements:
+
+* The first element MUST be the string `OpenID4VPHandover`. This serves as a unique identifier for the handover structure to prevent misinterpretation or confusion.
+* The second element MUST be a Byte String which contains the sha-256 hash of the bytes of `OpenID4VPHandoverInfo` when encoded as CBOR.
+* The `OpenID4VPHandoverInfo` has the following elements:
+  * The first element MUST be the `client_id` request parameter. If the request is signed, the `client_id` MUST be obtained from the signed Request Object.
+  * The second element MUST be the value of the `nonce` request parameter.
+  * If the response is encrypted, e.g., using `direct_post.jwt`, the third element MUST be the JWK SHA-256 Thumbprint as defined in [@!RFC7638], encoded as a Byte String, of the Verifier's public key used to encrypt the response. Otherwise, the third element MUST be `null`. See (#session_transcript_dc_api) for an explanation of why this is important.
+  * The fourth element MUST be either the `redirect_uri` or `response_uri` request parameter, depending on which is present, as determined by the Response Mode.
+
+The following is a non-normative example of the input JWK for calculating the JWK Thumbprint in the context of `OpenID4VPHandoverInfo`:
+```json
+{
+  "kty": "EC",
+  "crv": "P-256",
+  "x": "DxiH5Q4Yx3UrukE2lWCErq8N8bqC9CHLLrAwLz5BmE0",
+  "y": "XtLM4-3h5o3HUH0MHVJV0kyq0iBlrBwlh8qEDMZ4-Pc",
+  "use": "enc",
+  "alg": "ECDH-ES",
+  "kid": "1"
+}
+```
+
+The following is a non-normative example of the `OpenID4VPHandoverInfo` structure:
+```
+Hex:
+
+847818783530395f73616e5f646e733a6578616d706c652e636f6d782b6578633767
+426b786a7831726463397564527276654b7653734a4971383061766c58654c486847
+7771744158204283ec927ae0f208daaa2d026a814f2b22dca52cf85ffa8f3f8626c6
+bd669047781c68747470733a2f2f6578616d706c652e636f6d2f726573706f6e7365
+
+CBOR diagnostic:
+
+84                                 # array(4)
+  78 18                            #   string(24)
+    783530395f73616e5f646e733a6578 #     "x509_san_dns:ex"
+    616d706c652e636f6d             #     "ample.com"
+  78 2b                            #   string(43)
+    6578633767426b786a783172646339 #     "exc7gBkxjx1rdc9"
+    7564527276654b7653734a49713830 #     "udRrveKvSsJIq80"
+    61766c58654c48684777717441     #     "avlXeLHhGwqtA"
+  58 20                            #   bytes(32)
+    4283ec927ae0f208daaa2d026a814f #     "B\x83ì\x92zàò\x08Úª-\x02j\x81O"
+    2b22dca52cf85ffa8f3f8626c6bd66 #     "+"Ü¥,ø_ú\x8f?\x86&Æ½f"
+    9047                           #     "\x90G"
+  78 1c                            #   string(28)
+    68747470733a2f2f6578616d706c65 #     "https://example"
+    2e636f6d2f726573706f6e7365     #     ".com/response"
+```
+
+The following is a non-normative example of the `OpenID4VPHandover` structure:
+```
+Hex:
+
+82714f70656e494434565048616e646f7665725820048bc053c00442af9b8eed494c
+efdd9d95240d254b046b11b68013722aad38ac
+
+CBOR diagnostic:
+
+82                                 # array(2)
+  71                               #   string(17)
+    4f70656e494434565048616e646f76 #     "OpenID4VPHandov"
+    6572                           #     "er"
+  58 20                            #   bytes(32)
+    048bc053c00442af9b8eed494cefdd #     "\x04\x8bÀSÀ\x04B¯\x9b\x8eíILïÝ"
+    9d95240d254b046b11b68013722aad #     "\x9d\x95$\x0d%K\x04k\x11¶\x80\x13r*­"
+    38ac                           #     "8¬"
+```
+
+The following is a non-normative example of the `SessionTranscript` structure:
+```
+Hex:
+
+83f6f682714f70656e494434565048616e646f7665725820048bc053c00442af9b8e
+ed494cefdd9d95240d254b046b11b68013722aad38ac
+
+CBOR diagnostic:
+
+83                                 # array(3)
+  f6                               #   null
+  f6                               #   null
+  82                               #   array(2)
+    71                             #     string(17)
+      4f70656e494434565048616e646f #       "OpenID4VPHando"
+      766572                       #       "ver"
+    58 20                          #     bytes(32)
+      048bc053c00442af9b8eed494cef #       "\x04\x8bÀSÀ\x04B¯\x9b\x8eíILï"
+      dd9d95240d254b046b11b6801372 #       "Ý\x9d\x95$\x0d%K\x04k\x11¶\x80\x13r"
+      2aad38ac                     #       "*­8¬"
+```
+
+#### Invocation via the Digital Credentials API {#session_transcript_dc_api}
 
 If the presentation request is invoked using the Digital Credentials API, the `SessionTranscript` CBOR structure as defined in Section 9.1.5.1 in [@ISO.18013-5] MUST be used with the following changes:
 
