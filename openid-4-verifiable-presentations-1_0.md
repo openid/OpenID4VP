@@ -2756,7 +2756,7 @@ OpenID4VPHandoverInfoBytes = bstr .cbor OpenID4VPHandoverInfo
 OpenID4VPHandoverInfo = [
   clientId,
   nonce,
-  jwk_thumbprint,
+  jwkThumbprint,
   responseUri  
 ] ; Array containing handover parameters
 
@@ -2764,7 +2764,7 @@ clientId = tstr
 
 nonce = tstr
 
-jwk_thumbprint = bstr
+jwkThumbprint = bstr
 
 responseUri = tstr
 ```
@@ -2886,14 +2886,14 @@ OpenID4VPDCAPIHandoverInfoBytes = bstr .cbor OpenID4VPDCAPIHandoverInfo
 OpenID4VPDCAPIHandoverInfo = [
   origin,
   nonce,
-  jwk_thumbprint
+  jwkThumbprint
 ] ; Array containing handover parameters
 
 origin = tstr
 
 nonce = tstr
 
-jwk_thumbprint = bstr
+jwkThumbprint = bstr
 ```
 
 The `OpenID4VPDCAPIHandover` structure has the following elements:
