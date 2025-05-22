@@ -1961,15 +1961,6 @@ Wallets should
 
 ** NOTE **: Implementers should also refer to the Security Considerations section of this document. 
 
-## Privacy Compliance {#privacy_compliance}
-
-Wallet providers and verifiers should:
-
-*   Conduct periodic audits to verify and demonstrate that their processing meets privacy safeguarding requirements;
-*   Implement appropriate internal controls and independent supervision mechanisms to ensure compliance with relevant privacy laws and their security, data protection, and privacy policies; and 
-*   Develop and maintain privacy risk assessments to evaluate whether programs and services involving personal identifiable information comply with data protection and privacy requirements. 
-
-
 {backmatter}
 
 <reference anchor="VC_DATA" target="https://www.w3.org/TR/2022/REC-vc-data-model-20220303/">
