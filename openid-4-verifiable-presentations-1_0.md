@@ -1302,7 +1302,7 @@ The JWE `alg` algorithm used MUST be equal to the `alg` value of the chosen `jwk
 If the selected public key contains a `kid` parameter, the JWE MUST include the same value in the `kid` JWE Header Parameter (as defined in [@!RFC7516, Section 4.1.6]) of the encrypted response. This enables the Verifier to easily identify the specific public key that was used to encrypt the response.
 The JWE `enc` content encryption algorithm used is obtained from the `encrypted_response_enc_values_supported` parameter of client metadata, such as the `client_metadata` request parameter, allowing for the default value of `A128GCM` when not explicitly set.
 
-When the `encryption_details_supported parameter` `client_metadata` parameter is used in the request (see #new_parameters) and requires the Wallet to include a referenced profile in the response, the selected profile can be included in the JWE protected header using the `encryption_details` parameter. When present, the `encryption_details` parameter MUST contain a string of the selected profile.
+When the `encryption_details_supported` parameter is present in the `client_metadata` parameter of the request (see #new_parameters) and requires the Wallet to include a referenced profile in the response, the selected profile MAY be included in the JWE protected header using the `encryption_details` header. When present, the `encryption_details` header MUST contain a string of the selected profile.
 
 The payload of the encrypted JWT response MUST include the contents of the response as defined in (#response-parameters) as top-level JSON members.
 
