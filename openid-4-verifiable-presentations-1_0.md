@@ -1954,17 +1954,6 @@ Wallets should
 *   provide access to the user of the list of verifiers that presentations were made, including date, purposes and claims/credentials;  and 
 *   enable the user to revoke the use or deletion of data stored at the verifier. 
 
-## Accountability {#accountability}
-
-Both wallet providers and verifiers should
-
-*   document and communicate as appropriate all privacy-related policies, procedures and practices, including what options in the protocols are used. 
-
-Verifier should 
-
-*   sign the request so that it will not be able to repudiate the request; and 
-*   be able to demonstrate compliance with the policies by producing evidence.
-
 ## Information Security {#information_security}
 
 *   Wallet providers and verifiers should choose the options in the protocols described in this document so that the data in transit is integrity, confidentiality and availability protected. 
