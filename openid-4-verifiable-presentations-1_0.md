@@ -1930,14 +1930,6 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
     
 *   **Prevention of Profiling and Tracking:** The wallet's design incorporates data minimization principles, ensuring that only essential information is shared during interactions. This limits opportunities for profiling or linking user activities across different services
 
-### Verifier's Use, Retention and Disclosure Limitation {#verifiers_use_retntion_and_disclosure_limitation}
-
-Verifier should
-
-*  limit the use, retention and disclosure of PII to that which is necessary in order to fulfil specific, explicit and legitimate purposes communicated to the user; 
-*  retain PII only as long as necessary to fulfil the stated purpose or as long as it is valid; and 
-*  lock any PII when and for as long as the stated purposes have expired, but where applicable laws require retention. 
-    
 ## Accuracy and Quality {#accuracy_and_quality}
 
 * Verifiers ensure that the PII processed is accurate, complete, up-to-date (unless there is a legitimate basis for keeping outdated data), adequate and relevant for the purpose of use. This could be achieved by only accepting credentials from trusted issuers and checking the issuance and expiry date.
