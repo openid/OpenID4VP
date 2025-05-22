@@ -2127,16 +2127,6 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
         </front>
 </reference>
 
-<reference anchor="ISO.29100" target="https://www.iso.org/standard/85938.html">
-        <front>
-          <title>ISO/IEC 29100:2024 Information technology — Security techniques — Privacy framework</title>
-          <author>
-            <organization> ISO/IEC JTC 1/SC 27 Information security, cybersecurity and privacy protection</organization>
-          </author>
-          <date year="2024"/>
-        </front>
-</reference>
-
 <reference anchor="ETSI.TL" target="https://www.etsi.org/deliver/etsi_ts/119600_119699/119612/02.01.01_60/ts_119612v020101p.pdf">
         <front>
           <title>ETSI TS 119 612 V2.1.1 Electronic Signatures and Infrastructures (ESI); Trusted Lists </title>
