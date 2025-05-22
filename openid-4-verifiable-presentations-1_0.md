@@ -1788,15 +1788,13 @@ https://openid.net/certification/conformance-testing-for-openid-for-verifiable-p
 
 # Privacy Considerations {#privacy_consideratins}
 
-The OpenID for Verifiable Presentations protocol introduces new data flows and metadata exchanges which require careful attention to privacy.
-This section outlines key privacy considerations implementers, Wallet providers, and Verifiers must account for to mitigate the risks of data
-leakage, user tracking, and other privacy harms that are relevant to the protocol so that implementers can take this as input to produce privacy risk analysis.
-
 Many privacy considerations are specific to the credential format and associated proof type used in any particular presentation.
 This section mainly focuses on privacy considerations that are specific to the presentation protocol with some treatment also
 given to considerations that apply across some common credential formats and the treatments at wallets and verifiers. 
 
-What follows is organized in accordance with ISO/IEC 29100 [@ISO.29100] Privacy Principles. 
+Wallet providers and Verifiers need to take into account privacy considerations in this section to mitigate the risks of
+data leakage, user tracking, and other privacy harms and as an input to produce privacy risk analysis.
+
 
 ## Always Use the Full Client Identifier
 
