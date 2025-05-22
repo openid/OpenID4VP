@@ -1925,7 +1925,6 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
 
 ### Unobservability by Wallets {#unobservability_by_wallets}
 
-*   **No Data Collection or Monitoring**: Wallet providers are prohibited from collecting or monitoring data about how users interact with their wallets, digital IDs, or stored documents. This means providers cannot track user behavior or transactions. 
     
 *   **User-Only Visibility**: Only the user can view their transaction history and data within the wallet. Even issuers of digital documents (e.g., IDs or licenses) are not informed when these documents are used. 
     
