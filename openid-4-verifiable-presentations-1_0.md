@@ -1944,13 +1944,6 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
     *   the types of authorized natural persons who will access the PII and to whom the PII can be transferred; and
     *   the specified PII retention and disposal requirements.
         
-## Individual Participation and Access {#individual_paricipation_and_access}
-
-Wallets should
-
-*   provide access to the user of the list of verifiers that presentations were made, including date, purposes and claims/credentials;  and 
-*   enable the user to revoke the use or deletion of data stored at the verifier. 
-
 ## Information Security {#information_security}
 
 *   Wallet providers and verifiers should choose the options in the protocols described in this document so that the data in transit is integrity, confidentiality and availability protected. 
