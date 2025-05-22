@@ -1868,9 +1868,6 @@ Wallets SHOULD suppress claims from the response if their values do not match th
 
 Verifier SHOULD NOT attempt to fingerprint the wallets to track the user's visits.
 
-### No Data Collection or Monitoring {#no_data_collection_or_monitoring}
-
-Wallet providers are prohibited from collecting or monitoring data about how users interact with their wallets, digital IDs, or stored documents. This means providers cannot track user behavior or transactions
 
 ## Data Minimization {#data_minimization}
 
