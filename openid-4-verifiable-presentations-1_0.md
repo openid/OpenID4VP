@@ -2945,7 +2945,6 @@ Given a `transaction_data` array:
 [
   "eyJ0eXBlIjoicGF5bWVudCIsImNyZWRlbnRpYWxfaWRzIjpbIjEyMyJdLCJhbW91bnQiOjEwMC4wMH0"
 ]
-
 {
   "transaction_data_hashes": [
     "1RfsZ1oRryNj3uUHOsQe2sx3_YG04pM0rW93w4q2p8M"
