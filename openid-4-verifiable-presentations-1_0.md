@@ -2775,7 +2775,7 @@ The `OpenID4VPHandover` structure has the following elements:
 * The first element MUST be the string `OpenID4VPHandover`. This serves as a unique identifier for the handover structure to prevent misinterpretation or confusion.
 * The second element MUST be a Byte String which contains the sha-256 hash of the bytes of `OpenID4VPHandoverInfo` when encoded as CBOR.
 * The `OpenID4VPHandoverInfo` has the following elements:
-  * The first element MUST be the `client_id` request parameter. If the request is signed, the `client_id` MUST be obtained from the signed Request Object.
+  * The first element MUST be the Client Identifier. If applicable, this includes the Client Identifier Prefix. If the request is unsigned, the Client Identifier is taken from the `client_id` Authorization Request parameter. If the request is signed, the `client_id` MUST be obtained from the signed Request Object
   * The second element MUST be the value of the `nonce` request parameter.
   * If the response is encrypted, e.g., using `direct_post.jwt`, the third element MUST be the JWK SHA-256 Thumbprint as defined in [@!RFC7638], encoded as a Byte String, of the Verifier's public key used to encrypt the response. Otherwise, the third element MUST be `null`. See (#session_transcript_dc_api) for an explanation of why this is important.
   * The fourth element MUST be either the `redirect_uri` or `response_uri` request parameter, depending on which is present, as determined by the Response Mode.
