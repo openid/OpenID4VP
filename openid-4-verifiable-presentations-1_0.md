@@ -1201,6 +1201,8 @@ The Response Mode is defined in accordance with [@!OAuth.Responses] as follows:
 
 The following new Authorization Request parameter is defined to be used in conjunction with Response Mode `direct_post`: 
 
+If the Response Endpoint receives a request in the direct_post response mode that is structurally valid and complies with the submission requirements of the presentation definition, it MUST respond with an HTTP status code 200, indicating that the request was successfully processed in terms of protocol compliance. If the submitted credential is invalid (e.g., expired, revoked, or does not meet the verifier’s functional requirements), the Response Endpoint SHOULD respond with an HTTP status code 400 (Bad Request). The 400 response MUST include an `error` parameter with a value such as `invalid_credential` or `functional_requirements_not_met`, and MAY include a `redirect_uri` to allow the wallet to resubmit with different credentials. The `error_description` parameter MAY provide additional details to assist the wallet in correcting the submission.
+
 `response_uri`:
 : REQUIRED when the Response Mode `direct_post` is used. The URL to which the Wallet MUST send the Authorization Response using an HTTP POST request as defined by the Response Mode `direct_post`. The Response URI receives all Authorization Response parameters as defined by the respective Response Type. When the `response_uri` parameter is present, the `redirect_uri` Authorization Request parameter MUST NOT be present. If the `redirect_uri` Authorization Request parameter is present when the Response Mode is `direct_post`, the Wallet MUST return an `invalid_request` Authorization Response error. The `response_uri` value MUST be a value that the client would be permitted to use as `redirect_uri` when following the rules defined in (#client_metadata_management).
 
@@ -1257,6 +1259,7 @@ Content-Type: application/x-www-form-urlencoded
 ```
 
 If the Response URI has successfully processed the Authorization Response or Authorization Error Response, it MUST respond with an HTTP status code of 200 with `Content-Type` of `application/json` and a JSON object in the response body.
+
 
 The following new parameter is defined for use in the JSON object returned from the Response Endpoint to the Wallet:
 
