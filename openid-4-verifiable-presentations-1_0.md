@@ -1204,6 +1204,7 @@ The following new Authorization Request parameter is defined to be used in conju
 If the Response Endpoint receives a request in the direct_post response mode that is structurally valid and complies with the submission requirements of the presentation definition, it MUST respond with an HTTP status code 200, indicating that the request was successfully processed in terms of protocol compliance. If the submitted credential is invalid (e.g., expired, revoked, or does not meet the verifier’s functional requirements), the Response Endpoint SHOULD respond with an HTTP status code 400 (Bad Request). The 400 response MUST include an `error` parameter with a value such as `invalid_credential` or `functional_requirements_not_met`, and MAY include a `redirect_uri` to allow the wallet to resubmit with different credentials. The `error_description` parameter MAY provide additional details to assist the wallet in correcting the submission.
 
 `response_uri`:
+
 : REQUIRED when the Response Mode `direct_post` is used. The URL to which the Wallet MUST send the Authorization Response using an HTTP POST request as defined by the Response Mode `direct_post`. The Response URI receives all Authorization Response parameters as defined by the respective Response Type. When the `response_uri` parameter is present, the `redirect_uri` Authorization Request parameter MUST NOT be present. If the `redirect_uri` Authorization Request parameter is present when the Response Mode is `direct_post`, the Wallet MUST return an `invalid_request` Authorization Response error. The `response_uri` value MUST be a value that the client would be permitted to use as `redirect_uri` when following the rules defined in (#client_metadata_management).
 
 Note: When the specification text refers to the usage of Redirect URI in the Authorization Request, that part of the text also applies when Response URI is used in the Authorization Request with Response Mode `direct_post`.
@@ -1298,7 +1299,7 @@ This section defines how an Authorization Response containing a VP Token (such a
 To encrypt the Authorization Response, implementations MUST use an unsigned, encrypted JWT as described in [@!RFC7519].
 
 To obtain the Verifier's public key to which to encrypt the Authorization Response, the Wallet uses keys from client metadata, such as the `jwks` member within the `client_metadata` request parameter, the metadata defined in the Entity Configuration if OpenID Federation is used, or other mechanisms.
-Using what it supports and its preferences, the Wallet selects the public key to encrypt the Authorization Response based on information about each key, such as the `kty` (Key Type), `use` (Public Key Use), `alg` (Algorithm), and other JWK parameters. 
+Using what it supports and its ps, the Wallet selects the public key to encrypt the Authorization Response based on information about each key, such as the `kty` (Key Type), `use` (Public Key Use), `alg` (Algorithm), and other JWK parameters. 
 The `alg` parameter MUST be present in the JWKs.
 The JWE `alg` algorithm used MUST be equal to the `alg` value of the chosen `jwk`.
 If the selected public key contains a `kid` parameter, the JWE MUST include the same value in the `kid` JWE Header Parameter (as defined in [@!RFC7516, Section 4.1.6]) of the encrypted response. This enables the Verifier to easily identify the specific public key that was used to encrypt the response.
@@ -2925,6 +2926,31 @@ The following is one profile that can be included in a transaction data type spe
 * The Key Binding JWT in the response includes the following top level parameters:
   * `transaction_data_hashes`: A non-empty array of hashes, where each hash is calculated using a hash function over the data in the strings received in the `transaction_data` request parameter. Each hash value ensures the integrity of, and maps to, the respective transaction data object. If `transaction_data_hashes_alg` was specified in the request, the hash function MUST be one of its values. If `transaction_data_hashes_alg` was not specified in the request, the hash function MUST be `sha-256`.
   * `transaction_data_hashes_alg`: REQUIRED when this parameter was present in the `transaction_data` request parameter. String representing the hash algorithm identifier used to calculate hashes in `transaction_data_hashes` response parameter.
+
+  #### SD-JWT Profile
+
+The SD-JWT profile defines the following parameters for the KB-JWT:
+
+**nonce**: A unique value issued by the Verifier, as defined in [Section X].
+**aud**: The audience of the KB-JWT, typically the Verifier’s identifier.
+**iat**: The issuance time of the KB-JWT, as a UNIX timestamp.
+**sd_hash**: The hash of the SD-JWT payload, as defined in [SD-JWT].
+
+**transaction_data_hashes**: Array of base64url-encoded SHA-256 hashes, where each hash is calculated over the UTF-8 encoded JSON data obtained by base64url-decoding each string in the `transaction_data` request parameter. The Wallet must decode each base64url-encoded `transaction_data` element to its UTF-8 JSON representation before computing the SHA-256 hash. The resulting hash must be base64url-encoded without padding to form each element of the `transaction_data_hashes` array. Implementers must ensure that base64url decoding produces a valid UTF-8 string to avoid data transformation errors (e.g., by handling non-ASCII characters correctly and avoiding string truncation). This approach ensures interoperability across implementations by providing a non-ambiguous serialization of the JSON data for hashing.
+
+**Non-normative Example**:
+
+Given a `transaction_data` array:
+```json
+[
+  "eyJ0eXBlIjoicGF5bWVudCIsImNyZWRlbnRpYWxfaWRzIjpbIjEyMyJdLCJhbW91bnQiOjEwMC4wMH0"
+]
+
+{
+  "transaction_data_hashes": [
+    "1RfsZ1oRryNj3uUHOsQe2sx3_YG04pM0rW93w4q2p8M"
+  ]
+}
 
 ### Metadata
 
