@@ -1299,7 +1299,7 @@ This section defines how an Authorization Response containing a VP Token (such a
 To encrypt the Authorization Response, implementations MUST use an unsigned, encrypted JWT as described in [@!RFC7519].
 
 To obtain the Verifier's public key to which to encrypt the Authorization Response, the Wallet uses keys from client metadata, such as the `jwks` member within the `client_metadata` request parameter, the metadata defined in the Entity Configuration if OpenID Federation is used, or other mechanisms.
-Using what it supports and its ps, the Wallet selects the public key to encrypt the Authorization Response based on information about each key, such as the `kty` (Key Type), `use` (Public Key Use), `alg` (Algorithm), and other JWK parameters. 
+Using what it supports and its preferences, the Wallet selects the public key to encrypt the Authorization Response based on information about each key, such as the `kty` (Key Type), `use` (Public Key Use), `alg` (Algorithm), and other JWK parameters. 
 The `alg` parameter MUST be present in the JWKs.
 The JWE `alg` algorithm used MUST be equal to the `alg` value of the chosen `jwk`.
 If the selected public key contains a `kid` parameter, the JWE MUST include the same value in the `kid` JWE Header Parameter (as defined in [@!RFC7516, Section 4.1.6]) of the encrypted response. This enables the Verifier to easily identify the specific public key that was used to encrypt the response.
