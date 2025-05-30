@@ -2544,7 +2544,7 @@ The following is another non-normative example of a W3C Verifiable Credential th
     "https://www.w3.org/2018/credentials/v1",
     "https://www.w3.org/2018/credentials/examples/v1"
   ],
-  "type": ["VerifiableCredential", "AlumniCredential"]
+  "type": ["VerifiableCredential", "BachelorDegree", "AlumniCredential"]
 }
 ```
 
