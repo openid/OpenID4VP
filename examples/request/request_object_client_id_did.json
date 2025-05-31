@@ -6,23 +6,9 @@
   "dcql_query": { ... },
   "client_metadata": {
     "vp_formats_supported": {
-      "jwt_vp": {
-        "alg_values": [
-          "EdDSA",
-          "ES256K"
-        ]
-      },
-      "ldp_vp": {
-        "proof_type_values": [
-          "DataIntegrityProof",
-          "Ed25519Signature2020"
-        ],
-        "cryptosuite_values": [
-          "ecdsa-rdfc-2019",
-          "ecdsa-sd-2023",
-          "ecdsa-jcs-2019",
-          "bbs-2023"
-        ]
+      "dc+sd-jwt": {
+        "sd-jwt_alg_values": ["ES256", "ES384"],
+        "kb-jwt_alg_values": ["ES256", "ES384"]
       }
     }
   }
