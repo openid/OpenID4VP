@@ -1410,7 +1410,7 @@ Note: For encryption, implementers have a variety of options available through J
 
 ### Response Mode "direct_post.jwt" {#direct_post_jwt}
 
-This specification also defines a new Response Mode `direct_post.jwt`, which allows for encryption to be used with Response Mode `direct_post` defined in (#response_mode_post).
+This specification also defines a new Response Mode `direct_post.jwt`, which allows for encryption to be used on top of the Response Mode `direct_post` defined in (#response_mode_post). The mechanisms described in (#response_mode_post) apply unless specified otherwise in this section."
 
 The Response Mode `direct_post.jwt` causes the Wallet to send the Authorization Response using an HTTP POST request instead of redirecting back to the Verifier as defined in (#response_mode_post). The Wallet adds the `response` parameter containing the JWT as defined in (#response_encryption) in the body of an HTTP POST request using the `application/x-www-form-urlencoded` content type. The names and values in the body MUST be encoded using UTF-8.
 
