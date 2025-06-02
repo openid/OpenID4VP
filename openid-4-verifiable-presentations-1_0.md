@@ -1740,9 +1740,10 @@ Note: If the Verifier's Response URI did not return a `redirect_uri` in step (6)
 
 Implementers should be aware that this specification uses several specifications that are not yet final specifications. Those specifications are:
 
-- OpenID Federation 1.0 draft -42 [@!OpenID.Federation]
-- SIOPv2 draft -13 [@!SIOPv2]
-- SD-JWT-based Verifiable Credentials (SD-JWT VC) draft -08 [@!I-D.ietf-oauth-sd-jwt-vc]
+* OpenID Federation 1.0 draft -42 [@!OpenID.Federation]
+* SIOPv2 draft -13 [@!SIOPv2]
+* SD-JWT-based Verifiable Credentials (SD-JWT VC) draft -09 [@!I-D.ietf-oauth-sd-jwt-vc]
+* Fully-Specified Algorithms for JOSE and COSE draft -13 [@!I-D.ietf-jose-fully-specified-algorithms]
 
 While breaking changes to the specifications referenced in this specification are not expected, should they occur, OpenID4VP implementations should continue to use the specifically referenced versions above in preference to the final versions, unless updated by a profile or new version of this specification.
 
