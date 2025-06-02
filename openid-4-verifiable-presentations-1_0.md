@@ -3346,6 +3346,7 @@ The technology described in this specification was made available from contribut
 
    -29
 
+   * update pre-final specs section
    * make the `meta` parameter mandatory in DCQL query
    * explicitly state that various arrays need to be non-empty
 
