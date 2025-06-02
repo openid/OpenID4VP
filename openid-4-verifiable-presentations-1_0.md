@@ -1452,7 +1452,7 @@ The error response follows the rules as defined in [@!RFC6749], with the followi
 `invalid_request`:
 
 - The request contains both a `dcql_query` parameter and a `scope` parameter referencing a DCQL query.
-- The request uses the `vp_token` Response Type but does not request a Credential using any of the three options
+- The request uses the `vp_token` Response Type but does not include a `dcql_query` parameter nor a `scope` parameter referencing a DCQL query.
 - The Wallet does not support the Client Identifier Prefix passed in the Authorization Request.
 - The Client Identifier passed in the request did not belong to its Client Identifier Prefix, or requirements of a certain prefix was violated, for example an unsigned request was sent with Client Identifier Prefix `https`.
 
