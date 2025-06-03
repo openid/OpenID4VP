@@ -1858,10 +1858,6 @@ Note that the nature of the issuer of the credential may leak unnecessary inform
 
 * Verifiers SHOULD design queries that request only the minimal set of claims and credentials needed to fulfill the specified purposes. DCQL helps facilitate this. 
 
-### Claim Value Filtering {#claim_value_filtering}
-
-Wallets SHOULD suppress claims from the response if their values do not match the requested values filter, unless user consent overrides this.
-
 ### No Fingerprinting {#no_fingerprinting}
 
 Verifier SHOULD NOT attempt to fingerprint the wallets to track the user's visits.
