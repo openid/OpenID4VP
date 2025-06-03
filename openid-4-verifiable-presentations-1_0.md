@@ -1742,6 +1742,7 @@ Implementers should be aware that this specification uses several specifications
 
 * OpenID Federation 1.0 draft -42 [@!OpenID.Federation]
 * SIOPv2 draft -13 [@!SIOPv2]
+* Selective Disclosure for JWTs (SD-JWT) draft -22 [@!I-D.ietf-oauth-selective-disclosure-jwt]
 * SD-JWT-based Verifiable Credentials (SD-JWT VC) draft -09 [@!I-D.ietf-oauth-sd-jwt-vc]
 * Fully-Specified Algorithms for JOSE and COSE draft -13 [@!I-D.ietf-jose-fully-specified-algorithms]
 
