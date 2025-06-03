@@ -1917,7 +1917,7 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
 ### Unobservability by Wallets {#unobservability_by_wallets}
 
     
-*   **User-Only Visibility**: Only the user can view their transaction history and data within the wallet. Even issuers of digital documents (e.g., IDs or licenses) are not informed when these documents are used. 
+*   **User-Only Visibility**: Transaction history and data within the wallet should not be accessible to anyone other than the user, unless the user has given consent or there is another legal basis to do so.
     
 *   **Prevention of Profiling and Tracking:** The wallet's design incorporates data minimization principles, ensuring that only essential information is shared during interactions. This limits opportunities for profiling or linking user activities across different services
 
