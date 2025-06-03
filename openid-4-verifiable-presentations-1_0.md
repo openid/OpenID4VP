@@ -1926,14 +1926,7 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
     
 ## Openness, Transparency and Notice {#openness_transparency_and_notice}
 
-*   Wallet should keep track of the verifiers’ privacy notices and make them readily available to the user.   
 *   Wallet should make its privacy notices readily available to the user. 
-*   A privacy notice should at least include:  
-    *   the specified PII required for the specified purpose;
-    *   the specified purpose for PII collection;
-    *   the specified processing (including collection, communication and storage mechanisms);
-    *   the types of authorized natural persons who will access the PII and to whom the PII can be transferred; and
-    *   the specified PII retention and disposal requirements.
         
 ## Information Security {#information_security}
 
