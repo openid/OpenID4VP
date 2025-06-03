@@ -618,7 +618,7 @@ The following parameters are defined to be included in the request to the Reques
 `wallet_nonce`:
 : OPTIONAL. A String value used to mitigate replay attacks of the Authorization Request. When received, the Verifier MUST use it as the `wallet_nonce` value in the signed authorization request object. Value can be a base64url-encoded, fresh, cryptographically random number with sufficient entropy.  
 
-If the Wallet requires the Verifier to encrypt the Request Object, it SHOULD use the `jwks` or `jwks_uri` parameter within the `wallet_metadata` parameter to pass the public key for the input to the key agreement. Other mechanisms to pass the encryption key can be used as well. If the Wallet requires an encrypted Authorization Response, it SHOULD specify supported encryption algorithms using the `authorization_encryption_alg_values_supported` and `authorization_encryption_enc_values_supported` parameters. 
+If the Wallet requires the Verifier to encrypt the Request Object, it SHOULD use the `jwks` parameter within the `wallet_metadata` parameter to pass public encryption keys. If the Wallet requires an encrypted Authorization Response, it SHOULD specify supported encryption algorithms using the `authorization_encryption_alg_values_supported` and `authorization_encryption_enc_values_supported` parameters.
 
 Additionally, if the Client Identifier Prefix permits signed Request Objects, the Wallet SHOULD list supported cryptographic algorithms for securing the Request Object through the `request_object_signing_alg_values_supported` parameter. Conversely, the Wallet MUST NOT include this parameter if the Client Identifier Prefix precludes signed Request Objects.
 
@@ -1294,7 +1294,7 @@ This section defines how an Authorization Response containing a VP Token (such a
 
 To encrypt the Authorization Response, implementations MUST use an unsigned, encrypted JWT as described in [@!RFC7519].
 
-To obtain the Verifier's public key to which to encrypt the Authorization Response, the Wallet uses keys from client metadata, such as the `jwks` member within the `client_metadata` request parameter, the metadata defined in the Entity Configuration if OpenID Federation is used, or other mechanisms.
+To obtain the Verifier's public key to which to encrypt the Authorization Response, the Wallet uses JWKs from client metadata (such as the `jwks` member within the `client_metadata` request parameter or other mechanisms as allowed by the given Client Identifier Prefix).
 Using what it supports and its preferences, the Wallet selects the public key to encrypt the Authorization Response based on information about each key, such as the `kty` (Key Type), `use` (Public Key Use), `alg` (Algorithm), and other JWK parameters. 
 The `alg` parameter MUST be present in the JWKs.
 The JWE `alg` algorithm used MUST be equal to the `alg` value of the chosen `jwk`.
@@ -3481,6 +3481,7 @@ The technology described in this specification was made available from contribut
    * update pre-final specs section
    * make the `meta` parameter mandatory in DCQL query
    * explicitly state that various arrays need to be non-empty
+   * clarify text about how encryption keys are obtained
 
    -28
 
