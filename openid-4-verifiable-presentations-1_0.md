@@ -1830,7 +1830,6 @@ response can also leak information about the processing outcome of `values`.
 ## User Consent and Choice {#user_consent_and_choice}
 
 * Wallets should obtain explicit, informed consent from the End-User before releasing any Verifiable Credential or Presentation to a Verifier.
-* The Wallet should display the purpose and requested claims clearly, especially when `transaction_data` or `claim_sets` are used to express sensitive queries.
 * If an error prevents the Wallet from honoring a request (e.g., missing credentials or mismatched claim values), the Wallet should inform the user in a privacy-preserving way.
 
 ## Purpose Legitimacy and Specification {#purpose_legitimacy_and_specification}
