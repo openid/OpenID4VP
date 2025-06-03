@@ -1877,7 +1877,6 @@ Verifier SHOULD NOT attempt to fingerprint the wallets to track the user's visit
     
 *   **No excessive data**: If the Wallet has indications that the Verifier is requesting data that it should not be, the Wallet should warn the user and potentially stop processing. 
     
-*   **Passive outsider unobservability**: All communications between Wallets and Verifiers should be encrypted either by the transport layer or application layer so that the payload of the communication is unobservable by a passive outsider.
 
 ### Authorization Error Response with the `wallet_unavailable` error code {#authoization_error_responsewith_the_wallet_unavailable_error_code}
 
