@@ -1928,7 +1928,6 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
 ## Accuracy and Quality {#accuracy_and_quality}
 
 * Verifiers ensure that the PII processed is accurate, complete, up-to-date (unless there is a legitimate basis for keeping outdated data), adequate and relevant for the purpose of use. This could be achieved by only accepting credentials from trusted issuers and checking the issuance and expiry date.
-* If making changes to the already collected and stored data, the verifier should make sure that the new presentation is about the same user.
 * Verifiers should establish a means to detect status change (e.g. revocation) of the obtained credentials through the OpenID4VP protocol. (e.g., through StatusList.) 
     
 ## Openness, Transparency and Notice {#openness_transparency_and_notice}
