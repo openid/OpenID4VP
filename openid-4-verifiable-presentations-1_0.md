@@ -1875,7 +1875,7 @@ Verifier SHOULD NOT attempt to fingerprint the wallets to track the user's visit
     
 *   **Unlinkability:** Wallet can use ephemeral credentials only to achieve cross-session unlinkability. Wallet can use different instances of credentials to different verifiers to achieve cross-verifier unlinkability. Considerable discourse regarding unlinkability in salted-hash based selective disclosure mechanisms is provided in \[@?I-D.ietf-oauth-selective-disclosure-jwt, section 10.1\]. One technique mentioned to achieve some important unlinkability properties is the use of batch issuance, which is supported in \[@?OpenID4VCI\], with individual credentials being presented only once.
     
-*   **No excessive data**: If the verifier requests unusually large amounts of data, the wallet should warn the user and potentially stop processing. 
+*   **No excessive data**: If the Wallet has indications that the Verifier is requesting data that it should not be, the Wallet should warn the user and potentially stop processing. 
     
 *   **Passive outsider unobservability**: All communications between Wallets and Verifiers should be encrypted either by the transport layer or application layer so that the payload of the communication is unobservable by a passive outsider.
 
