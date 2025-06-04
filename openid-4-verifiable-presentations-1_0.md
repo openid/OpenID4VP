@@ -1410,6 +1410,22 @@ into the key derivation process that is used to derive the content encryption ke
 
 Note: For encryption, implementers have a variety of options available through JOSE, including the use of Hybrid Public Key Encryption (HPKE) as detailed in [@I-D.ietf-jose-hpke-encrypt]. 
 
+### ECDH-ES APU/APV Values
+When performing Reponse Encryption where the `alg` is ECDH-ES the `apv` MUST be set by the Wallet and validated by the Verifier. The value to set is is the base64url encodig of the sha-256 hash of the bytes of several fields concatanated. The fields to be concatanated is based on the response mode:
+
+  - When response mode is `direct_post.jwt` the clientId, nonce, jwkThumbprint and responseUri
+  - When response mode is `dc_api.jwt` the origin, nonce and jwkThumbprint
+
+(TODO: Add two examples of the apv values, one for `direct_post.jwt` and another for `dc_api.jwt`).
+
+The fields must be concatonated in the order specified here before being hashed, and base64url encoded. To validate the `apv` the Verifier MUST construct the same value and compare it to the `apv` included in the protected headed. If the `apv` value fails validation the Verifier MUST stop processing and discard the response. 
+
+These values are the same as those required to perform verification of the credential presentations. This binds the encryption to the presentation and allows the verifier to terminate processing early when the presentation is not meant for them.
+
+Note that because the `apv` is attached, this does not allow the encryption to fail closed (i.e. be unable to decrypt when the presentation is not meant for them), but the same approach could be taken when such an algorithm is supported.
+
+There are no requirements on the `apu` value so the Wallet may use any value (including leaving it empty).
+
 ### Response Mode "direct_post.jwt" {#direct_post_jwt}
 
 This specification also defines a new Response Mode `direct_post.jwt`, which allows for encryption to be used on top of the Response Mode `direct_post` defined in (#response_mode_post). The mechanisms described in (#response_mode_post) apply unless specified otherwise in this section.
