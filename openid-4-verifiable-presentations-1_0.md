@@ -1834,7 +1834,7 @@ response can also leak information about the processing outcome of `values`.
 
 ## Purpose Legitimacy and Specification {#purpose_legitimacy_and_specification}
 
-* The verifier ensures that the purposes are sufficiently specific and are communicated before the time the information is collected. For example, it is shown before the presentation request is sent or is sent in the request to the wallet. In the latter case, the wallet communicates them with the user before the user can make their choice. 
+* The Verifier ensures that the purposes are sufficiently specific and are communicated before the time the information is collected. For example, it is shown before the presentation request is sent or is sent in the request to the wallet. In the latter case, the Wallet communicates them with the user before the user can make their choice. 
 
 ## Collection Limitation {#collection_limitation}
 
@@ -1865,15 +1865,15 @@ Verifier SHOULD NOT attempt to fingerprint the wallets to track the user's visit
 
 ## Data Minimization {#data_minimization}
 
-### Wallet to verifier communication {#wallet_to_verifier_communication}
+### Wallet to Verifier communication {#wallet_to_verifier_communication}
 
 *   **HTTP Headers:** Wallets SHOULD only send the minimal amount of information possible, and in particular, without any HTTP headers identifying the software used for the request (e.g., HTTP libraries or their versions) when retrieving a `request_uri` or sending to `response_uri` to reduce the risk of fingerprinting and End-User tracking. 
     
 *   **No unauthorized PII:** Wallets MUST NOT include any personally identifiable information (PII) in HTTP requests to Verifiers unless explicitly required for the flow and authorized by the user. 
     
-*   **No unauthorized request to Request URI:** If no End-User interaction is required before sending the request to Request URI, it is easy for a malicious verifier to obtain the wallet capabilities from all visitors of a website on a large scale and in an automated fashion. Even without personally identifiable information (PII) this can reveal some information about End-Users, like their nationality (e.g., a Wallet with special capabilities only used in one EU member state). Mandatory End-User interaction before sending the request, like clicking a button, unlocking the wallet or even just showing a screen of the app, can make this less attractive/likely to being exploited.
+*   **No unauthorized request to Request URI:** If no End-User interaction is required before sending the request to Request URI, it is easy for a malicious Verifier to obtain the Wallet capabilities from all visitors of a website on a large scale and in an automated fashion. Even without personally identifiable information (PII) this can reveal some information about End-Users, like their nationality (e.g., a Wallet with special capabilities only used in one EU member state). Mandatory End-User interaction before sending the request, like clicking a button, unlocking the Wallet or even just showing a screen of the app, can make this less attractive/likely to being exploited.
     
-*   **Unlinkability:** Wallet can use ephemeral credentials only to achieve cross-session unlinkability. Wallet can use different instances of credentials to different verifiers to achieve cross-verifier unlinkability. Considerable discourse regarding unlinkability in salted-hash based selective disclosure mechanisms is provided in \[@?I-D.ietf-oauth-selective-disclosure-jwt, section 10.1\]. One technique mentioned to achieve some important unlinkability properties is the use of batch issuance, which is supported in \[@?OpenID4VCI\], with individual credentials being presented only once.
+*   **Unlinkability:** Wallet can use ephemeral credentials only to achieve cross-session unlinkability. Wallet can use different instances of credentials to different Verifiers to achieve cross-Verifier unlinkability. Considerable discourse regarding unlinkability in salted-hash based selective disclosure mechanisms is provided in \[@?I-D.ietf-oauth-selective-disclosure-jwt, section 10.1\]. One technique mentioned to achieve some important unlinkability properties is the use of batch issuance, which is supported in \[@?OpenID4VCI\], with individual credentials being presented only once.
     
 *   **No excessive data**: If the Wallet has indications that the Verifier is requesting data that it should not be, the Wallet should warn the user and potentially stop processing. 
     
@@ -1916,9 +1916,9 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
 ### Unobservability by Wallets {#unobservability_by_wallets}
 
     
-*   **User-Only Visibility**: Transaction history and data within the wallet should not be accessible to anyone other than the user, unless the user has given consent or there is another legal basis to do so.
+*   **User-Only Visibility**: Transaction history and data within the Wallet should not be accessible to anyone other than the user, unless the user has given consent or there is another legal basis to do so.
     
-*   **Prevention of Profiling and Tracking:** The wallet's design incorporates data minimization principles, ensuring that only essential information is shared during interactions. This limits opportunities for profiling or linking user activities across different services
+*   **Prevention of Profiling and Tracking:** The Wallet's design incorporates data minimization principles, ensuring that only essential information is shared during interactions. This limits opportunities for profiling or linking user activities across different services
 
 ## Accuracy and Quality {#accuracy_and_quality}
 
@@ -1926,12 +1926,12 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
     
 ## Openness, Transparency and Notice {#openness_transparency_and_notice}
 
-*   Wallet should make its privacy notices readily available to the user. 
+*   Wallets should make their privacy notices readily available to the user. 
         
 ## Information Security {#information_security}
 
-*   Wallet providers and verifiers should choose the options in the protocols described in this document so that the data in transit is integrity, confidentiality and availability protected. 
-*   Both Wallet providers and verifiers should be protecting PII under its authority with appropriate controls at the operational, functional and strategic level to ensure the integrity, confidentiality and availability of the PII, and protect it against risks such as unauthorized access, destruction, use, modification, disclosure or loss throughout the whole of its life cycle;
+*   Wallet providers and Verifiers should choose the options in the protocols described in this document so that the data in transit is integrity, confidentiality and availability protected. 
+*   Both Wallet providers and Verifiers should be protecting PII under their respective authority with appropriate controls at the operational, functional, and strategic level to ensure the integrity, confidentiality, and availability of the PII, and protect it against risks such as unauthorized access, destruction, use, modification, disclosure or loss throughout the whole of its life cycle;
 
 ** NOTE **: Implementers should also refer to the Security Considerations section of this document. 
 
