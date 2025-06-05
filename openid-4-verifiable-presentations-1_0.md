@@ -1413,8 +1413,16 @@ Note: For encryption, implementers have a variety of options available through J
 ### ECDH-ES APU/APV Values
 When performing Reponse Encryption where the `alg` is ECDH-ES the `apv` MUST be set by the Wallet and validated by the Verifier. The value to set is is the base64url encodig of the sha-256 hash of the bytes of several fields concatanated. The fields to be concatanated is based on the response mode:
 
-  - When response mode is `direct_post.jwt` the clientId, nonce, jwkThumbprint and responseUri
-  - When response mode is `dc_api.jwt` the origin, nonce and jwkThumbprint
+  - When response mode is `direct_post.jwt` the `client_id`, `nonce`, `jwkThumbprint` and `responseUri`
+  - When response mode is `dc_api.jwt` the `origin`, `nonce` and `jwkThumbprint`
+  
+  where 
+  
+  - `client_id` is the `client_id` request parameter
+  - `nonce` is the `nonce` request parameter
+  - `jwkThumbprint` is the base64url encoded JWK SHA-256 Thumbprint (as defined in [@!RFC7638]) of the Verifier's public key used to encrypt the response
+  - `responseUri` is either the `redirect_uri` or the `response_uri` request parameter,
+  - `origin` is the string representing the Origin of the request as described in (#dc_api). MUST NOT be prefixed with `origin:`
 
 (TODO: Add two examples of the apv values, one for `direct_post.jwt` and another for `dc_api.jwt`).
 
