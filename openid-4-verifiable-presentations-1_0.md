@@ -323,7 +323,7 @@ The following is a non-normative example of a transaction data content, after ba
     * `data`: REQUIRED. An object or string containing an attestation (e.g. a JWT). The payload structure is defined on a per format level. It is at the discretion of the Wallet whether it uses the information from `verifier_info`. Factors that influence such Wallet's decision include, but are not limited to, trust framework the wallet supports, specific policies defined by the Issuers or ecosystem, and profiles of this specification. If the Wallet uses information from `verifier_info`, the Wallet MUST validate the signature and ensure binding.
     * `credential_ids`: OPTIONAL. A non-empty array of strings each referencing a Credential requested by the Verifier for which the attestation is relevant. Each string matches the `id` field in a DCQL Credential Query. If omitted, the attestation is relevant to all requested credentials.
 
-See (#verifier-attestations) for more details.
+See (#verifier-info) for more details.
 
 The following is a non-normative example of an attested object:
 
@@ -669,11 +669,11 @@ The Wallet then validates the request as specified in OAuth 2.0 [@RFC6749].
 
 If the Verifier responds with any HTTP error response, the Wallet MUST terminate the process.
 
-## Verifier Attestations {#verifier-attestations}
+## Verifier Info {#verifier-info}
 
-Verifier Attestations allow the Verifier to provide additional context or metadata as part of the Authorization Request attested by a trusted third party. These inputs can support a variety of use cases, such as helping the Wallet apply policy decisions, validating eligibility, or presenting more meaningful information to the End-User during consent.
+Verifier Info parameter allows the Verifier to provide additional context or metadata as part of the Authorization Request attested by a trusted third party. These inputs can support a variety of use cases, such as helping the Wallet apply policy decisions, validating eligibility, or presenting more meaningful information to the End-User during consent.
 
-Each Verifier Attestation is an object containing a type identifier, associated data and optionally references to credential ids. The format and semantics of these attestations are defined by ecosystems or profiles.
+Each Verifier Info object contains a type identifier, associated data and optionally references to credential ids. The format and semantics of these objects are defined by ecosystems or profiles.
 
 For example, a Verifier might include:
 
@@ -681,7 +681,7 @@ For example, a Verifier might include:
 - A **policy statement**, such as a signed document describing acceptable use, retention periods, or access rights.
 - The **confirmation of a role** of the verifier in a certain domain, e.g. the verifier might be a certified payment service provider under the EU's Payment Service Directive 2.
 
-Verifier Attestations are optional. Wallets MAY use them to make authorization decisions or to enhance the user experience, but they SHOULD ignore any unrecognized or unsupported Verifier Attestation types.
+Verifier Info parameter is optional. Wallets MAY use them to make authorization decisions or to enhance the user experience, but they SHOULD ignore any unrecognized or unsupported Verifier Info types.
 
 ### Proof of Possession
 
