@@ -1418,7 +1418,7 @@ When performing Reponse Encryption where the `alg` is ECDH-ES the `apv` MUST be 
 
 (TODO: Add two examples of the apv values, one for `direct_post.jwt` and another for `dc_api.jwt`).
 
-The fields must be concatonated in the order specified here before being hashed, and base64url encoded. To validate the `apv` the Verifier MUST construct the same value and compare it to the `apv` included in the protected headed. If the `apv` value fails validation the Verifier MUST stop processing and discard the response. 
+The fields MUST be concatenated in the order specified here before being hashed, and base64url encoded. To validate the `apv` the Verifier MUST construct the same value and compare it to the `apv` included in the protected header. If the `apv` value fails validation the Verifier MUST stop processing and discard the response. 
 
 These values are the same as those required to perform verification of the credential presentations. This binds the encryption to the presentation and allows the verifier to terminate processing early when the presentation is not meant for them.
 
