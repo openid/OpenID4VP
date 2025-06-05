@@ -1834,7 +1834,8 @@ response can also leak information about the processing outcome of `values`.
 
 ## Purpose Legitimacy and Specification {#purpose_legitimacy_and_specification}
 
-* The Verifier ensures that the purposes are sufficiently specific and are communicated before the time the information is collected. For example, it is shown before the presentation request is sent or is sent in the request to the wallet. In the latter case, the Wallet communicates them with the user before the user can make their choice. 
+* The Verifier ensures that information collection purpose is sufficiently specific and communicated before collection.
+For example, the purpose is shown beforehand or included in the presentation request to the wallet. In the latter case, the wallet informs the user of the purpose before the user makes a choice .
 
 ## Collection Limitation {#collection_limitation}
 
