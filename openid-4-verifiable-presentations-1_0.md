@@ -1915,7 +1915,7 @@ Wallets SHOULD obtain explicit, informed consent from the End-User before releas
 
 If an error prevents the Wallet from honoring a request (e.g., missing Credentials or mismatched claim values), the Wallet SHOULD inform the End-User in a privacy-preserving way.
 
-## Purpose Legitimacy and Specification {#purpose_legitimacy_and_specification}
+## Purpose Legitimacy {#purpose_legitimacy_and_specification}
 
 The Verifier ensures that information collection purpose is sufficiently specific and communicated before collection. For example, the purpose is shown to the End-User before the presentation request is sent to the Wallet.
 
@@ -1954,7 +1954,7 @@ precautions against leaking information about the claim value when processing
 In both cases listed here, it needs to be considered that returning an error
 response can also leak information about the processing outcome of `values`.
 
-### Strictly Necessary {#strictly_necessary}
+### Strictly Necessary Claims {#strictly_necessary}
 
 Verifiers SHOULD design DCQL queries that request only the minimal set of claims and Credentials needed to fulfill the specified purposes.
 
@@ -1962,9 +1962,7 @@ Verifiers SHOULD design DCQL queries that request only the minimal set of claims
 
 Verifier SHOULD NOT attempt to fingerprint the Wallets to track the End-User's visits.
 
-## Data Minimization {#data_minimization}
-
-### Wallet to Verifier communication {#wallet_to_verifier_communication}
+## Wallet to Verifier communication {#wallet_to_verifier_communication}
 
 *   **HTTP Headers:** Wallets SHOULD only send the minimal amount of information possible, and in particular, without any HTTP headers identifying the software used for the request (e.g., HTTP libraries or their versions) when retrieving a `request_uri` or sending to `response_uri` to reduce the risk of fingerprinting and End-User tracking. 
     
@@ -1975,17 +1973,12 @@ Verifier SHOULD NOT attempt to fingerprint the Wallets to track the End-User's v
 *   **Unlinkability:** Wallet can use ephemeral Credentials only to achieve cross-session unlinkability. Wallet can use different instances of Credentials to different Verifiers to achieve cross-Verifier unlinkability. Considerable discourse regarding unlinkability in salted-hash based selective disclosure mechanisms is provided in \[@?I-D.ietf-oauth-selective-disclosure-jwt, section 10.1\]. One technique mentioned to achieve some important unlinkability properties is the use of batch issuance, which is supported in \[@?OpenID4VCI\], with individual Credentials being presented only once.
     
 *   **No excessive data**: If the Wallet has indications that the Verifier is requesting data that it is not entitled to, the Wallet SHOULD warn the End-User and potentially stop processing.
-    
 
-### Authorization Error Response with the `wallet_unavailable` error code {#authoization_error_responsewith_the_wallet_unavailable_error_code}
+### Establishing Trust in the Request URI {#request_uri_and_trust_relationships}
 
-* In the event that another component is invoked instead of the Wallet, the End-User MUST be informed and give consent before the invoked component returns the `wallet_unavailable` Authorization Error Response to the Verifier.
-* Error responses SHOULD avoid including sensitive or detailed contextual information that could be used to infer End-User's data.
+Wallets operating within a trust framework SHOULD validate that the Request URI is properly associated with the Client Identifier and authorized for the request.
 
-### Request URI and Trust Relationships {#request_uri_and_trust_relationships}
-
-* Wallets operating within a trust framework SHOULD validate that the request_uri is properly associated with the client_id and authorized for the request.
-* Untrusted or unrecognized request_uri endpoints SHOULD be rejected or require End-User confirmation before proceeding.
+Untrusted or unrecognized Request URI endpoints SHOULD be rejected or require End-User confirmation before proceeding.
 
 ### Authorization Requests with Request URI {#authorization_requests_with_request_uri}
 
@@ -1997,16 +1990,15 @@ Mandatory End-User interaction before sending the request, like clicking a butto
 
 Requests from the Wallet to the Verifier SHOULD be sent with the minimal amount of information possible, and in particular, without any HTTP headers identifying the software used for the request (e.g., HTTP libraries or their versions). The Wallet MUST NOT send PII or any other data that could be used for fingerprinting to the Request URI in order to prevent End-User tracking.
 
-### Privacy implications of mechanisms to establish trust in Issuers {#privacy_trusted_authorities}
+## Error Responses
 
-This specification introduces an extension point that allows for a Verifier to express expected Issuers or trust frameworks that certify Issuers.
-It is important to understand the implications that different mechanisms to establish trust in Issuers can have on the privacy of the overall system.
+Error responses SHOULD avoid including sensitive or detailed contextual information that could be used to infer End-User's data.
 
-## Authorization Error Response with the `wallet_unavailable` error code
+### `wallet_unavailable` Authorization Error Response {#authoization_error_responsewith_the_wallet_unavailable_error_code}
 
-In the event that another component is invoked instead of the Wallet, the End-User MUST be informed and give consent before the invoked component returns the `wallet_unavailable` Authorization Error Response to the Verifier.
+In the event that another component is invoked instead of the Wallet, the End-User SHOULD be informed and give consent before the invoked component returns the `wallet_unavailable` Authorization Error Response to the Verifier.
 
-## Digital Credential API Error Responses {#privacy-dc-api-error}
+### Digital Credential API Error Responses {#privacy-dc-api-error}
 
 Returning any OpenID4VP protocol error, regardless of content, can reveal additional information about the End-User’s underlying Credentials or Wallet in a way that is unique to the Digital Credentials API since reaching the Wallet can be dependent on a Wallet's ability to satisfy the request. For example, platform implementations could only allow Wallets to be selected that satisfy the request. In this case, returning an OpenID4VP protocol error responses can only be returned by a selected Wallet and would therefore reveal that the End-User is in possession of Credentials that satisfy the request. This is in contrast to other engagement methods, where the Wallet receives the request before learning if it can be fulfilled. What is revealed by a Wallet in those cases depends on how each individual Wallet processes a request.
 
@@ -2040,7 +2032,6 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
 
 ### Unobservability by Wallets {#unobservability_by_wallets}
 
-    
 *   **User-Only Visibility**: Transaction history and data within the Wallet SHOULD NOT be accessible to anyone other than the End-User, unless the End-User has given consent or there is another legal basis to do so.
     
 *   **Prevention of Profiling and Tracking:** The Wallet's design incorporates data minimization principles, ensuring that only essential information is shared during interactions. This limits opportunities for profiling or linking End-User activities across different services
