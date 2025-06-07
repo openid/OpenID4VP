@@ -673,7 +673,7 @@ If the Verifier responds with any HTTP error response, the Wallet MUST terminate
 
 Verifier Info parameter allows the Verifier to provide additional context or metadata as part of the Authorization Request attested by a trusted third party. These inputs can support a variety of use cases, such as helping the Wallet apply policy decisions, validating eligibility, or presenting more meaningful information to the End-User during consent.
 
-Each Verifier Info object contains a type identifier, associated data and optionally references to credential ids. The format and semantics of these objects are defined by ecosystems or profiles.
+Each Verifier Info object contains a type identifier, associated data and optionally references to credential ids. The format and semantics of these attestations are defined by ecosystems or profiles.
 
 For example, a Verifier might include:
 
@@ -681,7 +681,7 @@ For example, a Verifier might include:
 - A **policy statement**, such as a signed document describing acceptable use, retention periods, or access rights.
 - The **confirmation of a role** of the verifier in a certain domain, e.g. the verifier might be a certified payment service provider under the EU's Payment Service Directive 2.
 
-Verifier Info parameter is optional. Wallets MAY use them to make authorization decisions or to enhance the user experience, but they SHOULD ignore any unrecognized or unsupported Verifier Info types.
+The Verifier Info parameter is optional. Wallets MAY use them to make authorization decisions or to enhance the user experience, but they SHOULD ignore any unrecognized or unsupported Verifier Info types.
 
 ### Proof of Possession
 
