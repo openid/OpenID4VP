@@ -106,7 +106,7 @@ Issuer-Holder-Verifier Model:
 Origin:
 : An identifier for the calling website or native application, asserted by the web or app platform. A web origin is the combination of a scheme/protocol, host, and port, with port being omitted when it matches the default port of the scheme. An app platform may use a linked web origin, or use a platform-specific URI for the app origin.
 
-For example, the verifier for the organization MyExampleOrg is served from https://verify.example.com. The web origin is `https://verify.example.com` with `https` being the scheme, `verify.example.com` being the host, and the port is not explicitly included as `443` is the default port for the protocol `https`. The native applications origin on some platforms will also be `https://verify.example.com` and on other platforms, may be `platform:pkg-key-hash:Z4OFzVVSZrzTRa3eg79hUuHy12MVW0vzPDf4q4zaPs0`.
+For example, the Verifier for the organization MyExampleOrg is served from https://verify.example.com. The web origin is `https://verify.example.com` with `https` being the scheme, `verify.example.com` being the host, and the port is not explicitly included as `443` is the default port for the protocol `https`. The native applications origin on some platforms will also be `https://verify.example.com` and on other platforms, may be `platform:pkg-key-hash:Z4OFzVVSZrzTRa3eg79hUuHy12MVW0vzPDf4q4zaPs0`.
 
 Presentation:
 : Data that is presented to a specific Verifier, derived from a Credential. In this specification, Presentations are usually Verifiable Presentations including Holder Binding (as defined below), but may also be Presentations without Holder Binding (discussed in (#nkb-credentials)).
@@ -187,7 +187,7 @@ Figure: Same Device Flow
 
 (#cross_device_figure) is a diagram of a flow where the End-User presents a Credential to a Verifier interacting with the End-User on a different device as the device the Wallet resides on.
 
-In this flow, the Verifier prepares an Authorization Request and renders it as a QR Code. The End-User then uses the Wallet to scan the QR Code. The Presentations are sent to the Verifier in a direct HTTP POST request to a URL controlled by the Verifier. The flow uses the Response Type `vp_token` in conjunction with the Response Mode `direct_post`, both defined in this specification. In order to keep the size of the QR Code small and be able to sign and optionally encrypt the Request Object, the actual Authorization Request contains just a Request URI according to [@!RFC9101], which the wallet uses to retrieve the actual Authorization Request data.
+In this flow, the Verifier prepares an Authorization Request and renders it as a QR Code. The End-User then uses the Wallet to scan the QR Code. The Presentations are sent to the Verifier in a direct HTTP POST request to a URL controlled by the Verifier. The flow uses the Response Type `vp_token` in conjunction with the Response Mode `direct_post`, both defined in this specification. In order to keep the size of the QR Code small and be able to sign and optionally encrypt the Request Object, the actual Authorization Request contains just a Request URI according to [@!RFC9101], which the Wallet uses to retrieve the actual Authorization Request data.
 
 Note: The diagram illustrates neither all parameters nor all optional features of this specification.
 
@@ -320,7 +320,7 @@ The following is a non-normative example of a transaction data content, after ba
 : OPTIONAL. A non-empty array of attestations about the Verifier relevant to the Credential Request. These attestations MAY include Verifier metadata, policies, trust status, or authorizations. Attestations are intended to support authorization decisions, inform Wallet policy enforcement, or enrich the End-User consent dialog. Each object has the following structure:
 
     * `format`: REQUIRED. A string that identifies the format of the attestation and how it is encoded. Ecosystems SHOULD use collision-resistant identifiers. Further processing of the attestation is determined by the type of the attestation, which is specified in a format-specific way. 
-    * `data`: REQUIRED. An object or string containing an attestation (e.g. a JWT). The payload structure is defined on a per format level. It is at the discretion of the Wallet whether it uses the information from `verifier_info`. Factors that influence such Wallet's decision include, but are not limited to, trust framework the wallet supports, specific policies defined by the Issuers or ecosystem, and profiles of this specification. If the Wallet uses information from `verifier_info`, the Wallet MUST validate the signature and ensure binding.
+    * `data`: REQUIRED. An object or string containing an attestation (e.g. a JWT). The payload structure is defined on a per format level. It is at the discretion of the Wallet whether it uses the information from `verifier_info`. Factors that influence such Wallet's decision include, but are not limited to, trust framework the Wallet supports, specific policies defined by the Issuers or ecosystem, and profiles of this specification. If the Wallet uses information from `verifier_info`, the Wallet MUST validate the signature and ensure binding.
     * `credential_ids`: OPTIONAL. A non-empty array of strings each referencing a Credential requested by the Verifier for which the attestation is relevant. Each string matches the `id` field in a DCQL Credential Query. If omitted, the attestation is relevant to all requested Credentials.
 
 See (#verifier-info) for more details.
@@ -459,7 +459,7 @@ GET /authorize?
   &request_uri_method=post HTTP/1.1
 ```
 
-To retrieve the actual request, the wallet might send the following non-normative example HTTP request to the `request_uri`:
+To retrieve the actual request, the Wallet might send the following non-normative example HTTP request to the `request_uri`:
 ```
 POST /request/vapof4ql2i7m41m68uep HTTP/1.1
 Host: client.example.org
@@ -561,7 +561,7 @@ From this definition, it follows that pre-registered clients MUST NOT contain a 
 
 This specification defines the following Client Identifier Prefixes, followed by the examples where applicable. 
 
-In case of using OpenID4VP over DC API, as defined in (#dc_api), it is at the discretion of the Wallet whether it validates the signature on the Request Object following the processing rules defined by a relevant Client Identifier Prefix. Factors that influence the Wallet's decision include, but are not limited to, trust framework the wallet supports, specific policies defined by the Issuers or ecosystem, and profiles of this specification.
+In case of using OpenID4VP over DC API, as defined in (#dc_api), it is at the discretion of the Wallet whether it validates the signature on the Request Object following the processing rules defined by a relevant Client Identifier Prefix. Factors that influence the Wallet's decision include, but are not limited to, trust framework the Wallet supports, specific policies defined by the Issuers or ecosystem, and profiles of this specification.
 
 * `redirect_uri`: This prefix value indicates that the original Client Identifier part (without the prefix `redirect_uri:`) is the Verifier's Redirect URI (or Response URI when Response Mode `direct_post` is used). The Verifier MAY omit the `redirect_uri` Authorization Request parameter (or `response_uri` when Response Mode `direct_post` is used). All Verifier metadata parameters MUST be passed using the `client_metadata` parameter defined in (#new_parameters). An example Client Identifier value is `redirect_uri:https://client.example.org/cb`. Requests using the `redirect_uri` Client Identifier Prefix cannot be signed because there is no method for the Wallet to obtain a trusted key for verification. Therefore, implementations requiring signed requests cannot use the `redirect_uri` Client Identifier Prefix.
 
@@ -598,7 +598,7 @@ Body
 
 * `x509_san_dns`: When the Client Identifier Prefix is `x509_san_dns`, the original Client Identifier (the part after the `x509_san_dns:` prefix) MUST be a DNS name and match a `dNSName` Subject Alternative Name (SAN) [@!RFC5280] entry in the leaf certificate passed with the request. The request MUST be signed with the private key corresponding to the public key in the leaf X.509 certificate of the certificate chain added to the request in the `x5c` JOSE header [@!RFC7515] of the signed request object. The Wallet MUST validate the signature and the trust chain of the X.509 certificate. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter. The following requirement applies unless the interaction is using the DC API as defined in (#dc_api): If the Wallet can establish trust in the Client Identifier authenticated through the certificate, e.g. because the Client Identifier is contained in a list of trusted Client Identifiers, it may allow the client to freely choose the `redirect_uri` value. If not, the FQDN of the `redirect_uri` value MUST match the Client Identifier without the prefix `x509_san_dns:`. Example Client Identifier: `x509_san_dns:client.example.org`.
 
-* `x509_hash`: When the Client Identifier Prefix is `x509_hash`, the original Client Identifier (the part without the `x509_hash:` prefix) MUST be a hash and match the hash of the leaf certificate passed with the request. The request MUST be signed with the private key corresponding to the public key in the leaf X.509 certificate of the certificate chain added to the request in the `x5c` JOSE header parameter [@!RFC7515] of the signed request object. The value of `x509_hash` is the base64url encoded value of the SHA-256 hash of the DER-encoded X.509 certificate. The Wallet MUST validate the signature and the trust chain of the X.509 leaf certificate. All verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter. Example Client Identifier: `x509_hash:Uvo3HtuIxuhC92rShpgqcT3YXwrqRxWEviRiA0OZszk`
+* `x509_hash`: When the Client Identifier Prefix is `x509_hash`, the original Client Identifier (the part without the `x509_hash:` prefix) MUST be a hash and match the hash of the leaf certificate passed with the request. The request MUST be signed with the private key corresponding to the public key in the leaf X.509 certificate of the certificate chain added to the request in the `x5c` JOSE header parameter [@!RFC7515] of the signed request object. The value of `x509_hash` is the base64url encoded value of the SHA-256 hash of the DER-encoded X.509 certificate. The Wallet MUST validate the signature and the trust chain of the X.509 leaf certificate. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter. Example Client Identifier: `x509_hash:Uvo3HtuIxuhC92rShpgqcT3YXwrqRxWEviRiA0OZszk`
 
 * `origin`: This reserved Client Identifier Prefix is defined in (#dc_api_request). The Wallet MUST NOT accept this Client Identifier Prefix in requests. In OpenID4VP over the Digital Credentials API, the audience of the Credential Presentation is always the origin value prefixed by `origin:`, for example `origin:https://verifier.example.com/`.
 
@@ -677,9 +677,9 @@ Each Verifier Info object contains a type identifier, associated data and option
 
 For example, a Verifier might include:
 
-- A **registration certificate** issued by a trusted authority, to prove that the verifier has publicly registered its intend to request certain credentials.
+- A **registration certificate** issued by a trusted authority, to prove that the Verifier has publicly registered its intend to request certain credentials.
 - A **policy statement**, such as a signed document describing acceptable use, retention periods, or access rights.
-- The **confirmation of a role** of the verifier in a certain domain, e.g. the verifier might be a certified payment service provider under the EU's Payment Service Directive 2.
+- The **confirmation of a role** of the Verifier in a certain domain, e.g. the Verifier might be a certified payment service provider under the EU's Payment Service Directive 2.
 
 The Verifier Info parameter is optional. Wallets MAY use them to make authorization decisions or to enhance the user experience, but they SHOULD ignore any unrecognized or unsupported Verifier Info types.
 
@@ -948,7 +948,7 @@ Wallet and/or the End-User if the value matching request
 is followed. Therefore, Verifiers MUST treat restrictions expressed using `values` as a
 best-effort way to improve user privacy, but MUST NOT rely on it for security checks.
 
-The purpose of the `claim_sets` syntax is to provide a way for a verifier to
+The purpose of the `claim_sets` syntax is to provide a way for a Verifier to
 describe alternative ways a given Credential can satisfy the request. The array
 ordering expresses the Verifier's preference for how to fulfill the request. The
 first element in the array is the most preferred and the last element in the
@@ -1199,7 +1199,7 @@ It has been defined to address the following use cases:
 The Response Mode is defined in accordance with [@!OAuth.Responses] as follows:
 
 `direct_post`:
-: In this mode, the Authorization Response is sent to the Verifier using an HTTP POST request to an endpoint controlled by the Verifier. The Authorization Response MUST be encoded in the request body using the format defined by the `application/x-www-form-urlencoded` HTTP content type. The parameters in the request body MUST all be encoded using UTF-8. The verifier can request that the wallet redirects the user to the verifier using the response as defined below.
+: In this mode, the Authorization Response is sent to the Verifier using an HTTP POST request to an endpoint controlled by the Verifier. The Authorization Response MUST be encoded in the request body using the format defined by the `application/x-www-form-urlencoded` HTTP content type. The parameters in the request body MUST all be encoded using UTF-8. The Verifier can request that the Wallet redirects the user to the Verifier using the response as defined below.
 
 The following new Authorization Request parameter is defined to be used in conjunction with Response Mode `direct_post`: 
 
@@ -1516,7 +1516,7 @@ The Verifier can use one of the following mechanisms to invoke a Wallet:
 - Custom URL scheme as an `authorization_endpoint` (for example, `openid4vp://` as defined in (#openid4vp-scheme))
 - URL (including Domain-bound Universal Links/App link) as an `authorization_endpoint`
 
-For a cross device flow, either of the above options MAY be presented as a QR code for the End-User to scan using a wallet or an arbitrary camera application on a user-device.
+For a cross device flow, either of the above options MAY be presented as a QR code for the End-User to scan using a Wallet or an arbitrary camera application on a user-device.
 
 The Wallet can also be invoked from the web or a native app using the Digital Credentials API as described in (#dc_api). As described in detail in (#dc_api), DC API provides privacy, security (see (#session_fixation)), and user experience benefits (particularly in the cases where a user has multiple Wallets).
 
@@ -1547,7 +1547,7 @@ The following is a non-normative example of a `vp_formats_supported` parameter:
 `client_id_prefixes_supported`:
 : OPTIONAL. A non-empty array of strings containing the values of the Client Identifier Prefixes that the Wallet supports. The values defined by this specification are `pre-registered` (which represents the behavior when no Client Identifier Prefix is used), `redirect_uri`, `openid_federation`, `verifier_attestation`, `decentralized_identifier`, `x509_san_dns` and `x509_hash`. If omitted, the default value is `pre-registered`. Other values may be used when defined in the profiles or extensions of this specification.
 
-Additional wallet metadata parameters MAY be defined and used,
+Additional Wallet metadata parameters MAY be defined and used,
 as described in [@!RFC8414].
 The Verifier MUST ignore any unrecognized parameters.
 
@@ -1578,7 +1578,7 @@ The Wallet MUST ignore any unrecognized parameters.
 
 # Verifier Attestation JWT {#verifier_attestation_jwt}
 
-The Verifier Attestation JWT is a JWT especially designed to allow a Wallet to authenticate a Verifier in a secure and flexible manner. A Verifier Attestation JWT is issued to the Verifier by a party that wallets trust for the purpose of authentication and authorization of Verifiers. The way this trust established is out of scope of this specification. Every Verifier is bound to a public key, the Verifier MUST always present a Verifier Attestation JWT along with the proof of possession for this key. In the case of the Client Identifier Prefix `verifier_attestation`, the authorization request is signed with this key, which serves as proof of possession.
+The Verifier Attestation JWT is a JWT especially designed to allow a Wallet to authenticate a Verifier in a secure and flexible manner. A Verifier Attestation JWT is issued to the Verifier by a party that Wallets trust for the purpose of authentication and authorization of Verifiers. The way this trust established is out of scope of this specification. Every Verifier is bound to a public key, the Verifier MUST always present a Verifier Attestation JWT along with the proof of possession for this key. In the case of the Client Identifier Prefix `verifier_attestation`, the authorization request is signed with this key, which serves as proof of possession.
 
 A Verifier Attestation JWT MUST contain the following claims:
 
@@ -1839,7 +1839,7 @@ However, the Response Mode `direct_post` is susceptible to such an attack as the
 
 This kind of attack can be detected if the Response Mode `direct_post` is used in conjunction with the redirect URI, which causes the Wallet to redirect the flow to the Verifier's frontend at the device where the transaction was concluded. The Verifier's Response URI MUST include a fresh secret (Response Code) into the redirect URI returned to the Wallet and the Verifier's Response URI MUST require the frontend to pass the respective Response Code when fetching the Authorization Response. That stops session fixation attacks as long as the attacker is unable to get access to the Response Code.
 
-Note that this protection technique is not applicable to cross-device scenarios because the browser used by the wallet will not have the original session.
+Note that this protection technique is not applicable to cross-device scenarios because the browser used by the Wallet will not have the original session.
 It is also not applicable in same-device scenarios if the Wallet uses a browser different from the one used on the presentation request (e.g. device with multiple installed browsers), because the original session will also not be available there. (#dc_api) provides an alternative Wallet invocation method using web/app platform APIs that avoids many of these issues.
 
 See (#implementation_considerations_direct_post) for more implementation considerations.
@@ -1902,14 +1902,40 @@ Presentations.
 
 # Privacy Considerations {#privacy_consideratins}
 
-Many privacy considerations are specific to the Credential format and associated proof type used in a particular presentation.
+Many privacy considerations are specific to the Credential format and associated proof type used in a particular Presentation.
 This section mainly focuses on privacy considerations that are specific to the presentation protocol, while also addressing
-considerations that apply across some common Credential formats and the treatments at wallets and verifiers. 
+considerations that apply across some common Credential formats and the treatments at Wallets and Verifiers. 
 
 Wallet providers and Verifiers need to take into account privacy considerations in this section to mitigate the risks of
 data leakage, user tracking, and other privacy harms. These considerations inform the development of privacy risk analysis.
 
-## DCQL Value Matching {#dcql-value-matching}
+## User Consent and Choice {#user_consent_and_choice}
+
+Wallets SHOULD obtain explicit, informed consent from the End-User before releasing any Verifiable Credential or Presentation to a Verifier.
+
+If an error prevents the Wallet from honoring a request (e.g., missing Credentials or mismatched claim values), the Wallet SHOULD inform the user in a privacy-preserving way.
+
+## Purpose Legitimacy and Specification {#purpose_legitimacy_and_specification}
+
+The Verifier ensures that information collection purpose is sufficiently specific and communicated before collection. For example, the purpose is shown to the user before the presentation request is sent to the Wallet.
+
+## Selective Disclosure {#selective_disclosure}
+
+Selective disclosure is a data minimization technique that allows for sharing only the specific information needed from
+a Credential without revealing all of the claims contained in that Credential.
+
+The DCQL helps facilitate selective disclosure by allowing the Verifier to specify the claims it is interested in,
+allowing the Wallet to disclose only the claims that are relevant to the Verifier's request.
+
+Some Credential formats support selective disclosure and a salted-hash based approach is one common approach.
+Considerable discourse regarding unlinkability in salted-hash based selective disclosure mechanisms is provided in
+[@?I-D.ietf-oauth-selective-disclosure-jwt, section 10.1]. One technique mentioned to achieve some important
+unlinkability properties is the use of batch issuance, which is supported in [@?OpenID4VCI], with individual Credentials
+being presented only once.
+
+Note that the nature of the issuer of the Credential may leak sensitive information such as nationality or state of residence.
+
+### DCQL Value Matching {#dcql-value-matching}
 
 When using DCQL `values` to match the expected values of claims, the fact that a
 claim within a certain Credential matched a value or did not match a value might
@@ -1928,42 +1954,13 @@ precautions against leaking information about the claim value when processing
 In both cases listed here, it needs to be considered that returning an error
 response can also leak information about the processing outcome of `values`.
 
-## User Consent and Choice {#user_consent_and_choice}
-
-* Wallets SHOULD obtain explicit, informed consent from the End-User before releasing any Verifiable Credential or Presentation to a Verifier.
-* If an error prevents the Wallet from honoring a request (e.g., missing Credentials or mismatched claim values), the Wallet SHOULD inform the user in a privacy-preserving way.
-
-## Purpose Legitimacy and Specification {#purpose_legitimacy_and_specification}
-
-* The Verifier ensures that information collection purpose is sufficiently specific and communicated before collection.
-For example, the purpose is shown beforehand or included in the presentation request to the wallet. In the latter case, the wallet informs the user of the purpose before the user makes a choice .
-
-## Collection Limitation {#collection_limitation}
-
-### Selective Disclosure {#selective_disclosure}
-
-Selective disclosure is a data minimization technique that allows for sharing only the specific information needed from
-a Credential without revealing everything.
-
-The DCQL helps facilitate selective disclosure by allowing the Verifier to specify the claims it is interested in,
-allowing the Wallet to disclose only the claims that are relevant to the Verifier's request.
-
-Some Credential formats support selective disclosure and a salted-hash based approach is one common approach.
-Considerable discourse regarding unlinkability in salted-hash based selective disclosure mechanisms is provided in
-[@?I-D.ietf-oauth-selective-disclosure-jwt, section 10.1]. One technique mentioned to achieve some important
-unlinkability properties is the use of batch issuance, which is supported in [@?OpenID4VCI], with individual Credentials
-being presented only once.
-
-Note that the nature of the issuer of the Credential may leak sensitive information such as nationality or state of residence.
-
 ### Strictly Necessary {#strictly_necessary}
 
-* Verifiers SHOULD design queries that request only the minimal set of claims and Credentials needed to fulfill the specified purposes. DCQL helps facilitate this. 
+Verifiers SHOULD design DCQL queries that request only the minimal set of claims and Credentials needed to fulfill the specified purposes.
 
-### No Fingerprinting {#no_fingerprinting}
+## No Fingerprinting of the Wallets {#no_fingerprinting}
 
-Verifier SHOULD NOT attempt to fingerprint the wallets to track the user's visits.
-
+Verifier SHOULD NOT attempt to fingerprint the Wallets to track the user's visits.
 
 ## Data Minimization {#data_minimization}
 
@@ -1994,9 +1991,9 @@ Verifier SHOULD NOT attempt to fingerprint the wallets to track the user's visit
 
 If the Wallet is acting within a trust framework that allows the Wallet to determine whether a 'request_uri' belongs to a certain 'client_id', the Wallet is RECOMMENDED to validate the Verifier's authenticity and authorization given by 'client_id' and that the 'request_uri' corresponds to this Verifier. If the link cannot be established in those cases, the Wallet SHOULD refuse the request or ask the End-User for advice.
 
-If no End-User interaction is required before sending the request, it is easy to request on a large scale and in an automated fashion the wallet capabilities from all visitors of a website. Even without personally identifiable information (PII) this can reveal some information about End-Users, like their nationality (e.g., a Wallet with special capabilities only used in one EU member state).
+If no End-User interaction is required before sending the request, it is easy to request on a large scale and in an automated fashion the Wallet capabilities from all visitors of a website. Even without personally identifiable information (PII) this can reveal some information about End-Users, like their nationality (e.g., a Wallet with special capabilities only used in one EU member state).
 
-Mandatory End-User interaction before sending the request, like clicking a button, unlocking the wallet or even just showing a screen of the app, can make this less attractive/likely to being exploited.
+Mandatory End-User interaction before sending the request, like clicking a button, unlocking the Wallet or even just showing a screen of the app, can make this less attractive/likely to being exploited.
 
 Requests from the Wallet to the Verifier SHOULD be sent with the minimal amount of information possible, and in particular, without any HTTP headers identifying the software used for the request (e.g., HTTP libraries or their versions). The Wallet MUST NOT send PII or any other data that could be used for fingerprinting to the Request URI in order to prevent End-User tracking.
 
@@ -2020,7 +2017,7 @@ The more narrow a request is, the more information is revealed:
  * A request with which can only be satisfied by a single trusted authority will reveal that the user has a Credential from a particular authority, from which other attributes may be inferred. 
  * A request with value matching (as defined in (#selecting_claims)) will reveal specific value of that claim/attribute. 
 
-Wallet implementations need to balance the value of error detection to the maintenance and scaling of the verifier ecosystem with the information that is revealed.
+Wallet implementations need to balance the value of error detection to the maintenance and scaling of the Verifier ecosystem with the information that is revealed.
 
 A Wallet SHOULD NOT return any OpenID4VP protocol errors without user interaction either with the platform or the Wallet. When handling errors, implementations can opt to cancel the flow (the details of which are platform specific) rather than return an OpenID4VP protocol-specific error. This will make the result indistinguishable from other platform aborts, preventing any information from being revealed.
 
@@ -2444,7 +2441,7 @@ The `client_id` parameter MUST be omitted in unsigned requests defined in (#unsi
 
 Parameters defined by a specific Client Identifier Prefix (such as the `trust_chain` parameter for the OpenID Federation Client Identifier Prefix) are also supported over the W3C Digital Credentials API.
 
-The `client_id` parameter MUST be present in signed requests defined in (#signed_request), as it communicates to the wallet which Client Identifier Prefix and Client Identifier to use when authenticating the client through verification of the request signature or retrieving client metadata.
+The `client_id` parameter MUST be present in signed requests defined in (#signed_request), as it communicates to the Wallet which Client Identifier Prefix and Client Identifier to use when authenticating the client through verification of the request signature or retrieving client metadata.
 The value of the `response_mode` parameter MUST be `dc_api` when the response is not encrypted and `dc_api.jwt` when the response is encrypted as defined in (#response_encryption). The Response Mode `dc_api` causes the Wallet to send the Authorization Response via the DC API. For Response Mode `dc_api.jwt`, the Wallet includes the `response` parameter, which contains an encrypted JWT encapsulating the Authorization Response, as defined in (#response_encryption).
 
 In addition to the above-mentioned parameters, a new parameter is introduced for OpenID4VP over the W3C Digital Credentials API:
@@ -2477,7 +2474,7 @@ Verifiers SHOULD format signed Requests using JWS Compact Serialization but MAY 
 
 #### JWS Compact Serialization {#single_signed_request}
 
-When the JWS Compact Serialization is used to send the request, the Verifier can convey only one Trust Framework, i.e., the Verifier knows which trust frameworks the wallet supports. All request parameters are encoded in a request object as defined in (#vp_token_request) and the JWS object is used as the value of the `request` claim in the `data` element of the API call. 
+When the JWS Compact Serialization is used to send the request, the Verifier can convey only one Trust Framework, i.e., the Verifier knows which trust frameworks the Wallet supports. All request parameters are encoded in a request object as defined in (#vp_token_request) and the JWS object is used as the value of the `request` claim in the `data` element of the API call. 
 
 This is illustrated in the following non-normative example.
 
@@ -3486,7 +3483,7 @@ The media type for a Verifier Attestation JWT is `application/verifier-attestati
 * Security considerations: See Security Considerations in in [@!RFC7519].
 * Interoperability considerations: n/a
 * Published specification: (#verifier_attestation_jwt) of this specification
-* Applications that use this media type: Applications that issue, present, verify verifier attestation VCs
+* Applications that use this media type: Applications that issue, present, verify Verifier attestation VCs
 * Additional information:
   - Magic number(s): n/a
   - File extension(s): n/a
@@ -3527,7 +3524,7 @@ in the IANA "Uniform Resource Identifier (URI) Schemes" registry [@IANA.URI.Sche
 ### openid4vp
 
 * URI Scheme: `openid4vp`
-* Description: Custom scheme used for wallet invocation
+* Description: Custom scheme used for Wallet invocation
 * Status: Provisional
 * Well-Known URI Support: -
 * Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
