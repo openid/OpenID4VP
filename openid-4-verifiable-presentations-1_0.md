@@ -2539,7 +2539,7 @@ The following security considerations from OpenID4VP apply:
 
 The following privacy considerations from OpenID4VP apply:
 
-* Selective Disclosure as described in (#seletive-disclosure).
+* Selective Disclosure as described in (#selective-disclosure).
 * Privacy implications of mechanisms to establish trust in Issuers as described in (#privacy_trusted_authorities).
 
 # Credential Format Specific Parameters and Rules {#format_specific_parameters}
