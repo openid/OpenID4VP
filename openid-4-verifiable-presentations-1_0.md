@@ -316,14 +316,14 @@ The following is a non-normative example of a transaction data content, after ba
 }
 ```
 
-`verifier_attestations`:
+`verifier_info`:
 : OPTIONAL. A non-empty array of attestations about the Verifier relevant to the Credential Request. These attestations MAY include Verifier metadata, policies, trust status, or authorizations. Attestations are intended to support authorization decisions, inform Wallet policy enforcement, or enrich the End-User consent dialog. Each object has the following structure:
 
     * `format`: REQUIRED. A string that identifies the format of the attestation and how it is encoded. Ecosystems SHOULD use collision-resistant identifiers. Further processing of the attestation is determined by the type of the attestation, which is specified in a format-specific way. 
-    * `data`: REQUIRED. An object or string containing an attestation (e.g. a JWT). The payload structure is defined on a per format level. It is at the discretion of the Wallet whether it uses the information from `verifier_attestations`. Factors that influence such Wallet's decision include, but are not limited to, trust framework the wallet supports, specific policies defined by the Issuers or ecosystem, and profiles of this specification. If the Wallet uses information from `verifier_attestations`, the Wallet MUST validate the signature and ensure binding.
+    * `data`: REQUIRED. An object or string containing an attestation (e.g. a JWT). The payload structure is defined on a per format level. It is at the discretion of the Wallet whether it uses the information from `verifier_info`. Factors that influence such Wallet's decision include, but are not limited to, trust framework the wallet supports, specific policies defined by the Issuers or ecosystem, and profiles of this specification. If the Wallet uses information from `verifier_info`, the Wallet MUST validate the signature and ensure binding.
     * `credential_ids`: OPTIONAL. A non-empty array of strings each referencing a Credential requested by the Verifier for which the attestation is relevant. Each string matches the `id` field in a DCQL Credential Query. If omitted, the attestation is relevant to all requested credentials.
 
-See (#verifier-attestations) for more details.
+See (#verifier-info) for more details.
 
 The following is a non-normative example of an attested object:
 
@@ -669,11 +669,11 @@ The Wallet then validates the request as specified in OAuth 2.0 [@RFC6749].
 
 If the Verifier responds with any HTTP error response, the Wallet MUST terminate the process.
 
-## Verifier Attestations {#verifier-attestations}
+## Verifier Info {#verifier-info}
 
-Verifier Attestations allow the Verifier to provide additional context or metadata as part of the Authorization Request attested by a trusted third party. These inputs can support a variety of use cases, such as helping the Wallet apply policy decisions, validating eligibility, or presenting more meaningful information to the End-User during consent.
+Verifier Info parameter allows the Verifier to provide additional context or metadata as part of the Authorization Request attested by a trusted third party. These inputs can support a variety of use cases, such as helping the Wallet apply policy decisions, validating eligibility, or presenting more meaningful information to the End-User during consent.
 
-Each Verifier Attestation is an object containing a type identifier, associated data and optionally references to credential ids. The format and semantics of these attestations are defined by ecosystems or profiles.
+Each Verifier Info object contains a type identifier, associated data and optionally references to credential ids. The format and semantics of these attestations are defined by ecosystems or profiles.
 
 For example, a Verifier might include:
 
@@ -681,7 +681,7 @@ For example, a Verifier might include:
 - A **policy statement**, such as a signed document describing acceptable use, retention periods, or access rights.
 - The **confirmation of a role** of the verifier in a certain domain, e.g. the verifier might be a certified payment service provider under the EU's Payment Service Directive 2.
 
-Verifier Attestations are optional. Wallets MAY use them to make authorization decisions or to enhance the user experience, but they SHOULD ignore any unrecognized or unsupported Verifier Attestation types.
+The Verifier Info parameter is optional. Wallets MAY use them to make authorization decisions or to enhance the user experience, but they SHOULD ignore any unrecognized or unsupported Verifier Info types.
 
 ### Proof of Possession
 
@@ -2360,7 +2360,7 @@ Out of the Authorization Request parameters defined in [@!RFC6749] and (#vp_toke
 * `request`
 * `transaction_data`
 * `dcql_query`
-* `verifier_attestations`
+* `verifier_info`
 
 The `client_id` parameter MUST be omitted in unsigned requests defined in (#unsigned_request). The Wallet MUST ignore any `client_id` parameter that is present in an unsigned request.
 
@@ -2418,7 +2418,7 @@ The JWS JSON Serialization [@!RFC7515]) allows the Verifier to use multiple Clie
 In this case, the following request parameters, if used, MUST be present only in the protected header of the respective `signature` object in the `signatures` array defined in [@!RFC7515, section 7.2.1]:
 
 * `client_id`
-* `verifier_attestations`
+* `verifier_info`
 * parameters that are specific to a Client Identifier Prefix, e.g., the `trust_chain` JWS header parameter for the `openid_federation` Client Identifier Prefix 
 
 All other request parameters MUST be present in the `payload` element of the JWS object.
@@ -3313,9 +3313,9 @@ established by [@!RFC6749].
 * Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#response-parameters) of this specification
 
-### verifier_attestations
+### verifier_info
 
-* Name: `verifier_attestations`
+* Name: `verifier_info`
 * Parameter Usage Location: authorization request
 * Change Controller: OpenID Foundation Digital Credentials Protocols Working Group - openid-specs-digital-credentials-protocols@lists.openid.net
 * Reference: (#new_parameters) of this specification
@@ -3484,6 +3484,7 @@ The technology described in this specification was made available from contribut
    * make the `meta` parameter mandatory in DCQL query
    * explicitly state that various arrays need to be non-empty
    * clarify text about how encryption keys are obtained
+   * rename `verifier_attestations` parameter name to `verifier_info`
 
    -28
 
