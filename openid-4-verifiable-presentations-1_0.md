@@ -1888,15 +1888,6 @@ The OpenID Foundation provides tools that can be used to confirm that an impleme
 
 https://openid.net/certification/conformance-testing-for-openid-for-verifiable-presentations/
 
-# Privacy Considerations {#privacy_consideratins}
-
-Many privacy considerations are specific to the credential format and associated proof type used in a particular presentation.
-This section mainly focuses on privacy considerations that are specific to the presentation protocol, while also addressing
-considerations that apply across some common credential formats and the treatments at wallets and verifiers. 
-
-Wallet providers and Verifiers need to take into account privacy considerations in this section to mitigate the risks of
-data leakage, user tracking, and other privacy harms. These considerations should inform the development of privacy risk analysis.
-
 ## Always Use the Full Client Identifier {#full-client-identifier}
 
 Confusing Verifiers using a Client Identifier Prefix with those using none can lead to attacks. Therefore, Wallets MUST always use the full Client Identifier, including the prefix if provided, within the context of the Wallet or its responses to identify the client. This refers in particular to places where the Client Identifier is used in [@!RFC6749] and in the presentation returned to the Verifier.
@@ -1916,8 +1907,7 @@ This section mainly focuses on privacy considerations that are specific to the p
 considerations that apply across some common credential formats and the treatments at wallets and verifiers. 
 
 Wallet providers and Verifiers need to take into account privacy considerations in this section to mitigate the risks of
-data leakage, user tracking, and other privacy harms. These considerations should inform the development of privacy risk analysis.
-
+data leakage, user tracking, and other privacy harms. These considerations inform the development of privacy risk analysis.
 
 ## DCQL Value Matching {#dcql-value-matching}
 
@@ -1940,8 +1930,8 @@ response can also leak information about the processing outcome of `values`.
 
 ## User Consent and Choice {#user_consent_and_choice}
 
-* Wallets should obtain explicit, informed consent from the End-User before releasing any Verifiable Credential or Presentation to a Verifier.
-* If an error prevents the Wallet from honoring a request (e.g., missing credentials or mismatched claim values), the Wallet should inform the user in a privacy-preserving way.
+* Wallets SHOULD obtain explicit, informed consent from the End-User before releasing any Verifiable Credential or Presentation to a Verifier.
+* If an error prevents the Wallet from honoring a request (e.g., missing credentials or mismatched claim values), the Wallet SHOULD inform the user in a privacy-preserving way.
 
 ## Purpose Legitimacy and Specification {#purpose_legitimacy_and_specification}
 
@@ -1980,7 +1970,6 @@ Verifier SHOULD NOT attempt to fingerprint the wallets to track the user's visit
 ### Wallet to Verifier communication {#wallet_to_verifier_communication}
 
 *   **HTTP Headers:** Wallets SHOULD only send the minimal amount of information possible, and in particular, without any HTTP headers identifying the software used for the request (e.g., HTTP libraries or their versions) when retrieving a `request_uri` or sending to `response_uri` to reduce the risk of fingerprinting and End-User tracking. 
-<<<<<<< HEAD
     
 *   **No unauthorized PII:** Wallets MUST NOT include any personally identifiable information (PII) in HTTP requests to Verifiers unless explicitly required for the flow and authorized by the user. 
     
@@ -1988,19 +1977,8 @@ Verifier SHOULD NOT attempt to fingerprint the wallets to track the user's visit
     
 *   **Unlinkability:** Wallet can use ephemeral credentials only to achieve cross-session unlinkability. Wallet can use different instances of credentials to different Verifiers to achieve cross-Verifier unlinkability. Considerable discourse regarding unlinkability in salted-hash based selective disclosure mechanisms is provided in \[@?I-D.ietf-oauth-selective-disclosure-jwt, section 10.1\]. One technique mentioned to achieve some important unlinkability properties is the use of batch issuance, which is supported in \[@?OpenID4VCI\], with individual credentials being presented only once.
     
-*   **No excessive data**: If the Wallet has indications that the Verifier is requesting data that it should not be, the Wallet should warn the user and potentially stop processing. 
+*   **No excessive data**: If the Wallet has indications that the Verifier is requesting data that it is not entitled to, the Wallet SHOULD warn the user and potentially stop processing.
     
-=======
-
-*   **No unauthorized PII:** Wallets MUST NOT include any personally identifiable information (PII) in HTTP requests to Verifiers unless explicitly required for the flow and authorized by the user. 
-
-*   **No unauthorized request to Request URI:** If no End-User interaction is required before sending the request to Request URI, it is easy for a malicious Verifier to obtain the Wallet capabilities from all visitors of a website on a large scale and in an automated fashion. Even without personally identifiable information (PII) this can reveal some information about End-Users, like their nationality (e.g., a Wallet with special capabilities only used in one EU member state). Mandatory End-User interaction before sending the request, like clicking a button, unlocking the Wallet or even just showing a screen of the app, can make this less attractive/likely to being exploited.
-
-*   **Unlinkability:** Wallet can use ephemeral credentials only to achieve cross-session unlinkability. Wallet can use different instances of credentials to different Verifiers to achieve cross-Verifier unlinkability. Considerable discourse regarding unlinkability in salted-hash based selective disclosure mechanisms is provided in \[@?I-D.ietf-oauth-selective-disclosure-jwt, section 10.1\]. One technique mentioned to achieve some important unlinkability properties is the use of batch issuance, which is supported in \[@?OpenID4VCI\], with individual credentials being presented only once.
-
-*   **No excessive data**: If the Wallet has indications that the Verifier is requesting data that it should not be, the Wallet should warn the user and potentially stop processing. 
-
->>>>>>> d32d978 (manually resolve merge conflicts)
 
 ### Authorization Error Response with the `wallet_unavailable` error code {#authoization_error_responsewith_the_wallet_unavailable_error_code}
 
@@ -2065,42 +2043,23 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
 
 ### Unobservability by Wallets {#unobservability_by_wallets}
 
-<<<<<<< HEAD
     
-*   **User-Only Visibility**: Transaction history and data within the Wallet should not be accessible to anyone other than the user, unless the user has given consent or there is another legal basis to do so.
+*   **User-Only Visibility**: Transaction history and data within the Wallet SHOULD NOT be accessible to anyone other than the user, unless the user has given consent or there is another legal basis to do so.
     
-=======
-*   **User-Only Visibility**: Transaction history and data within the Wallet should not be accessible to anyone other than the user, unless the user has given consent or there is another legal basis to do so.
-
->>>>>>> d32d978 (manually resolve merge conflicts)
 *   **Prevention of Profiling and Tracking:** The Wallet's design incorporates data minimization principles, ensuring that only essential information is shared during interactions. This limits opportunities for profiling or linking user activities across different services
 
 ## Accuracy and Quality {#accuracy_and_quality}
 
-* Verifiers should establish a means to detect status change (e.g. revocation) of the obtained credentials through the OpenID4VP protocol. (e.g., through StatusList.) 
-<<<<<<< HEAD
+* Verifiers SHOULD establish a means to detect status change (e.g. revocation) of the Credentials obtained  through the OpenID4VP protocol. (e.g., through StatusList.) 
     
 ## Openness, Transparency and Notice {#openness_transparency_and_notice}
 
-*   Wallets should make their privacy notices readily available to the user. 
+*   Wallets SHOULD make their privacy notices readily available to the user. 
         
-=======
-
-## Openness, Transparency and Notice {#openness_transparency_and_notice}
-
-*   Wallets should make their privacy notices readily available to the user. 
-
->>>>>>> d32d978 (manually resolve merge conflicts)
 ## Information Security {#information_security}
 
-*   Wallet providers and Verifiers should choose the options in the protocols described in this document so that the data in transit is integrity, confidentiality and availability protected. 
-*   Both Wallet providers and Verifiers should be protecting PII under their respective authority with appropriate controls at the operational, functional, and strategic level to ensure the integrity, confidentiality, and availability of the PII, and protect it against risks such as unauthorized access, destruction, use, modification, disclosure or loss throughout the whole of its life cycle;
-
-<<<<<<< HEAD
-** NOTE **: Implementers should also refer to the Security Considerations section of this document. 
-=======
-** NOTE **: Implementers should also refer to the Security Considerations section of this document.
->>>>>>> d32d978 (manually resolve merge conflicts)
+*   Wallet providers and Verifiers SHOULD choose the options in the protocols described in this document so that the data in transit is integrity, confidentiality and availability protected. 
+*   Both Wallet providers and Verifiers SHOULD be protecting PII under their respective authority with appropriate controls at the operational, functional, and strategic level to ensure the integrity, confidentiality, and availability of the PII, and protect it against risks such as unauthorized access, destruction, use, modification, disclosure or loss throughout the whole of its life cycle;
 
 {backmatter}
 
@@ -2518,7 +2477,7 @@ Verifiers SHOULD format signed Requests using JWS Compact Serialization but MAY 
 
 #### JWS Compact Serialization {#single_signed_request}
 
-When the JWS Compact Serialization is used to send the request, the Verifier can convey only one Trust Framework, i.e., the Verifier should know which trust frameworks the wallet supports. All request parameters are encoded in a request object as defined in (#vp_token_request) and the JWS object is used as the value of the `request` claim in the `data` element of the API call. 
+When the JWS Compact Serialization is used to send the request, the Verifier can convey only one Trust Framework, i.e., the Verifier knows which trust frameworks the wallet supports. All request parameters are encoded in a request object as defined in (#vp_token_request) and the JWS object is used as the value of the `request` claim in the `data` element of the API call. 
 
 This is illustrated in the following non-normative example.
 
