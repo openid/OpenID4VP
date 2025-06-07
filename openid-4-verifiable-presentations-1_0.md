@@ -1790,7 +1790,7 @@ https://openid.net/certification/conformance-testing-for-openid-for-verifiable-p
 
 Many privacy considerations are specific to the credential format and associated proof type used in a particular presentation.
 This section mainly focuses on privacy considerations that are specific to the presentation protocol, while also addressing
-considerations considerations that apply across some common credential formats and the treatments at wallets and verifiers. 
+considerations that apply across some common credential formats and the treatments at wallets and verifiers. 
 
 Wallet providers and Verifiers need to take into account privacy considerations in this section to mitigate the risks of
 data leakage, user tracking, and other privacy harms. These considerations should inform the development of privacy risk analysis.
@@ -1853,7 +1853,7 @@ Considerable discourse regarding unlinkability in salted-hash based selective di
 unlinkability properties is the use of batch issuance, which is supported in [@?OpenID4VCI], with individual credentials
 being presented only once.
 
-Note that the nature of the issuer of the credential may leak unnecessary information such as nationality or state of residence.
+Note that the nature of the issuer of the credential may leak sensitive information such as nationality or state of residence.
 
 ### Strictly Necessary {#strictly_necessary}
 
