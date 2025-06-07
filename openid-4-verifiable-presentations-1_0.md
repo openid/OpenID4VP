@@ -170,7 +170,7 @@ Note: The diagram does not illustrate all the optional features of this specific
         |                 |-------------------------------------------------->|
         |                 |                                                   |
         |                 |                                                   |
-        |   End-User Authentication / Consent                                 |
+        |       User Authentication / Consent                                 |
         |                 |                                                   |
         |                 |  (2)   Authorization Response                     |
         |                 |  (VP Token with Presentation(s))                  |
@@ -214,7 +214,7 @@ Note: The usage of the Request URI as defined in [@!RFC9101] does not depend on 
         |                 |      (DCQL query)                                 |
         |                 |-------------------------------------------------->|
         |                 |                                                   |
-        |   End-User Authentication / Consent                                 |
+        |       User Authentication / Consent                                 |
         |                 |                                                   |
         |                 |  (3)   Authorization Response as HTTP POST        |
         |                 |  (VP Token with Presentation(s))                  |
@@ -244,7 +244,7 @@ OpenID for Verifiable Presentations extends existing OAuth 2.0 mechanisms as fol
 * The concept of a Client Identifier Prefix to enable deployments of this specification to use different mechanisms to obtain and validate metadata of the Verifier beyond the scope of [@!RFC6749].
 * A mechanism specifying the use of OpenID4VP with the Digital Credentials API (see (#dc_api)).
 
-Presentation of Credentials using OpenID for Verifiable Presentations can be combined with the End-User authentication using [@SIOPv2], and the issuance of OAuth 2.0 Access Tokens.
+Presentation of Credentials using OpenID for Verifiable Presentations can be combined with the user authentication using [@SIOPv2], and the issuance of OAuth 2.0 Access Tokens.
 
 # Authorization Request {#vp_token_request}
 
@@ -956,7 +956,7 @@ array is the least preferred. Verifiers SHOULD use the principle of least
 information disclosure to influence how they order these options. For example, a
 proof of age request should prioritize requesting an attribute like
 `age_over_18` over an attribute like `birth_date`. The `claim_sets` syntax is
-not intended to define options the user can choose from, see (#dcql_query_ui) for
+not intended to define options the End-User can choose from, see (#dcql_query_ui) for
 more information. The Wallet is recommended to return the first option it can satisfy
 since that is the preferred option from the Verifier. However, there can be reasons to
 deviate. Non-exhaustive examples of such reasons are:
@@ -996,7 +996,7 @@ Verifier according to these rules, it MUST NOT return any Credential(s).
 
 While this specification provides the mechanisms for requesting different sets
 of claims and Credentials, it does not define details about the user interface
-of the Wallet, for example, if and how users can select which combination of
+of the Wallet, for example, if and how End-Users can select which combination of
 Credentials to present. However, it is typically expected that the Wallet
 presents the End-User with a choice of which Credential(s) to present if
 multiple of the sets of Credentials in `options` can satisfy the request.
@@ -1199,7 +1199,7 @@ It has been defined to address the following use cases:
 The Response Mode is defined in accordance with [@!OAuth.Responses] as follows:
 
 `direct_post`:
-: In this mode, the Authorization Response is sent to the Verifier using an HTTP POST request to an endpoint controlled by the Verifier. The Authorization Response MUST be encoded in the request body using the format defined by the `application/x-www-form-urlencoded` HTTP content type. The parameters in the request body MUST all be encoded using UTF-8. The Verifier can request that the Wallet redirects the user to the Verifier using the response as defined below.
+: In this mode, the Authorization Response is sent to the Verifier using an HTTP POST request to an endpoint controlled by the Verifier. The Authorization Response MUST be encoded in the request body using the format defined by the `application/x-www-form-urlencoded` HTTP content type. The parameters in the request body MUST all be encoded using UTF-8. The Verifier can request that the Wallet redirects the End-User to the Verifier using the response as defined below.
 
 The following new Authorization Request parameter is defined to be used in conjunction with Response Mode `direct_post`: 
 
@@ -1518,7 +1518,7 @@ The Verifier can use one of the following mechanisms to invoke a Wallet:
 
 For a cross device flow, either of the above options MAY be presented as a QR code for the End-User to scan using a Wallet or an arbitrary camera application on a user-device.
 
-The Wallet can also be invoked from the web or a native app using the Digital Credentials API as described in (#dc_api). As described in detail in (#dc_api), DC API provides privacy, security (see (#session_fixation)), and user experience benefits (particularly in the cases where a user has multiple Wallets).
+The Wallet can also be invoked from the web or a native app using the Digital Credentials API as described in (#dc_api). As described in detail in (#dc_api), DC API provides privacy, security (see (#session_fixation)), and user experience benefits (particularly in the cases where an End-User has multiple Wallets).
 
 # Wallet Metadata (Authorization Server Metadata) {#as_metadata_parameters}
 
@@ -1682,7 +1682,7 @@ In order to support implementers, this section outlines a possible design that f
     |              |      (response_uri, nonce, state, dcql_query)                 |
     |              |-------------------------------------------------------------->|
     |              |                            |                                  |
-    |              End-User Authentication / Consent                               |
+    |                  User Authentication / Consent                               |
     |              |                            |                                  |
     |              |                            | (5) Authorization Response       |
     |              |                            |     (VP Token, state)            |
@@ -1866,7 +1866,7 @@ Implementations of this specification MUST have security mechanisms in place to 
 * Authentication between the different parts within the Verifier
 * Two cryptographically random numbers.  The first being used to manage state between the Wallet and Verifier. The second being used to ensure that only a legitimate component of the Verifier can obtain the Authorization Response data.
 
-## End-User Authentication using Credentials {#end-user-authentication-using-credentials}
+## User Authentication using Credentials {#end-user-authentication-using-credentials}
 
 Clients intending to authenticate the End-User utilizing a claim in a Credential MUST ensure this claim is stable for the End-User as well locally unique and never reassigned within the Credential Issuer to another End-User. Such a claim MUST also only be used in combination with the Credential Issuer identifier to ensure global uniqueness and to prevent attacks where an attacker obtains the same claim from a different Credential Issuer and tries to impersonate the legitimate End-User.
 
@@ -1913,11 +1913,11 @@ data leakage, user tracking, and other privacy harms. These considerations infor
 
 Wallets SHOULD obtain explicit, informed consent from the End-User before releasing any Verifiable Credential or Presentation to a Verifier.
 
-If an error prevents the Wallet from honoring a request (e.g., missing Credentials or mismatched claim values), the Wallet SHOULD inform the user in a privacy-preserving way.
+If an error prevents the Wallet from honoring a request (e.g., missing Credentials or mismatched claim values), the Wallet SHOULD inform the End-User in a privacy-preserving way.
 
 ## Purpose Legitimacy and Specification {#purpose_legitimacy_and_specification}
 
-The Verifier ensures that information collection purpose is sufficiently specific and communicated before collection. For example, the purpose is shown to the user before the presentation request is sent to the Wallet.
+The Verifier ensures that information collection purpose is sufficiently specific and communicated before collection. For example, the purpose is shown to the End-User before the presentation request is sent to the Wallet.
 
 ## Selective Disclosure {#selective_disclosure}
 
@@ -1943,12 +1943,12 @@ already leak information about the claim value. Therefore, Wallets MUST take
 precautions against leaking information about the claim value when processing
 `values`. This SHOULD include, in particular:
 
-- ensuring that a Verifier, in the response, cannot distinguish between the case where a user did
+- ensuring that a Verifier, in the response, cannot distinguish between the case where an End-User did
   not consent to releasing the Credential and the case where the claim value did
   not match the expected value, and
 - preventing repeated or "silent" requests leaking data to the Verifier without
   the user's consent by ensuring that all requests, even if no response can be
-  sent by the Wallet due to a `values` mismatch, require some form of user
+  sent by the Wallet due to a `values` mismatch, require some form of End-User
   interaction before a response is sent.
 
 In both cases listed here, it needs to be considered that returning an error
@@ -1960,7 +1960,7 @@ Verifiers SHOULD design DCQL queries that request only the minimal set of claims
 
 ## No Fingerprinting of the Wallets {#no_fingerprinting}
 
-Verifier SHOULD NOT attempt to fingerprint the Wallets to track the user's visits.
+Verifier SHOULD NOT attempt to fingerprint the Wallets to track the End-User's visits.
 
 ## Data Minimization {#data_minimization}
 
@@ -1968,24 +1968,24 @@ Verifier SHOULD NOT attempt to fingerprint the Wallets to track the user's visit
 
 *   **HTTP Headers:** Wallets SHOULD only send the minimal amount of information possible, and in particular, without any HTTP headers identifying the software used for the request (e.g., HTTP libraries or their versions) when retrieving a `request_uri` or sending to `response_uri` to reduce the risk of fingerprinting and End-User tracking. 
     
-*   **No unauthorized PII:** Wallets MUST NOT include any personally identifiable information (PII) in HTTP requests to Verifiers unless explicitly required for the flow and authorized by the user. 
+*   **No unauthorized PII:** Wallets MUST NOT include any personally identifiable information (PII) in HTTP requests to Verifiers unless explicitly required for the flow and authorized by the End-User. 
     
 *   **No unauthorized request to Request URI:** If no End-User interaction is required before sending the request to Request URI, it is easy for a malicious Verifier to obtain the Wallet capabilities from all visitors of a website on a large scale and in an automated fashion. Even without personally identifiable information (PII) this can reveal some information about End-Users, like their nationality (e.g., a Wallet with special capabilities only used in one EU member state). Mandatory End-User interaction before sending the request, like clicking a button, unlocking the Wallet or even just showing a screen of the app, can make this less attractive/likely to being exploited.
     
 *   **Unlinkability:** Wallet can use ephemeral Credentials only to achieve cross-session unlinkability. Wallet can use different instances of Credentials to different Verifiers to achieve cross-Verifier unlinkability. Considerable discourse regarding unlinkability in salted-hash based selective disclosure mechanisms is provided in \[@?I-D.ietf-oauth-selective-disclosure-jwt, section 10.1\]. One technique mentioned to achieve some important unlinkability properties is the use of batch issuance, which is supported in \[@?OpenID4VCI\], with individual Credentials being presented only once.
     
-*   **No excessive data**: If the Wallet has indications that the Verifier is requesting data that it is not entitled to, the Wallet SHOULD warn the user and potentially stop processing.
+*   **No excessive data**: If the Wallet has indications that the Verifier is requesting data that it is not entitled to, the Wallet SHOULD warn the End-User and potentially stop processing.
     
 
 ### Authorization Error Response with the `wallet_unavailable` error code {#authoization_error_responsewith_the_wallet_unavailable_error_code}
 
 * In the event that another component is invoked instead of the Wallet, the End-User MUST be informed and give consent before the invoked component returns the `wallet_unavailable` Authorization Error Response to the Verifier.
-* Error responses SHOULD avoid including sensitive or detailed contextual information that could be used to infer user data.
+* Error responses SHOULD avoid including sensitive or detailed contextual information that could be used to infer End-User's data.
 
 ### Request URI and Trust Relationships {#request_uri_and_trust_relationships}
 
 * Wallets operating within a trust framework SHOULD validate that the request_uri is properly associated with the client_id and authorized for the request.
-* Untrusted or unrecognized request_uri endpoints SHOULD be rejected or require user confirmation before proceeding.
+* Untrusted or unrecognized request_uri endpoints SHOULD be rejected or require End-User confirmation before proceeding.
 
 ### Authorization Requests with Request URI {#authorization_requests_with_request_uri}
 
@@ -2008,20 +2008,20 @@ In the event that another component is invoked instead of the Wallet, the End-Us
 
 ## Digital Credential API Error Responses {#privacy-dc-api-error}
 
-Returning any OpenID4VP protocol error, regardless of content, can reveal additional information about the user’s underlying Credentials or Wallet in a way that is unique to the Digital Credentials API since reaching the Wallet can be dependent on a Wallet's ability to satisfy the request. For example, platform implementations could only allow Wallets to be selected that satisfy the request. In this case, returning an OpenID4VP protocol error responses can only be returned by a selected Wallet and would therefore reveal that the user is in possession of Credentials that satisfy the request. This is in contrast to other engagement methods, where the Wallet receives the request before learning if it can be fulfilled. What is revealed by a Wallet in those cases depends on how each individual Wallet processes a request.
+Returning any OpenID4VP protocol error, regardless of content, can reveal additional information about the End-User’s underlying Credentials or Wallet in a way that is unique to the Digital Credentials API since reaching the Wallet can be dependent on a Wallet's ability to satisfy the request. For example, platform implementations could only allow Wallets to be selected that satisfy the request. In this case, returning an OpenID4VP protocol error responses can only be returned by a selected Wallet and would therefore reveal that the End-User is in possession of Credentials that satisfy the request. This is in contrast to other engagement methods, where the Wallet receives the request before learning if it can be fulfilled. What is revealed by a Wallet in those cases depends on how each individual Wallet processes a request.
 
 The more narrow a request is, the more information is revealed: 
 
- * A request that can be fulfilled by a broad range of documents will only reveal that the user has a Credential from a large set of documents.
- * A request for a single document type will reveal the user is in possession of that Credential. How sensitive this is would depend on the particular Credential.
- * A request with which can only be satisfied by a single trusted authority will reveal that the user has a Credential from a particular authority, from which other attributes may be inferred. 
+ * A request that can be fulfilled by a broad range of documents will only reveal that the End-User has a Credential from a large set of documents.
+ * A request for a single document type will reveal the End-User is in possession of that Credential. How sensitive this is would depend on the particular Credential.
+ * A request with which can only be satisfied by a single trusted authority will reveal that the End-User has a Credential from a particular authority, from which other attributes may be inferred. 
  * A request with value matching (as defined in (#selecting_claims)) will reveal specific value of that claim/attribute. 
 
 Wallet implementations need to balance the value of error detection to the maintenance and scaling of the Verifier ecosystem with the information that is revealed.
 
-A Wallet SHOULD NOT return any OpenID4VP protocol errors without user interaction either with the platform or the Wallet. When handling errors, implementations can opt to cancel the flow (the details of which are platform specific) rather than return an OpenID4VP protocol-specific error. This will make the result indistinguishable from other platform aborts, preventing any information from being revealed.
+A Wallet SHOULD NOT return any OpenID4VP protocol errors without End-User interaction either with the platform or the Wallet. When handling errors, implementations can opt to cancel the flow (the details of which are platform specific) rather than return an OpenID4VP protocol-specific error. This will make the result indistinguishable from other platform aborts, preventing any information from being revealed.
 
-A Wallet SHOULD NOT return any OpenID4VP protocol errors before obtaining user consent, when processing a request containing value matching (to avoid revealing values of claims without consent), or issuer selection (to avoid revealing that the user has a Credential from a particular authority).
+A Wallet SHOULD NOT return any OpenID4VP protocol errors before obtaining End-User consent, when processing a request containing value matching (to avoid revealing values of claims without consent), or issuer selection (to avoid revealing that the End-User has a Credential from a particular authority).
 
 ## Privacy implications of mechanisms to establish trust in Issuers {#privacy_trusted_authorities}
 
@@ -2031,7 +2031,7 @@ It is important to understand the implications that different mechanisms to esta
 Generally speaking, a distinction can be made between self-contained mechanisms, where all information necessary to validate if a Credential matches the request is already present in the Wallet and Verifier, and those mechanisms that require some form of online resolution.
 Mechanisms that require online resolution can leak information that could be used to profile the usage of Credentials and the overall ecosystem.
 
-Especially the case where a Wallet has to retrieve information before being able to construct a presentation that matches the request could leak information about individual users to other parties.
+Especially the case where a Wallet has to retrieve information before being able to construct a presentation that matches the request could leak information about individual End-Users to other parties.
 Wallets SHOULD NOT fetch URLs provided by the Verifier in a request that are unknown to the Wallet or hosted by a third party that the Wallet does not trust. The privacy concerns can be mitigated if the URLs are only used by the Wallet as identifiers but not fetched upon receiving the request from the Verifier.
 
 Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make sure that the privacy properties of the mechanisms they choose to support matches with the desired privacy properties of the overall ecosystem.
@@ -2041,9 +2041,9 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
 ### Unobservability by Wallets {#unobservability_by_wallets}
 
     
-*   **User-Only Visibility**: Transaction history and data within the Wallet SHOULD NOT be accessible to anyone other than the user, unless the user has given consent or there is another legal basis to do so.
+*   **User-Only Visibility**: Transaction history and data within the Wallet SHOULD NOT be accessible to anyone other than the End-User, unless the End-User has given consent or there is another legal basis to do so.
     
-*   **Prevention of Profiling and Tracking:** The Wallet's design incorporates data minimization principles, ensuring that only essential information is shared during interactions. This limits opportunities for profiling or linking user activities across different services
+*   **Prevention of Profiling and Tracking:** The Wallet's design incorporates data minimization principles, ensuring that only essential information is shared during interactions. This limits opportunities for profiling or linking End-User activities across different services
 
 ## Accuracy and Quality {#accuracy_and_quality}
 
@@ -2051,7 +2051,7 @@ Ecosystems that plan to leverage the trusted authorities mechanisms SHOULD make 
     
 ## Openness, Transparency and Notice {#openness_transparency_and_notice}
 
-*   Wallets SHOULD make their privacy notices readily available to the user. 
+*   Wallets SHOULD make their privacy notices readily available to the End-User. 
         
 ## Information Security {#information_security}
 
@@ -2391,7 +2391,7 @@ The DC API offers several advantages for implementers of both Verifiers and Wall
 
 Firstly, the API serves as a privacy-preserving alternative to invoking Wallets via URLs, particularly custom URL schemes. The underlying app platform will only invoke a Wallet if the End-User confirms the request based on contextual information about the Credential Request and the requestor (Verifier).
 
-Secondly, the session with the End-User will always continue in the initial context, typically a web browser tab, when the request has been fulfilled (or aborted), which results in an improved user experience.
+Secondly, the session with the End-User will always continue in the initial context, typically a web browser tab, when the request has been fulfilled (or aborted), which results in an improved End-User experience.
 
 Thirdly, cross-device requests benefit from the use of secure transports with proximity checks, which are handled by the OS platform, e.g., using FIDO CTAP 2.2 with hybrid transports.
 
@@ -2554,7 +2554,7 @@ The audience for the response (for example, the `aud` value in a Key Binding JWT
 The following security considerations from OpenID4VP apply:
 
 * Preventing Replay of Verifiable Presentations as described in (#preventing-replay), with the difference that the origin is used instead of the Client Identifier to bind the response to the Client.
-* End-User Authentication using Credentials as described in (#end-user-authentication-using-credentials).
+* User Authentication using Credentials as described in (#end-user-authentication-using-credentials).
 * Encrypting an Unsigned Response as described in (#encrypting_unsigned_response).
 * TLS Requirements as described in (#tls-requirements).
 * Always Use the Full Client Identifier as described in (#full-client-identifier) for signed requests.
@@ -3215,7 +3215,7 @@ The following is a non-normative example of an unsecured payload of an SD-JWT VC
 
 <{{examples/sd_jwt_vcld/01/user_claims.json}}
 
-The following payload would be used in the SD-JWT after encoding the payload above and enabling selective disclosure on the user-specific claims within `credentialSubject`:
+The following payload would be used in the SD-JWT after encoding the payload above and enabling selective disclosure on the End-User specific claims within `credentialSubject`:
 
 <{{examples/sd_jwt_vcld/01/sd_jwt_payload.json}}
 
