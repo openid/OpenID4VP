@@ -321,7 +321,7 @@ The following is a non-normative example of a transaction data content, after ba
 
     * `format`: REQUIRED. A string that identifies the format of the attestation and how it is encoded. Ecosystems SHOULD use collision-resistant identifiers. Further processing of the attestation is determined by the type of the attestation, which is specified in a format-specific way. 
     * `data`: REQUIRED. An object or string containing an attestation (e.g. a JWT). The payload structure is defined on a per format level. It is at the discretion of the Wallet whether it uses the information from `verifier_info`. Factors that influence such Wallet's decision include, but are not limited to, trust framework the wallet supports, specific policies defined by the Issuers or ecosystem, and profiles of this specification. If the Wallet uses information from `verifier_info`, the Wallet MUST validate the signature and ensure binding.
-    * `credential_ids`: OPTIONAL. A non-empty array of strings each referencing a Credential requested by the Verifier for which the attestation is relevant. Each string matches the `id` field in a DCQL Credential Query. If omitted, the attestation is relevant to all requested credentials.
+    * `credential_ids`: OPTIONAL. A non-empty array of strings each referencing a Credential requested by the Verifier for which the attestation is relevant. Each string matches the `id` field in a DCQL Credential Query. If omitted, the attestation is relevant to all requested Credentials.
 
 See (#verifier-info) for more details.
 
@@ -476,7 +476,7 @@ wallet_nonce=qPmxiNFCR3QTm19POc8u
 
 Wallets MAY support requesting Presentations using OAuth 2.0 scope values.
 
-Such a `scope` parameter value MUST be an alias for a well-defined DCQL query. Since multiple `scope` values can be used at the same time, the identifiers for credentials (see (#credential_query)) and claims (see (#claims_query)) within the DCQL queries associated with `scope` values MUST be unique. This ensures that there are no collisions between the identifiers used in the DCQL queries and that the Verifier can unambiguously identify the requested Credentials in the response.
+Such a `scope` parameter value MUST be an alias for a well-defined DCQL query. Since multiple `scope` values can be used at the same time, the identifiers for Credentials (see (#credential_query)) and claims (see (#claims_query)) within the DCQL queries associated with `scope` values MUST be unique. This ensures that there are no collisions between the identifiers used in the DCQL queries and that the Verifier can unambiguously identify the requested Credentials in the response.
 
 The specific scope values, and the mapping between a certain scope value and the respective 
 DCQL query is out of scope of this specification. 
@@ -673,7 +673,7 @@ If the Verifier responds with any HTTP error response, the Wallet MUST terminate
 
 Verifier Info parameter allows the Verifier to provide additional context or metadata as part of the Authorization Request attested by a trusted third party. These inputs can support a variety of use cases, such as helping the Wallet apply policy decisions, validating eligibility, or presenting more meaningful information to the End-User during consent.
 
-Each Verifier Info object contains a type identifier, associated data and optionally references to credential ids. The format and semantics of these attestations are defined by ecosystems or profiles.
+Each Verifier Info object contains a type identifier, associated data and optionally references to Credential identifiers. The format and semantics of these attestations are defined by ecosystems or profiles.
 
 For example, a Verifier might include:
 
@@ -697,7 +697,7 @@ This specification supports two models for proof of possession:
 The Digital Credentials Query Language (DCQL, pronounced [ˈdakl̩]) is a
 JSON-encoded query language that allows the Verifier to request
 Presentations that match the query. The Verifier MAY encode constraints on the
-combinations of credentials and claims that are requested. The Wallet evaluates
+combinations of Credentials and claims that are requested. The Wallet evaluates
 the query against the Credentials it holds and returns
 Presentations matching the query.
 
@@ -709,7 +709,7 @@ top-level properties:
 that specify the requested Credentials.
 
 `credential_sets`:
-: OPTIONAL. A non-empty array of credential set queries as defined in (#credential_set_query)
+: OPTIONAL. A non-empty array of Credential Set Queries as defined in (#credential_set_query)
 that specifies additional constraints on which of the requested Credentials to return.
 
 Note: Future extensions may define additional properties both on the top level
@@ -809,8 +809,8 @@ Type:
 Value:
 : Contains the KeyIdentifier of the AuthorityKeyIdentifier as defined in Section 4.2.1.1 of [@!RFC5280],
 encoded as base64url. The raw byte representation of this element MUST match with the AuthorityKeyIdentifier
-element of an X.509 certificate in the certificate chain present in the credential (e.g., in the header of
-an mdoc or SD-JWT). Note that the chain can consist of a single certificate and the credential can include the
+element of an X.509 certificate in the certificate chain present in the Credential (e.g., in the header of
+an mdoc or SD-JWT). Note that the chain can consist of a single certificate and the Credential can include the
 entire X.509 chain or parts of it.
 
 Below is a non-normative example of such an entry of type `aki`:
@@ -863,7 +863,7 @@ Below is a non-normative example of such an entry of type `openid_federation`:
 
 ## Credential Set Query {#credential_set_query}
 
-A Credential Set Query is an object representing a request for one or more credentials to satisfy
+A Credential Set Query is an object representing a request for one or more Credentials to satisfy
 a particular use case with the Verifier.
 
 Each entry in `credential_sets` MUST be an object with the following properties:
@@ -901,7 +901,7 @@ If the `values` property is present, the Wallet SHOULD return the claim only if 
 type and value of the claim both match exactly for at least one of the elements in the array. Details of the processing
 rules are defined in (#selecting_claims).
 
-If a Wallet implements value matching and the credential being matched is
+If a Wallet implements value matching and the Credential being matched is
 an ISO mdoc-based credential, the CBOR value used for matching MUST first be converted to JSON, following the advice 
 given in Section 6.1 of [@RFC8949]. The resulting JSON value is then used to match against the `values` property as specified above.
 When conversion according to these rules is not clearly defined, behavior is out of scope of this specification.
@@ -949,7 +949,7 @@ is followed. Therefore, Verifiers MUST treat restrictions expressed using `value
 best-effort way to improve user privacy, but MUST NOT rely on it for security checks.
 
 The purpose of the `claim_sets` syntax is to provide a way for a verifier to
-describe alternative ways a given credential can satisfy the request. The array
+describe alternative ways a given Credential can satisfy the request. The array
 ordering expresses the Verifier's preference for how to fulfill the request. The
 first element in the array is the most preferred and the last element in the
 array is the least preferred. Verifiers SHOULD use the principle of least
@@ -1068,7 +1068,7 @@ In detail, the array is processed as follows:
 2. Select the namespace referenced by the first component. If the namespace does
    not exist in the mdoc abort processing and return an error.
 3. Select the data element referenced by the second component. If the data element does not exist
-   in the credential abort processing and return an error.
+   in the Credential abort processing and return an error.
 
 The result of the processing is the selected data element value as CBOR data item.
 
@@ -1439,7 +1439,7 @@ The following is a non-normative example of the payload of the JWT used in the e
 
 The transaction data mechanism enables a binding between the user's identification/authentication and the user’s authorization, for example to complete a payment transaction, or to sign specific document(s) using QES (Qualified Electronic Signatures). This is achieved by signing the transaction data used for user authorization with the user-controlled key used for proof of possession of the Credential being presented as a means for user identification/authentication.
 
-The Wallet that received the `transaction_data` parameter in the request MUST include a representation or reference to the data in the respective credential presentation. How this is done is transaction data type specific. Credential Formats can give recommendations of how to handle transaction data, such as those in (#format_specific_parameters).
+The Wallet that received the `transaction_data` parameter in the request MUST include a representation or reference to the data in the respective Credential presentation. How this is done is transaction data type specific. Credential Formats can give recommendations of how to handle transaction data, such as those in (#format_specific_parameters).
 
 If the Wallet does not support `transaction_data` parameter, it MUST return an error upon receiving a request that includes it.
 
@@ -1583,7 +1583,7 @@ The Verifier Attestation JWT is a JWT especially designed to allow a Wallet to a
 A Verifier Attestation JWT MUST contain the following claims:
 
 * `iss`: REQUIRED. This claim identifies the issuer of the Verifier Attestation JWT. The `iss` value MAY be used to retrieve the issuer's public key. How the trust is established between Wallet and Issuer and how the public key is obtained for validating the attestation's signature is out of scope of this specification. 
-* `sub`: REQUIRED. The value of this claim MUST be the `client_id` of the client making the credential request.
+* `sub`: REQUIRED. The value of this claim MUST be the `client_id` of the client making the Credential request.
 * `iat`: OPTIONAL. A number representing the time at which the Verifier Attestation JWT was issued using the syntax defined in [RFC7519].
 * `exp`: REQUIRED. A number representing the time at which the Verifier Attestation JWT expires using the syntax defined in [RFC7519]. The Wallet MUST reject any Verifier Attestation JWT with an expiration time that has passed, subject to allowable clock skew between systems.
 * `nbf`: OPTIONAL. A number representing the time before which the token MUST NOT be accepted for processing.
@@ -1902,9 +1902,9 @@ Presentations.
 
 # Privacy Considerations {#privacy_consideratins}
 
-Many privacy considerations are specific to the credential format and associated proof type used in a particular presentation.
+Many privacy considerations are specific to the Credential format and associated proof type used in a particular presentation.
 This section mainly focuses on privacy considerations that are specific to the presentation protocol, while also addressing
-considerations that apply across some common credential formats and the treatments at wallets and verifiers. 
+considerations that apply across some common Credential formats and the treatments at wallets and verifiers. 
 
 Wallet providers and Verifiers need to take into account privacy considerations in this section to mitigate the risks of
 data leakage, user tracking, and other privacy harms. These considerations inform the development of privacy risk analysis.
@@ -1912,13 +1912,13 @@ data leakage, user tracking, and other privacy harms. These considerations infor
 ## DCQL Value Matching {#dcql-value-matching}
 
 When using DCQL `values` to match the expected values of claims, the fact that a
-claim within a certain credential matched a value or did not match a value might
+claim within a certain Credential matched a value or did not match a value might
 already leak information about the claim value. Therefore, Wallets MUST take
 precautions against leaking information about the claim value when processing
 `values`. This SHOULD include, in particular:
 
 - ensuring that a Verifier, in the response, cannot distinguish between the case where a user did
-  not consent to releasing the credential and the case where the claim value did
+  not consent to releasing the Credential and the case where the claim value did
   not match the expected value, and
 - preventing repeated or "silent" requests leaking data to the Verifier without
   the user's consent by ensuring that all requests, even if no response can be
@@ -1931,7 +1931,7 @@ response can also leak information about the processing outcome of `values`.
 ## User Consent and Choice {#user_consent_and_choice}
 
 * Wallets SHOULD obtain explicit, informed consent from the End-User before releasing any Verifiable Credential or Presentation to a Verifier.
-* If an error prevents the Wallet from honoring a request (e.g., missing credentials or mismatched claim values), the Wallet SHOULD inform the user in a privacy-preserving way.
+* If an error prevents the Wallet from honoring a request (e.g., missing Credentials or mismatched claim values), the Wallet SHOULD inform the user in a privacy-preserving way.
 
 ## Purpose Legitimacy and Specification {#purpose_legitimacy_and_specification}
 
@@ -1943,22 +1943,22 @@ For example, the purpose is shown beforehand or included in the presentation req
 ### Selective Disclosure {#selective_disclosure}
 
 Selective disclosure is a data minimization technique that allows for sharing only the specific information needed from
-a credential without revealing everything.
+a Credential without revealing everything.
 
 The DCQL helps facilitate selective disclosure by allowing the Verifier to specify the claims it is interested in,
 allowing the Wallet to disclose only the claims that are relevant to the Verifier's request.
 
-Some credential formats support selective disclosure and a salted-hash based approach is one common approach.
+Some Credential formats support selective disclosure and a salted-hash based approach is one common approach.
 Considerable discourse regarding unlinkability in salted-hash based selective disclosure mechanisms is provided in
 [@?I-D.ietf-oauth-selective-disclosure-jwt, section 10.1]. One technique mentioned to achieve some important
-unlinkability properties is the use of batch issuance, which is supported in [@?OpenID4VCI], with individual credentials
+unlinkability properties is the use of batch issuance, which is supported in [@?OpenID4VCI], with individual Credentials
 being presented only once.
 
-Note that the nature of the issuer of the credential may leak sensitive information such as nationality or state of residence.
+Note that the nature of the issuer of the Credential may leak sensitive information such as nationality or state of residence.
 
 ### Strictly Necessary {#strictly_necessary}
 
-* Verifiers SHOULD design queries that request only the minimal set of claims and credentials needed to fulfill the specified purposes. DCQL helps facilitate this. 
+* Verifiers SHOULD design queries that request only the minimal set of claims and Credentials needed to fulfill the specified purposes. DCQL helps facilitate this. 
 
 ### No Fingerprinting {#no_fingerprinting}
 
@@ -1975,7 +1975,7 @@ Verifier SHOULD NOT attempt to fingerprint the wallets to track the user's visit
     
 *   **No unauthorized request to Request URI:** If no End-User interaction is required before sending the request to Request URI, it is easy for a malicious Verifier to obtain the Wallet capabilities from all visitors of a website on a large scale and in an automated fashion. Even without personally identifiable information (PII) this can reveal some information about End-Users, like their nationality (e.g., a Wallet with special capabilities only used in one EU member state). Mandatory End-User interaction before sending the request, like clicking a button, unlocking the Wallet or even just showing a screen of the app, can make this less attractive/likely to being exploited.
     
-*   **Unlinkability:** Wallet can use ephemeral credentials only to achieve cross-session unlinkability. Wallet can use different instances of credentials to different Verifiers to achieve cross-Verifier unlinkability. Considerable discourse regarding unlinkability in salted-hash based selective disclosure mechanisms is provided in \[@?I-D.ietf-oauth-selective-disclosure-jwt, section 10.1\]. One technique mentioned to achieve some important unlinkability properties is the use of batch issuance, which is supported in \[@?OpenID4VCI\], with individual credentials being presented only once.
+*   **Unlinkability:** Wallet can use ephemeral Credentials only to achieve cross-session unlinkability. Wallet can use different instances of Credentials to different Verifiers to achieve cross-Verifier unlinkability. Considerable discourse regarding unlinkability in salted-hash based selective disclosure mechanisms is provided in \[@?I-D.ietf-oauth-selective-disclosure-jwt, section 10.1\]. One technique mentioned to achieve some important unlinkability properties is the use of batch issuance, which is supported in \[@?OpenID4VCI\], with individual Credentials being presented only once.
     
 *   **No excessive data**: If the Wallet has indications that the Verifier is requesting data that it is not entitled to, the Wallet SHOULD warn the user and potentially stop processing.
     
@@ -2031,8 +2031,8 @@ A Wallet SHOULD NOT return any OpenID4VP protocol errors before obtaining user c
 This specification introduces an extension point that allows for a Verifier to express expected Issuers or trust frameworks that certify Issuers.
 It is important to understand the implications that different mechanisms to establish trust in Issuers can have on the privacy of the overall system.
 
-Generally speaking, a distinction can be made between self-contained mechanisms, where all information necessary to validate if a credential matches the request is already present in the Wallet and Verifier, and those mechanisms that require some form of online resolution.
-Mechanisms that require online resolution can leak information that could be used to profile the usage of credentials and the overall ecosystem.
+Generally speaking, a distinction can be made between self-contained mechanisms, where all information necessary to validate if a Credential matches the request is already present in the Wallet and Verifier, and those mechanisms that require some form of online resolution.
+Mechanisms that require online resolution can leak information that could be used to profile the usage of Credentials and the overall ecosystem.
 
 Especially the case where a Wallet has to retrieve information before being able to construct a presentation that matches the request could leak information about individual users to other parties.
 Wallets SHOULD NOT fetch URLs provided by the Verifier in a request that are unknown to the Wallet or hosted by a third party that the Wallet does not trust. The privacy concerns can be mitigated if the URLs are only used by the Wallet as identifiers but not fetched upon receiving the request from the Verifier.
@@ -3155,7 +3155,7 @@ The following is an SD-JWT VC specific parameter in the `meta` parameter in a Cr
 : REQUIRED. A non-empty array of strings that specifies allowed values for
 the type of the requested Verifiable Credential. All elements in the array MUST
 be valid type identifiers as defined in [@!I-D.ietf-oauth-sd-jwt-vc]. The Wallet
-MAY return credentials that inherit from any of the specified types, following
+MAY return Credentials that inherit from any of the specified types, following
 the inheritance logic defined in [@!I-D.ietf-oauth-sd-jwt-vc].
 
 ### Presentation Response
@@ -3176,15 +3176,15 @@ The following is a non-normative example of the unsecured payload of the Key Bin
 
 ### SD-JWT VCLD {#sd-jwt_vcld}
 
-SD-JWT VCLD (SD-JWT Verifiable Credentials with JSON-LD) extends the IETF SD-JWT VC [@!I-D.ietf-oauth-sd-jwt-vc] credential format and allows to incorporate existing data models that use Linked Data, e.g., W3C VCDM [@?VC_DATA], while enabling a consistent and uncomplicated approach to selective disclosure.
+SD-JWT VCLD (SD-JWT Verifiable Credentials with JSON-LD) extends the IETF SD-JWT VC [@!I-D.ietf-oauth-sd-jwt-vc] Credential format and allows to incorporate existing data models that use Linked Data, e.g., W3C VCDM [@?VC_DATA], while enabling a consistent and uncomplicated approach to selective disclosure.
 
-Information contained in SD-JWT VCLD credentials can be processed using a JSON-LD [@?JSON-LD] processor after the SD-JWT VC processing.
+Information contained in SD-JWT VCLD Credentials can be processed using a JSON-LD [@?JSON-LD] processor after the SD-JWT VC processing.
 
 When IETF SD-JWT VC is mentioned in this specification, SD-JWT VCLD defined in this section MAY be used.
 
 #### Format
 
-SD-JWT VCLD credentials are valid SD-JWT VC credentials and all requirements from [@!I-D.ietf-oauth-sd-jwt-vc] apply. Additionally, the requirements listed in this section apply.
+SD-JWT VCLD Credentials are valid SD-JWT VCs and all requirements from [@!I-D.ietf-oauth-sd-jwt-vc] apply. Additionally, the requirements listed in this section apply.
 
 For compatibility with JWT processors, the following registered Claims from [@!RFC7519] and [@!I-D.ietf-oauth-sd-jwt-vc] MUST be used instead of any respective counterpart properties from W3C VCDM or elsewhere:
 
@@ -3292,8 +3292,8 @@ Verifiable Credentials; all of them must be returned:
 <{{examples/query_lang/multi_credentials.json}}
 
 The following shows a complex query where the Wallet is requested to deliver the
-`pid` credential, or the `other_pid` credential, or both `pid_reduced_cred_1`
-and `pid_reduced_cred_2`. Additionally, the `nice_to_have` credential may
+`pid` Credential, or the `other_pid` Credential, or both `pid_reduced_cred_1`
+and `pid_reduced_cred_2`. Additionally, the `nice_to_have` Credential may
 optionally be delivered.
 
 <{{examples/query_lang/credentials_alternatives.json}}
@@ -3311,7 +3311,7 @@ The following is a non-normative example of a DCQL query that requests
 <{{examples/query_lang/claims_alternatives.json}}
 
 The following example shows a query that uses the `values` constraints
-to request a credential with specific values for the `last_name` and `postal_code` claims:
+to request a Credential with specific values for the `last_name` and `postal_code` claims:
 
 <{{examples/query_lang/value_matching_simple.json}}
 
