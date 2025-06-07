@@ -1900,7 +1900,7 @@ these constraints. The Wallet is not controlled by the Verifier and the Verifier
 MUST perform its own security checks on the returned Credentials and
 Presentations.
 
-# Privacy Considerations {#privacy_considerations}
+# Privacy Considerations {#privacy-considerations}
 
 Many privacy considerations are specific to the Credential format and associated proof type used in a particular Presentation.
 
@@ -1927,7 +1927,7 @@ The Verifier SHOULD ensure that information collection purpose is sufficiently s
 
 If the Wallet has indications that the Verifier is requesting data that it is not entitled to, the Wallet SHOULD warn the End-User and potentially stop processing.
 
-## Selective Disclosure {#selective_disclosure}
+## Selective Disclosure {#selective-disclosure}
 
 Selective disclosure is a data minimization technique that allows for sharing only the specific information needed from
 a Credential without revealing all of the claims contained in that Credential.
