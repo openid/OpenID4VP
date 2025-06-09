@@ -170,7 +170,7 @@ Note: The diagram does not illustrate all the optional features of this specific
         |                 |-------------------------------------------------->|
         |                 |                                                   |
         |                 |                                                   |
-        |       User Authentication / Consent                                 |
+        |   End-User Authentication / Consent                                 |
         |                 |                                                   |
         |                 |  (2)   Authorization Response                     |
         |                 |  (VP Token with Presentation(s))                  |
@@ -214,7 +214,7 @@ Note: The usage of the Request URI as defined in [@!RFC9101] does not depend on 
         |                 |      (DCQL query)                                 |
         |                 |-------------------------------------------------->|
         |                 |                                                   |
-        |       User Authentication / Consent                                 |
+        |   End-User Authentication / Consent                                 |
         |                 |                                                   |
         |                 |  (3)   Authorization Response as HTTP POST        |
         |                 |  (VP Token with Presentation(s))                  |
@@ -244,7 +244,7 @@ OpenID for Verifiable Presentations extends existing OAuth 2.0 mechanisms as fol
 * The concept of a Client Identifier Prefix to enable deployments of this specification to use different mechanisms to obtain and validate metadata of the Verifier beyond the scope of [@!RFC6749].
 * A mechanism specifying the use of OpenID4VP with the Digital Credentials API (see (#dc_api)).
 
-Presentation of Credentials using OpenID for Verifiable Presentations can be combined with the user authentication using [@SIOPv2], and the issuance of OAuth 2.0 Access Tokens.
+Presentation of Credentials using OpenID for Verifiable Presentations can be combined with the End-User authentication using [@SIOPv2], and the issuance of OAuth 2.0 Access Tokens.
 
 # Authorization Request {#vp_token_request}
 
@@ -1682,7 +1682,7 @@ In order to support implementers, this section outlines a possible design that f
     |              |      (response_uri, nonce, state, dcql_query)                 |
     |              |-------------------------------------------------------------->|
     |              |                            |                                  |
-    |                  User Authentication / Consent                               |
+    |              End-User Authentication / Consent                               |
     |              |                            |                                  |
     |              |                            | (5) Authorization Response       |
     |              |                            |     (VP Token, state)            |
@@ -1866,7 +1866,7 @@ Implementations of this specification MUST have security mechanisms in place to 
 * Authentication between the different parts within the Verifier
 * Two cryptographically random numbers.  The first being used to manage state between the Wallet and Verifier. The second being used to ensure that only a legitimate component of the Verifier can obtain the Authorization Response data.
 
-## User Authentication using Credentials {#end-user-authentication-using-credentials}
+## End-User Authentication using Credentials {#end-user-authentication-using-credentials}
 
 Clients intending to authenticate the End-User utilizing a claim in a Credential MUST ensure this claim is stable for the End-User as well locally unique and never reassigned within the Credential Issuer to another End-User. Such a claim MUST also only be used in combination with the Credential Issuer identifier to ensure global uniqueness and to prevent attacks where an attacker obtains the same claim from a different Credential Issuer and tries to impersonate the legitimate End-User.
 
