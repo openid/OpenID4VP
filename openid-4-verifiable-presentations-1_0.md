@@ -3480,11 +3480,30 @@ The technology described in this specification was made available from contribut
 
    -29
 
-   * update pre-final specs section
+   * define mdoc session transcript for redirect-based oid4vp flow
+   * rename `verifier_attestations` parameter name to `verifier_info`
    * make the `meta` parameter mandatory in DCQL query
    * explicitly state that various arrays need to be non-empty
    * clarify text about how encryption keys are obtained
-   * rename `verifier_attestations` parameter name to `verifier_info`
+   * clarify how hashing works in transaction_data_hashes
+   * rework & expand privacy considerations section
+   * capitalise use of defined terms more consistently
+   * relax language in some cases that required wallets to always perform signature verification
+   * fix language implying `verifier_attestations` was mandatory
+   * try to make it clearer that direct_post.jwt builds on top of direct_post
+   * update pre-final specs section
+   * add IANA considerations for `encrypted_response_enc_values_supported`
+   * remove now unused reference to JARM
+   * move `verifier_attestations` IANA consideration to correct section
+   * fix title in 23220-2 ref
+   * add example of response encryption
+   * remove reference to CBOR encoding the OpenID4VPDCAPIHandoverInfo thumbprint
+   * fixed reference for DC API single/multi sign requests and made it clear what the protocol identifier is
+   * fix type_values example in W3C Verifiable Credential section
+   * fix an example that used now removed jwt_vp and ldp_vp
+   * fix description of invalid_request error
+   * add note that cross-device flow diagram doesn't show all parameters
+   * additions to & typo fixed in acknowledgements
 
    -28
 
