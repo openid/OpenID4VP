@@ -1925,7 +1925,7 @@ Wallets SHOULD make their privacy notices readily available to the End-User.
 
 The Verifier SHOULD ensure that information collection purpose is sufficiently specific and communicated before collection. For example, the purpose is shown to the End-User before the presentation request is sent to the Wallet.
 
-If the Wallet has indications that the Verifier is requesting data that it is not entitled to, the Wallet SHOULD warn the End-User and potentially stop processing.
+If the Wallet has indications that the Verifier is requesting data that it is not entitled to, the Wallet SHOULD warn the End-User or potentially stop processing.
 
 ## Selective Disclosure {#selective-disclosure}
 
@@ -1958,9 +1958,9 @@ response can also leak information about the processing outcome of `values`.
 
 ### Strictly Necessary Claims {#strictly_necessary}
 
-Verifiers SHOULD design DCQL queries that request only the minimal set of claims and Credentials needed to fulfill the specified purposes.
+Verifiers SHOULD use DCQL queries that request only the minimal set of claims and Credentials needed to fulfill the specified purposes.
 
-## Verifier-to-Verifier Unlinkability
+## Verifier-to-Verifier Unlinkable Presentations
 
 Wallet can use ephemeral Credentials only to achieve cross-session unlinkability. Wallet can use different instances of Credentials to different Verifiers to achieve cross-Verifier unlinkability. Considerable discourse regarding unlinkability in salted-hash based selective disclosure mechanisms is provided in section 10.1 of [@!I-D.ietf-oauth-selective-disclosure-jwt]. One technique mentioned to achieve some important unlinkability properties is the use of batch issuance, which is supported in [@!OpenID4VCI], with individual Credentials being presented only once.
 
