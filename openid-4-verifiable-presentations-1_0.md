@@ -1964,9 +1964,9 @@ Verifiers SHOULD use DCQL queries that request only the minimal set of claims an
 
 Wallet can use ephemeral Credentials only to achieve cross-session unlinkability. Wallet can use different instances of Credentials to different Verifiers to achieve cross-Verifier unlinkability. Considerable discourse regarding unlinkability in salted-hash based selective disclosure mechanisms is provided in section 10.1 of [@!I-D.ietf-oauth-selective-disclosure-jwt]. One technique mentioned to achieve some important unlinkability properties is the use of batch issuance, which is supported in [@!OpenID4VCI], with individual Credentials being presented only once.
 
-## No Fingerprinting of the Wallets {#no_fingerprinting}
+## No Fingerprinting of the End-User {#no_fingerprinting}
 
-Verifier SHOULD NOT attempt to fingerprint the Wallets to track the End-User's visits.
+A Verifier SHOULD NOT attempt to fingerprint the End-User based on metadata that may be available in the interaction with the End-Users wallet.
 
 ## Information Security {#information_security}
 
