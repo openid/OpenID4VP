@@ -1971,6 +1971,8 @@ A Verifier SHOULD NOT attempt to fingerprint the End-User based on metadata that
 
 A Wallet SHOULD implement measures that prevent fingerprinting of the End-Users during the request to resolve the Request Object URI.
 
+A Wallet SHOULD implement measures that limit unintended additional information being disclosed through the Response URI. For example, disclosing Wallet-related information through the HTTP user agent header.
+
 ## Information Security {#information_security}
 
 
