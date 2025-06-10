@@ -1919,7 +1919,7 @@ Wallets SHOULD make their privacy notices readily available to the End-User.
 
 ## Purpose Legitimacy {#purpose_legitimacy_and_specification}
 
-The Verifier SHOULD ensure that information collection purpose is sufficiently specific and communicated before collection. For example, the purpose is shown to the End-User before or within the presentation request that is sent to the Wallet.
+The Verifier SHOULD ensure that purpose for collecting the information it is requesting is sufficiently specific and communicated before collection. For example, the purpose is shown to the End-User before or within the presentation request that is sent to the Wallet.
 
 If the Wallet has indications that the Verifier is requesting data that it is not entitled to, the Wallet SHOULD warn the End-User or potentially stop processing.
 
