@@ -1905,13 +1905,11 @@ Many privacy considerations are specific to the Credential format and associated
 This section focuses on privacy considerations specific to the presentation protocol while also addressing cross-cutting concerns related to credential formats, Wallet behavior, and Verifier practices.
 
 Wallet providers and Verifiers need to take into account privacy considerations in this section to mitigate the risks of
-data leakage, user tracking, and other privacy harms. These considerations inform the development of privacy risk analysis.
+data leakage, user tracking, and other privacy harms.
 
 ## User Consent {#user_consent_and_choice}
 
 Wallets SHOULD obtain explicit, informed consent from the End-User before releasing any Verifiable Credential or Presentation to a Verifier, or returning an error.
-
-If an error prevents the Wallet from honoring a request (e.g., missing Credentials or mismatched claim values), the Wallet SHOULD inform the End-User in a privacy-preserving way.
 
 Transaction history and data within the Wallet SHOULD NOT be accessible to anyone other than the End-User, unless the End-User has given consent or there is another legal basis to do so.
 
