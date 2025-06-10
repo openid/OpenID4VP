@@ -1741,7 +1741,7 @@ Note: If the Verifier's Response URI did not return a `redirect_uri` in step (6)
 
 Implementers should be aware that this specification uses several specifications that are not yet final specifications. Those specifications are:
 
-* OpenID Federation 1.0 draft -42 [@!OpenID.Federation]
+* OpenID Federation 1.0 draft -43 [@!OpenID.Federation]
 * SIOPv2 draft -13 [@!SIOPv2]
 * Selective Disclosure for JWTs (SD-JWT) draft -22 [@!I-D.ietf-oauth-selective-disclosure-jwt]
 * SD-JWT-based Verifiable Credentials (SD-JWT VC) draft -09 [@!I-D.ietf-oauth-sd-jwt-vc]
@@ -2250,10 +2250,10 @@ Ecosystems intending to use trusted authority mechanisms SHOULD ensure that the 
         </front>
 </reference>
 
-<reference anchor="OpenID.Federation" target="https://openid.net/specs/openid-federation-1_0-42.html">
+<reference anchor="OpenID.Federation" target="https://openid.net/specs/openid-federation-1_0-43.html">
         <front>
           <title>OpenID Federation 1.0</title>
-		  <author fullname="R. Hedberg, Ed.">
+	  <author fullname="R. Hedberg, Ed.">
             <organization>independent</organization>
           </author>
           <author fullname="Michael B. Jones">
@@ -2271,7 +2271,7 @@ Ecosystems intending to use trusted authority mechanisms SHOULD ensure that the 
           <author fullname="Vladimir Dzhuvinov">
             <organization>Connect2id</organization>
           </author>
-          <date day="05" month="March" year="2025"/>
+          <date day="2" month="June" year="2025"/>
         </front>
 </reference>
 
