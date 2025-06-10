@@ -1969,6 +1969,8 @@ Considerable discourse regarding unlinkability in salted-hash based selective di
 
 A Verifier SHOULD NOT attempt to fingerprint the End-User based on metadata that may be available in the interaction with the End-User's wallet.
 
+A Wallet SHOULD implement measures that prevent fingerprinting of the End-Users during the request to resolve the Request Object URI.
+
 ## Information Security {#information_security}
 
 
@@ -1989,10 +1991,6 @@ Untrusted or unrecognized Request URI endpoints SHOULD be rejected or require En
 ### Authorization Requests with Request URI {#authorization_requests_with_request_uri}
 
 If the Wallet is acting within a trust framework that allows the Wallet to determine whether a Request URI belongs to a certain Client Identifier, the Wallet is RECOMMENDED to validate the Verifier's authenticity and authorization given by the Client Identifier and that the Request URI corresponds to this Verifier. If the link cannot be established in those cases, the Wallet MUST refuse the request.
-
-If no End-User interaction is required before sending the request, it is easy to request on a large scale and in an automated fashion the Wallet capabilities from all visitors of a website. Even without PII, this can reveal some information about End-Users, like their nationality (e.g., a Wallet with special capabilities only used in one EU member state).
-
-Mandatory End-User interaction before sending the request, like clicking a button or an explicit user action that unlocks the Wallet, can make this less attractive/likely to being exploited.
 
 ## Error Responses
 
