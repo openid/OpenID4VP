@@ -2201,13 +2201,13 @@ Ecosystems intending to use trusted authority mechanisms SHOULD ensure that the 
         </front>
 </reference>
 
-<reference anchor="ISO.23220-4" target="https://www.iso.org/standard/86782.html">
+<reference anchor="ISO.23220-4" target="https://www.iso.org/standard/86785.html">
         <front>
           <title>ISO/IEC CD TS 23220-4 Personal identification — Building blocks for identity management via mobile devices, Part 4: Protocols and services for operational phase</title>
           <author>
             <organization> ISO/IEC JTC 1/SC 17 Cards and security devices for personal identification</organization>
           </author>
-          <date year="2024"/>
+          <date year="2025"/>
         </front>
 </reference>
 
