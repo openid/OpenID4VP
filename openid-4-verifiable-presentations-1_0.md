@@ -1526,7 +1526,8 @@ This specification defines how the Verifier can determine Credential formats, pr
 
 This specification defines new metadata parameters according to [@!RFC8414].
 
-* `vp_formats_supported`: REQUIRED. An object containing a list of name/value pairs, where the name is a Credential Format Identifier and the value defines format-specific parameters that a Wallet supports. For specific values that can be used, see (#format_specific_parameters).
+`vp_formats_supported`:
+: REQUIRED. An object containing a list of name/value pairs, where the name is a Credential Format Identifier and the value defines format-specific parameters that a Wallet supports. For specific values that can be used, see (#format_specific_parameters).
 Deployments can extend the formats supported, provided Issuers, Holders and Verifiers all understand the new format.
 
     The following is a non-normative example of a `vp_formats_supported` parameter:
@@ -1542,7 +1543,7 @@ Deployments can extend the formats supported, provided Issuers, Holders and Veri
     }
     ```
 
-* `client_id_prefixes_supported`:
+`client_id_prefixes_supported`:
 : OPTIONAL. A non-empty array of strings containing the values of the Client Identifier Prefixes that the Wallet supports. The values defined by this specification are `pre-registered` (which represents the behavior when no Client Identifier Prefix is used), `redirect_uri`, `openid_federation`, `verifier_attestation`, `decentralized_identifier`, `x509_san_dns` and `x509_hash`. If omitted, the default value is `pre-registered`. Other values may be used when defined in the profiles or extensions of this specification.
 
 Additional Wallet metadata parameters MAY be defined and used,
