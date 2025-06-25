@@ -1898,6 +1898,10 @@ these constraints. The Wallet is not controlled by the Verifier and the Verifier
 MUST perform its own security checks on the returned Credentials and
 Presentations.
 
+## Security Checks on the DCQL Query {#dcql_injection}
+
+Recipients of DCQL query MUST treat the incoming query as untrusted input. A malformed or malicious statement could trigger a "DCQL injection" altering the normal processing. Implementations MUST NOT rely on the Verifier for sanitation; they MUST independently validate query syntax, semantics, permitted scopes, resource identifiers, and execution context before acceptance or evaluation.
+
 # Privacy Considerations {#privacy-considerations}
 
 Many privacy considerations are specific to the Credential format and associated proof type used in a particular Presentation.
