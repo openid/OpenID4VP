@@ -2275,7 +2275,7 @@ Ecosystems intending to use trusted authority mechanisms SHOULD ensure that the 
         </front>
 </reference>
 
-<reference anchor="W3C.Digital_Credentials_API" target="https://w3c-fedid.github.io/digital-credentials/">
+<reference anchor="W3C.Digital_Credentials_API" target="https://www.w3.org/TR/2025/WD-digital-credentials-20250701/">
         <front>
           <title>Digital Credentials API</title>
 		  <author fullname="Marcos Caceres">
@@ -2284,7 +2284,7 @@ Ecosystems intending to use trusted authority mechanisms SHOULD ensure that the 
           <author fullname="Tim Cappalli">
             <organization>Okta</organization>
           </author>
-          <author fullname="Sam Goto">
+          <author fullname="Mohamed Amir Yosef">
             <organization>Google</organization>
           </author>
         </front>
