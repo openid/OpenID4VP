@@ -710,7 +710,7 @@ that specify the requested Credentials.
 : OPTIONAL. A non-empty array of Credential Set Queries as defined in (#credential_set_query)
 that specifies additional constraints on which of the requested Credentials to return.
 
-Note: Future extensions may define additional properties both on the top-level
+Note: Future extensions may define additional properties both at the top level
 and in the rest of the DCQL data structure. Implementations MUST ignore any
 unknown properties.
 
@@ -1554,7 +1554,7 @@ The Verifier MUST ignore any unrecognized parameters.
 A Verifier utilizing this specification has multiple options to obtain the Wallet's metadata:
 
 * Verifier obtains the Wallet's metadata dynamically, e.g., using [@!RFC8414] or out-of-band mechanisms. See (#as_metadata_parameters) for the details.
-* Verifier has pre-obtained a static set of Wallet's metadata. See (#openid4vp-scheme) for the example.
+* Verifier has pre-obtained a static set of the Wallet's metadata. See (#openid4vp-scheme) for the example.
 
 # Verifier Metadata (Client Metadata) {#client_metadata}
 
