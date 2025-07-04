@@ -2287,6 +2287,7 @@ Ecosystems intending to use trusted authority mechanisms SHOULD ensure that the 
           <author fullname="Mohamed Amir Yosef">
             <organization>Google</organization>
           </author>
+          <date day="1" month="July" year="2025"/>
         </front>
 </reference>
 
