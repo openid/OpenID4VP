@@ -608,15 +608,15 @@ Other specifications can define further Client Identifier Prefixes. It is RECOMM
 
 This request is handled by the Request URI endpoint of the Verifier.  
 
-The request MUST use the HTTP POST method with the `https` scheme, and the content type `application/x-www-form-urlencoded` and the accept header set to `application/oauth-authz-req+jwt`. The names and values in the body MUST be encoded using UTF-8.
+The request MUST use the HTTP POST method with the `https` scheme, and the content type `application/x-www-form-urlencoded` and the `Accept` header set to `application/oauth-authz-req+jwt`. The names and values in the body MUST be encoded using UTF-8.
 
 The following parameters are defined to be included in the request to the Request URI Endpoint:
 
 `wallet_metadata`:
-: OPTIONAL. A String containing a JSON object containing metadata parameters as defined in (#as_metadata_parameters). 
+: OPTIONAL. A string containing a JSON object containing metadata parameters as defined in (#as_metadata_parameters).
 
 `wallet_nonce`:
-: OPTIONAL. A String value used to mitigate replay attacks of the Authorization Request. When received, the Verifier MUST use it as the `wallet_nonce` value in the signed authorization request object. Value can be a base64url-encoded, fresh, cryptographically random number with sufficient entropy.  
+: OPTIONAL. A string value used to mitigate replay attacks of the Authorization Request. When received, the Verifier MUST use it as the `wallet_nonce` value in the signed authorization request object. Value can be a base64url-encoded, fresh, cryptographically random number with sufficient entropy.
 
 If the Wallet requires the Verifier to encrypt the Request Object, it SHOULD use the `jwks` parameter within the `wallet_metadata` parameter to pass public encryption keys. If the Wallet requires an encrypted Authorization Response, it SHOULD specify supported encryption algorithms using the `authorization_encryption_alg_values_supported` and `authorization_encryption_enc_values_supported` parameters.
 
@@ -640,7 +640,7 @@ wallet_nonce=qPmxiNFCR3QTm19POc8u
 
 ### Request URI Response
 
-The Request URI response MUST be an HTTP response with the content type "application/oauth-authz-req+jwt" and the body being a signed, optionally encrypted, request object as defined in [@RFC9101]. The request object MUST fulfill the requirements as defined in (#vp_token_request).
+The Request URI response MUST be an HTTP response with the content type `application/oauth-authz-req+jwt` and the body being a signed, optionally encrypted, request object as defined in [@RFC9101]. The request object MUST fulfill the requirements as defined in (#vp_token_request).
 
 The following is a non-normative example of a payload for a request object:
 
@@ -675,7 +675,7 @@ Each Verifier Info object contains a type identifier, associated data and option
 
 For example, a Verifier might include:
 
-- A **registration certificate** issued by a trusted authority, to prove that the Verifier has publicly registered its intend to request certain credentials.
+- A **registration certificate** issued by a trusted authority, to prove that the Verifier has publicly registered its intent to request certain credentials.
 - A **policy statement**, such as a signed document describing acceptable use, retention periods, or access rights.
 - The **confirmation of a role** of the Verifier in a certain domain, e.g. the Verifier might be a certified payment service provider under the EU's Payment Service Directive 2.
 
@@ -685,7 +685,7 @@ The Verifier Info parameter is optional. Wallets MAY use them to make authorizat
 
 This specification supports two models for proof of possession:
 
-- **claim-bound attestations**: The attestation is not signed by the Verifier, but bound to it. The exact binding mechanism is defined by the type of the definition. For example for JWTs, the `sub` claim is including the distinguished name of the Certificate that was used to sign the request. The binding may also include the client_id parameter.
+- **claim-bound attestations**: The attestation is not signed by the Verifier, but bound to it. The exact binding mechanism is defined by the type of the definition. For example for JWTs, the `sub` claim is including the distinguished name of the Certificate that was used to sign the request. The binding may also include the `client_id` parameter.
 - **key-bound attestations**: The attestation's proof of possession is signed by the Verifier with a key contained or related to the attestation. To bind the signature to the presentation request, the respective signature object should include the `nonce` and `client_id` request parameters. The attestation and the proof of possession have to be passed in the attachment.
 
  The Wallet MUST validate such proofs if defined by the profile and ignore or reject attachments that fail validation.
@@ -724,7 +724,7 @@ Each entry in `credentials` MUST be an object with the following properties:
 `id`:
 : REQUIRED. A string identifying the Credential in the response and, if provided,
 the constraints in `credential_sets`. The value MUST be a non-empty string
-consisting of alphanumeric, underscore (`_`) or hyphen (`-`) characters.
+consisting of alphanumeric, underscore (`_`), or hyphen (`-`) characters.
 Within the Authorization Request, the same `id` MUST NOT
 be present more than once.
 
@@ -775,7 +775,7 @@ Multiple Credential Queries in a request MAY request a presentation of the same 
 A Trusted Authorities Query is an object representing information that helps to identify an authority
 or the trust framework that certifies Issuers. A Credential is identified as a match
 to a Trusted Authorities Query if it matches with one of the provided values in one of the provided
-types. How exactly the matching works is defined for the different types below
+types. How exactly the matching works is defined for the different types below.
 
 Note that direct Issuer matching can also work using claim value matching if supported (e.g., value matching
 the `iss` claim in an SD-JWT) if the mechanisms for `trusted_authorities` are not applicable but might
@@ -792,7 +792,7 @@ Types defined by this specification are listed below.
 used Trusted Authorities Query type that allows the identification of an issuer, a trust framework, or a federation that an
 issuer belongs to.
 
-Below are descriptions for the different Type Identifiers (string), the description on how to interpret
+Below are descriptions for the different Type Identifiers (string), detailing how to interpret
 and perform the matching logic for each provided value.
 
 Note that depending on the trusted authorities type used, the underlying mechanisms can have
@@ -866,13 +866,13 @@ a particular use case with the Verifier.
 
 Each entry in `credential_sets` MUST be an object with the following properties:
 
-`options`
+`options`:
 : REQUIRED: A non-empty array, where each value in the array is a list
 of Credential Query identifiers representing one set of Credentials that
 satisfies the use case. The value of each element in the `options` array is a
 non-empty array of identifiers which reference elements in `credentials`.
 
-`required`
+`required`:
 : OPTIONAL. A boolean which indicates whether this set of Credentials is required
 to satisfy the particular use case at the Verifier. If omitted, the default value is `true`.
 
@@ -885,7 +885,7 @@ Each entry in `claims` MUST be an object with the following properties:
 `id`:
 : REQUIRED if `claim_sets` is present in the Credential Query; OPTIONAL otherwise. A string
 identifying the particular claim. The value MUST be a non-empty string
-consisting of alphanumeric, underscore (`_`) or hyphen (`-`) characters.
+consisting of alphanumeric, underscore (`_`), or hyphen (`-`) characters.
 Within the particular `claims` array, the same `id` MUST NOT
 be present more than once.
 
@@ -1414,7 +1414,7 @@ This specification also defines a new Response Mode `direct_post.jwt`, which all
 
 The Response Mode `direct_post.jwt` causes the Wallet to send the Authorization Response using an HTTP POST request instead of redirecting back to the Verifier as defined in (#response_mode_post). The Wallet adds the `response` parameter containing the JWT as defined in (#response_encryption) in the body of an HTTP POST request using the `application/x-www-form-urlencoded` content type. The names and values in the body MUST be encoded using UTF-8.
 
-If a Wallet is unable to generate an encrypted response, it MAY send an error response without as per (#response_mode_post).
+If a Wallet is unable to generate an encrypted response, it MAY send an error response as per (#response_mode_post).
 
 The following is a non-normative example of a response (omitted content shown with ellipses for display purposes only):
 ```
