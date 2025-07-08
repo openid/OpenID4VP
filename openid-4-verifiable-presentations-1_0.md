@@ -867,13 +867,13 @@ a particular use case with the Verifier.
 Each entry in `credential_sets` MUST be an object with the following properties:
 
 `options`:
-: REQUIRED: A non-empty array, where each value in the array is a list
+: REQUIRED A non-empty array, where each value in the array is a list
 of Credential Query identifiers representing one set of Credentials that
 satisfies the use case. The value of each element in the `options` array is a
 non-empty array of identifiers which reference elements in `credentials`.
 
 `required`:
-: OPTIONAL. A boolean which indicates whether this set of Credentials is required
+: OPTIONAL A boolean which indicates whether this set of Credentials is required
 to satisfy the particular use case at the Verifier. If omitted, the default value is `true`.
 
 Before sending the presentation request, the Verifier SHOULD display to the End-User the purpose, context, or reason for the query to the Wallet.
@@ -894,7 +894,7 @@ be present more than once.
 within the Credential, as defined in (#claims_path_pointer).
 
 `values`:
-: OPTIONAL. A non-empty array of strings, integers or boolean values that specifies the expected values of the claim.
+: OPTIONAL A non-empty array of strings, integers or boolean values that specifies the expected values of the claim.
 If the `values` property is present, the Wallet SHOULD return the claim only if the
 type and value of the claim both match exactly for at least one of the elements in the array. Details of the processing
 rules are defined in (#selecting_claims).
@@ -1414,7 +1414,7 @@ This specification also defines a new Response Mode `direct_post.jwt`, which all
 
 The Response Mode `direct_post.jwt` causes the Wallet to send the Authorization Response using an HTTP POST request instead of redirecting back to the Verifier as defined in (#response_mode_post). The Wallet adds the `response` parameter containing the JWT as defined in (#response_encryption) in the body of an HTTP POST request using the `application/x-www-form-urlencoded` content type. The names and values in the body MUST be encoded using UTF-8.
 
-If a Wallet is unable to generate an encrypted response, it MAY send an error response as per (#response_mode_post).
+If a Wallet is unable to generate an encrypted response, it MAY send an error response without encryption as per (#response_mode_post).
 
 The following is a non-normative example of a response (omitted content shown with ellipses for display purposes only):
 ```
