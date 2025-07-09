@@ -75,7 +75,7 @@ Additionally, it defines how to use OpenID4VP in conjunction with the Digital Cr
 
 ## Errata revisions
 
-The latest revision of this specification, incorporating any errata updates, is published at [openid-4-verifiable-presentations-1_0](https://openid.net/specs/openid-4-verifiable-presentations-1_0.html). The exact text you are currently looking at will always be available at [openid-4-verifiable-presentations-1_0-final](https://openid.net/specs/openid-4-verifiable-presentations-1_0-final.html). When referring to this specification from otber documents, it is recommended to reference [openid-4-verifiable-presentations-1_0](https://openid.net/specs/openid-4-verifiable-presentations-1_0.html).
+The latest revision of this specification, incorporating any errata updates, is published at [openid-4-verifiable-presentations-1_0](https://openid.net/specs/openid-4-verifiable-presentations-1_0.html). The text of the final specification as approved will always be available at [openid-4-verifiable-presentations-1_0-final](https://openid.net/specs/openid-4-verifiable-presentations-1_0-final.html). When referring to this specification from other documents, it is recommended to reference [openid-4-verifiable-presentations-1_0](https://openid.net/specs/openid-4-verifiable-presentations-1_0.html).
 
 ## Requirements Notation and Conventions
 
