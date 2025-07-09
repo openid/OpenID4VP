@@ -2751,7 +2751,7 @@ Some document types support some transaction data ((#transaction_data)) to be pr
 The `vp_formats_supported` parameter of the Verifier metadata or Wallet metadata MUST have the Credential Format Identifier as a key, and the value MUST be an object consisting of the following name/value pairs:
 
 * `issuerauth_alg_values`: OPTIONAL. A non-empty array containing cryptographic algorithm identifiers. The Credential MUST be considered to fulfill the requirement(s) expressed in this parameter if one of the following is true: 1) The value in the array matches the 'alg' value in the IssuerAuth COSE header. 2) The value in the array is a fully specified algorithm according to [@!I-D.ietf-jose-fully-specified-algorithms] and the combination of the `alg` value in the `IssuerAuth` COSE header and the curve used by the signing key of the COSE structure matches the combination of the algorithm and curve identified by the fully specified algorithm. As an example, if the `IssuerAuth` structure contains an `alg` header with value `-7` (which stands for ECDSA with SHA-256 in [@IANA.COSE]) and is signed by a P-256 key, then it matches an `issuerauth_alg_values` element of `-7` and `-9` (which stands for ECDSA using P-256 curve and SHA-256 in [@!I-D.ietf-jose-fully-specified-algorithms]).
-* `deviceauth_alg_values`: OPTIONAL. A non-empty array containing cryptographic algorithm identifiers. The Credential MUST be considered to fulfill the requirement(s) expressed in this parameter if one of the following is true: 1) The value in the array matches the 'alg' value in the `DeviceSignature` or `DeviceMac` COSE header. 2) The value in the array is a fully specified algorithm according to [@!I-D.ietf-jose-fully-specified-algorithms] and the combination of the `alg` value in the `DeviceSignature` COSE header and the curve used by the signing key of the COSE structure matches the combination of the algorithm and curve identified by the fully specified algorithm. 3) The `alg` of the `DeviceMac` COSE header is `HMAC 256/256` (as described in Section 9.1.3.5 of [@ISO.18013-5]) and the curve of the device key (from Table 22 of [@ISO.18013-5]) matches a value in the array using the identifiers defined in the following table:
+* `deviceauth_alg_values`: OPTIONAL. A non-empty array containing cryptographic algorithm identifiers. The Credential MUST be considered to fulfill the requirement(s) expressed in this parameter if one of the following is true: 1) The value in the array matches the 'alg' value in the `DeviceSignature` or `DeviceMac` COSE header. 2) The value in the array is a fully-specified algorithm according to [@!I-D.ietf-jose-fully-specified-algorithms] and the combination of the `alg` value in the `DeviceSignature` COSE header and the curve used by the signing key of the COSE structure matches the combination of the algorithm and curve identified by the fully-specified algorithm. 3) The `alg` of the `DeviceMac` COSE header is `HMAC 256/256` (as described in Section 9.1.3.5 of [@ISO.18013-5]) and the curve of the device key (from Table 22 of [@ISO.18013-5]) matches a value in the array using the identifiers defined in the following table:
 
 | Algorithm Name | Algorithm Value |
 |:--- |:--- |
@@ -2768,9 +2768,9 @@ Table: Mapping of curves to `alg` identifiers used for the `HMAC 256/256` case
 
 Note: These are specified in OpenID4VP only for private use in this parameter in this specification, and might be superseded by a future registration in IANA.
 
-For clarity the following is a couple of non-normative examples of the `deviceauth_alg_values` parameter
+For clarity, the following is a couple of non-normative examples of the `deviceauth_alg_values` parameter
 
-The below example indicates the verifier supports DeviceMac with HMAC 256/256 where the MAC key is established via ECDH using keys on the P-256 curve as per Section 9.1.3.5 of [@ISO.18013-5].
+The example below indicates the verifier supports DeviceMac with HMAC 256/256, where the MAC key is established via ECDH using keys on the P-256 curve as per Section 9.1.3.5 of [@ISO.18013-5].
 
 ```json
 {
@@ -2778,7 +2778,7 @@ The below example indicates the verifier supports DeviceMac with HMAC 256/256 wh
 }
 ```
 
-The below example indicates the verifier supports both, DeviceMac with HMAC 256/256 where the MAC key is established via ECDH using keys on the P-256 curve as per Section 9.1.3.5 of [@ISO.18013-5], and DeviceSignature using ECDSA with the P-256 curve.
+The example below indicates the verifier supports DeviceMac with HMAC 256/256, where the MAC key is established via ECDH using keys on the P-256 curve as per Section 9.1.3.5 of [@ISO.18013-5], and DeviceSignature using ECDSA with the P-256 curve.
 
 ```json
 {
