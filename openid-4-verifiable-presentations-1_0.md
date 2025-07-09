@@ -2763,7 +2763,7 @@ The below example indicates the verifier supports DeviceMac with HMAC 256/256 wh
 }
 ```
 
-The below example indicates the verifier supports both, DeviceMac with HMAC 256/256 where the MAC key is established via ECDH using keys on the P-256 curve as per Section 9.1.3.5 of [@ISO.18013-5] AND DeviceSignature using ECDSA with the P-256 curve.
+The below example indicates the verifier supports both, DeviceMac with HMAC 256/256 where the MAC key is established via ECDH using keys on the P-256 curve as per Section 9.1.3.5 of [@ISO.18013-5], and DeviceSignature using ECDSA with the P-256 curve.
 
 ```json
 {
