@@ -1,5 +1,5 @@
 %%%
-title = "OpenID for Verifiable Presentations"
+title = "OpenID for Verifiable Presentations 1.0"
 abbrev = "openid-4-vp"
 ipr = "none"
 workgroup = "OpenID Digital Credentials Protocols"
@@ -1631,7 +1631,7 @@ This section lists profiles of this specification that define static configurati
 
 The following is a list of profiles that define static configuration values of Wallets:
 
-- [OpenID4VC High Assurance Interoperability Profile](https://openid.net/specs/openid4vc-high-assurance-interoperability-profile-1_0.html)
+- [OpenID4VC High Assurance Interoperability Profile 1.0](https://openid.net/specs/openid4vc-high-assurance-interoperability-profile-1_0.html)
 - [JWT VC Presentation Profile](https://identity.foundation/jwt-vc-presentation-profile/)
 
 ### A Set of Static Configuration Values bound to `openid4vp://` {#openid4vp-scheme}
@@ -2115,11 +2115,11 @@ Ecosystems intending to use trusted authority mechanisms SHOULD ensure that the 
 
 <reference anchor="OpenID4VCI" target="https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html">
   <front>
-    <title>OpenID for Verifiable Credential Issuance - draft 15</title>
+    <title>OpenID for Verifiable Credential Issuance 1.0 - draft 16</title>
     <author fullname="Torsten Lodderstedt"/>
     <author fullname="Kristina Yasuda"/>
     <author fullname="Tobias Looker"/>
-    <date day="19" month="December" year="2024"/>
+    <date day="26" month="June" year="2025"/>
   </front>
 </reference>
 
