@@ -456,8 +456,8 @@ Where the contents of the `request` query parameter consist of a base64url-encod
           "vct_values": [ "https://credentials.example.com/identity_credential" ]
         },
         "claims": [
-            {"path": ["last_name"]},
-            {"path": ["first_name"]}   
+            {"path": ["family_name"]},
+            {"path": ["given_name"]}   
         ]
       }
     ]
@@ -1129,8 +1129,8 @@ claims:
 
 The following is a non-normative example of a DCQL query that requests a
 Credential of the format `dc+sd-jwt` with a type value of
-`https://credentials.example.com/identity_credential` and the claims `last_name`,
-`first_name`, and `address.street_address`:
+`https://credentials.example.com/identity_credential` and the claims `family_name`,
+`given_name`, and `address.street_address`:
 
 <{{examples/query_lang/simple.json}}
 
@@ -1337,8 +1337,8 @@ a few public keys for encryption in the `jwks` member of the `client_metadata` r
       "vct_values": ["https://credentials.example.com/identity_credential"]
     },
     "claims": [
-      {"path": ["last_name"]},
-      {"path": ["first_name"]},
+      {"path": ["family_name"]},
+      {"path": ["given_name"]},
       {"path": ["address", "postal_code"]}
      ]
     }
