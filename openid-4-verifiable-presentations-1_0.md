@@ -1771,7 +1771,7 @@ While breaking changes to the specifications referenced in this specification ar
 
 ## Formal Security Analysis
 
-The security properties of the OpenID for Verifiable Credentials family of specifications have been formally analyzed, see [@secanalysis.openid4vp].
+The security properties of the OpenID for Verifiable Credentials family of specifications have been formally analyzed, see [@secanalysis.openid4vc].
 
 ## Preventing Replay of Verifiable Presentations {#preventing-replay} 
 
