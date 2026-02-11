@@ -1769,6 +1769,10 @@ While breaking changes to the specifications referenced in this specification ar
 
 # Security Considerations {#security_considerations}
 
+## Formal Security Analysis
+
+The security properties of the OpenID for Verifiable Credentials family of specifications have been formally analyzed, see [@secanalysis.openid4vp].
+
 ## Preventing Replay of Verifiable Presentations {#preventing-replay} 
 
 An attacker could try to inject Presentations obtained from (for example) a previous Authorization Response into another Authorization Response, thus impersonating the End-User that originally presented the respective Verifiable Presentation. Holder Binding aims to prevent such attacks.
@@ -2565,15 +2569,9 @@ The audience for the response (for example, the `aud` value in a Key Binding JWT
 
 ## Security Considerations {#dc_api_security_considerations}
 
-### Formal Security Analysis
+The security properties of the OpenID4VP protocol, when used in conjunction with the Digital Credentials API (DC API) [@!W3C.Digital_Credentials_API], have been formally analyzed, see [@secanalysis.openid4vp.dc].
 
-The security properties of the OpenID for Verifiable Credentials family of specifications have been formally analyzed, see [@secanalysis.openid4vp].
-
-In addition, the security properties of this protocol, when used in conjunction with Digital Credentials API (DC API) [@!W3C.Digital_Credentials_API], have been formally analyzed, see [@secanalysis.openid4vp.dc].
-
-### Additional security considerations
-
-The following security considerations apply:
+The following security considerations from the OpenID4VP apply:
 
 * Preventing Replay of Verifiable Presentations as described in (#preventing-replay), with the difference that the origin is used instead of the Client Identifier to bind the response to the Client.
 * End-User Authentication using Credentials as described in (#end-user-authentication-using-credentials).
