@@ -10,7 +10,7 @@ The current WG-Draft version is built automatically from the main branch and can
 ### Building the HTML
 
 ```
-cd 1.1 && run -v `pwd`:/data danielfett/markdown2rfc openid-4-verifiable-presentations-1_1.md
+cd 1.1 && docker run -v `pwd`:/data danielfett/markdown2rfc openid-4-verifiable-presentations-1_1.md
 ```
 
 ### Conformance tests
