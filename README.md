@@ -2,12 +2,16 @@
 
 ### Current WG-Draft
 
-The current WG-Draft version is built automatically from the master branch and can be accessed at: https://openid.github.io/OpenID4VP/openid-4-verifiable-presentations-wg-draft.html
+The current WG-Draft version is built automatically from the main branch and can be accessed at:
+
+* 1.0: https://openid.github.io/OpenID4VP/openid-4-verifiable-presentations-1_0-wg-draft.html
+* 1.1: https://openid.github.io/OpenID4VP/openid-4-verifiable-presentations-1_1-wg-draft.html
 
 ### Building the HTML
 
 ```
-docker run -v `pwd`:/data danielfett/markdown2rfc openid-4-verifiable-presentations-1_0.md
+cd 1.1
+docker run -v `pwd`:/data danielfett/markdown2rfc openid-4-verifiable-presentations-1_1.md
 ```
 
 ### Conformance tests
