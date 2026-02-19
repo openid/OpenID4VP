@@ -1,5 +1,5 @@
 %%%
-title = "OpenID for Verifiable Presentations 1.0 incorporating errata set 1 - Editor's draft""
+title = "OpenID for Verifiable Presentations 1.0 incorporating errata set 1 - Editor's draft"
 abbrev = "openid-4-vp"
 ipr = "none"
 workgroup = "OpenID Digital Credentials Protocols"
