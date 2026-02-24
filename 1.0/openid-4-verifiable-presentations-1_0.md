@@ -300,7 +300,8 @@ This specification defines the following new request parameters:
 : OPTIONAL. A JSON object containing the Verifier metadata values. It MUST be UTF-8 encoded. The following metadata parameters MAY be used:
 
     * `jwks`: OPTIONAL. A JSON Web Key Set, as defined in [@!RFC7591], that contains one or more public keys, such as those used by the Wallet as an input to a key agreement that may be used for encryption of the Authorization Response (see (#response_encryption)), or where the Wallet will require the public key of the Verifier to generate a Verifiable Presentation. This allows the Verifier to pass ephemeral keys specific to this Authorization Request. Public keys included in this parameter MUST NOT be used to verify the signature of signed Authorization Requests. Each JWK in the set MUST have a `kid` (Key ID) parameter that uniquely identifies the key within the context of the request.
-    * `encrypted_response_enc_values_supported`: OPTIONAL. Non-empty array of strings, where each string is a JWE [@!RFC7516] `enc` algorithm that can be used as the content encryption algorithm for encrypting the Response. This parameter is only applicable when a JWE content encryption algorithm is used. When JOSE HPKE integrated encryption mode is used, this parameter has no effect and MUST be ignored if present. When a `response_mode` requiring encryption of the Response (such as `dc_api.jwt` or `direct_post.jwt`) is specified and JOSE HPKE integrated encryption mode is not used, this MUST be present for anything other than the default single value of `A128GCM`. Otherwise, this SHOULD be absent.
+    * `encrypted_response_enc_values_supported`: OPTIONAL. Non-empty array of strings, where each string is a JWE [@!RFC7516] `enc` algorithm that can be used as the content encryption algorithm for encrypting the Response. This parameter is only applicable when a JWE content encryption algorithm is used. When a `response_mode` requiring encryption of the Response (such as `dc_api.jwt` or `direct_post.jwt`) is specified, this MUST be present for anything other than the default single value of `A128GCM`. Otherwise, this SHOULD be absent.    
+    * `vp_formats_supported`: REQUIRED when not available to the Wallet via another mechanism. As defined in (#client_metadata_parameters).
 
     Authoritative data the Wallet is able to obtain about the Client from other sources, for example those from an OpenID Federation Entity Statement, take precedence over the values passed in `client_metadata`.
 
@@ -3565,7 +3566,7 @@ The technology described in this specification was made available from contribut
 
 -31
 
-   * TBD 
+   * Clarify that `encrypted_response_enc_values_supported` applies only if JWE content encryption algorithm is used
    
 -final
    
