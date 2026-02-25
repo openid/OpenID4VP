@@ -1882,6 +1882,8 @@ Implementations of this specification MUST have security mechanisms in place to 
 
 Clients intending to authenticate the End-User utilizing a claim in a Credential MUST ensure this claim is stable for the End-User as well as locally unique and never reassigned within the Credential Issuer to another End-User. Such a claim MUST also only be used in combination with the Credential Issuer identifier to ensure global uniqueness and to prevent attacks where an attacker obtains the same claim from a different Credential Issuer and tries to impersonate the legitimate End-User.
 
+Clients intending to access a Resource Server on-behalf of the End-User authenticated via Credential presentation, SHOULD NOT use VP Token as an Access Token. The way to produce Access Token based on Credential presentation is out of scope of this specification.
+
 ## Encrypting an Unsigned Response {#encrypting_unsigned_response}
 
 Because an encrypted Authorization Response has no additional integrity protection, an attacker might be able to alter Authorization Response parameters and generate a new encrypted Authorization Response for the Verifier, as encryption is performed using the public key of the Verifier (which is likely to be widely known when not ephemeral to the request/response). Note this includes injecting a new VP Token. Since the contents of the VP Token are integrity protected, tampering with the VP Token is detectable by the Verifier. For details, see (#preventing-replay).
@@ -3562,4 +3564,4 @@ The technology described in this specification was made available from contribut
 
    -01
 
-   * TBD
+   * Add security consideration not to use VP Token as Access Token
