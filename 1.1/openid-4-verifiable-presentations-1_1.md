@@ -1425,15 +1425,13 @@ Hybrid Public Key Encryption MAY be used by specifying the `alg` value according
 When the response mode is `direct_post.jwt` the encoding is as follows: 
 
 ```example
-  session_info = ASCII("OpenID4VP si") ||
-                 BYTE(255) ||
-                 ASCII(clientId) ||
-                 BYTE(255) ||
-                 ASCII(nonce) ||
-                 BYTE(255) ||
-                 BYTE(jwkThumbprint) ||
-                 BYTE(255) ||
-                 ASCII(responseUri)
+session_info = ASCII("OpenID4VP si") ||
+                BYTE(255) ||
+                ASCII(clientId) ||
+                BYTE(255) ||
+                ASCII(nonce) ||
+                BYTE(255) ||
+                ASCII(responseUri)
 ```
 
 Where:
@@ -1442,32 +1440,28 @@ Where:
 - BYTE(255): In each occurence is a separator byte (0xFF) used to delimit fields.
 - ASCII(clientId): The `client_id` request parameter. If applicable, this includes the Client Identifier Prefix.
 - ASCII(nonce): The `nonce` request parameter.
-- Byte(jwkThumbprint): The `JWK SHA-256 Thumbprint as defined in [RFC7638], encoded as a Byte, of the Verifier's public key used to encrypt the response.
 - ASCII(responseUri): The `redirect_uri` or `response_uri` request parameter, depending on which is present, as determined by the Response Mode.
 
 The following is a non-normative example of the `session_info` structure for `direct_post.jwt` response mode:
 
 ```example
-  "OpenID4VP si\xffx509_san_dns:example.com\xffexc7gBkxjx1rdc9udRrveKvSsJIq80avlXeLHhGwqtA\xffB\x83ì\x92zàò\x08Úª-\x02j\x81O+"Ü¥,ø_ú\x8f?\x86&Æ½f\x90G\xffhttps://example.com/response"
+"OpenID4VP si\xffx509_san_dns:example.com\xffexc7gBkxjx1rdc9udRrveKvSsJIq80avlXeLHhGwqtA\xffhttps://example.com/response"
 ```
 
 The corresponding hexadecimal representation is:
 
 ```
-4f70656e4944345650207369ff783530395f73616e5f646e733a6578616d706c652e636f6dff6578633767426b786a7831726463397564527276654b7653734a4971383061766c58654c48684777717441ff4283ec927ae0f208daaa2d026a814f2b22dca52cf85ffa8f3f8626c6bd669047ff68747470733a2f2f6578616d706c652e636f6d2f726573706f6e7365
+4f70656e4944345650207369ff783530395f73616e5f646e733a6578616d706c652e636f6dff6578633767426b786a7831726463397564527276654b7653734a4971383061766c58654c48684777717441ff68747470733a2f2f6578616d706c652e636f6d2f726573706f6e7365
 ```
 
 When the response mode is `dc_api.jwt` the encoding is as follows:
 
 ```example
-  session_info = ASCII("OpenID4VPDCAPI si") ||
-                 BYTE(255) ||
-                 ASCII(origin) ||
-                 BYTE(255) ||
-                 ASCII(nonce) ||
-                 BYTE(255) ||
-                 BYTE(jwkThumbprint) ||
-
+session_info = ASCII("OpenID4VPDCAPI si") ||
+               BYTE(255) ||
+               ASCII(origin) ||
+               BYTE(255) ||
+               ASCII(nonce) ||
 ```
 
 Where:
@@ -1476,18 +1470,17 @@ Where:
 - BYTE(255): In each occurence is a separator byte (0xFF) used to delimit fields.
 - ASCII(origin): The ASCII string representing the Origin of the request as described in (#dc_api_request). It MUST NOT be prefixed with origin:.
 - ASCII(nonce): The `nonce` request parameter.
-- Byte(jwkThumbprint): The `JWK SHA-256 Thumbprint as defined in [RFC7638], encoded as a Byte, of the Verifier's public key used to encrypt the response.
 
 The following is a non-normative example of the `session_info` structure for `dc_api.jwt` response mode:
 
 ```example
-  "OpenID4VPDCAPI si\xffhttps://example.com\xffexc7gBkxjx1rdc9udRrveKvSsJIq80avlXeLHhGwqtA\xffB\x83ì\x92zàò\x08Úª-\x02j\x81O+"Ü¥,ø_ú\x8f?\x86&Æ½f\x90G"
+"OpenID4VPDCAPI si\xffhttps://example.com\xffexc7gBkxjx1rdc9udRrveKvSsJIq80avlXeLHhGwqtA"
 ```
 
 The corresponding hexadecimal representation is:
 
 ```
-4f70656e49443456504443415049207369ff68747470733a2f2f6578616d706c652e636f6dff6578633767426b786a7831726463397564527276654b7653734a4971383061766c58654c48684777717441ff4283ec927ae0f208daaa2d026a814f2b22dca52cf85ffa8f3f8626c6bd669047
+4f70656e49443456504443415049207369ff68747470733a2f2f6578616d706c652e636f6dff6578633767426b786a7831726463397564527276654b7653734a4971383061766c58654c48684777717441
 ```
 
 The `session_info` structure's bytes are used as the value of the `info` parameter when using Integrated Encryption as the Key Management Mode. If the `recipient_structure` is being used then it is used as the value of the `recipient_extra_info` parameter instead.
