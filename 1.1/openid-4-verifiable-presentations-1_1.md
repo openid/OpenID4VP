@@ -452,8 +452,8 @@ Where the contents of the `request` query parameter consist of a base64url-encod
           "vct_values": [ "https://credentials.example.com/identity_credential" ]
         },
         "claims": [
-            {"path": ["last_name"]},
-            {"path": ["first_name"]}   
+            {"path": ["family_name"]},
+            {"path": ["given_name"]}
         ]
       }
     ]
@@ -1125,8 +1125,8 @@ claims:
 
 The following is a non-normative example of a DCQL query that requests a
 Credential of the format `dc+sd-jwt` with a type value of
-`https://credentials.example.com/identity_credential` and the claims `last_name`,
-`first_name`, and `address.street_address`:
+`https://credentials.example.com/identity_credential` and the claims `family_name`,
+`given_name`, and `address.street_address`:
 
 <{{examples/query_lang/simple.json}}
 
@@ -1333,8 +1333,8 @@ a few public keys for encryption in the `jwks` member of the `client_metadata` r
       "vct_values": ["https://credentials.example.com/identity_credential"]
     },
     "claims": [
-      {"path": ["last_name"]},
-      {"path": ["first_name"]},
+      {"path": ["family_name"]},
+      {"path": ["given_name"]},
       {"path": ["address", "postal_code"]}
      ]
     }
@@ -3286,7 +3286,7 @@ Note: The `nonce` and `aud` are set to the `nonce` of the request and the Client
 
 The following is a non-normative example of a DCQL query that requests a Verifiable
 Credential in the format `mso_mdoc` with the claims `vehicle_holder` and
-`first_name`:
+`given_name`:
 
 <{{examples/query_lang/simple_mdoc.json}}
 
@@ -3309,13 +3309,13 @@ come from an mDL or a photoid Credential.
 
 The following is a non-normative example of a DCQL query that requests 
 
-- the mandatory claims `last_name` and `date_of_birth`, and
+- the mandatory claims `family_name` and `date_of_birth`, and
 - either the claim `postal_code`, or, if that is not available, both of the claims `locality` and `region`.
 
 <{{examples/query_lang/claims_alternatives.json}}
 
 The following example shows a query that uses the `values` constraints
-to request a Credential with specific values for the `last_name` and `postal_code` claims:
+to request a Credential with specific values for the `family_name` and `postal_code` claims:
 
 <{{examples/query_lang/value_matching_simple.json}}
 

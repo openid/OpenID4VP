@@ -8,7 +8,7 @@
       },
       "claims": [
         {"path": ["org.iso.7367.1", "vehicle_holder"]},
-        {"path": ["org.iso.18013.5.1", "first_name"]}
+        {"path": ["org.iso.18013.5.1", "given_name"]}
       ]
     }
   ]
