@@ -1,0 +1,24 @@
+{
+  "expected_origins": [
+    "https://origin1.example.com",
+    "https://origin2.example.com"
+  ],
+  "response_type": "vp_token",
+  "response_mode": "dc_api",
+  "nonce": "n-0S6_WzA2Mj",
+  "dcql_query": {...},
+  "client_metadata": {
+    "jwks": {
+      "keys": [
+        {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "MKBCTNIcKUSDii11ySs3526iDZ8AiTo7Tu6KPAqv7D4",
+          "y": "4Etl6SRW2YiLUrN5vfvVHuhp7x8PxltmWWlbbM4IFyM",
+          "use": "enc",
+          "kid": "1"
+        }
+      ]
+    }
+  }
+}

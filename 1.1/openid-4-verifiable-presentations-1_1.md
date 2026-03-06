@@ -1,5 +1,5 @@
 %%%
-title = "OpenID for Verifiable Presentations 1.0"
+title = "OpenID for Verifiable Presentations 1.1 - Editor's draft"
 abbrev = "openid-4-vp"
 ipr = "none"
 workgroup = "OpenID Digital Credentials Protocols"
@@ -7,7 +7,7 @@ keyword = ["security", "openid", "ssi"]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "openid-4-verifiable-presentations-1_0-30"
+value = "openid-4-verifiable-presentations-1_1-01"
 status = "standard"
 
 [[author]]
@@ -72,10 +72,6 @@ Additionally, it defines how to use OpenID4VP in conjunction with the Digital Cr
 
 * Tobias Looker (MATTR)
 * Adam Lemmon (MATTR)
-
-## Errata revisions
-
-The latest revision of this specification, incorporating any errata updates, is published at [openid-4-verifiable-presentations-1_0](https://openid.net/specs/openid-4-verifiable-presentations-1_0.html). The text of the final specification as approved will always be available at [openid-4-verifiable-presentations-1_0-final](https://openid.net/specs/openid-4-verifiable-presentations-1_0-final.html). When referring to this specification from other documents, it is recommended to reference [openid-4-verifiable-presentations-1_0](https://openid.net/specs/openid-4-verifiable-presentations-1_0.html).
 
 ## Requirements Notation and Conventions
 
@@ -300,7 +296,7 @@ This specification defines the following new request parameters:
 : OPTIONAL. A JSON object containing the Verifier metadata values. It MUST be UTF-8 encoded. The following metadata parameters MAY be used:
 
     * `jwks`: OPTIONAL. A JSON Web Key Set, as defined in [@!RFC7591], that contains one or more public keys, such as those used by the Wallet as an input to a key agreement that may be used for encryption of the Authorization Response (see (#response_encryption)), or where the Wallet will require the public key of the Verifier to generate a Verifiable Presentation. This allows the Verifier to pass ephemeral keys specific to this Authorization Request. Public keys included in this parameter MUST NOT be used to verify the signature of signed Authorization Requests. Each JWK in the set MUST have a `kid` (Key ID) parameter that uniquely identifies the key within the context of the request.
-    * `encrypted_response_enc_values_supported`: OPTIONAL. Non-empty array of strings, where each string is a JWE [@!RFC7516] `enc` algorithm that can be used as the content encryption algorithm for encrypting the Response. When a `response_mode` requiring encryption of the Response (such as `dc_api.jwt` or `direct_post.jwt`) is specified, this MUST be present for anything other than the default single value of `A128GCM`. Otherwise, this SHOULD be absent.
+    * `encrypted_response_enc_values_supported`: OPTIONAL. Non-empty array of strings, where each string is a JWE [@!RFC7516] `enc` algorithm that can be used as the content encryption algorithm for encrypting the Response. This parameter is only applicable when a JWE content encryption algorithm is used. When JOSE HPKE integrated encryption mode is used, this parameter has no effect and MUST be ignored if present. When a `response_mode` requiring encryption of the Response (such as `dc_api.jwt` or `direct_post.jwt`) is specified and JOSE HPKE integrated encryption mode is not used, this MUST be present for anything other than the default single value of `A128GCM`. Otherwise, this SHOULD be absent.
     * `vp_formats_supported`: REQUIRED when not available to the Wallet via another mechanism. As defined in (#client_metadata_parameters).
 
     Authoritative data the Wallet is able to obtain about the Client from other sources, for example those from an OpenID Federation Entity Statement, take precedence over the values passed in `client_metadata`.
@@ -456,8 +452,8 @@ Where the contents of the `request` query parameter consist of a base64url-encod
           "vct_values": [ "https://credentials.example.com/identity_credential" ]
         },
         "claims": [
-            {"path": ["family_name"]},
-            {"path": ["given_name"]}   
+            {"path": ["last_name"]},
+            {"path": ["first_name"]}   
         ]
       }
     ]
@@ -1129,8 +1125,8 @@ claims:
 
 The following is a non-normative example of a DCQL query that requests a
 Credential of the format `dc+sd-jwt` with a type value of
-`https://credentials.example.com/identity_credential` and the claims `family_name`,
-`given_name`, and `address.street_address`:
+`https://credentials.example.com/identity_credential` and the claims `last_name`,
+`first_name`, and `address.street_address`:
 
 <{{examples/query_lang/simple.json}}
 
@@ -1337,8 +1333,8 @@ a few public keys for encryption in the `jwks` member of the `client_metadata` r
       "vct_values": ["https://credentials.example.com/identity_credential"]
     },
     "claims": [
-      {"path": ["family_name"]},
-      {"path": ["given_name"]},
+      {"path": ["last_name"]},
+      {"path": ["first_name"]},
       {"path": ["address", "postal_code"]}
      ]
     }
@@ -3290,7 +3286,7 @@ Note: The `nonce` and `aud` are set to the `nonce` of the request and the Client
 
 The following is a non-normative example of a DCQL query that requests a Verifiable
 Credential in the format `mso_mdoc` with the claims `vehicle_holder` and
-`given_name`:
+`first_name`:
 
 <{{examples/query_lang/simple_mdoc.json}}
 
@@ -3313,13 +3309,13 @@ come from an mDL or a photoid Credential.
 
 The following is a non-normative example of a DCQL query that requests 
 
-- the mandatory claims `family_name` and `date_of_birth`, and
+- the mandatory claims `last_name` and `date_of_birth`, and
 - either the claim `postal_code`, or, if that is not available, both of the claims `locality` and `region`.
 
 <{{examples/query_lang/claims_alternatives.json}}
 
 The following example shows a query that uses the `values` constraints
-to request a Credential with specific values for the `family_name` and `postal_code` claims:
+to request a Credential with specific values for the `last_name` and `postal_code` claims:
 
 <{{examples/query_lang/value_matching_simple.json}}
 
@@ -3559,3 +3555,11 @@ Copyright (c) 2025 The OpenID Foundation.
 The OpenID Foundation (OIDF) grants to any Contributor, developer, implementer, or other interested party a non-exclusive, royalty free, worldwide copyright license to reproduce, prepare derivative works from, distribute, perform and display, this Implementers Draft, Final Specification, or Final Specification Incorporating Errata Corrections solely for the purposes of (i) developing specifications, and (ii) implementing Implementers Drafts, Final Specifications, and Final Specification Incorporating Errata Corrections based on such documents, provided that attribution be made to the OIDF as the source of the material, but that such attribution does not indicate an endorsement by the OIDF.
 
 The technology described in this specification was made available from contributions from various sources, including members of the OpenID Foundation and others. Although the OpenID Foundation has taken steps to help ensure that the technology is available for distribution, it takes no position regarding the validity or scope of any intellectual property or other rights that might be claimed to pertain to the implementation or use of the technology described in this specification or the extent to which any license under such rights might or might not be available; neither does it represent that it has made any independent effort to identify any such rights. The OpenID Foundation and the contributors to this specification make no (and hereby expressly disclaim any) warranties (express, implied, or otherwise), including implied warranties of merchantability, non-infringement, fitness for a particular purpose, or title, related to this specification, and the entire risk as to implementing this specification is assumed by the implementer. The OpenID Intellectual Property Rights policy (found at openid.net) requires contributors to offer a patent promise not to assert certain patent claims against other contributors and against implementers. OpenID invites any interested party to bring to its attention any copyrights, patents, patent applications, or other proprietary rights that may cover technology that may be required to practice this specification.
+
+# Document History
+
+   [[ To be removed from the final specification ]]
+
+   -01
+
+   * Clarify that `encrypted_response_enc_values_supported` applies only if JWE content encryption algorithm is used; e.g., it does not apply to JOSE HPKE
