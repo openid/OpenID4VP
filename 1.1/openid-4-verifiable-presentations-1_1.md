@@ -79,7 +79,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 # Terminology
 
-This specification uses the terms "Access Token", "Authorization Request", "Authorization Response", "Client", "Client Authentication", "Client Identifier", "Grant Type", "Resource Server", "Response Type", "Token Request" and "Token Response" defined by OAuth 2.0 [@!RFC6749], the terms "End-User" and "Entity" as defined by OpenID Connect Core [@!OpenID.Core], the terms "Request Object" and "Request URI" as defined by [@!RFC9101], the term "JSON Web Token (JWT)" defined by JSON Web Token (JWT) [@!RFC7519], the term "JOSE Header" defined by JSON Web Signature (JWS) [@!RFC7515], the term "JSON Web Encryption (JWE)" defined by [@!RFC7516], and the term "Response Mode" defined by OAuth 2.0 Multiple Response Type Encoding Practices [@!OAuth.Responses].
+This specification uses the terms "Access Token", "Authorization Request", "Authorization Response", "Client", "Client Authentication", "Client Identifier", "Grant Type", "Response Type", "Token Request" and "Token Response" defined by OAuth 2.0 [@!RFC6749], the terms "End-User" and "Entity" as defined by OpenID Connect Core [@!OpenID.Core], the terms "Request Object" and "Request URI" as defined by [@!RFC9101], the term "JSON Web Token (JWT)" defined by JSON Web Token (JWT) [@!RFC7519], the term "JOSE Header" defined by JSON Web Signature (JWS) [@!RFC7515], the term "JSON Web Encryption (JWE)" defined by [@!RFC7516], and the term "Response Mode" defined by OAuth 2.0 Multiple Response Type Encoding Practices [@!OAuth.Responses].
 
 Base64url-encoded denotes the URL-safe base64 encoding without padding defined in Section 2 of [@!RFC7515].
 
@@ -1882,7 +1882,9 @@ Implementations of this specification MUST have security mechanisms in place to 
 
 Clients intending to authenticate the End-User utilizing a claim in a Credential MUST ensure this claim is stable for the End-User as well as locally unique and never reassigned within the Credential Issuer to another End-User. Such a claim MUST also only be used in combination with the Credential Issuer identifier to ensure global uniqueness and to prevent attacks where an attacker obtains the same claim from a different Credential Issuer and tries to impersonate the legitimate End-User.
 
-Clients intending to access a Resource Server on-behalf of the End-User authenticated via Credential presentation, MUST NOT use the VP Token as an Access Token. The way to produce Access Tokens based on Credential presentations is out of scope of this specification.
+## VP Token abuse {#vp-token-abuse}
+
+Ecosystems MUST NOT use the VP Token as an Access Token. The way to produce Access Tokens based on Credential presentations is out of scope of this specification.
 
 ## Encrypting an Unsigned Response {#encrypting_unsigned_response}
 
@@ -2546,6 +2548,7 @@ The following security considerations from OpenID4VP apply:
 
 * Preventing Replay of Verifiable Presentations as described in (#preventing-replay), with the difference that the origin is used instead of the Client Identifier to bind the response to the Client.
 * End-User Authentication using Credentials as described in (#end-user-authentication-using-credentials).
+* VP Token abuse (#vp-token-abuse).
 * Encrypting an Unsigned Response as described in (#encrypting_unsigned_response).
 * TLS Requirements as described in (#tls-requirements).
 * Always Use the Full Client Identifier as described in (#full-client-identifier) for signed requests.
