@@ -1882,7 +1882,7 @@ Implementations of this specification MUST have security mechanisms in place to 
 
 Clients intending to authenticate the End-User utilizing a claim in a Credential MUST ensure this claim is stable for the End-User as well as locally unique and never reassigned within the Credential Issuer to another End-User. Such a claim MUST also only be used in combination with the Credential Issuer identifier to ensure global uniqueness and to prevent attacks where an attacker obtains the same claim from a different Credential Issuer and tries to impersonate the legitimate End-User.
 
-Clients intending to access a Resource Server on-behalf of the End-User authenticated via Credential presentation, SHOULD NOT use VP Token as an Access Token. The way to produce Access Token based on Credential presentation is out of scope of this specification.
+Clients intending to access a Resource Server on-behalf of the End-User authenticated via Credential presentation, MUST NOT use the VP Token as an Access Token. The way to produce Access Tokens based on Credential presentations is out of scope of this specification.
 
 ## Encrypting an Unsigned Response {#encrypting_unsigned_response}
 
