@@ -1882,6 +1882,10 @@ Implementations of this specification MUST have security mechanisms in place to 
 
 Clients intending to authenticate the End-User utilizing a claim in a Credential MUST ensure this claim is stable for the End-User as well as locally unique and never reassigned within the Credential Issuer to another End-User. Such a claim MUST also only be used in combination with the Credential Issuer identifier to ensure global uniqueness and to prevent attacks where an attacker obtains the same claim from a different Credential Issuer and tries to impersonate the legitimate End-User.
 
+## VP Token abuse {#vp-token-abuse}
+
+Ecosystems MUST NOT use the VP Token as an Access Token. The way to produce Access Tokens based on Credential presentations is out of scope of this specification.
+
 ## Encrypting an Unsigned Response {#encrypting_unsigned_response}
 
 Because an encrypted Authorization Response has no additional integrity protection, an attacker might be able to alter Authorization Response parameters and generate a new encrypted Authorization Response for the Verifier, as encryption is performed using the public key of the Verifier (which is likely to be widely known when not ephemeral to the request/response). Note this includes injecting a new VP Token. Since the contents of the VP Token are integrity protected, tampering with the VP Token is detectable by the Verifier. For details, see (#preventing-replay).
@@ -2544,6 +2548,7 @@ The following security considerations from OpenID4VP apply:
 
 * Preventing Replay of Verifiable Presentations as described in (#preventing-replay), with the difference that the origin is used instead of the Client Identifier to bind the response to the Client.
 * End-User Authentication using Credentials as described in (#end-user-authentication-using-credentials).
+* VP Token abuse (#vp-token-abuse).
 * Encrypting an Unsigned Response as described in (#encrypting_unsigned_response).
 * TLS Requirements as described in (#tls-requirements).
 * Always Use the Full Client Identifier as described in (#full-client-identifier) for signed requests.
@@ -3562,4 +3567,5 @@ The technology described in this specification was made available from contribut
 
    -01
 
+   * Add security consideration not to use VP Token as Access Token
    * Clarify that `encrypted_response_enc_values_supported` applies only if JWE content encryption algorithm is used; e.g., it does not apply to JOSE HPKE
