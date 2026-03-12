@@ -8,10 +8,10 @@
       },
       "claims": [
           {
-            "path": ["last_name"],
+            "path": ["family_name"],
             "values": ["Doe"]
           },
-          {"path": ["first_name"]},
+          {"path": ["given_name"]},
           {"path": ["address", "street_address"]},
           {
             "path": ["postal_code"],
