@@ -2571,7 +2571,7 @@ The audience for the response (for example, the `aud` value in a Key Binding JWT
 
 The security properties of the OpenID4VP protocol, when used in conjunction with the Digital Credentials API (DC API) [@!W3C.Digital_Credentials_API], have been formally analyzed, see [@secanalysis.openid4vp.dc].
 
-The following security considerations from the OpenID4VP apply:
+The following security considerations from OpenID4VP apply:
 
 * Preventing Replay of Verifiable Presentations as described in (#preventing-replay), with the difference that the origin is used instead of the Client Identifier to bind the response to the Client.
 * End-User Authentication using Credentials as described in (#end-user-authentication-using-credentials).
