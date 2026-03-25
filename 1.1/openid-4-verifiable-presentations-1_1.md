@@ -1765,6 +1765,10 @@ While breaking changes to the specifications referenced in this specification ar
 
 # Security Considerations {#security_considerations}
 
+## Formal Security Analysis
+
+The security properties of the OpenID for Verifiable Credentials family of specifications have been formally analyzed, see [@secanalysis.openid4vc].
+
 ## Preventing Replay of Verifiable Presentations {#preventing-replay} 
 
 An attacker could try to inject Presentations obtained from (for example) a previous Authorization Response into another Authorization Response, thus impersonating the End-User that originally presented the respective Verifiable Presentation. Holder Binding aims to prevent such attacks.
@@ -2367,6 +2371,26 @@ Ecosystems intending to use trusted authority mechanisms SHOULD ensure that the 
         </front>
 </reference>
 
+<reference anchor="secanalysis.openid4vp.dc" target="https://openid.net/wp-content/uploads/2025/08/Report-Deliverable-A_1_B_.pdf">
+  <front>
+    <title>Formal Security Analysis of the OpenID for Verifiable Presentations Specification (with DC API)</title>
+    <author fullname="Fabian Hauck"></author>
+    <author fullname="Pedram Hosseyni"></author>
+    <author fullname="Ralf Küsters"></author>
+    <author fullname="Tim Würtele"></author>
+    <date day="15" month="July" year="2025"/>
+  </front>
+</reference>
+
+<reference anchor="secanalysis.openid4vc" target="https://elib.uni-stuttgart.de/items/07055a8e-a85e-42b9-98b5-11f046d5fb91">
+  <front>
+    <title>OpenID for Verifiable Credentials: Formal Security Analysis using the Web Infrastructure Model</title>
+    <author fullname="Fabian Hauck">
+    </author>
+    <date day="2" month="October" year="2023"/>
+  </front>
+</reference>
+
 # OpenID4VP over the Digital Credentials API {#dc_api}
 
 This section defines how to use OpenID4VP with the Digital Credentials API.
@@ -2544,6 +2568,8 @@ The audience for the response (for example, the `aud` value in a Key Binding JWT
 
 ## Security Considerations {#dc_api_security_considerations}
 
+The security properties of the OpenID4VP protocol, when used in conjunction with the Digital Credentials API (DC API) [@!W3C.Digital_Credentials_API], have been formally analyzed, see [@secanalysis.openid4vp.dc].
+
 The following security considerations from OpenID4VP apply:
 
 * Preventing Replay of Verifiable Presentations as described in (#preventing-replay), with the difference that the origin is used instead of the Client Identifier to bind the response to the Client.
@@ -2551,7 +2577,7 @@ The following security considerations from OpenID4VP apply:
 * VP Token abuse (#vp-token-abuse).
 * Encrypting an Unsigned Response as described in (#encrypting_unsigned_response).
 * TLS Requirements as described in (#tls-requirements).
-* Always Use the Full Client Identifier as described in (#full-client-identifier) for signed requests.
+* Always use the Full Client Identifier as described in (#full-client-identifier) for signed requests.
 * Security Checks on the Returned Credentials and Presentations as described in (#dcql_query_security).
 * DCQL Value Matching as described in (#dcql-value-matching).
 
