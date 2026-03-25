@@ -2361,7 +2361,6 @@ Ecosystems intending to use trusted authority mechanisms SHOULD ensure that the 
         </front>
 </reference>
 
-
 <reference anchor="IANA.Hash.Algorithms" target="https://www.iana.org/assignments/named-information/named-information.xhtml">
         <front>
           <title>Named Information Hash Algorithm Registry</title>
