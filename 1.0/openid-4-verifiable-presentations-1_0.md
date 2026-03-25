@@ -2575,7 +2575,7 @@ The following security considerations from OpenID4VP apply:
 * End-User Authentication using Credentials as described in (#end-user-authentication-using-credentials).
 * Encrypting an Unsigned Response as described in (#encrypting_unsigned_response).
 * TLS Requirements as described in (#tls-requirements).
-* Always Use the Full Client Identifier as described in (#full-client-identifier) for signed requests.
+* Always use the Full Client Identifier as described in (#full-client-identifier) for signed requests.
 * Security Checks on the Returned Credentials and Presentations as described in (#dcql_query_security).
 * DCQL Value Matching as described in (#dcql-value-matching).
 
