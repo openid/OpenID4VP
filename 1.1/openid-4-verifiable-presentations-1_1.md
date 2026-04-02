@@ -3631,6 +3631,6 @@ The technology described in this specification was made available from contribut
 
    -01
 
-   * Add usage of HPKE an specfication for the `info` parameter. 
+   * Add usage of HPKE for the `info` parameter. 
    * Add security consideration not to use VP Token as Access Token
    * Clarify that `encrypted_response_enc_values_supported` applies only if JWE content encryption algorithm is used; e.g., it does not apply to JOSE HPKE
