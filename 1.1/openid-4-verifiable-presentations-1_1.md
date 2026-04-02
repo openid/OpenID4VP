@@ -1466,7 +1466,7 @@ session_info = ASCII("OpenID4VPDCAPI-si") ||
 
 Where:
 
-- ASCII("OpenID4VPDCAPI-si"): A fixed ASCII string identifying this session_info structure.
+- ASCII("OpenID4VPDCAPI-si"): A fixed ASCII string identifying this `session_info` structure.
 - BYTE(255): In each occurence is a separator byte (0xFF) used to delimit fields.
 - ASCII(origin): The ASCII string representing the Origin of the request as described in (#dc_api_request). It MUST NOT be prefixed with origin:.
 - ASCII(nonce): The `nonce` request parameter.
