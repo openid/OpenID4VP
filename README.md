@@ -9,9 +9,20 @@ The current WG-Draft version is built automatically from the main branch and can
 
 ### Building the HTML
 
+The easiest way to build the HTML is to use the [`danielfett/markdown2rfc`](https://hub.docker.com/r/danielfett/markdown2rfc) docker image. For example, to build the `1.1` version of the spec, do the following:
+
+**bash / zsh / sh**
+
 ```
 cd 1.1
 docker run -v `pwd`:/data danielfett/markdown2rfc openid-4-verifiable-presentations-1_1.md
+```
+
+**fish**
+
+```
+cd 1.1
+docker run -v (pwd):/data danielfett/markdown2rfc openid-4-verifiable-presentations-1_1.md
 ```
 
 ### Conformance tests

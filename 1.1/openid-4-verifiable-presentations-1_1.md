@@ -452,8 +452,8 @@ Where the contents of the `request` query parameter consist of a base64url-encod
           "vct_values": [ "https://credentials.example.com/identity_credential" ]
         },
         "claims": [
-            {"path": ["last_name"]},
-            {"path": ["first_name"]}   
+            {"path": ["family_name"]},
+            {"path": ["given_name"]}
         ]
       }
     ]
@@ -1125,8 +1125,8 @@ claims:
 
 The following is a non-normative example of a DCQL query that requests a
 Credential of the format `dc+sd-jwt` with a type value of
-`https://credentials.example.com/identity_credential` and the claims `last_name`,
-`first_name`, and `address.street_address`:
+`https://credentials.example.com/identity_credential` and the claims `family_name`,
+`given_name`, and `address.street_address`:
 
 <{{examples/query_lang/simple.json}}
 
@@ -1333,8 +1333,8 @@ a few public keys for encryption in the `jwks` member of the `client_metadata` r
       "vct_values": ["https://credentials.example.com/identity_credential"]
     },
     "claims": [
-      {"path": ["last_name"]},
-      {"path": ["first_name"]},
+      {"path": ["family_name"]},
+      {"path": ["given_name"]},
       {"path": ["address", "postal_code"]}
      ]
     }
@@ -1945,6 +1945,10 @@ Implementations of this specification MUST have security mechanisms in place to 
 ## End-User Authentication using Credentials {#end-user-authentication-using-credentials}
 
 Clients intending to authenticate the End-User utilizing a claim in a Credential MUST ensure this claim is stable for the End-User as well as locally unique and never reassigned within the Credential Issuer to another End-User. Such a claim MUST also only be used in combination with the Credential Issuer identifier to ensure global uniqueness and to prevent attacks where an attacker obtains the same claim from a different Credential Issuer and tries to impersonate the legitimate End-User.
+
+## VP Token abuse {#vp-token-abuse}
+
+Ecosystems MUST NOT use the VP Token as an Access Token. The way to produce Access Tokens based on Credential presentations is out of scope of this specification.
 
 ## Encrypting an Unsigned Response {#encrypting_unsigned_response}
 
@@ -2608,6 +2612,7 @@ The following security considerations from OpenID4VP apply:
 
 * Preventing Replay of Verifiable Presentations as described in (#preventing-replay), with the difference that the origin is used instead of the Client Identifier to bind the response to the Client.
 * End-User Authentication using Credentials as described in (#end-user-authentication-using-credentials).
+* VP Token abuse (#vp-token-abuse).
 * Encrypting an Unsigned Response as described in (#encrypting_unsigned_response).
 * TLS Requirements as described in (#tls-requirements).
 * Always Use the Full Client Identifier as described in (#full-client-identifier) for signed requests.
@@ -3350,7 +3355,7 @@ Note: The `nonce` and `aud` are set to the `nonce` of the request and the Client
 
 The following is a non-normative example of a DCQL query that requests a Verifiable
 Credential in the format `mso_mdoc` with the claims `vehicle_holder` and
-`first_name`:
+`given_name`:
 
 <{{examples/query_lang/simple_mdoc.json}}
 
@@ -3373,13 +3378,13 @@ come from an mDL or a photoid Credential.
 
 The following is a non-normative example of a DCQL query that requests 
 
-- the mandatory claims `last_name` and `date_of_birth`, and
+- the mandatory claims `family_name` and `date_of_birth`, and
 - either the claim `postal_code`, or, if that is not available, both of the claims `locality` and `region`.
 
 <{{examples/query_lang/claims_alternatives.json}}
 
 The following example shows a query that uses the `values` constraints
-to request a Credential with specific values for the `last_name` and `postal_code` claims:
+to request a Credential with specific values for the `family_name` and `postal_code` claims:
 
 <{{examples/query_lang/value_matching_simple.json}}
 
@@ -3627,4 +3632,5 @@ The technology described in this specification was made available from contribut
    -01
 
    * Add usage of HPKE an specfication for the `info` parameter. 
+   * Add security consideration not to use VP Token as Access Token
    * Clarify that `encrypted_response_enc_values_supported` applies only if JWE content encryption algorithm is used; e.g., it does not apply to JOSE HPKE

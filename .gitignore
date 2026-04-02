@@ -1,0 +1,3 @@
+# ignore markdown2rfc output
+*.html
+*.xml
