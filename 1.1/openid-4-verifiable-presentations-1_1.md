@@ -1445,7 +1445,7 @@ Where:
 The following is a non-normative example of the `session_info` structure for `direct_post.jwt` response mode:
 
 ```example
-"OpenID4VP-si\xffx509_san_dns:example.com\xffexc7gBkxjx1rdc9udRrveKvSsJIq80avlXeLHhGwqtA\xffhttps://example.com/response"
+OpenID4VP-si\xffx509_san_dns:example.com\xffexc7gBkxjx1rdc9udRrveKvSsJIq80avlXeLHhGwqtA\xffhttps://example.com/response
 ```
 
 The corresponding hexadecimal representation is:
