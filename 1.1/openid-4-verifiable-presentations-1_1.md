@@ -1474,7 +1474,7 @@ Where:
 The following is a non-normative example of the `session_info` structure for `dc_api.jwt` response mode:
 
 ```example
-"OpenID4VPDCAPI-si\xffhttps://example.com\xffexc7gBkxjx1rdc9udRrveKvSsJIq80avlXeLHhGwqtA"
+OpenID4VPDCAPI-si\xffhttps://example.com\xffexc7gBkxjx1rdc9udRrveKvSsJIq80avlXeLHhGwqtA
 ```
 
 The corresponding hexadecimal representation is:
