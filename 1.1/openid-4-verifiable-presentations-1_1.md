@@ -1461,7 +1461,7 @@ session_info = ASCII("OpenID4VPDCAPI-si") ||
                BYTE(255) ||
                ASCII(origin) ||
                BYTE(255) ||
-               ASCII(nonce) ||
+               ASCII(nonce)
 ```
 
 Where:
