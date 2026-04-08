@@ -1437,10 +1437,10 @@ session_info = ASCII("OpenID4VP-si") ||
 Where:
 
 - ASCII("OpenID4VP-si"): A fixed ASCII string identifying this `session_info` structure.
-- BYTE(255): In each occurence is a separator byte (0xFF) used to delimit fields.
-- ASCII(clientId): The `client_id` request parameter. If applicable, this includes the Client Identifier Prefix.
-- ASCII(nonce): The `nonce` request parameter.
-- ASCII(responseUri): The `redirect_uri` or `response_uri` request parameter, depending on which is present, as determined by the Response Mode.
+- `BYTE(255)`: In each occurence is a separator byte (0xFF) used to delimit fields.
+- `ASCII(clientId)`: The `client_id` request parameter. If applicable, this includes the Client Identifier Prefix.
+- `ASCII(nonce)`: The `nonce` request parameter.
+- `ASCII(responseUri)`: The `redirect_uri` or `response_uri` request parameter, depending on which is present, as determined by the Response Mode.
 
 The following is a non-normative example of the `session_info` structure for `direct_post.jwt` response mode:
 
