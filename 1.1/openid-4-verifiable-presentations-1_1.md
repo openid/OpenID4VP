@@ -1468,7 +1468,7 @@ Where:
 
 - `ASCII("OpenID4VPDCAPI-si")`: A fixed ASCII string identifying this `session_info` structure.
 - `BYTE(255)`: In each occurence is a separator byte (0xFF) used to delimit fields.
-- `ASCII(origin)`: The ASCII string representing the Origin of the request as described in (#dc_api_request). It MUST NOT be prefixed with origin:.
+- `ASCII(origin)`: The ASCII string representing the Origin of the request as described in (#dc_api_request). It MUST NOT be prefixed with `origin:`.
 - `ASCII(nonce)`: The `nonce` request parameter.
 
 The following is a non-normative example of the `session_info` structure for `dc_api.jwt` response mode:
