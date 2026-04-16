@@ -351,7 +351,7 @@ This specification defines the following new request parameters:
 The following additional considerations are given for pre-existing Authorization Request parameters:
 
 `nonce`:
-: REQUIRED. A case-sensitive String representing a value to securely bind Verifiable Presentation(s) provided by the Wallet to the particular transaction. The Verifier MUST create a fresh, cryptographically random number with sufficient entropy for every Authorization Request, store it with its current session, and pass it in the `nonce` Authorization Request Parameter to the Wallet. See (#preventing-replay) for details. Values MUST only contain ASCII URL safe characters (uppercase and lowercase letters, decimal digits, hyphen, period, underscore, and tilde).
+: REQUIRED. A case-sensitive String representing a value to securely bind Verifiable Presentation(s) provided by the Wallet to the particular transaction. The Verifier MUST create a fresh and unpredictable nonce using a secure cryptographically random number generator of at least 128 bits of entropy for every Authorization Request and store it with its current session. See (#preventing-replay) for details. Values MUST only contain ASCII URL safe characters (uppercase and lowercase letters, decimal digits, hyphen, period, underscore, and tilde).
 
 `scope`:
 : OPTIONAL. Defined in [@!RFC6749]. The Wallet MAY allow Verifiers to request Presentations by utilizing a pre-defined scope value. See (#request_scope) for more details.
@@ -3567,5 +3567,6 @@ The technology described in this specification was made available from contribut
 
    -01
 
+   * Clarify nonce entropy requirements
    * Add security consideration not to use VP Token as Access Token
    * Clarify that `encrypted_response_enc_values_supported` applies only if JWE content encryption algorithm is used; e.g., it does not apply to JOSE HPKE
