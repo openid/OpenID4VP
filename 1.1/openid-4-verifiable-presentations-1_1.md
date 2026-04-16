@@ -2388,7 +2388,7 @@ Secondly, the session with the End-User will always continue in the initial cont
 
 Thirdly, cross-device requests benefit from the use of secure transports with proximity checks, which are handled by the OS platform, e.g., using FIDO CTAP 2.2 with hybrid transports.
 
-And lastly, as part of the request, the Wallet is provided with information about the Verifier's Origin as authenticated by the user agent, which is important for phishing resistance.
+And lastly, as part of the request, the Wallet is provided with information about the Verifier's Origin as authenticated by the trusted platform (e.g., user agent), which is important for phishing resistance.
 
 ## Protocol
 
@@ -3570,3 +3570,4 @@ The technology described in this specification was made available from contribut
    * Add security consideration not to use VP Token as Access Token
    * Clarify that `encrypted_response_enc_values_supported` applies only if JWE content encryption algorithm is used; e.g., it does not apply to JOSE HPKE
    * Clarify provided Origin is an opaque string and validation is based on simple string comparison
+   * Add assumption that the platform that provides the Origin is trusted
