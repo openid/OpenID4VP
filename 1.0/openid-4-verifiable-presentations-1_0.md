@@ -3566,8 +3566,6 @@ The technology described in this specification was made available from contribut
 
    * Clarify that `encrypted_response_enc_values_supported` applies only if JWE content encryption algorithm is used
    * Clarify provided Origin is an opaque string and validation is based on simple string comparison
-The transport of the request and Origin to the Wallet is platform-specific and is out of scope of OpenID4VP over the Digital Credentials API.
-
    
 -final
    
