@@ -1420,7 +1420,7 @@ Note that for the ECDH JWE algorithms (from Section 4.6 of [@!RFC7518]), the `ap
 into the key derivation process that is used to derive the content encryption key. Regardless of the algorithm used, the values are always part of the AEAD tag computation so will still be bound to the encrypted response.
 
 ### Encryption using HPKE
-Hybrid Public Key Encryption MAY be used by specifying the `alg` value according to [@I-D.ietf-jose-hpke-encrypt]. When it is, a `session_info` structure is calculated by the Wallet and the Verifier independently and included as mutually known private information. This is to ensure that encryption fails closed when the session information needed for verification of the credential is invalid.
+Hybrid Public Key Encryption (HPKE) may be used for encrypted responses. If HPKE is used, the `alg` value MUST be specified according to [@I-D.ietf-jose-hpke-encrypt]. Additionally, a `session_info` structure MUST be calculated and utilized for encryption and decryption independently by the Wallet and the Verifier. This ensures that decryption fails closed when the session information needed for verification of the credential is invalid. The `session_info`  structure is specific to the response modes `direct_post.jwt` and `dc_api.jwt`.
 
 When the response mode is `direct_post.jwt` the encoding is as follows: 
 
