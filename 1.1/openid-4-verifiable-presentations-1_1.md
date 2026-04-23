@@ -1422,7 +1422,7 @@ into the key derivation process that is used to derive the content encryption ke
 ### Encryption using HPKE
 Hybrid Public Key Encryption (HPKE) may be used for encrypted responses. If HPKE is used, the `alg` value MUST be specified according to [@I-D.ietf-jose-hpke-encrypt]. Additionally, a `session_info` structure MUST be calculated and utilized for encryption and decryption independently by the Wallet and the Verifier. This ensures that decryption fails closed when the session information needed for verification of the credential is invalid. The `session_info`  structure is specific to the response modes `direct_post.jwt` and `dc_api.jwt`.
 
-When the response mode is `direct_post.jwt` the encoding is as follows: 
+When the the presentation is invoked via redirects, such as Response Mode such as `direct_post.jwt`, the encoding is as follows: 
 
 ```example
 session_info = ASCII("OpenID4VP-si") ||
@@ -1438,7 +1438,7 @@ Where:
 
 - `ASCII("OpenID4VP-si")`: A fixed ASCII string identifying this `session_info` structure.
 - `BYTE(255)`: In each occurence is a separator byte (0xFF) used to delimit fields.
-- `ASCII(clientId)`: The `client_id` request parameter. If applicable, this includes the Client Identifier Prefix.
+- `ASCII(clientId)`: The `client_id` request parameter, as was passed in the Authorization Request, potentially including the Client Identifier Prefix.
 - `ASCII(nonce)`: The `nonce` request parameter.
 - `ASCII(responseUri)`: The `redirect_uri` or `response_uri` request parameter, depending on which is present, as determined by the Response Mode.
 
