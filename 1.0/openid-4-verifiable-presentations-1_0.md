@@ -2388,7 +2388,7 @@ Secondly, the session with the End-User will always continue in the initial cont
 
 Thirdly, cross-device requests benefit from the use of secure transports with proximity checks, which are handled by the OS platform, e.g., using FIDO CTAP 2.2 with hybrid transports.
 
-And lastly, as part of the request, the Wallet is provided with information about the Verifier's Origin as authenticated by the trusted platform (e.g., user agent), which is important for phishing resistance.
+And lastly, as part of the request, the Wallet is provided with information about the Verifier's Origin as authenticated by the trusted platform (i.e. user agent), which is important for phishing resistance.
 
 ## Protocol
 
