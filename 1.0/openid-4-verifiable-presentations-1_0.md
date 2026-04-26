@@ -289,6 +289,9 @@ One exception to this rule is the `transaction_data` parameter. Wallets that do 
 ## New Parameters {#new_parameters}
 This specification defines the following new request parameters:
 
+`response_uri`:
+: As defined in (#security_considerations_direct_post).
+
 `dcql_query`:
 : A JSON object containing a DCQL query as defined in (#dcql_query).
 
