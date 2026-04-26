@@ -3567,7 +3567,8 @@ The technology described in this specification was made available from contribut
 -31
 
    * Clarify that `encrypted_response_enc_values_supported` applies only if JWE content encryption algorithm is used
-   * Clarify that `aud` corresponds to `issuer` Wallet Metadata paremeter if Dynamic Discovery is used 
+   * Clarify that `aud` corresponds to `issuer` Wallet Metadata paremeter if Dynamic Discovery is used
+   * Clarified that Multi-RP-sig section means Verifier Info instead of attestations
    
 -final
    

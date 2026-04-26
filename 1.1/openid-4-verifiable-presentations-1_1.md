@@ -3635,3 +3635,4 @@ The technology described in this specification was made available from contribut
    * Add security consideration not to use VP Token as Access Token
    * Clarify that `encrypted_response_enc_values_supported` applies only if JWE content encryption algorithm is used; e.g., it does not apply to JOSE HPKE
    * Clarify that `aud` corresponds to `issuer` Wallet Metadata paremeter if Dynamic Discovery is used
+   * Clarified that Multi-RP-sig section means Verifier Info instead of attestations
