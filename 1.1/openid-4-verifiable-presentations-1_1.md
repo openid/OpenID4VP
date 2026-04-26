@@ -1522,10 +1522,6 @@ If the Wallet does not support `transaction_data` parameter, it MUST return an e
 
 The error response follows the rules as defined in [@!RFC6749], with the following additional clarifications:
 
-`invalid_scope`: 
-
-- Requested scope value is invalid, unknown, or malformed.
-
 `invalid_request`:
 
 - The request contains both a `dcql_query` parameter and a `scope` parameter referencing a DCQL query.
@@ -3635,3 +3631,4 @@ The technology described in this specification was made available from contribut
    * Add security consideration not to use VP Token as Access Token
    * Clarify that `encrypted_response_enc_values_supported` applies only if JWE content encryption algorithm is used; e.g., it does not apply to JOSE HPKE
    * Clarify that `aud` corresponds to `issuer` Wallet Metadata paremeter if Dynamic Discovery is used
+   * Removed invalid_scope error guidance as duplicate of RFC6749
