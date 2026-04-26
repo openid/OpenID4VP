@@ -611,7 +611,7 @@ In case of using OpenID4VP over DC API, as defined in (#dc_api), it is at the di
 
 * `x509_hash`: When the Client Identifier Prefix is `x509_hash`, the original Client Identifier (the part without the `x509_hash:` prefix) MUST be a hash and match the hash of the leaf certificate passed with the request. The request MUST be signed with the private key corresponding to the public key in the leaf X.509 certificate of the certificate chain added to the request in the `x5c` JOSE header parameter [@!RFC7515] of the signed request object. The value of `x509_hash` is the base64url-encoded value of the SHA-256 hash of the DER-encoded X.509 certificate. The Wallet MUST validate the signature and the trust chain of the X.509 leaf certificate. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter. Example Client Identifier: `x509_hash:Uvo3HtuIxuhC92rShpgqcT3YXwrqRxWEviRiA0OZszk`
 
-* `origin`: This reserved Client Identifier Prefix is defined in (#dc_api_request). The Wallet MUST NOT accept this Client Identifier Prefix in requests. In OpenID4VP over the Digital Credentials API, the audience of the Credential Presentation is always the origin value prefixed by `origin:`, for example `origin:https://verifier.example.com/`.
+* `origin`: This reserved Client Identifier Prefix is defined in (#dc_api_request). The Wallet MUST NOT accept this Client Identifier Prefix in requests. In OpenID4VP over the Digital Credentials API, the audience of the Credential Presentation is always the origin value prefixed by `origin:`, for example `origin:https://verifier.example.com`.
 
 To use the Client Identifier Prefixes `openid_federation`, `decentralized_identifier`, `verifier_attestation`, `x509_san_dns` and `x509_hash`, Verifiers MUST be capable of securely storing private key material. This might require changes to the technical design of native apps as such apps are typically public clients.
 
@@ -2604,7 +2604,7 @@ The following is a non-normative example of a `data` object containing an error:
 
 The security properties that are normally provided by the Client Identifier are achieved by binding the response to the Origin it was received from.
 
-The audience for the response (for example, the `aud` value in a Key Binding JWT) MUST be the Origin, prefixed with `origin:`, for example `origin:https://verifier.example.com/`. This is the case even for signed requests. Therefore, when using OpenID4VP over the DC API, the Client Identifier is not used as the audience for the response.
+The audience for the response (for example, the `aud` value in a Key Binding JWT) MUST be the Origin, prefixed with `origin:`, for example `origin:https://verifier.example.com`. This is the case even for signed requests. Therefore, when using OpenID4VP over the DC API, the Client Identifier is not used as the audience for the response.
 
 ## Security Considerations {#dc_api_security_considerations}
 
@@ -3635,3 +3635,4 @@ The technology described in this specification was made available from contribut
    * Add security consideration not to use VP Token as Access Token
    * Clarify that `encrypted_response_enc_values_supported` applies only if JWE content encryption algorithm is used; e.g., it does not apply to JOSE HPKE
    * Clarify that `aud` corresponds to `issuer` Wallet Metadata paremeter if Dynamic Discovery is used
+   * Updated origin examples to remove trailing slash
