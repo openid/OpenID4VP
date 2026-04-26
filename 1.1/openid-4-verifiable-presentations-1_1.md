@@ -1604,7 +1604,7 @@ This specification defines how the Verifier can determine Credential formats, pr
 This specification defines new metadata parameters according to [@!RFC8414].
 
 `vp_formats_supported`:
-: REQUIRED. An object containing a list of name/value pairs, where the name is a Credential Format Identifier and the value defines format-specific parameters that a Wallet supports. For specific values that can be used, see (#format_specific_parameters).
+: REQUIRED. An object containing name/value pairs, where the name is a Credential Format Identifier and the value defines format-specific parameters that a Wallet supports. For specific values that can be used, see (#format_specific_parameters).
 Deployments can extend the formats supported, provided Issuers, Holders and Verifiers all understand the new format.
 
     The following is a non-normative example of a `vp_formats_supported` parameter:
