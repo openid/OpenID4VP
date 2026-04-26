@@ -1419,7 +1419,71 @@ While this shows the payload of the above encrypted Authorization Response examp
 Note that for the ECDH JWE algorithms (from Section 4.6 of [@!RFC7518]), the `apu` and `apv` values are inputs
 into the key derivation process that is used to derive the content encryption key. Regardless of the algorithm used, the values are always part of the AEAD tag computation so will still be bound to the encrypted response.
 
-Note: For encryption, implementers have a variety of options available through JOSE, including the use of Hybrid Public Key Encryption (HPKE) as detailed in [@I-D.ietf-jose-hpke-encrypt]. 
+### Encryption using HPKE
+Hybrid Public Key Encryption (HPKE) may be used for encrypted responses. If HPKE is used, the `alg` value MUST be specified according to [@I-D.ietf-jose-hpke-encrypt]. Additionally, a `session_info` structure MUST be calculated and utilized for encryption and decryption independently by the Wallet and the Verifier. This ensures that decryption fails closed when the session information needed for verification of the credential is invalid. The `session_info`  structure is specific to the response modes `direct_post.jwt` and `dc_api.jwt`.
+
+When the the presentation is invoked via redirects, such as Response Mode such as `direct_post.jwt`, the encoding is as follows: 
+
+```example
+session_info = ASCII("OpenID4VP-si") ||
+                BYTE(255) ||
+                ASCII(clientId) ||
+                BYTE(255) ||
+                ASCII(nonce) ||
+                BYTE(255) ||
+                ASCII(responseUri)
+```
+
+Where:
+
+- `ASCII("OpenID4VP-si")`: A fixed ASCII string identifying this `session_info` structure.
+- `BYTE(255)`: In each occurence is a separator byte (0xFF) used to delimit fields.
+- `ASCII(clientId)`: The `client_id` request parameter, as was passed in the Authorization Request, potentially including the Client Identifier Prefix.
+- `ASCII(nonce)`: The `nonce` request parameter.
+- `ASCII(responseUri)`: The `redirect_uri` or `response_uri` request parameter, depending on which is present, as determined by the Response Mode.
+
+The following is a non-normative example of the `session_info` structure for `direct_post.jwt` response mode:
+
+```example
+OpenID4VP-si\xffx509_san_dns:example.com\xffexc7gBkxjx1rdc9udRrveKvSsJIq80avlXeLHhGwqtA\xffhttps://example.com/response
+```
+
+The corresponding hexadecimal representation is:
+
+```
+4f70656e49443456502d7369ff783530395f73616e5f646e733a6578616d706c652e636f6dff6578633767426b786a7831726463397564527276654b7653734a4971383061766c58654c48684777717441ff68747470733a2f2f6578616d706c652e636f6d2f726573706f6e7365
+```
+
+When the response mode is `dc_api.jwt` the encoding is as follows:
+
+```example
+session_info = ASCII("OpenID4VPDCAPI-si") ||
+               BYTE(255) ||
+               ASCII(origin) ||
+               BYTE(255) ||
+               ASCII(nonce)
+```
+
+Where:
+
+- `ASCII("OpenID4VPDCAPI-si")`: A fixed ASCII string identifying this `session_info` structure.
+- `BYTE(255)`: In each occurence is a separator byte (0xFF) used to delimit fields.
+- `ASCII(origin)`: The ASCII string representing the Origin of the request as described in (#dc_api_request). It MUST NOT be prefixed with `origin:`.
+- `ASCII(nonce)`: The `nonce` request parameter.
+
+The following is a non-normative example of the `session_info` structure for `dc_api.jwt` response mode:
+
+```example
+OpenID4VPDCAPI-si\xffhttps://example.com\xffexc7gBkxjx1rdc9udRrveKvSsJIq80avlXeLHhGwqtA
+```
+
+The corresponding hexadecimal representation is:
+
+```
+4f70656e494434565044434150492d7369ff68747470733a2f2f6578616d706c652e636f6dff6578633767426b786a7831726463397564527276654b7653734a4971383061766c58654c48684777717441
+```
+
+The `session_info` structure's bytes are used as the value of the `info` parameter when using Integrated Encryption as the Key Management Mode. If the `recipient_structure` is being used then it is used as the value of the `recipient_extra_info` parameter instead.
 
 ### Response Mode "direct_post.jwt" {#direct_post_jwt}
 
@@ -3567,5 +3631,6 @@ The technology described in this specification was made available from contribut
 
    -01
 
+   * Add usage of HPKE for the `info` parameter. 
    * Add security consideration not to use VP Token as Access Token
    * Clarify that `encrypted_response_enc_values_supported` applies only if JWE content encryption algorithm is used; e.g., it does not apply to JOSE HPKE
