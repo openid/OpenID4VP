@@ -2481,7 +2481,7 @@ This is an example of the payload of a signed OpenID4VP request used with the W3
 
 #### JWS JSON Serialization {#multi_signed_request}
 
-The JWS JSON Serialization ([@!RFC7515]) allows the Verifier to use multiple Client Identifiers and corresponding key material to protect the same request. This serves use cases where the Verifier requests Credentials belonging to different trust frameworks and, therefore, needs to authenticate in the context of those trust frameworks. It also allows the Verifier to add different attestations for each Client Identifier.
+The JWS JSON Serialization ([@!RFC7515]) allows the Verifier to use multiple Client Identifiers and corresponding key material to protect the same request. This serves use cases where the Verifier requests Credentials belonging to different trust frameworks and, therefore, needs to authenticate in the context of those trust frameworks. It also allows the Verifier to add different Verifier Info for each Client Identifier.
 
 In this case, the following request parameters, if used, MUST be present only in the protected header of the respective `signature` object in the `signatures` array defined in [@!RFC7515, section 7.2.1]:
 
@@ -3567,7 +3567,8 @@ The technology described in this specification was made available from contribut
 -31
 
    * Clarify that `encrypted_response_enc_values_supported` applies only if JWE content encryption algorithm is used
-   * Clarify that `aud` corresponds to `issuer` Wallet Metadata paremeter if Dynamic Discovery is used 
+   * Clarify that `aud` corresponds to `issuer` Wallet Metadata paremeter if Dynamic Discovery is used
+   * Clarified that Multi-RP-sig section means Verifier Info instead of attestations
    
 -final
    
