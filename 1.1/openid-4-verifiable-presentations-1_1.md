@@ -528,7 +528,7 @@ The usage of the Response Mode `direct_post` (see (#response_mode_post)) in conj
 
 When the Verifier is sending a Request Object as defined in [@!RFC9101], the `aud` claim value depends on whether the recipient of the request can be identified by the Verifier or not:
 
-- the `aud` claim MUST be equal to the `iss` (issuer) claim value, when Dynamic Discovery is performed.
+- the `aud` claim MUST be equal to the `issuer` parameter in the Wallet Metadata, when Dynamic Discovery is performed.
 - the `aud` claim MUST be "https://self-issued.me/v2", when Static Discovery metadata is used.
 
 Note: "https://self-issued.me/v2" is a symbolic string and can be used as an `aud` claim value even when this specification is used standalone, without SIOPv2.
@@ -3634,3 +3634,4 @@ The technology described in this specification was made available from contribut
    * Add usage of HPKE for the `info` parameter. 
    * Add security consideration not to use VP Token as Access Token
    * Clarify that `encrypted_response_enc_values_supported` applies only if JWE content encryption algorithm is used; e.g., it does not apply to JOSE HPKE
+   * Clarify that `aud` corresponds to `issuer` Wallet Metadata paremeter if Dynamic Discovery is used
