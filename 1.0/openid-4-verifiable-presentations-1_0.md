@@ -2381,7 +2381,7 @@ Ecosystems intending to use trusted authority mechanisms SHOULD ensure that the 
   </front>
 </reference>
 
-<reference anchor="secanalysis.openid4vc" target="http://dx.doi.org/10.18419/opus-13772">
+<reference anchor="secanalysis.openid4vc" target="https://dx.doi.org/10.18419/opus-13772">
   <front>
     <title>OpenID for Verifiable Credentials: Formal Security Analysis using the Web Infrastructure Model</title>
     <author fullname="Fabian Hauck">
