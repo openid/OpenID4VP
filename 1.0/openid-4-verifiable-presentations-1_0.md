@@ -367,7 +367,7 @@ The following additional considerations are given for pre-existing Authorization
 : REQUIRED. Defined in [@!RFC6749]. This specification defines additional requirements to enable the use of Client Identifier Prefixes as described in (#client_metadata_management). The Client Identifier can be created by parties other than the Wallet and it is considered unique within the context of the Wallet when used in combination with the Client Identifier Prefix.
 
 `state`:
-: REQUIRED under the conditions defined in (#nkb-credentials). Otherwise, `state` is OPTIONAL. `state` values MUST only contain ASCII URL safe characters (uppercase and lowercase letters, decimal digits, hyphen, period, underscore, and tilde).
+: REQUIRED under the conditions defined in Section 5.3. Otherwise, state is RECOMMENDED. state values MUST only contain ASCII URL safe characters (uppercase and lowercase letters, decimal digits, hyphen, period, underscore, and tilde).
 
 ## Requesting Presentations without Holder Binding Proofs {#nkb-credentials}
 
@@ -3566,6 +3566,7 @@ The technology described in this specification was made available from contribut
 
 -31
 
+   * Clarify that state is recommended to match text from Section 14.3.2. Protection of the Response URI
    * Clarify that `encrypted_response_enc_values_supported` applies only if JWE content encryption algorithm is used
    * Clarify that `aud` corresponds to `issuer` Wallet Metadata paremeter if Dynamic Discovery is used 
    
