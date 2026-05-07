@@ -1984,7 +1984,7 @@ Presentations.
 
 Wallet implementers need to choose a source of client metadata they can trust within their own ecosystem or implementation. This should determine whether it is safe to use or display to a User. For example, a client name obtained from an X.509 certificate can be trusted, whereas a client name from the `client_metadata` parameter cannot.
 
-It is recommended to use`client_metadata` parameters only for client-supplied parameters that can be used untrusted, for example, a public key. 
+It is recommended to use `client_metadata` parameters only for client-supplied parameters that can be used untrusted, for example, a public key. 
 
 Ecosystems can use other ecosystem-specific trusted data sources as long as they conduct a proper trust evaluation. 
 
