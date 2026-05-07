@@ -272,7 +272,7 @@ that signals to the Wallet that it can make an HTTP POST request to the Verifier
 endpoint with information about its capabilities as defined in (#request_uri_method_post). The Wallet MAY continue with JAR
 when it receives `request_uri_method` parameter with the value `post` but does not support this feature.
 
-The Verifier articulates requirements of the Credential(s) that are requested using the `dcql_query` parameter. Wallet implementations MUST process the DCQL query and select candidate Credential(s) using the evaluation process described in (#dcql_query_lang_processing_rules)
+The Verifier articulates requirements of the Credential(s) that are requested using either the `dcql_query` or `scope` parameters. Wallet implementations MUST process the DCQL query and select candidate Credential(s) using the evaluation process described in (#dcql_query_lang_processing_rules)
 
 The Verifier communicates a Client Identifier Prefix that indicates how the Wallet is supposed to interpret the Client Identifier and associated data in the process of Client identification, authentication, and authorization as a prefix in the `client_id` parameter. This enables deployments of this specification to use different mechanisms to obtain and validate Client metadata beyond the scope of [@!RFC6749]. A certain Client Identifier Prefix sets the requirements whether the Verifier needs to sign the Authorization Request as a means of authentication and/or pass additional parameters and require the Wallet to process them.
 
@@ -284,6 +284,9 @@ One exception to this rule is the `transaction_data` parameter. Wallets that do 
 
 ## New Parameters {#new_parameters}
 This specification defines the following new request parameters:
+
+`response_uri`:
+: As defined in (#security_considerations_direct_post).
 
 `dcql_query`:
 : A JSON object containing a DCQL query as defined in (#dcql_query).
@@ -304,7 +307,7 @@ This specification defines the following new request parameters:
     Other metadata parameters MUST be ignored unless a profile of this specification explicitly defines them as usable in the `client_metadata` parameter.
 
 `request_uri_method`: 
-: OPTIONAL. A string determining the HTTP method to be used when the `request_uri` parameter is included in the same request. Two case-sensitive valid values are defined in this specification: `get` and `post`. If `request_uri_method` value is `get`, the Wallet MUST send the request to retrieve the Request Object using the HTTP GET method, i.e., as defined in [@RFC9101]. If `request_uri_method` value is `post`, a supporting Wallet MUST send the request using the HTTP POST method as detailed in (#request_uri_method_post). If the `request_uri_method` parameter is not present, the Wallet MUST process the `request_uri` parameter as defined in [@RFC9101]. Wallets not supporting the `post` method will send a GET request to the Request URI (default behavior as defined in [@RFC9101]). `request_uri_method` parameter MUST NOT be present if a `request_uri` parameter is not present.
+: OPTIONAL. A case-sensitive string determining the HTTP method to be used when the `request_uri` parameter is included in the same request. Two case-sensitive valid values are defined in this specification: `get` and `post`. If `request_uri_method` value is `get`, the Wallet MUST send the request to retrieve the Request Object using the HTTP GET method, i.e., as defined in [@RFC9101]. If `request_uri_method` value is `post`, a supporting Wallet MUST send the request using the HTTP POST method as detailed in (#request_uri_method_post). If the `request_uri_method` parameter is not present, the Wallet MUST process the `request_uri` parameter as defined in [@RFC9101]. Wallets not supporting the `post` method will send a GET request to the Request URI (default behavior as defined in [@RFC9101]). `request_uri_method` parameter MUST NOT be present if a `request_uri` parameter is not present.
 
     If the Verifier set the `request_uri_method` parameter value to `post` and there is no other means to convey its capabilities to the Wallet, it SHOULD add the `client_metadata` parameter to the Authorization Request. 
     This enables the Wallet to assess the Verifier's capabilities, allowing it to transmit only the relevant capabilities through the `wallet_metadata` parameter in the Request URI POST request.
@@ -363,7 +366,7 @@ The following additional considerations are given for pre-existing Authorization
 : REQUIRED. Defined in [@!RFC6749]. This specification defines additional requirements to enable the use of Client Identifier Prefixes as described in (#client_metadata_management). The Client Identifier can be created by parties other than the Wallet and it is considered unique within the context of the Wallet when used in combination with the Client Identifier Prefix.
 
 `state`:
-: REQUIRED under the conditions defined in (#nkb-credentials). Otherwise, `state` is OPTIONAL. `state` values MUST only contain ASCII URL safe characters (uppercase and lowercase letters, decimal digits, hyphen, period, underscore, and tilde).
+: REQUIRED under the conditions defined in (#nkb-credentials). Otherwise, `state` is RECOMMENDED, see (#security_considerations_direct_post). `state` values MUST only contain ASCII URL safe characters (uppercase and lowercase letters, decimal digits, hyphen, period, underscore, and tilde).
 
 ## Requesting Presentations without Holder Binding Proofs {#nkb-credentials}
 
@@ -611,7 +614,7 @@ In case of using OpenID4VP over DC API, as defined in (#dc_api), it is at the di
 
 * `x509_hash`: When the Client Identifier Prefix is `x509_hash`, the original Client Identifier (the part without the `x509_hash:` prefix) MUST be a hash and match the hash of the leaf certificate passed with the request. The request MUST be signed with the private key corresponding to the public key in the leaf X.509 certificate of the certificate chain added to the request in the `x5c` JOSE header parameter [@!RFC7515] of the signed request object. The value of `x509_hash` is the base64url-encoded value of the SHA-256 hash of the DER-encoded X.509 certificate. The Wallet MUST validate the signature and the trust chain of the X.509 leaf certificate. All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter. Example Client Identifier: `x509_hash:Uvo3HtuIxuhC92rShpgqcT3YXwrqRxWEviRiA0OZszk`
 
-* `origin`: This reserved Client Identifier Prefix is defined in (#dc_api_request). The Wallet MUST NOT accept this Client Identifier Prefix in requests. In OpenID4VP over the Digital Credentials API, the audience of the Credential Presentation is always the origin value prefixed by `origin:`, for example `origin:https://verifier.example.com/`.
+* `origin`: This reserved Client Identifier Prefix is defined in (#dc_api_request). The Wallet MUST NOT accept this Client Identifier Prefix in requests. In OpenID4VP over the Digital Credentials API, the audience of the Credential Presentation is always the origin value prefixed by `origin:`, for example `origin:https://verifier.example.com`.
 
 To use the Client Identifier Prefixes `openid_federation`, `decentralized_identifier`, `verifier_attestation`, `x509_san_dns` and `x509_hash`, Verifiers MUST be capable of securely storing private key material. This might require changes to the technical design of native apps as such apps are typically public clients.
 
@@ -1135,7 +1138,7 @@ Additional, more complex examples can be found in (#more_dcql_query_examples).
 
 # Response {#response}
 
-A VP Token is only returned if the corresponding Authorization Request contained a `dcql_query` parameter or a `scope` parameter representing a DCQL Query (#vp_token_request).
+A VP Token is only returned if the corresponding Authorization Request contained a `dcql_query` parameter or a `scope` parameter representing a DCQL Query (as defined in #vp_token_request).
 
 A VP Token can be returned in the Authorization Response or the Token Response depending on the Response Type used. See (#response_type_vp_token) for more details.
 
@@ -1522,10 +1525,6 @@ If the Wallet does not support `transaction_data` parameter, it MUST return an e
 
 The error response follows the rules as defined in [@!RFC6749], with the following additional clarifications:
 
-`invalid_scope`: 
-
-- Requested scope value is invalid, unknown, or malformed.
-
 `invalid_request`:
 
 - The request contains both a `dcql_query` parameter and a `scope` parameter referencing a DCQL query.
@@ -1604,7 +1603,7 @@ This specification defines how the Verifier can determine Credential formats, pr
 This specification defines new metadata parameters according to [@!RFC8414].
 
 `vp_formats_supported`:
-: REQUIRED. An object containing a list of name/value pairs, where the name is a Credential Format Identifier and the value defines format-specific parameters that a Wallet supports. For specific values that can be used, see (#format_specific_parameters).
+: REQUIRED. An object containing name/value pairs, where the name is a Credential Format Identifier and the value defines format-specific parameters that a Wallet supports. For specific values that can be used, see (#format_specific_parameters).
 Deployments can extend the formats supported, provided Issuers, Holders and Verifiers all understand the new format.
 
     The following is a non-normative example of a `vp_formats_supported` parameter:
@@ -1828,6 +1827,10 @@ Implementers should be aware that this specification uses several specifications
 While breaking changes to the specifications referenced in this specification are not expected, should they occur, OpenID4VP implementations should continue to use the specifically referenced versions above in preference to the final versions, unless updated by a profile or new version of this specification.
 
 # Security Considerations {#security_considerations}
+
+## Formal Security Analysis
+
+The security properties of the OpenID for Verifiable Credentials family of specifications have been formally analyzed, see [@secanalysis.openid4vc].
 
 ## Preventing Replay of Verifiable Presentations {#preventing-replay} 
 
@@ -2421,7 +2424,6 @@ Ecosystems intending to use trusted authority mechanisms SHOULD ensure that the 
         </front>
 </reference>
 
-
 <reference anchor="IANA.Hash.Algorithms" target="https://www.iana.org/assignments/named-information/named-information.xhtml">
         <front>
           <title>Named Information Hash Algorithm Registry</title>
@@ -2429,6 +2431,26 @@ Ecosystems intending to use trusted authority mechanisms SHOULD ensure that the 
             <organization>IANA</organization>
           </author>
         </front>
+</reference>
+
+<reference anchor="secanalysis.openid4vp.dc" target="https://openid.net/wp-content/uploads/2025/08/Report-Deliverable-A_1_B_.pdf">
+  <front>
+    <title>Formal Security Analysis of the OpenID for Verifiable Presentations Specification (with DC API)</title>
+    <author fullname="Fabian Hauck"></author>
+    <author fullname="Pedram Hosseyni"></author>
+    <author fullname="Ralf Küsters"></author>
+    <author fullname="Tim Würtele"></author>
+    <date day="15" month="July" year="2025"/>
+  </front>
+</reference>
+
+<reference anchor="secanalysis.openid4vc" target="https://dx.doi.org/10.18419/opus-13772">
+  <front>
+    <title>OpenID for Verifiable Credentials: Formal Security Analysis using the Web Infrastructure Model</title>
+    <author fullname="Fabian Hauck">
+    </author>
+    <date day="2" month="October" year="2023"/>
+  </front>
 </reference>
 
 # OpenID4VP over the Digital Credentials API {#dc_api}
@@ -2545,7 +2567,7 @@ This is an example of the payload of a signed OpenID4VP request used with the W3
 
 #### JWS JSON Serialization {#multi_signed_request}
 
-The JWS JSON Serialization ([@!RFC7515]) allows the Verifier to use multiple Client Identifiers and corresponding key material to protect the same request. This serves use cases where the Verifier requests Credentials belonging to different trust frameworks and, therefore, needs to authenticate in the context of those trust frameworks. It also allows the Verifier to add different attestations for each Client Identifier.
+The JWS JSON Serialization ([@!RFC7515]) allows the Verifier to use multiple Client Identifiers and corresponding key material to protect the same request. This serves use cases where the Verifier requests Credentials belonging to different trust frameworks and, therefore, needs to authenticate in the context of those trust frameworks. It also allows the Verifier to add different Verifier Info for each Client Identifier.
 
 In this case, the following request parameters, if used, MUST be present only in the protected header of the respective `signature` object in the `signatures` array defined in [@!RFC7515, section 7.2.1]:
 
@@ -2604,9 +2626,11 @@ The following is a non-normative example of a `data` object containing an error:
 
 The security properties that are normally provided by the Client Identifier are achieved by binding the response to the Origin it was received from.
 
-The audience for the response (for example, the `aud` value in a Key Binding JWT) MUST be the Origin, prefixed with `origin:`, for example `origin:https://verifier.example.com/`. This is the case even for signed requests. Therefore, when using OpenID4VP over the DC API, the Client Identifier is not used as the audience for the response.
+The audience for the response (for example, the `aud` value in a Key Binding JWT) MUST be the Origin, prefixed with `origin:`, for example `origin:https://verifier.example.com`. This is the case even for signed requests. Therefore, when using OpenID4VP over the DC API, the Client Identifier is not used as the audience for the response.
 
 ## Security Considerations {#dc_api_security_considerations}
+
+The security properties of the OpenID4VP protocol, when used in conjunction with the Digital Credentials API (DC API) [@!W3C.Digital_Credentials_API], have been formally analyzed, see [@secanalysis.openid4vp.dc].
 
 The following security considerations from OpenID4VP apply:
 
@@ -2615,7 +2639,7 @@ The following security considerations from OpenID4VP apply:
 * VP Token abuse (#vp-token-abuse).
 * Encrypting an Unsigned Response as described in (#encrypting_unsigned_response).
 * TLS Requirements as described in (#tls-requirements).
-* Always Use the Full Client Identifier as described in (#full-client-identifier) for signed requests.
+* Always use the Full Client Identifier as described in (#full-client-identifier) for signed requests.
 * Security Checks on the Returned Credentials and Presentations as described in (#dcql_query_security).
 * DCQL Value Matching as described in (#dcql-value-matching).
 
@@ -3634,5 +3658,10 @@ The technology described in this specification was made available from contribut
    * Clarify nonce entropy requirements
    * Add usage of HPKE for the `info` parameter. 
    * Add security consideration not to use VP Token as Access Token
+   * Clarify that state is recommended to match text from Section 14.3.2. Protection of the Response URI
    * Clarify that `encrypted_response_enc_values_supported` applies only if JWE content encryption algorithm is used; e.g., it does not apply to JOSE HPKE
    * Clarify that `aud` corresponds to `issuer` Wallet Metadata paremeter if Dynamic Discovery is used
+   * Removed invalid_scope error guidance as duplicate of RFC6749
+   * Clarified that Multi-RP-sig section means Verifier Info instead of attestations
+   * Updated origin examples to remove trailing slash
+   * Clarified that request_uri_method is a case-sensitive string
