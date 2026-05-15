@@ -2897,7 +2897,7 @@ be a valid doctype identifier as defined in [@ISO.18013-5].
 The following are ISO mdoc specific parameters to be used in a Claims Query as defined in (#claims_query).
 
 `intent_to_retain`
-: OPTIONAL. A boolean that is equivalent to `IntentToRetain` variable defined in Section 8.3.2.1.2.1 of [@ISO.18013-5]. If not specified, the Wallet uses the value `false`.
+: OPTIONAL. A boolean that is equivalent to `IntentToRetain` variable defined in Section 8.3.2.1.2.1 of [@ISO.18013-5]. If absent, the Verifier makes no statement on `IntentToRetain`.
 
 ### Presentation Response
 
