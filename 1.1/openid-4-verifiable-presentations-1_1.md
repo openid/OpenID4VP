@@ -354,7 +354,7 @@ This specification defines the following new request parameters:
 The following additional considerations are given for pre-existing Authorization Request parameters:
 
 `nonce`:
-: REQUIRED. A case-sensitive String representing a value to securely bind Verifiable Presentation(s) provided by the Wallet to the particular transaction. The Verifier MUST create a fresh, cryptographically random number with sufficient entropy for every Authorization Request, store it with its current session, and pass it in the `nonce` Authorization Request Parameter to the Wallet. See (#preventing-replay) for details. Values MUST only contain ASCII URL safe characters (uppercase and lowercase letters, decimal digits, hyphen, period, underscore, and tilde).
+: REQUIRED. A case-sensitive String representing a value to securely bind Verifiable Presentation(s) provided by the Wallet to the particular transaction. The Verifier MUST create a fresh, cryptographically random number with sufficient entropy for every Authorization Request and store it with its current session. The nonce SHOULD contain at least 128 bits of entropy. See (#preventing-replay) for details. Values MUST only contain ASCII URL safe characters (uppercase and lowercase letters, decimal digits, hyphen, period, underscore, and tilde).
 
 `scope`:
 : OPTIONAL. Defined in [@!RFC6749]. The Wallet MAY allow Verifiers to request Presentations by utilizing a pre-defined scope value. See (#request_scope) for more details.
@@ -366,7 +366,7 @@ The following additional considerations are given for pre-existing Authorization
 : REQUIRED. Defined in [@!RFC6749]. This specification defines additional requirements to enable the use of Client Identifier Prefixes as described in (#client_metadata_management). The Client Identifier can be created by parties other than the Wallet and it is considered unique within the context of the Wallet when used in combination with the Client Identifier Prefix.
 
 `state`:
-: REQUIRED under the conditions defined in (#nkb-credentials). Otherwise, `state` is OPTIONAL. `state` values MUST only contain ASCII URL safe characters (uppercase and lowercase letters, decimal digits, hyphen, period, underscore, and tilde).
+: REQUIRED under the conditions defined in (#nkb-credentials). Otherwise, `state` is RECOMMENDED, see (#security_considerations_direct_post). `state` values MUST only contain ASCII URL safe characters (uppercase and lowercase letters, decimal digits, hyphen, period, underscore, and tilde).
 
 ## Requesting Presentations without Holder Binding Proofs {#nkb-credentials}
 
@@ -1525,10 +1525,6 @@ If the Wallet does not support `transaction_data` parameter, it MUST return an e
 
 The error response follows the rules as defined in [@!RFC6749], with the following additional clarifications:
 
-`invalid_scope`: 
-
-- Requested scope value is invalid, unknown, or malformed.
-
 `invalid_request`:
 
 - The request contains both a `dcql_query` parameter and a `scope` parameter referencing a DCQL query.
@@ -1607,7 +1603,7 @@ This specification defines how the Verifier can determine Credential formats, pr
 This specification defines new metadata parameters according to [@!RFC8414].
 
 `vp_formats_supported`:
-: REQUIRED. An object containing a list of name/value pairs, where the name is a Credential Format Identifier and the value defines format-specific parameters that a Wallet supports. For specific values that can be used, see (#format_specific_parameters).
+: REQUIRED. An object containing name/value pairs, where the name is a Credential Format Identifier and the value defines format-specific parameters that a Wallet supports. For specific values that can be used, see (#format_specific_parameters).
 Deployments can extend the formats supported, provided Issuers, Holders and Verifiers all understand the new format.
 
     The following is a non-normative example of a `vp_formats_supported` parameter:
@@ -3659,12 +3655,15 @@ The technology described in this specification was made available from contribut
 
    -01
 
+   * Clarify nonce entropy requirements
    * Add usage of HPKE for the `info` parameter. 
    * Add security consideration not to use VP Token as Access Token
+   * Clarify that state is recommended to match text from Section 14.3.2. Protection of the Response URI
    * Clarify that `encrypted_response_enc_values_supported` applies only if JWE content encryption algorithm is used; e.g., it does not apply to JOSE HPKE
    * Clarify provided Origin is a string without prior interpretation and validation is based on simple string comparison
    * Add assumption that the platform that provides the Origin is trusted
    * Clarify that `aud` corresponds to `issuer` Wallet Metadata paremeter if Dynamic Discovery is used
+   * Removed invalid_scope error guidance as duplicate of RFC6749
    * Clarified that Multi-RP-sig section means Verifier Info instead of attestations
    * Updated origin examples to remove trailing slash
    * Clarified that request_uri_method is a case-sensitive string
