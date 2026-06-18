@@ -3254,7 +3254,7 @@ A Credential's type can be determined as satifying the Credential Query as follo
 
 1. Check if the `vct` in the Credential is contained in the `vct_values` array. If it is, the Credential satisfies the Credential Query.
 1. If `vct` in the Credential is not contained in the `vct_values` array, check if the Credential has an `extends` claim. If it does, repeat this process for the Type metadata specified by the `extends` value, until either a match is found or the `extends` claim is not present.
-1. If none of the above conditions are met, the Credential's type does not satisfy the Credential Query.
+1. If none of the above conditions are met, the Credential does not satisfy the Credential Query.
 
 ### Presentation Response
 
