@@ -1987,7 +1987,7 @@ Presentations.
 
 Wallets MUST treat all incoming requests as untrusted input. To mitigate injection and resource exhaustion attacks, Wallets MUST implement input validation on the Authorization Request and its enclosed DCQL query.
 
-Wallets SHOULD run the following checks:
+Wallets SHOULD implement the following steps:
 
 * Enforce Schema Validation: Verify that the DCQL query conforms to the expected JSON schema and contains no unknown or malformed properties.
 
