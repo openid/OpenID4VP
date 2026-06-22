@@ -1832,7 +1832,7 @@ While breaking changes to the specifications referenced in this specification ar
 
 The security properties of the OpenID for Verifiable Credentials family of specifications have been formally analyzed, see [@secanalysis.openid4vc].
 
-## Preventing Replay of Verifiable Presentations {#preventing-replay} 
+## Preventing Replay of Verifiable Presentations {#preventing-replay}
 
 An attacker could try to inject Presentations obtained from (for example) a previous Authorization Response into another Authorization Response, thus impersonating the End-User that originally presented the respective Verifiable Presentation. Holder Binding aims to prevent such attacks.
 
@@ -1982,6 +1982,16 @@ the Credential level as shown in (#dcql_query_lang_processing_rules), it MUST NO
 these constraints. The Wallet is not controlled by the Verifier and the Verifier
 MUST perform its own security checks on the returned Credentials and
 Presentations.
+
+## Parsing of untrusted inputs
+
+Wallets MUST treat all incoming requests as untrusted input. To mitigate injection and resource exhaustion attacks, Wallets MUST implement input validation on the Authorization Request and its enclosed DCQL query.
+
+Wallets SHOULD run the following checks:
+
+* Enforce Schema Validation: Verify that the DCQL query conforms to the expected JSON schema and contains no unknown or malformed properties.
+
+* Apply Resource Limits: Enforce maximum length restrictions on strings, maximum depths for nested objects, and maximum item counts for arrays within the query.
 
 # Privacy Considerations {#privacy-considerations}
 
