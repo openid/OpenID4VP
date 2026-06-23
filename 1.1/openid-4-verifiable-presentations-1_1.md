@@ -1989,7 +1989,7 @@ Wallets MUST treat all incoming requests as untrusted input. To mitigate injecti
 
 Wallets SHOULD implement the following steps:
 
-* Enforce Schema Validation: Verify that the DCQL query conforms to the expected JSON schema and contains no unknown or malformed properties.
+* Enforce Schema Validation: Verify that the Authorization Request and DCQL query contain no malformed properties. Unknown parameters MUST be ignored.
 
 * Apply Resource Limits: Enforce maximum length restrictions on strings, maximum depths for nested objects, and maximum item counts for arrays within the query.
 
