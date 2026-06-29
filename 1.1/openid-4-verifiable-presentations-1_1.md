@@ -2908,7 +2908,7 @@ be a valid doctype identifier as defined in [@ISO.18013-5].
 The following are ISO mdoc specific parameters to be used in a Claims Query as defined in (#claims_query).
 
 `intent_to_retain`
-: OPTIONAL. A boolean that is equivalent to `IntentToRetain` variable defined in Section 8.3.2.1.2.1 of [@ISO.18013-5].
+: OPTIONAL. A boolean that is equivalent to `IntentToRetain` variable defined in Section 8.3.2.1.2.1 of [@ISO.18013-5]. If absent, the Verifier makes no statement on `IntentToRetain`.
 
 ### Presentation Response
 
@@ -3674,6 +3674,7 @@ The technology described in this specification was made available from contribut
    * Clarify provided Origin is a string without prior interpretation and validation is based on simple string comparison
    * Add assumption that the platform that provides the Origin is trusted
    * Clarify that `aud` corresponds to `issuer` Wallet Metadata paremeter if Dynamic Discovery is used
+   * Clarified `intent_to_retain` value when not present
    * Removed invalid_scope error guidance as duplicate of RFC6749
    * Clarified that Multi-RP-sig section means Verifier Info instead of attestations
    * Updated origin examples to remove trailing slash
