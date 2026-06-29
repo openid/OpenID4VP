@@ -2453,7 +2453,7 @@ Ecosystems intending to use trusted authority mechanisms SHOULD ensure that the 
   </front>
 </reference>
 
-<reference anchor="whatwg.html" target="https://html.spec.whatwg.org/commit-snapshots/c560a56704e7a31887ab79299d30e6f68d696cf4/#origin">
+<reference anchor="whatwg.html" target="https://html.spec.whatwg.org#concept-origin">
   <front>
     <title>HTML - Living Standard</title>
     <author>
@@ -2461,6 +2461,7 @@ Ecosystems intending to use trusted authority mechanisms SHOULD ensure that the 
     </author>
     <date day="22" month="June" year="2026"/>
   </front>
+  <annotation>Commit snapshot: https://html.spec.whatwg.org/commit-snapshots/c560a56704e7a31887ab79299d30e6f68d696cf4/#concept-origin</annotation>
 </reference>
 
 # OpenID4VP over the Digital Credentials API {#dc_api}
