@@ -3250,7 +3250,7 @@ The following is an SD-JWT VC specific parameter in the `meta` parameter in a Cr
 `vct_values`:
 : REQUIRED. A non-empty array of strings that specifies allowed values for the type of the requested Verifiable Credential. All elements in the array MUST be valid type identifiers as defined in [@!I-D.ietf-oauth-sd-jwt-vc]. To satisfy the Credential Query, a Credential MUST either have or inherit from a type that is included in the `vct_values` array as defined in [@!I-D.ietf-oauth-sd-jwt-vc]. 
 
-A Credential's type can be determined as satifying the Credential Query as follows:
+The Wallet MUST determine whether a Credential's type satisfies a Credential Query by following these steps:
 
 1. Check if the `vct` in the Credential is contained in the `vct_values` array. If it is, the Credential satisfies the Credential Query.
 1. If `vct` in the Credential is not contained in the `vct_values` array, check if the Credential has an `extends` claim. If it does, repeat this process for the Type metadata specified by the `extends` value, until either a match is found or the `extends` claim is not present. If a circular dependency is detected while following the `extends` claims, the Credential does not satisfy the Credential Query.
