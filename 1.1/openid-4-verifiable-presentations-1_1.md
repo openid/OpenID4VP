@@ -1832,7 +1832,7 @@ While breaking changes to the specifications referenced in this specification ar
 
 The security properties of the OpenID for Verifiable Credentials family of specifications have been formally analyzed, see [@secanalysis.openid4vc].
 
-## Preventing Replay of Verifiable Presentations {#preventing-replay} 
+## Preventing Replay of Verifiable Presentations {#preventing-replay}
 
 An attacker could try to inject Presentations obtained from (for example) a previous Authorization Response into another Authorization Response, thus impersonating the End-User that originally presented the respective Verifiable Presentation. Holder Binding aims to prevent such attacks.
 
@@ -1982,6 +1982,15 @@ the Credential level as shown in (#dcql_query_lang_processing_rules), it MUST NO
 these constraints. The Wallet is not controlled by the Verifier and the Verifier
 MUST perform its own security checks on the returned Credentials and
 Presentations.
+
+## Parsing of untrusted inputs
+
+Wallets MUST treat all incoming requests as untrusted input. To mitigate injection and resource exhaustion attacks, Wallets MUST implement input validation on the Authorization Request and its enclosed DCQL query.
+
+Wallets SHOULD implement the following steps:
+
+* Enforce input validation: Verify that the Authorization Request and DCQL query contain no malformed properties. Unknown parameters MUST be ignored.
+* Apply resource limits: Enforce maximum length restrictions on strings, maximum depths for nested objects, and maximum item counts for arrays within the query.
 
 # Privacy Considerations {#privacy-considerations}
 
@@ -3666,3 +3675,4 @@ The technology described in this specification was made available from contribut
    * Clarified that Multi-RP-sig section means Verifier Info instead of attestations
    * Updated origin examples to remove trailing slash
    * Clarified that request_uri_method is a case-sensitive string
+   * add seecurity considerations on untrusted input
