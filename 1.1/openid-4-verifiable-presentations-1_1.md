@@ -3674,4 +3674,4 @@ The technology described in this specification was made available from contribut
    * Clarified that Multi-RP-sig section means Verifier Info instead of attestations
    * Updated origin examples to remove trailing slash
    * Clarified that request_uri_method is a case-sensitive string
-   * add seecurity considerations on untrusted input
+   * add security considerations on untrusted input
