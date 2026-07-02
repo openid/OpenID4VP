@@ -1182,7 +1182,7 @@ When a VP Token is returned, the respective response includes the following para
   * Each Presentation MUST be encoded as a string or object according to
     (#format_specific_parameters).
 
-  * The object MAY be empty only if the DCQL query can be satisfied without
+  * The object MUST NOT be empty
     returning any Presentation according to
     (#dcql_query_lang_processing_rules).
 
