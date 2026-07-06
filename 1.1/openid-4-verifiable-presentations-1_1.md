@@ -681,7 +681,7 @@ The Wallet then validates the request as specified in OAuth 2.0 [@RFC6749].
 
 ### Request URI Error Response
 
-If the Verifier responds with any HTTP error response, the Wallet MUST terminate the process.
+If the Verifier responds with any HTTP error response, the Wallet MUST terminate the process. The Wallet SHOULD NOT follow HTTP redirects and SHOULD treat them as an error response (see (#http_redirects)).
 
 ## Verifier Info {#verifier-info}
 
@@ -1272,7 +1272,7 @@ Content-Type: application/x-www-form-urlencoded
   state=eyJhb...6-sVA
 ```
 
-If the Response URI has successfully processed the Authorization Response or Authorization Error Response, it MUST respond with an HTTP status code of 200 with `Content-Type` of `application/json` and a JSON object in the response body.
+If the Response URI has successfully processed the Authorization Response or Authorization Error Response, it MUST respond with an HTTP status code of 200 with `Content-Type` of `application/json` and a JSON object in the response body. The Wallet SHOULD NOT follow HTTP redirects returned by the Response URI and SHOULD treat them as an error response (see (#http_redirects)).
 
 The following new parameter is defined for use in the JSON object returned from the Response Endpoint to the Wallet:
 
@@ -1962,6 +1962,14 @@ Because an encrypted Authorization Response has no additional integrity protecti
 Implementations MUST follow [@!BCP195].
 
 Whenever TLS is used, a TLS server certificate check MUST be performed, per [@!RFC6125].
+
+## HTTP Redirects {#http_redirects}
+
+This specification does not use HTTP redirects (HTTP status codes 3xx) for the HTTP requests defined in this specification that the Wallet sends directly to the Verifier, specifically the request to retrieve the Request Object from the Request URI (whether using the `get` method as defined in [@RFC9101] or the `post` method defined in (#request_uri_method_post)) and the request transmitting the Authorization Response to the Response URI (see (#response_mode_post)). If the Wallet receives an HTTP redirect in response to one of these requests, it SHOULD NOT follow the redirect and SHOULD treat the response as an error. Extensions and profiles of this specification MAY define the use of HTTP redirects for specific requests.
+
+Following redirects for the request to the Response URI would allow an Authorization Response containing personally identifiable information to be re-sent (e.g., in the case of an HTTP 307 or 308 redirect) to a URL that was not validated according to the rules for the Response URI (see (#security_considerations_direct_post)). Similarly, following redirects when retrieving the Request Object could disclose request parameters, such as `wallet_metadata` and `wallet_nonce`, to a host that was not validated. In both cases, following redirects could expose the Wallet to redirect loops.
+
+Note: This requirement applies only to HTTP-level redirects. It does not affect redirection of the user agent as part of the protocol, e.g., when the Authorization Response is returned via the Redirect URI or when the Wallet redirects the user agent to the `redirect_uri` returned from the Response URI (see (#response_mode_post)); that `redirect_uri` is conveyed as a response parameter in an HTTP 200 response, not as an HTTP-level redirect.
 
 ## Incomplete or Incorrect Implementations of the Specifications and Conformance Testing
 
@@ -3655,6 +3663,7 @@ The technology described in this specification was made available from contribut
 
    -01
 
+   * Clarify that the Wallet does not follow HTTP redirects
    * Clarify nonce entropy requirements
    * Add usage of HPKE for the `info` parameter. 
    * Add security consideration not to use VP Token as Access Token
