@@ -3604,6 +3604,7 @@ The technology described in this specification was made available from contribut
 
 -31
 
+   * Clarify that the Wallet does not follow HTTP redirects
    * Clarify nonce entropy requirements
    * Clarify that state is recommended to match text from Section 14.3.2. Protection of the Response URI
    * Clarify that `encrypted_response_enc_values_supported` applies only if JWE content encryption algorithm is used
