@@ -1965,7 +1965,12 @@ Whenever TLS is used, a TLS server certificate check MUST be performed, per [@!R
 
 ## HTTP Redirects {#http_redirects}
 
-This specification does not use HTTP redirects (HTTP status codes 3xx) for the HTTP requests defined in this specification that the Wallet sends directly to the Verifier. Specifically, HTTP redirects are not used in the request to retrieve the Request Object from the Request URI (whether using the `get` method as defined in [@RFC9101] or the `post` method defined in (#request_uri_method_post)) and the request transmitting the Authorization Response to the Response URI (see (#response_mode_post)). If the Wallet receives an HTTP redirect in response to one of these requests, it SHOULD NOT follow the redirect and SHOULD treat the response as an error. Extensions and profiles of this specification MAY define the use of HTTP redirects for specific requests.
+This specification does not use HTTP redirects (HTTP status codes 3xx) for the HTTP requests defined in this specification that the Wallet sends directly to the Verifier, i.e.:
+
+- the request to retrieve the Request Object from the Request URI (whether using the `get` method as defined in [@RFC9101] or the `post` method defined in (#request_uri_method_post))
+- the request transmitting the Authorization Response to the Response URI (see (#response_mode_post))
+
+If the Wallet receives an HTTP redirect in response to one of these requests, it SHOULD NOT follow the redirect and SHOULD treat the response as an error. Extensions and profiles of this specification MAY define the use of HTTP redirects for specific requests.
 
 Following redirects for the request to the Response URI would allow an Authorization Response containing personally identifiable information to be re-sent (e.g., in the case of an HTTP 307 or 308 redirect) to a URL that was not validated according to the rules for the Response URI (see (#security_considerations_direct_post)). Similarly, following redirects when retrieving the Request Object could disclose request parameters, such as `wallet_metadata` and `wallet_nonce`, to a host that was not validated. In both cases, following redirects could expose the Wallet to redirect loops.
 
