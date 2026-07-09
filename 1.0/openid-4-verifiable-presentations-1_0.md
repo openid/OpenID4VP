@@ -677,7 +677,7 @@ The following is a non-normative example of a payload for a request object:
 }
 ```
 
-The Wallet MUST process the request as defined in [@RFC9101]. Additionally, if the Wallet passed a `wallet_nonce` in the POST request, the Wallet MUST validate whether the request object contains the respective nonce value in a `wallet_nonce` claim. If it does not, the Wallet MUST terminate request processing. 
+The Wallet MUST process the request as defined in [@RFC9101]. The Wallet SHOULD NOT follow HTTP redirects and SHOULD treat them as an error response (see (#http_redirects)). Additionally, if the Wallet passed a `wallet_nonce` in the POST request, the Wallet MUST validate whether the request object contains the respective nonce value in a `wallet_nonce` claim. If it does not, the Wallet MUST terminate request processing.
 
 The Wallet MUST extract the set of Authorization Request parameters from the Request Object. The Wallet MUST only use the parameters in this Request Object, even if the same parameter was provided in an Authorization Request query parameter. The Client Identifier value in the `client_id` Authorization Request parameter and the Request Object `client_id` claim value MUST be identical, including the Client Identifier Prefix. If any of these conditions are not met, the Wallet MUST terminate request processing.
 
@@ -1276,7 +1276,7 @@ Content-Type: application/x-www-form-urlencoded
   state=eyJhb...6-sVA
 ```
 
-If the Response URI has successfully processed the Authorization Response or Authorization Error Response, it MUST respond with an HTTP status code of 200 with `Content-Type` of `application/json` and a JSON object in the response body.
+If the Response URI has successfully processed the Authorization Response or Authorization Error Response, it MUST respond with an HTTP status code of 200 with `Content-Type` of `application/json` and a JSON object in the response body. The Wallet SHOULD NOT follow HTTP redirects returned by the Response URI and SHOULD treat them as an error response (see (#http_redirects)).
 
 The following new parameter is defined for use in the JSON object returned from the Response Endpoint to the Wallet:
 
@@ -1898,6 +1898,20 @@ Because an encrypted Authorization Response has no additional integrity protecti
 Implementations MUST follow [@!BCP195].
 
 Whenever TLS is used, a TLS server certificate check MUST be performed, per [@!RFC6125].
+
+## HTTP Redirects {#http_redirects}
+
+This specification does not use HTTP redirects (HTTP status codes 3xx) for the HTTP requests defined in this specification that the Wallet sends directly to the Verifier, i.e.:
+
+- the request to retrieve the Request Object from the Request URI (whether using the `get` method as defined in [@RFC9101] or the `post` method defined in (#request_uri_method_post))
+- the request transmitting the Authorization Response to the Response URI (see (#response_mode_post))
+
+If the Wallet receives an HTTP redirect in response to one of these requests, it SHOULD NOT follow the redirect and SHOULD treat the response as an error. Extensions and profiles of this specification MAY define the use of HTTP redirects for specific requests.
+
+Following redirects for the request to the Response URI would allow an Authorization Response containing personally identifiable information to be re-sent (e.g., in the case of an HTTP 307 or 308 redirect) to a URL that was not validated according to the rules for the Response URI (see (#security_considerations_direct_post)). Similarly, following redirects when retrieving the Request Object could disclose request parameters, such as `wallet_metadata` and `wallet_nonce`, to a host that was not validated. In both cases, following redirects could expose the Wallet to redirect loops.
+
+Note: This requirement applies only to HTTP-level redirects. It does not affect redirection of the user agent as part of the protocol, e.g., when the Authorization Response is returned via the Redirect URI or when the Wallet redirects the user agent to the `redirect_uri` returned from the Response URI (see (#response_mode_post)); that `redirect_uri` is conveyed as a response parameter in an HTTP 200 response, not as an HTTP-level redirect.
+
 
 ## Incomplete or Incorrect Implementations of the Specifications and Conformance Testing
 

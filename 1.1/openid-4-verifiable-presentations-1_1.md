@@ -673,7 +673,7 @@ The following is a non-normative example of a payload for a request object:
 }
 ```
 
-The Wallet MUST process the request as defined in [@RFC9101]. The Wallet SHOULD NOT follow HTTP redirects and SHOULD treat them as an error response (see (#http_redirects)). Additionally, if the Wallet passed a `wallet_nonce` in the POST request, the Wallet MUST validate whether the request object contains the respective nonce value in a `wallet_nonce` claim. If it does not, the Wallet MUST terminate request processing. 
+The Wallet MUST process the request as defined in [@RFC9101]. The Wallet SHOULD NOT follow HTTP redirects and SHOULD treat them as an error response (see (#http_redirects)). Additionally, if the Wallet passed a `wallet_nonce` in the POST request, the Wallet MUST validate whether the request object contains the respective nonce value in a `wallet_nonce` claim. If it does not, the Wallet MUST terminate request processing.
 
 The Wallet MUST extract the set of Authorization Request parameters from the Request Object. The Wallet MUST only use the parameters in this Request Object, even if the same parameter was provided in an Authorization Request query parameter. The Client Identifier value in the `client_id` Authorization Request parameter and the Request Object `client_id` claim value MUST be identical, including the Client Identifier Prefix. If any of these conditions are not met, the Wallet MUST terminate request processing.
 
