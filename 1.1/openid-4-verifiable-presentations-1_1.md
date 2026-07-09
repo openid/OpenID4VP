@@ -1140,8 +1140,16 @@ Additional, more complex examples can be found in (#more_dcql_query_examples).
 
 A VP Token is only returned if the corresponding Authorization Request contained a `dcql_query` parameter or a `scope` parameter representing a DCQL Query (as defined in #vp_token_request).
 
-The Wallet MUST return a VP Token only if the set of Presentations represented
-by the VP Token satisfies the requirements of the DCQL query according to (#dcql_query_lang_processing_rules).
+The Wallet MUST return a VP Token only if the set of Presentations returned in
+the VP Token satisfies the requirements of the DCQL query according to
+(#dcql_query_lang_processing_rules). If the Wallet does not return any
+Presentation, for example, because the End-User did not give consent, the
+requested Credentials are not available, or the DCQL query can be satisfied
+without returning any Presentation (i.e., all Credential Queries that cannot
+be fulfilled are optional), the Wallet MUST NOT return a VP Token; if the
+Wallet returns a response, it MUST be an error response as defined in
+(#error-response). In particular, an empty VP Token (a JSON object without
+any entries) MUST NOT be used to signify an error.
 
 A VP Token can be returned in the Authorization Response or the Token Response depending on the Response Type used. See (#response_type_vp_token) for more details.
 
@@ -1164,7 +1172,6 @@ The behavior with respect to the VP Token is unspecified for any other individua
 
 When a VP Token is returned, the respective response includes the following parameters:
 
-
 `vp_token`:
 : REQUIRED. A JSON-encoded object subject to the following requirements:
 
@@ -1182,9 +1189,9 @@ When a VP Token is returned, the respective response includes the following para
   * Each Presentation MUST be encoded as a string or object according to
     (#format_specific_parameters).
 
-  * The object MUST NOT be empty
-    returning any Presentation according to
-    (#dcql_query_lang_processing_rules).
+  * The object MUST NOT be empty: it MUST contain at least one entry. If there
+    is no Presentation to return and the Wallet returns a response, it MUST be
+    an error response as defined in (#error-response) instead of a VP Token.
 
 Other parameters, such as `code` (from [@!RFC6749]), or `id_token` (from [@!OpenID.Core]), and `iss` (from [@RFC9207]) can be included in the response as defined in the respective specifications.
 
@@ -3687,5 +3694,5 @@ The technology described in this specification was made available from contribut
    * Clarified that Multi-RP-sig section means Verifier Info instead of attestations
    * Updated origin examples to remove trailing slash
    * Clarified that request_uri_method is a case-sensitive string
-   * Clarify that empty objects in VP Tokens cannot be used to signify an error response
+   * Clarify that a VP Token cannot be empty and that empty objects in VP Tokens cannot be used to signify an error response; an error response is returned instead
    * Editorial improvement of the `vp_token` section
