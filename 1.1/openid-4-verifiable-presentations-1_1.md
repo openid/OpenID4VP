@@ -2889,7 +2889,7 @@ The following is an ISO mdoc specific parameter in the `meta` parameter in a Cre
 
 `doctype_value`:
 : REQUIRED. String that specifies an allowed value for the
-doctype of the requested Verifiable Credential. It MUST be a valid doctype identifier as defined in [@ISO.18013-5]. For a mdoc to satisfy the Credential Query, the value of the `docType` element in the `MobileSecurityObject` structure MUST be equal to the `doctype_value`.
+doctype of the requested Verifiable Credential. It MUST be a valid doctype identifier as defined in [@ISO.18013-5]. For an mdoc to satisfy the Credential Query, the value of the `docType` element in the `MobileSecurityObject` structure MUST be equal to the `doctype_value`.
 
 ### Parameter in the Claims Query {#mdocs_claims_query}
 
