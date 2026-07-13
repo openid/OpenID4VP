@@ -1919,6 +1919,15 @@ these constraints. The Wallet is not controlled by the Verifier and the Verifier
 MUST perform its own security checks on the returned Credentials and
 Presentations.
 
+## Parsing of untrusted inputs
+
+Wallets MUST treat all incoming requests as untrusted input. To mitigate injection and resource exhaustion attacks, Wallets MUST implement input validation on the Authorization Request and its enclosed DCQL query.
+
+Wallets SHOULD implement the following steps:
+
+* Enforce input validation: Verify that the Authorization Request and DCQL query contain no malformed properties. Unknown parameters MUST be ignored.
+* Apply resource limits: Enforce maximum length restrictions on strings, maximum depths for nested objects, and maximum item counts for arrays within the query.
+
 # Privacy Considerations {#privacy-considerations}
 
 Many privacy considerations are specific to the Credential format and associated proof type used in a particular Presentation.
@@ -3601,6 +3610,7 @@ The technology described in this specification was made available from contribut
 
 -31
 
+   * add security considerations on untrusted input
    * Clarify nonce entropy requirements
    * Clarify that state is recommended to match text from Section 14.3.2. Protection of the Response URI
    * Clarify that `encrypted_response_enc_values_supported` applies only if JWE content encryption algorithm is used
