@@ -302,7 +302,7 @@ This specification defines the following new request parameters:
 `client_metadata`:
 : OPTIONAL. A JSON object containing the Verifier metadata values. It MUST be UTF-8 encoded. The following metadata parameters MAY be used:
 
-    * `jwks`: OPTIONAL. A JSON Web Key Set, as defined in [@!RFC7591], that contains one or more public keys, such as those used by the Wallet as an input to a key agreement that may be used for encryption of the Authorization Response (see (#response_encryption)), or where the Wallet will require the public key of the Verifier to generate a Verifiable Presentation. This allows the Verifier to pass ephemeral keys specific to this Authorization Request. Public keys included in this parameter MUST NOT be used to verify the signature of signed Authorization Requests. Each JWK in the set MUST have a `kid` (Key ID) parameter that uniquely identifies the key within the context of the request.
+    * `jwks`: OPTIONAL. A JSON Web Key Set, as defined in [@!RFC7591], that contains one or more public keys, such as those used by the Wallet as an input to a key agreement that may be used for encryption of the Authorization Response (see (#response_encryption)), or where the Wallet will require the public key of the Verifier to generate a Verifiable Presentation. This allows the Verifier to pass ephemeral keys specific to this Authorization Request. JWKs in this set that do not contain a `use` parameter are intended to be used for encryption of the Authorization Response. If the Verifier includes keys intended for different purposes, it SHOULD set the `use` parameter in each key of the set to avoid ambiguity about which key to use for which purpose. Public keys included in this parameter MUST NOT be used to verify the signature of signed Authorization Requests. Each JWK in the set MUST have a `kid` (Key ID) parameter that uniquely identifies the key within the context of the request.
     * `encrypted_response_enc_values_supported`: OPTIONAL. Non-empty array of strings, where each string is a JWE [@!RFC7516] `enc` algorithm that can be used as the content encryption algorithm for encrypting the Response. This parameter is only applicable when a JWE content encryption algorithm is used. When a `response_mode` requiring encryption of the Response (such as `dc_api.jwt` or `direct_post.jwt`) is specified, this MUST be present for anything other than the default single value of `A128GCM`. Otherwise, this SHOULD be absent.
     * `vp_formats_supported`: REQUIRED when not available to the Wallet via another mechanism. As defined in (#client_metadata_parameters).
 
@@ -1316,6 +1316,7 @@ To encrypt the Authorization Response, implementations MUST use an unsigned, enc
 
 To obtain the Verifier's public key to which to encrypt the Authorization Response, the Wallet uses JWKs from client metadata (such as the `jwks` member within the `client_metadata` request parameter or other mechanisms as allowed by the given Client Identifier Prefix).
 Using what it supports and its preferences, the Wallet selects the public key to encrypt the Authorization Response based on information about each key, such as the `kty` (Key Type), `use` (Public Key Use), `alg` (Algorithm), and other JWK parameters. 
+JWKs whose `use` parameter is absent or has the value `enc` are for encryption of the Authorization Response. The Wallet SHOULD NOT select a key whose `use` parameter indicates a different purpose (e.g., `sig`).
 The `alg` parameter MUST be present in the JWKs.
 The JWE `alg` algorithm used MUST be equal to the `alg` value of the chosen `jwk`.
 If the selected public key contains a `kid` parameter, the JWE MUST include the same value in the `kid` JWE Header Parameter (as defined in [@!RFC7516, Section 4.1.6]) of the encrypted response. This enables the Verifier to easily identify the specific public key that was used to encrypt the response.
@@ -3601,6 +3602,7 @@ The technology described in this specification was made available from contribut
 
 -31
 
+   * Clarify jwks use parameter
    * Clarify nonce entropy requirements
    * Clarify that state is recommended to match text from Section 14.3.2. Protection of the Response URI
    * Clarify that `encrypted_response_enc_values_supported` applies only if JWE content encryption algorithm is used
