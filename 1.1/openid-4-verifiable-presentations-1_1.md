@@ -117,7 +117,7 @@ Issuer-Holder-Verifier Model:
 : A model for exchanging claims, where claims are issued in the form of Credentials independent of the process of presenting them as Presentations to the Verifiers. An issued Credential may be used multiple times.
 
 Origin:
-: An identifier for the calling website or native application, asserted by the web or app platform. A web origin is the combination of a scheme/protocol, host, and port, with port being omitted when it matches the default port of the scheme. An app platform may use a linked web origin, or use a platform-specific URI for the app origin. For example, the Verifier for the organization MyExampleOrg is served from https://verify.example.com. The web origin is `https://verify.example.com` with `https` being the scheme, `verify.example.com` being the host, and the port is not explicitly included as `443` is the default port for the protocol `https`. The native applications origin on some platforms will also be `https://verify.example.com` and on other platforms, may be `platform:pkg-key-hash:Z4OFzVVSZrzTRa3eg79hUuHy12MVW0vzPDf4q4zaPs0`.
+: An identifier for the calling website or native application, asserted by the underlying web or application platform. For Web-based callers, the Origin is an opaque `origin` or `tuple origin` as defined in the "Origins" section of [@!whatwg.html]. For native application callers, the Origin follows a platform-specific convention. Some platforms use a linked web origin, while others use a platform-specific application origin. For example, the Verifier for the organization MyExampleOrg is served from https://verify.example.com. The corresponding web Origin is https://verify.example.com, where https is the scheme, verify.example.com is the host, and the port is not explicitly included because 443 is the default port for https. On some platforms, a native application uses the same Origin, while on others it uses a platform-specific value such as platform:pkg-key-hash:Z4OFzVVSZrzTRa3eg79hUuHy12MVW0vzPDf4q4zaPs0. The Origin provided by the underlying platform is outside the scope of this specification and MUST be treated as an opaque string.
 
 Presentation:
 : Data that is presented to a specific Verifier, derived from a Credential. In this specification, Presentations are usually Verifiable Presentations including Holder Binding (as defined below), but may also be Presentations without Holder Binding (discussed in (#nkb-credentials)).
@@ -298,7 +298,7 @@ This specification defines the following new request parameters:
 `client_metadata`:
 : OPTIONAL. A JSON object containing the Verifier metadata values. It MUST be UTF-8 encoded. The following metadata parameters MAY be used:
 
-    * `jwks`: OPTIONAL. A JSON Web Key Set, as defined in [@!RFC7591], that contains one or more public keys, such as those used by the Wallet as an input to a key agreement that may be used for encryption of the Authorization Response (see (#response_encryption)), or where the Wallet will require the public key of the Verifier to generate a Verifiable Presentation. This allows the Verifier to pass ephemeral keys specific to this Authorization Request. Public keys included in this parameter MUST NOT be used to verify the signature of signed Authorization Requests. Each JWK in the set MUST have a `kid` (Key ID) parameter that uniquely identifies the key within the context of the request.
+    * `jwks`: OPTIONAL. A JSON Web Key Set, as defined in [@!RFC7591], that contains one or more public keys, such as those used by the Wallet as an input to a key agreement that may be used for encryption of the Authorization Response (see (#response_encryption)), or where the Wallet will require the public key of the Verifier to generate a Verifiable Presentation. This allows the Verifier to pass ephemeral keys specific to this Authorization Request. JWKs in this set that do not contain a `use` parameter are intended to be used for encryption of the Authorization Response. If the Verifier includes keys intended for different purposes, it SHOULD set the `use` parameter in each key of the set to avoid ambiguity about which key to use for which purpose. Public keys included in this parameter MUST NOT be used to verify the signature of signed Authorization Requests. Each JWK in the set MUST have a `kid` (Key ID) parameter that uniquely identifies the key within the context of the request.
     * `encrypted_response_enc_values_supported`: OPTIONAL. Non-empty array of strings, where each string is a JWE [@!RFC7516] `enc` algorithm that can be used as the content encryption algorithm for encrypting the Response. This parameter is only applicable when a JWE content encryption algorithm is used. When JOSE HPKE integrated encryption mode is used, this parameter has no effect and MUST be ignored if present. When a `response_mode` requiring encryption of the Response (such as `dc_api.jwt` or `direct_post.jwt`) is specified and JOSE HPKE integrated encryption mode is not used, this MUST be present for anything other than the default single value of `A128GCM`. Otherwise, this SHOULD be absent.
     * `vp_formats_supported`: REQUIRED when not available to the Wallet via another mechanism. As defined in (#client_metadata_parameters).
 
@@ -1312,6 +1312,7 @@ To encrypt the Authorization Response, implementations MUST use an unsigned, enc
 
 To obtain the Verifier's public key to which to encrypt the Authorization Response, the Wallet uses JWKs from client metadata (such as the `jwks` member within the `client_metadata` request parameter or other mechanisms as allowed by the given Client Identifier Prefix).
 Using what it supports and its preferences, the Wallet selects the public key to encrypt the Authorization Response based on information about each key, such as the `kty` (Key Type), `use` (Public Key Use), `alg` (Algorithm), and other JWK parameters. 
+JWKs whose `use` parameter is absent or has the value `enc` are for encryption of the Authorization Response. The Wallet SHOULD NOT select a key whose `use` parameter indicates a different purpose (e.g., `sig`).
 The `alg` parameter MUST be present in the JWKs.
 The JWE `alg` algorithm used MUST be equal to the `alg` value of the chosen `jwk`.
 If the selected public key contains a `kid` parameter, the JWE MUST include the same value in the `kid` JWE Header Parameter (as defined in [@!RFC7516, Section 4.1.6]) of the encrypted response. This enables the Verifier to easily identify the specific public key that was used to encrypt the response.
@@ -1832,7 +1833,7 @@ While breaking changes to the specifications referenced in this specification ar
 
 The security properties of the OpenID for Verifiable Credentials family of specifications have been formally analyzed, see [@secanalysis.openid4vc].
 
-## Preventing Replay of Verifiable Presentations {#preventing-replay} 
+## Preventing Replay of Verifiable Presentations {#preventing-replay}
 
 An attacker could try to inject Presentations obtained from (for example) a previous Authorization Response into another Authorization Response, thus impersonating the End-User that originally presented the respective Verifiable Presentation. Holder Binding aims to prevent such attacks.
 
@@ -1995,6 +1996,15 @@ the Credential level as shown in (#dcql_query_lang_processing_rules), it MUST NO
 these constraints. The Wallet is not controlled by the Verifier and the Verifier
 MUST perform its own security checks on the returned Credentials and
 Presentations.
+
+## Parsing of untrusted inputs
+
+Wallets MUST treat all incoming requests as untrusted input. To mitigate injection and resource exhaustion attacks, Wallets MUST implement input validation on the Authorization Request and its enclosed DCQL query.
+
+Wallets SHOULD implement the following steps:
+
+* Enforce input validation: Verify that the Authorization Request and DCQL query contain no malformed properties. Unknown parameters MUST be ignored.
+* Apply resource limits: Enforce maximum length restrictions on strings, maximum depths for nested objects, and maximum item counts for arrays within the query.
 
 # Privacy Considerations {#privacy-considerations}
 
@@ -2466,6 +2476,17 @@ Ecosystems intending to use trusted authority mechanisms SHOULD ensure that the 
   </front>
 </reference>
 
+<reference anchor="whatwg.html" target="https://html.spec.whatwg.org#concept-origin">
+  <front>
+    <title>HTML - Living Standard</title>
+    <author>
+      <organization>WHATWG</organization>
+    </author>
+    <date day="22" month="June" year="2026"/>
+  </front>
+  <annotation>Commit snapshot: https://html.spec.whatwg.org/commit-snapshots/c560a56704e7a31887ab79299d30e6f68d696cf4/#concept-origin</annotation>
+</reference>
+
 # OpenID4VP over the Digital Credentials API {#dc_api}
 
 This section defines how to use OpenID4VP with the Digital Credentials API.
@@ -2487,7 +2508,7 @@ Secondly, the session with the End-User will always continue in the initial cont
 
 Thirdly, cross-device requests benefit from the use of secure transports with proximity checks, which are handled by the OS platform, e.g., using FIDO CTAP 2.2 with hybrid transports.
 
-And lastly, as part of the request, the Wallet is provided with information about the Verifier's Origin as authenticated by the user agent, which is important for phishing resistance.
+And lastly, as part of the request, the Wallet is provided with information about the Verifier's Origin as authenticated by the trusted platform (i.e., user agent), which is important for phishing resistance.
 
 ## Protocol
 
@@ -2538,7 +2559,7 @@ The value of the `response_mode` parameter MUST be `dc_api` when the response is
 
 In addition to the above-mentioned parameters, a new parameter is introduced for OpenID4VP over the W3C Digital Credentials API:
 
-* `expected_origins`: REQUIRED when signed requests defined in (#signed_request) are used with the Digital Credentials API (DC API). A non-empty array of strings, each string representing an Origin of the Verifier that is making the request. The Wallet MUST compare values in this parameter to the Origin to detect replay of the request from a malicious Verifier. If the Origin does not match any of the entries in `expected_origins`, the Wallet MUST return an error. This error SHOULD be an `invalid_request` error. This parameter is not for use in unsigned requests and therefore a Wallet MUST ignore this parameter if it is present in an unsigned request.
+* `expected_origins`: REQUIRED when signed requests defined in (#signed_request) are used with the Digital Credentials API (DC API). A non-empty array of strings, each string representing an Origin of the Verifier that is making the request. The Wallet MUST compare values in this parameter to the provided Origin, treated as a string, using simple string comparison, without any prior processing or interpretation of either the `expected_origins` values or the provided Origin, to detect replay of the request from a malicious Verifier. Values using unsafe or unsupported URI schemes, including `ftp`, `javascript`, `data`, `ws`, and `wss`, MUST NOT be used. Values using the http scheme MUST NOT be used unless they are explicitly allowed for constrained scenarios such as local development or equivalent non-production environments. If the Origin does not match any of the entries in `expected_origins`, the Wallet MUST return an error. This error SHOULD be an `invalid_request` error. This parameter is not for use in unsigned requests and therefore a Wallet MUST ignore this parameter if it is present in an unsigned request.
 
 The transport of the request and Origin to the Wallet is platform-specific and is out of scope of OpenID4VP over the Digital Credentials API.
 
@@ -3669,14 +3690,18 @@ The technology described in this specification was made available from contribut
    -01
 
    * Clarify that the Wallet does not follow HTTP redirects
+   * Clarify jwks use parameter
    * Clarify nonce entropy requirements
    * Add usage of HPKE for the `info` parameter. 
    * Add security consideration not to use VP Token as Access Token
    * Clarify that state is recommended to match text from Section 14.3.2. Protection of the Response URI
    * Clarify that `encrypted_response_enc_values_supported` applies only if JWE content encryption algorithm is used; e.g., it does not apply to JOSE HPKE
+   * Clarify provided Origin is a string without prior interpretation and validation is based on simple string comparison
+   * Add assumption that the platform that provides the Origin is trusted
    * Clarify that `aud` corresponds to `issuer` Wallet Metadata paremeter if Dynamic Discovery is used
    * Clarified `intent_to_retain` value when not present
    * Removed invalid_scope error guidance as duplicate of RFC6749
    * Clarified that Multi-RP-sig section means Verifier Info instead of attestations
    * Updated origin examples to remove trailing slash
    * Clarified that request_uri_method is a case-sensitive string
+   * add security considerations on untrusted input
