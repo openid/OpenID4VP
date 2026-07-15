@@ -776,9 +776,9 @@ proof.
 
 `claims`:
 : OPTIONAL. A non-empty array of objects as defined in (#claims_query) that specifies
-claims in the requested Credential. Verifiers MUST NOT point to the same claim as identified by the claims
-path pointer more than once in a single query. Wallets SHOULD ignore such duplicate claim queries (ignore the
-duplicate, but properly process to the first occurence).
+claims in the requested Credential. Verifiers MUST NOT include queries pointing to the same claim as identified
+by the claims path pointer more than once, unless they are requesting different values for that claim.
+If such duplicate claim queries are detected, Wallets SHOULD process the first occurrence and ignore duplicates.
 
 `claim_sets`:
 : OPTIONAL. A non-empty array containing arrays of identifiers for
