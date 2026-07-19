@@ -117,7 +117,7 @@ Issuer-Holder-Verifier Model:
 : A model for exchanging claims, where claims are issued in the form of Credentials independent of the process of presenting them as Presentations to the Verifiers. An issued Credential may be used multiple times.
 
 Origin:
-: An identifier for the calling website or native application, asserted by the underlying web or application platform. For Web-based callers, the Origin is an opaque `origin` or `tuple origin` as defined in the "Origins" section of [@!whatwg.html]. For native application callers, the Origin follows a platform-specific convention. Some platforms use a linked web origin, while others use a platform-specific application origin. For example, the Verifier for the organization MyExampleOrg is served from https://verify.example.com. The corresponding web Origin is https://verify.example.com, where https is the scheme, verify.example.com is the host, and the port is not explicitly included because 443 is the default port for https. On some platforms, a native application uses the same Origin, while on others it uses a platform-specific value such as platform:pkg-key-hash:Z4OFzVVSZrzTRa3eg79hUuHy12MVW0vzPDf4q4zaPs0. The Origin provided by the underlying platform is outside the scope of this specification and MUST be treated as an opaque string.
+: An identifier for the calling website or native application, asserted by the underlying web or application platform. For Web-based callers, the Origin is an opaque `origin` or `tuple origin` as defined in the "Origins" section of [@!whatwg.html]. For native application callers, the Origin follows a platform-specific convention. Some platforms use a linked web origin, while others use a platform-specific application origin. For example, the Verifier for the organization MyExampleOrg is served from https://verify.example.com. The corresponding web Origin is https://verify.example.com, where https is the scheme, verify.example.com is the host, and the port is not explicitly included because 443 is the default port for https. On some platforms, a native application uses the same Origin, while on others it uses a platform-specific value such as platform:pkg-key-hash:Z4OFzVVSZrzTRa3eg79hUuHy12MVW0vzPDf4q4zaPs0. The Origin provided by the underlying platform is outside the scope of this specification and MUST be treated as an opaque string (but see #dc_api_origin_security_considerations for the expected properties of platform-specific application Origins).
 
 Presentation:
 : Data that is presented to a specific Verifier, derived from a Credential. In this specification, Presentations are usually Verifiable Presentations including Holder Binding (as defined below), but may also be Presentations without Holder Binding (discussed in (#nkb-credentials)).
@@ -2561,7 +2561,7 @@ In addition to the above-mentioned parameters, a new parameter is introduced for
 
 * `expected_origins`: REQUIRED when signed requests defined in (#signed_request) are used with the Digital Credentials API (DC API). A non-empty array of strings, each string representing an Origin of the Verifier that is making the request. The Wallet MUST compare values in this parameter to the provided Origin, treated as a string, using simple string comparison, without any prior processing or interpretation of either the `expected_origins` values or the provided Origin, to detect replay of the request from a malicious Verifier. Values using unsafe or unsupported URI schemes, including `ftp`, `javascript`, `data`, `ws`, and `wss`, MUST NOT be used. Values using the http scheme MUST NOT be used unless they are explicitly allowed for constrained scenarios such as local development or equivalent non-production environments. If the Origin does not match any of the entries in `expected_origins`, the Wallet MUST return an error. This error SHOULD be an `invalid_request` error. This parameter is not for use in unsigned requests and therefore a Wallet MUST ignore this parameter if it is present in an unsigned request.
 
-The transport of the request and Origin to the Wallet is platform-specific and is out of scope of OpenID4VP over the Digital Credentials API.
+The transport of the request and Origin to the Wallet is platform-specific and is out of scope of OpenID4VP over the Digital Credentials API, but see (#dc_api_origin_security_considerations) for expected properties of the transport of the Origin.
 
 Additional request parameters MAY be defined and used with OpenID4VP over the DC API.
 
@@ -2676,6 +2676,15 @@ The following security considerations from OpenID4VP apply:
 * Always use the Full Client Identifier as described in (#full-client-identifier) for signed requests.
 * Security Checks on the Returned Credentials and Presentations as described in (#dcql_query_security).
 * DCQL Value Matching as described in (#dcql-value-matching).
+
+### Use of platform-specific application origins {#dc_api_origin_security_considerations}
+
+Some platforms use platform-specific application Origins with the Digital Credentials API.
+While the Origin values used by platforms and the transport of the request and Origin to the Wallet are outside the scope of this specification, the security of the protocol rests on the following properties:
+
+* The platform must provide collision-resistant values when assigning Origins.
+* The platform must ensure that each application using the platform is assigned a unique Origin.
+* The platform must ensure that it transports the Origin value to the Wallet unmodified, such that values can be compared to the `expected_origins` using exact string comparison.
 
 ## Privacy Considerations {#dc_api_privacy_considerations}
 
