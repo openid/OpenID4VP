@@ -3611,7 +3611,7 @@ The technology described in this specification was made available from contribut
    * Updated origin examples to remove trailing slash
    * Clarify that `aud` corresponds to `issuer` Wallet Metadata paremeter if Dynamic Discovery is used
    * Clarified that request_uri_method is a case-sensitive string
-   * Clarify duplicate claims entries
+   * Remove requirements for duplicate claim entries
    
 -final
    
