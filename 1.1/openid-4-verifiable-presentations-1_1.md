@@ -2682,9 +2682,9 @@ The following security considerations from OpenID4VP apply:
 Some platforms use platform-specific application Origins with the Digital Credentials API.
 While the Origin values used by platforms and the transport of the request and Origin to the Wallet are outside the scope of this specification, the security of the protocol rests on the following properties:
 
-* The platform must provide collision-resistant values when assigning Origins.
-* The platform must ensure that each application using the platform is assigned a unique Origin.
-* The platform must ensure that it transports the Origin value to the Wallet unmodified, such that values can be compared to the `expected_origins` using exact string comparison.
+* The platform provides collision-resistant values when assigning Origins.
+* The platform ensures that each application using the platform is assigned a unique Origin.
+* The platform ensures that it transports the Origin value to the Wallet unmodified, such that values can be compared to the `expected_origins` using exact string comparison.
 
 ## Privacy Considerations {#dc_api_privacy_considerations}
 
