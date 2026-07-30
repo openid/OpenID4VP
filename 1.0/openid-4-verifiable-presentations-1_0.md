@@ -1938,7 +1938,7 @@ Presentations.
 
 Wallets MUST treat all incoming requests as untrusted input. To mitigate injection and resource exhaustion attacks, Wallets MUST implement input validation on the Authorization Request and its enclosed DCQL query.
 
-Wallets SHOULD implement the following steps:
+Wallets SHOULD implement at least the following steps:
 
 * Enforce input validation: Verify that the Authorization Request and DCQL query contain no malformed properties. Unknown parameters MUST be ignored.
 * Apply resource limits: Enforce maximum length restrictions on strings, maximum depths for nested objects, and maximum item counts for arrays within the query.
