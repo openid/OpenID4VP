@@ -117,7 +117,7 @@ Issuer-Holder-Verifier Model:
 : A model for exchanging claims, where claims are issued in the form of Credentials independent of the process of presenting them as Presentations to the Verifiers. An issued Credential may be used multiple times.
 
 Origin:
-: An identifier for the calling website or native application, asserted by the web or app platform. A web origin is the combination of a scheme/protocol, host, and port, with port being omitted when it matches the default port of the scheme. An app platform may use a linked web origin, or use a platform-specific URI for the app origin. For example, the Verifier for the organization MyExampleOrg is served from https://verify.example.com. The web origin is `https://verify.example.com` with `https` being the scheme, `verify.example.com` being the host, and the port is not explicitly included as `443` is the default port for the protocol `https`. The native applications origin on some platforms will also be `https://verify.example.com` and on other platforms, may be `platform:pkg-key-hash:Z4OFzVVSZrzTRa3eg79hUuHy12MVW0vzPDf4q4zaPs0`.
+: An identifier for the calling website or native application, asserted by the underlying web or application platform. For Web-based callers, the Origin is an opaque `origin` or `tuple origin` as defined in the "Origins" section of [@!whatwg.html]. For native application callers, the Origin follows a platform-specific convention. Some platforms use a linked web origin, while others use a platform-specific application origin. For example, the Verifier for the organization MyExampleOrg is served from https://verify.example.com. The corresponding web Origin is https://verify.example.com, where https is the scheme, verify.example.com is the host, and the port is not explicitly included because 443 is the default port for https. On some platforms, a native application uses the same Origin, while on others it uses a platform-specific value such as platform:pkg-key-hash:Z4OFzVVSZrzTRa3eg79hUuHy12MVW0vzPDf4q4zaPs0. The Origin provided by the underlying platform is outside the scope of this specification and MUST be treated as an opaque string.
 
 Presentation:
 : Data that is presented to a specific Verifier, derived from a Credential. In this specification, Presentations are usually Verifiable Presentations including Holder Binding (as defined below), but may also be Presentations without Holder Binding (discussed in (#nkb-credentials)).
@@ -272,7 +272,7 @@ that signals to the Wallet that it can make an HTTP POST request to the Verifier
 endpoint with information about its capabilities as defined in (#request_uri_method_post). The Wallet MAY continue with JAR
 when it receives `request_uri_method` parameter with the value `post` but does not support this feature.
 
-The Verifier articulates requirements of the Credential(s) that are requested using the `dcql_query` parameter. Wallet implementations MUST process the DCQL query and select candidate Credential(s) using the evaluation process described in (#dcql_query_lang_processing_rules)
+The Verifier articulates requirements of the Credential(s) that are requested using either the `dcql_query` or `scope` parameters. Wallet implementations MUST process the DCQL query and select candidate Credential(s) using the evaluation process described in (#dcql_query_lang_processing_rules)
 
 The Verifier communicates a Client Identifier Prefix that indicates how the Wallet is supposed to interpret the Client Identifier and associated data in the process of Client identification, authentication, and authorization as a prefix in the `client_id` parameter. This enables deployments of this specification to use different mechanisms to obtain and validate Client metadata beyond the scope of [@!RFC6749]. A certain Client Identifier Prefix sets the requirements whether the Verifier needs to sign the Authorization Request as a means of authentication and/or pass additional parameters and require the Wallet to process them.
 
@@ -285,6 +285,9 @@ One exception to this rule is the `transaction_data` parameter. Wallets that do 
 ## New Parameters {#new_parameters}
 This specification defines the following new request parameters:
 
+`response_uri`:
+: As defined in (#security_considerations_direct_post).
+
 `dcql_query`:
 : A JSON object containing a DCQL query as defined in (#dcql_query).
 
@@ -295,7 +298,7 @@ This specification defines the following new request parameters:
 `client_metadata`:
 : OPTIONAL. A JSON object containing the Verifier metadata values. It MUST be UTF-8 encoded. The following metadata parameters MAY be used:
 
-    * `jwks`: OPTIONAL. A JSON Web Key Set, as defined in [@!RFC7591], that contains one or more public keys, such as those used by the Wallet as an input to a key agreement that may be used for encryption of the Authorization Response (see (#response_encryption)), or where the Wallet will require the public key of the Verifier to generate a Verifiable Presentation. This allows the Verifier to pass ephemeral keys specific to this Authorization Request. Public keys included in this parameter MUST NOT be used to verify the signature of signed Authorization Requests. Each JWK in the set MUST have a `kid` (Key ID) parameter that uniquely identifies the key within the context of the request.
+    * `jwks`: OPTIONAL. A JSON Web Key Set, as defined in [@!RFC7591], that contains one or more public keys, such as those used by the Wallet as an input to a key agreement that may be used for encryption of the Authorization Response (see (#response_encryption)), or where the Wallet will require the public key of the Verifier to generate a Verifiable Presentation. This allows the Verifier to pass ephemeral keys specific to this Authorization Request. JWKs in this set that do not contain a `use` parameter are intended to be used for encryption of the Authorization Response. If the Verifier includes keys intended for different purposes, it SHOULD set the `use` parameter in each key of the set to avoid ambiguity about which key to use for which purpose. Public keys included in this parameter MUST NOT be used to verify the signature of signed Authorization Requests. Each JWK in the set MUST have a `kid` (Key ID) parameter that uniquely identifies the key within the context of the request.
     * `encrypted_response_enc_values_supported`: OPTIONAL. Non-empty array of strings, where each string is a JWE [@!RFC7516] `enc` algorithm that can be used as the content encryption algorithm for encrypting the Response. This parameter is only applicable when a JWE content encryption algorithm is used. When JOSE HPKE integrated encryption mode is used, this parameter has no effect and MUST be ignored if present. When a `response_mode` requiring encryption of the Response (such as `dc_api.jwt` or `direct_post.jwt`) is specified and JOSE HPKE integrated encryption mode is not used, this MUST be present for anything other than the default single value of `A128GCM`. Otherwise, this SHOULD be absent.
     * `vp_formats_supported`: REQUIRED when not available to the Wallet via another mechanism. As defined in (#client_metadata_parameters).
 
@@ -304,7 +307,7 @@ This specification defines the following new request parameters:
     Other metadata parameters MUST be ignored unless a profile of this specification explicitly defines them as usable in the `client_metadata` parameter.
 
 `request_uri_method`: 
-: OPTIONAL. A string determining the HTTP method to be used when the `request_uri` parameter is included in the same request. Two case-sensitive valid values are defined in this specification: `get` and `post`. If `request_uri_method` value is `get`, the Wallet MUST send the request to retrieve the Request Object using the HTTP GET method, i.e., as defined in [@RFC9101]. If `request_uri_method` value is `post`, a supporting Wallet MUST send the request using the HTTP POST method as detailed in (#request_uri_method_post). If the `request_uri_method` parameter is not present, the Wallet MUST process the `request_uri` parameter as defined in [@RFC9101]. Wallets not supporting the `post` method will send a GET request to the Request URI (default behavior as defined in [@RFC9101]). `request_uri_method` parameter MUST NOT be present if a `request_uri` parameter is not present.
+: OPTIONAL. A case-sensitive string determining the HTTP method to be used when the `request_uri` parameter is included in the same request. Two case-sensitive valid values are defined in this specification: `get` and `post`. If `request_uri_method` value is `get`, the Wallet MUST send the request to retrieve the Request Object using the HTTP GET method, i.e., as defined in [@RFC9101]. If `request_uri_method` value is `post`, a supporting Wallet MUST send the request using the HTTP POST method as detailed in (#request_uri_method_post). If the `request_uri_method` parameter is not present, the Wallet MUST process the `request_uri` parameter as defined in [@RFC9101]. Wallets not supporting the `post` method will send a GET request to the Request URI (default behavior as defined in [@RFC9101]). `request_uri_method` parameter MUST NOT be present if a `request_uri` parameter is not present.
 
     If the Verifier set the `request_uri_method` parameter value to `post` and there is no other means to convey its capabilities to the Wallet, it SHOULD add the `client_metadata` parameter to the Authorization Request. 
     This enables the Wallet to assess the Verifier's capabilities, allowing it to transmit only the relevant capabilities through the `wallet_metadata` parameter in the Request URI POST request.
@@ -351,7 +354,7 @@ This specification defines the following new request parameters:
 The following additional considerations are given for pre-existing Authorization Request parameters:
 
 `nonce`:
-: REQUIRED. A case-sensitive String representing a value to securely bind Verifiable Presentation(s) provided by the Wallet to the particular transaction. The Verifier MUST create a fresh, cryptographically random number with sufficient entropy for every Authorization Request, store it with its current session, and pass it in the `nonce` Authorization Request Parameter to the Wallet. See (#preventing-replay) for details. Values MUST only contain ASCII URL safe characters (uppercase and lowercase letters, decimal digits, hyphen, period, underscore, and tilde).
+: REQUIRED. A case-sensitive String representing a value to securely bind Verifiable Presentation(s) provided by the Wallet to the particular transaction. The Verifier MUST create a fresh, cryptographically random number with sufficient entropy for every Authorization Request and store it with its current session. The nonce SHOULD contain at least 128 bits of entropy. See (#preventing-replay) for details. Values MUST only contain ASCII URL safe characters (uppercase and lowercase letters, decimal digits, hyphen, period, underscore, and tilde).
 
 `scope`:
 : OPTIONAL. Defined in [@!RFC6749]. The Wallet MAY allow Verifiers to request Presentations by utilizing a pre-defined scope value. See (#request_scope) for more details.
@@ -363,7 +366,7 @@ The following additional considerations are given for pre-existing Authorization
 : REQUIRED. Defined in [@!RFC6749]. This specification defines additional requirements to enable the use of Client Identifier Prefixes as described in (#client_metadata_management). The Client Identifier can be created by parties other than the Wallet and it is considered unique within the context of the Wallet when used in combination with the Client Identifier Prefix.
 
 `state`:
-: REQUIRED under the conditions defined in (#nkb-credentials). Otherwise, `state` is OPTIONAL. `state` values MUST only contain ASCII URL safe characters (uppercase and lowercase letters, decimal digits, hyphen, period, underscore, and tilde).
+: REQUIRED under the conditions defined in (#nkb-credentials). Otherwise, `state` is RECOMMENDED, see (#security_considerations_direct_post). `state` values MUST only contain ASCII URL safe characters (uppercase and lowercase letters, decimal digits, hyphen, period, underscore, and tilde).
 
 ## Requesting Presentations without Holder Binding Proofs {#nkb-credentials}
 
@@ -611,7 +614,7 @@ In case of using OpenID4VP over DC API, as defined in (#dc_api), it is at the di
 
 * `x509_hash`: When the Client Identifier Prefix is `x509_hash`, the original Client Identifier (the part without the `x509_hash:` prefix) MUST be a hash and match the hash of the leaf certificate passed with the request. The request MUST be signed with the private key corresponding to the public key in the leaf X.509 certificate of the certificate chain added to the request in the `x5c` JOSE header parameter [@!RFC7515] of the signed request object. The value of `x509_hash` is the base64url-encoded value of the SHA-256 hash of the DER-encoded X.509 certificate. The Wallet MUST validate the signature and the trust chain of the X.509 leaf certificate. Example Client Identifier: `x509_hash:Uvo3HtuIxuhC92rShpgqcT3YXwrqRxWEviRiA0OZszk`
 
-* `origin`: This reserved Client Identifier Prefix is defined in (#dc_api_request). The Wallet MUST NOT accept this Client Identifier Prefix in requests. In OpenID4VP over the Digital Credentials API, the audience of the Credential Presentation is always the origin value prefixed by `origin:`, for example `origin:https://verifier.example.com/`.
+* `origin`: This reserved Client Identifier Prefix is defined in (#dc_api_request). The Wallet MUST NOT accept this Client Identifier Prefix in requests. In OpenID4VP over the Digital Credentials API, the audience of the Credential Presentation is always the origin value prefixed by `origin:`, for example `origin:https://verifier.example.com`.
 
 To use the Client Identifier Prefixes `openid_federation`, `decentralized_identifier`, `verifier_attestation`, `x509_san_dns` and `x509_hash`, Verifiers MUST be capable of securely storing private key material. This might require changes to the technical design of native apps as such apps are typically public clients.
 
@@ -670,7 +673,7 @@ The following is a non-normative example of a payload for a request object:
 }
 ```
 
-The Wallet MUST process the request as defined in [@RFC9101]. Additionally, if the Wallet passed a `wallet_nonce` in the POST request, the Wallet MUST validate whether the request object contains the respective nonce value in a `wallet_nonce` claim. If it does not, the Wallet MUST terminate request processing. 
+The Wallet MUST process the request as defined in [@RFC9101]. The Wallet SHOULD NOT follow HTTP redirects and SHOULD treat them as an error response (see (#http_redirects)). Additionally, if the Wallet passed a `wallet_nonce` in the POST request, the Wallet MUST validate whether the request object contains the respective nonce value in a `wallet_nonce` claim. If it does not, the Wallet MUST terminate request processing.
 
 The Wallet MUST extract the set of Authorization Request parameters from the Request Object. The Wallet MUST only use the parameters in this Request Object, even if the same parameter was provided in an Authorization Request query parameter. The Client Identifier value in the `client_id` Authorization Request parameter and the Request Object `client_id` claim value MUST be identical, including the Client Identifier Prefix. If any of these conditions are not met, the Wallet MUST terminate request processing.
 
@@ -773,8 +776,7 @@ proof.
 
 `claims`:
 : OPTIONAL. A non-empty array of objects as defined in (#claims_query) that specifies
-claims in the requested Credential. Verifiers MUST NOT point to the same claim more than
-once in a single query. Wallets SHOULD ignore such duplicate claim queries.
+claims in the requested Credential.
 
 `claim_sets`:
 : OPTIONAL. A non-empty array containing arrays of identifiers for
@@ -1135,7 +1137,7 @@ Additional, more complex examples can be found in (#more_dcql_query_examples).
 
 # Response {#response}
 
-A VP Token is only returned if the corresponding Authorization Request contained a `dcql_query` parameter or a `scope` parameter representing a DCQL Query (#vp_token_request).
+A VP Token is only returned if the corresponding Authorization Request contained a `dcql_query` parameter or a `scope` parameter representing a DCQL Query (as defined in #vp_token_request).
 
 A VP Token can be returned in the Authorization Response or the Token Response depending on the Response Type used. See (#response_type_vp_token) for more details.
 
@@ -1269,7 +1271,7 @@ Content-Type: application/x-www-form-urlencoded
   state=eyJhb...6-sVA
 ```
 
-If the Response URI has successfully processed the Authorization Response or Authorization Error Response, it MUST respond with an HTTP status code of 200 with `Content-Type` of `application/json` and a JSON object in the response body.
+If the Response URI has successfully processed the Authorization Response or Authorization Error Response, it MUST respond with an HTTP status code of 200 with `Content-Type` of `application/json` and a JSON object in the response body. The Wallet SHOULD NOT follow HTTP redirects returned by the Response URI and SHOULD treat them as an error response (see (#http_redirects)).
 
 The following new parameter is defined for use in the JSON object returned from the Response Endpoint to the Wallet:
 
@@ -1309,6 +1311,7 @@ To encrypt the Authorization Response, implementations MUST use an unsigned, enc
 
 To obtain the Verifier's public key to which to encrypt the Authorization Response, the Wallet uses JWKs from client metadata (such as the `jwks` member within the `client_metadata` request parameter or other mechanisms as allowed by the given Client Identifier Prefix).
 Using what it supports and its preferences, the Wallet selects the public key to encrypt the Authorization Response based on information about each key, such as the `kty` (Key Type), `use` (Public Key Use), `alg` (Algorithm), and other JWK parameters. 
+JWKs whose `use` parameter is absent or has the value `enc` are for encryption of the Authorization Response. The Wallet SHOULD NOT select a key whose `use` parameter indicates a different purpose (e.g., `sig`).
 The `alg` parameter MUST be present in the JWKs.
 The JWE `alg` algorithm used MUST be equal to the `alg` value of the chosen `jwk`.
 If the selected public key contains a `kid` parameter, the JWE MUST include the same value in the `kid` JWE Header Parameter (as defined in [@!RFC7516, Section 4.1.6]) of the encrypted response. This enables the Verifier to easily identify the specific public key that was used to encrypt the response.
@@ -1522,10 +1525,6 @@ If the Wallet does not support `transaction_data` parameter, it MUST return an e
 
 The error response follows the rules as defined in [@!RFC6749], with the following additional clarifications:
 
-`invalid_scope`: 
-
-- Requested scope value is invalid, unknown, or malformed.
-
 `invalid_request`:
 
 - The request contains both a `dcql_query` parameter and a `scope` parameter referencing a DCQL query.
@@ -1604,7 +1603,7 @@ This specification defines how the Verifier can determine Credential formats, pr
 This specification defines new metadata parameters according to [@!RFC8414].
 
 `vp_formats_supported`:
-: REQUIRED. An object containing a list of name/value pairs, where the name is a Credential Format Identifier and the value defines format-specific parameters that a Wallet supports. For specific values that can be used, see (#format_specific_parameters).
+: REQUIRED. An object containing name/value pairs, where the name is a Credential Format Identifier and the value defines format-specific parameters that a Wallet supports. For specific values that can be used, see (#format_specific_parameters).
 Deployments can extend the formats supported, provided Issuers, Holders and Verifiers all understand the new format.
 
     The following is a non-normative example of a `vp_formats_supported` parameter:
@@ -1829,7 +1828,11 @@ While breaking changes to the specifications referenced in this specification ar
 
 # Security Considerations {#security_considerations}
 
-## Preventing Replay of Verifiable Presentations {#preventing-replay} 
+## Formal Security Analysis
+
+The security properties of the OpenID for Verifiable Credentials family of specifications have been formally analyzed, see [@secanalysis.openid4vc].
+
+## Preventing Replay of Verifiable Presentations {#preventing-replay}
 
 An attacker could try to inject Presentations obtained from (for example) a previous Authorization Response into another Authorization Response, thus impersonating the End-User that originally presented the respective Verifiable Presentation. Holder Binding aims to prevent such attacks.
 
@@ -1960,6 +1963,19 @@ Implementations MUST follow [@!BCP195].
 
 Whenever TLS is used, a TLS server certificate check MUST be performed, per [@!RFC6125].
 
+## HTTP Redirects {#http_redirects}
+
+This specification does not use HTTP redirects (HTTP status codes 3xx) for the HTTP requests defined in this specification that the Wallet sends directly to the Verifier, i.e.:
+
+- the request to retrieve the Request Object from the Request URI (whether using the `get` method as defined in [@RFC9101] or the `post` method defined in (#request_uri_method_post))
+- the request transmitting the Authorization Response to the Response URI (see (#response_mode_post))
+
+If the Wallet receives an HTTP redirect in response to one of these requests, it SHOULD NOT follow the redirect and SHOULD treat the response as an error. Extensions and profiles of this specification MAY define the use of HTTP redirects for specific requests.
+
+Following redirects for the request to the Response URI would allow an Authorization Response containing personally identifiable information to be re-sent (e.g., in the case of an HTTP 307 or 308 redirect) to a URL that was not validated according to the rules for the Response URI (see (#security_considerations_direct_post)). Similarly, following redirects when retrieving the Request Object could disclose request parameters, such as `wallet_metadata` and `wallet_nonce`, to a host that was not validated. In both cases, following redirects could expose the Wallet to redirect loops.
+
+Note: This requirement applies only to HTTP-level redirects. It does not affect redirection of the user agent as part of the protocol, e.g., when the Authorization Response is returned via the Redirect URI or when the Wallet redirects the user agent to the `redirect_uri` returned from the Response URI (see (#response_mode_post)); that `redirect_uri` is conveyed as a response parameter in an HTTP 200 response, not as an HTTP-level redirect.
+
 ## Incomplete or Incorrect Implementations of the Specifications and Conformance Testing
 
 To achieve the full security benefits, it is important that the implementation of this specification, and the underlying specifications, are both complete and correct.
@@ -1987,6 +2003,15 @@ Wallet implementers need to choose a sources of client metadata they can trust w
 It is recommended to use `client_metadata` parameters only for client-supplied parameters that can be used untrusted, for example, a public key used to encrypt the response. 
 
 Ecosystems can use other ecosystem-specific trusted data sources as long as they conduct a proper trust evaluation. 
+
+## Parsing of untrusted inputs
+
+Wallets MUST treat all incoming requests as untrusted input. To mitigate injection and resource exhaustion attacks, Wallets MUST implement input validation on the Authorization Request and its enclosed DCQL query.
+
+Wallets SHOULD at least implement the following steps:
+
+* Enforce input validation: Verify that the Authorization Request and DCQL query contain no malformed properties. Unknown parameters MUST be ignored.
+* Apply resource limits: Enforce maximum length restrictions on strings, maximum depths for nested objects, and maximum item counts for arrays within the query.
 
 # Privacy Considerations {#privacy-considerations}
 
@@ -2429,7 +2454,6 @@ Ecosystems intending to use trusted authority mechanisms SHOULD ensure that the 
         </front>
 </reference>
 
-
 <reference anchor="IANA.Hash.Algorithms" target="https://www.iana.org/assignments/named-information/named-information.xhtml">
         <front>
           <title>Named Information Hash Algorithm Registry</title>
@@ -2437,6 +2461,37 @@ Ecosystems intending to use trusted authority mechanisms SHOULD ensure that the 
             <organization>IANA</organization>
           </author>
         </front>
+</reference>
+
+<reference anchor="secanalysis.openid4vp.dc" target="https://openid.net/wp-content/uploads/2025/08/Report-Deliverable-A_1_B_.pdf">
+  <front>
+    <title>Formal Security Analysis of the OpenID for Verifiable Presentations Specification (with DC API)</title>
+    <author fullname="Fabian Hauck"></author>
+    <author fullname="Pedram Hosseyni"></author>
+    <author fullname="Ralf Küsters"></author>
+    <author fullname="Tim Würtele"></author>
+    <date day="15" month="July" year="2025"/>
+  </front>
+</reference>
+
+<reference anchor="secanalysis.openid4vc" target="https://dx.doi.org/10.18419/opus-13772">
+  <front>
+    <title>OpenID for Verifiable Credentials: Formal Security Analysis using the Web Infrastructure Model</title>
+    <author fullname="Fabian Hauck">
+    </author>
+    <date day="2" month="October" year="2023"/>
+  </front>
+</reference>
+
+<reference anchor="whatwg.html" target="https://html.spec.whatwg.org#concept-origin">
+  <front>
+    <title>HTML - Living Standard</title>
+    <author>
+      <organization>WHATWG</organization>
+    </author>
+    <date day="22" month="June" year="2026"/>
+  </front>
+  <annotation>Commit snapshot: https://html.spec.whatwg.org/commit-snapshots/c560a56704e7a31887ab79299d30e6f68d696cf4/#concept-origin</annotation>
 </reference>
 
 # OpenID4VP over the Digital Credentials API {#dc_api}
@@ -2460,7 +2515,7 @@ Secondly, the session with the End-User will always continue in the initial cont
 
 Thirdly, cross-device requests benefit from the use of secure transports with proximity checks, which are handled by the OS platform, e.g., using FIDO CTAP 2.2 with hybrid transports.
 
-And lastly, as part of the request, the Wallet is provided with information about the Verifier's Origin as authenticated by the user agent, which is important for phishing resistance.
+And lastly, as part of the request, the Wallet is provided with information about the Verifier's Origin as authenticated by the trusted platform (i.e., user agent), which is important for phishing resistance.
 
 ## Protocol
 
@@ -2511,7 +2566,7 @@ The value of the `response_mode` parameter MUST be `dc_api` when the response is
 
 In addition to the above-mentioned parameters, a new parameter is introduced for OpenID4VP over the W3C Digital Credentials API:
 
-* `expected_origins`: REQUIRED when signed requests defined in (#signed_request) are used with the Digital Credentials API (DC API). A non-empty array of strings, each string representing an Origin of the Verifier that is making the request. The Wallet MUST compare values in this parameter to the Origin to detect replay of the request from a malicious Verifier. If the Origin does not match any of the entries in `expected_origins`, the Wallet MUST return an error. This error SHOULD be an `invalid_request` error. This parameter is not for use in unsigned requests and therefore a Wallet MUST ignore this parameter if it is present in an unsigned request.
+* `expected_origins`: REQUIRED when signed requests defined in (#signed_request) are used with the Digital Credentials API (DC API). A non-empty array of strings, each string representing an Origin of the Verifier that is making the request. The Wallet MUST compare values in this parameter to the provided Origin, treated as a string, using simple string comparison, without any prior processing or interpretation of either the `expected_origins` values or the provided Origin, to detect replay of the request from a malicious Verifier. Values using unsafe or unsupported URI schemes, including `ftp`, `javascript`, `data`, `ws`, and `wss`, MUST NOT be used. Values using the http scheme MUST NOT be used unless they are explicitly allowed for constrained scenarios such as local development or equivalent non-production environments. If the Origin does not match any of the entries in `expected_origins`, the Wallet MUST return an error. This error SHOULD be an `invalid_request` error. This parameter is not for use in unsigned requests and therefore a Wallet MUST ignore this parameter if it is present in an unsigned request.
 
 The transport of the request and Origin to the Wallet is platform-specific and is out of scope of OpenID4VP over the Digital Credentials API.
 
@@ -2553,7 +2608,7 @@ This is an example of the payload of a signed OpenID4VP request used with the W3
 
 #### JWS JSON Serialization {#multi_signed_request}
 
-The JWS JSON Serialization ([@!RFC7515]) allows the Verifier to use multiple Client Identifiers and corresponding key material to protect the same request. This serves use cases where the Verifier requests Credentials belonging to different trust frameworks and, therefore, needs to authenticate in the context of those trust frameworks. It also allows the Verifier to add different attestations for each Client Identifier.
+The JWS JSON Serialization ([@!RFC7515]) allows the Verifier to use multiple Client Identifiers and corresponding key material to protect the same request. This serves use cases where the Verifier requests Credentials belonging to different trust frameworks and, therefore, needs to authenticate in the context of those trust frameworks. It also allows the Verifier to add different Verifier Info for each Client Identifier.
 
 In this case, the following request parameters, if used, MUST be present only in the protected header of the respective `signature` object in the `signatures` array defined in [@!RFC7515, section 7.2.1]:
 
@@ -2612,9 +2667,11 @@ The following is a non-normative example of a `data` object containing an error:
 
 The security properties that are normally provided by the Client Identifier are achieved by binding the response to the Origin it was received from.
 
-The audience for the response (for example, the `aud` value in a Key Binding JWT) MUST be the Origin, prefixed with `origin:`, for example `origin:https://verifier.example.com/`. This is the case even for signed requests. Therefore, when using OpenID4VP over the DC API, the Client Identifier is not used as the audience for the response.
+The audience for the response (for example, the `aud` value in a Key Binding JWT) MUST be the Origin, prefixed with `origin:`, for example `origin:https://verifier.example.com`. This is the case even for signed requests. Therefore, when using OpenID4VP over the DC API, the Client Identifier is not used as the audience for the response.
 
 ## Security Considerations {#dc_api_security_considerations}
+
+The security properties of the OpenID4VP protocol, when used in conjunction with the Digital Credentials API (DC API) [@!W3C.Digital_Credentials_API], have been formally analyzed, see [@secanalysis.openid4vp.dc].
 
 The following security considerations from OpenID4VP apply:
 
@@ -2623,7 +2680,7 @@ The following security considerations from OpenID4VP apply:
 * VP Token abuse (#vp-token-abuse).
 * Encrypting an Unsigned Response as described in (#encrypting_unsigned_response).
 * TLS Requirements as described in (#tls-requirements).
-* Always Use the Full Client Identifier as described in (#full-client-identifier) for signed requests.
+* Always use the Full Client Identifier as described in (#full-client-identifier) for signed requests.
 * Security Checks on the Returned Credentials and Presentations as described in (#dcql_query_security).
 * DCQL Value Matching as described in (#dcql-value-matching).
 
@@ -2881,7 +2938,7 @@ be a valid doctype identifier as defined in [@ISO.18013-5].
 The following are ISO mdoc specific parameters to be used in a Claims Query as defined in (#claims_query).
 
 `intent_to_retain`
-: OPTIONAL. A boolean that is equivalent to `IntentToRetain` variable defined in Section 8.3.2.1.2.1 of [@ISO.18013-5].
+: OPTIONAL. A boolean that is equivalent to `IntentToRetain` variable defined in Section 8.3.2.1.2.1 of [@ISO.18013-5]. If absent, the Verifier makes no statement on `IntentToRetain`.
 
 ### Presentation Response
 
@@ -3639,7 +3696,20 @@ The technology described in this specification was made available from contribut
 
    -01
 
+   * Clarify that the Wallet does not follow HTTP redirects
+   * Clarify jwks use parameter
+   * Clarify nonce entropy requirements
    * Add usage of HPKE for the `info` parameter. 
    * Add security consideration not to use VP Token as Access Token
+   * Clarify that state is recommended to match text from Section 14.3.2. Protection of the Response URI
    * Clarify that `encrypted_response_enc_values_supported` applies only if JWE content encryption algorithm is used; e.g., it does not apply to JOSE HPKE
+   * Clarify provided Origin is a string without prior interpretation and validation is based on simple string comparison
+   * Add assumption that the platform that provides the Origin is trusted
    * Clarify that `aud` corresponds to `issuer` Wallet Metadata paremeter if Dynamic Discovery is used
+   * Clarified `intent_to_retain` value when not present
+   * Removed invalid_scope error guidance as duplicate of RFC6749
+   * Clarified that Multi-RP-sig section means Verifier Info instead of attestations
+   * Updated origin examples to remove trailing slash
+   * Clarified that request_uri_method is a case-sensitive string
+   * Remove requirements for duplicate claim entries
+   * add security considerations on untrusted input
