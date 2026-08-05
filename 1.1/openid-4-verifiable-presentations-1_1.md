@@ -3248,13 +3248,12 @@ The following is a non-normative example of `client_metadata` request parameter 
 The following is an SD-JWT VC specific parameter in the `meta` parameter in a Credential Query as defined in (#credential_query).
 
 `vct_values`:
-: REQUIRED. A non-empty array of strings that specifies allowed values for the type of the requested Verifiable Credential. All elements in the array MUST be valid type identifiers as defined in [@!I-D.ietf-oauth-sd-jwt-vc]. To satisfy the Credential Query, a Credential MUST either have or inherit from a type that is included in the `vct_values` array as defined in [@!I-D.ietf-oauth-sd-jwt-vc]. 
+: REQUIRED. A non-empty array of strings that specifies allowed values for the type of the requested Verifiable Credential. All elements in the array MUST be valid type identifiers as defined in [@!I-D.ietf-oauth-sd-jwt-vc]. To satisfy the Credential Query, a Credential MUST be of a type that is included in the `vct_values` array as defined in [@!I-D.ietf-oauth-sd-jwt-vc]. 
 
-When a Wallet or Verifier needs to determine whether a Credential's type satisfies a Credential Query, it MUST do so by following these steps:
+When a Wallet or Verifier needs to determine whether a Credential's type satisfies a Credential Query, it MUST do so by evaluating if at least one of the following true:
 
-1. Check if the `vct` in the Credential is contained in the `vct_values` array. If it is, the Credential satisfies the Credential Query.
-1. If the `vct` in the Credential is not contained in the `vct_values` array, check if the Credential has an `extends` claim. If it does, repeat this process for the Type metadata specified by the `extends` value, until either a match is found or the `extends` claim is not present. If a circular dependency is detected while following the `extends` claims, the Credential does not satisfy the Credential Query.
-1. If none of the above conditions are met, the Credential does not satisfy the Credential Query.
+1. The value of the `vct` claim in the Credential is contained in the `vct_values` array.
+1. The `aka_vcts` claim is present and has at least one element that is contained in the `aka_vcts` array.
 
 ### Presentation Response
 
