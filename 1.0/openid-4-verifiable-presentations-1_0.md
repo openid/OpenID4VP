@@ -1186,7 +1186,7 @@ When a VP Token is returned, the respective response includes the following para
   * Each value MUST be an array containing one or more Presentations matching
     the corresponding Credential Query.
 
-  * When `multiple` is omitted or set to `false`, the array MUST contain exactly
+  * When `multiple` was omitted in the DCQL query or set to `false`, the array MUST contain exactly
     one Presentation.
 
   * The object MUST NOT contain an entry for an optional Credential Query when
