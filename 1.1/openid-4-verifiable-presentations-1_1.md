@@ -776,8 +776,7 @@ proof.
 
 `claims`:
 : OPTIONAL. A non-empty array of objects as defined in (#claims_query) that specifies
-claims in the requested Credential. Verifiers MUST NOT point to the same claim more than
-once in a single query. Wallets SHOULD ignore such duplicate claim queries.
+claims in the requested Credential.
 
 `claim_sets`:
 : OPTIONAL. A non-empty array containing arrays of identifiers for
@@ -2032,7 +2031,7 @@ Presentations.
 
 Wallets MUST treat all incoming requests as untrusted input. To mitigate injection and resource exhaustion attacks, Wallets MUST implement input validation on the Authorization Request and its enclosed DCQL query.
 
-Wallets SHOULD implement the following steps:
+Wallets SHOULD at least implement the following steps:
 
 * Enforce input validation: Verify that the Authorization Request and DCQL query contain no malformed properties. Unknown parameters MUST be ignored.
 * Apply resource limits: Enforce maximum length restrictions on strings, maximum depths for nested objects, and maximum item counts for arrays within the query.
@@ -3742,4 +3741,5 @@ The technology described in this specification was made available from contribut
    * Clarified that request_uri_method is a case-sensitive string
    * Clarify that a VP Token cannot be empty and that empty objects in VP Tokens cannot be used to signify an error response; an error response is returned instead
    * Editorial improvement of the `vp_token` section
+   * Remove requirements for duplicate claim entries
    * add security considerations on untrusted input
