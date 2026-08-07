@@ -2684,7 +2684,6 @@ While the Origin values used by platforms and the transport of the request and O
 
 * The platform provides collision-resistant values when assigning Origins.
 * The platform ensures that each application using the platform is assigned a unique Origin.
-* The platform ensures that it transports the Origin value to the Wallet unmodified, such that values can be compared to the `expected_origins` using exact string comparison.
 
 ## Privacy Considerations {#dc_api_privacy_considerations}
 
