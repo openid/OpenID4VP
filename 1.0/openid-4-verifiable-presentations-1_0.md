@@ -1141,7 +1141,7 @@ Additional, more complex examples can be found in (#more_dcql_query_examples).
 
 # Response {#response}
 
-A VP Token is only returned if the corresponding Authorization Request contained a `dcql_query` parameter or a `scope` parameter representing a DCQL Query (as defined in #vp_token_request).
+A VP Token is only returned if the corresponding Authorization Request contained a `dcql_query` parameter or a `scope` parameter representing a DCQL Query, as defined in (#vp_token_request).
 
 The Wallet MUST return a VP Token only if it contains a set of
   Presentations that satisfy the requirements of the DCQL query according to
