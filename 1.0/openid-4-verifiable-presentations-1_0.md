@@ -1939,7 +1939,7 @@ Wallet implementers need to choose a source of Verifier metadata they can trust 
 
 It is recommended to use `client_metadata` parameters only for client-supplied parameters that can be used untrusted, for example, a public key used to encrypt the response. 
 
-Ecosystems can use other ecosystem-specific trusted data sources as long as they conduct a proper trust evaluation. 
+Wallets MAY use other ecosystem-specific trusted sources of Verifier metadata, provided the Wallet is able to establish trust in those sources. As described in (#new_parameters), authoritative data obtained from such sources takes precedence over the values passed in the `client_metadata` parameter.
 
 ## Parsing of untrusted inputs
 
