@@ -1935,7 +1935,7 @@ Presentations.
 
 ## Source of Verifier Metadata
 
-Wallet implementers need to choose a source of client metadata they can trust within their own ecosystem or implementation. This should determine whether it is safe to use or display to a User. For example, a client name obtained from an X.509 leaf certificate that chains to a trust anchor the Wallet trusts may be appropriate to be displayed to an End-User, whereas a client name from the `client_metadata` parameter is not suitable to display. 
+Wallet implementers need to choose a source of Verifier metadata they can trust within their own ecosystem or implementation, including determining whether metadata is safe to use or display to an End-User. For example, a Verifier name obtained from an X.509 leaf certificate that chains to a trust anchor the Wallet trusts may be suitable to display to an End-User, whereas a Verifier name from the `client_metadata` parameter is not suitable to display.
 
 It is recommended to use `client_metadata` parameters only for client-supplied parameters that can be used untrusted, for example, a public key used to encrypt the response. 
 
