@@ -1,3 +1,4 @@
 # ignore markdown2rfc output
 *.html
 *.xml
+.DS_Store

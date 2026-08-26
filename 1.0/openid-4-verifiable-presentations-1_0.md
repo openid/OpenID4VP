@@ -1141,7 +1141,20 @@ Additional, more complex examples can be found in (#more_dcql_query_examples).
 
 # Response {#response}
 
-A VP Token is only returned if the corresponding Authorization Request contained a `dcql_query` parameter or a `scope` parameter representing a DCQL Query (as defined in #vp_token_request).
+A VP Token is only returned if the corresponding Authorization Request contained a `dcql_query` parameter or a `scope` parameter representing a DCQL Query, as defined in (#vp_token_request).
+
+The Wallet MUST return a VP Token only if it contains a set of
+Presentations that satisfy the requirements of the DCQL query according to
+(#dcql_query_lang_processing_rules). If the Wallet does not return any
+Presentation, for example, because the End-User did not give consent, the
+requested Credentials are not available, or the DCQL query can be satisfied
+without returning any Presentation (i.e., all Credential Queries that cannot
+be fulfilled are optional), the Wallet MUST NOT return a VP Token; if the
+Wallet returns a response, it MUST be an error response as defined in
+(#error-response). In particular, an empty VP Token (a JSON object without
+any entries) MUST NOT be used to signify an error. Privacy considerations that
+apply when returning an error response, in particular with regard to End-User
+consent, are defined in (#error-responses).
 
 A VP Token can be returned in the Authorization Response or the Token Response depending on the Response Type used. See (#response_type_vp_token) for more details.
 
@@ -1165,7 +1178,25 @@ The behavior with respect to the VP Token is unspecified for any other individua
 When a VP Token is returned, the respective response includes the following parameters:
 
 `vp_token`:
-: REQUIRED. This is a JSON-encoded object containing entries where the key is the `id` value used for a Credential Query in the DCQL query and the value is an array of one or more Presentations that match the respective Credential Query. When `multiple` is omitted, or set to `false`, the array MUST contain only one Presentation. There MUST NOT be any entry in the JSON-encoded object for optional Credential Queries when there are no matching Credentials for the respective Credential Query. Each Presentation is represented as a string or object, depending on the format as defined in (#format_specific_parameters). The same rules as above apply for encoding the Presentations.
+: REQUIRED. A JSON-encoded object subject to the following requirements:
+
+  * Each key MUST be the `id` of a Credential Query in the DCQL query.
+
+  * Each value MUST be an array containing one or more Presentations matching
+    the corresponding Credential Query.
+
+  * When `multiple` was omitted in the DCQL query or set to `false`, the array MUST contain exactly
+    one Presentation.
+
+  * The object MUST NOT contain an entry for an optional Credential Query when
+    there are no matching Credentials for that Credential Query.
+
+  * Each Presentation MUST be encoded as a string or object according to
+    (#format_specific_parameters).
+
+  * The object MUST NOT be empty: it MUST contain at least one entry. If there
+    is no Presentation to return and the Wallet returns a response, it MUST be
+    an error response as defined in (#error-response) instead of a VP Token.
 
 Other parameters, such as `code` (from [@!RFC6749]), or `id_token` (from [@!OpenID.Core]), and `iss` (from [@RFC9207]) can be included in the response as defined in the respective specifications.
 
@@ -2042,26 +2073,30 @@ If the Wallet is acting within a trust framework that allows the Wallet to deter
 
 Error responses SHOULD avoid including sensitive or detailed contextual information that could be used to infer the End-User's data.
 
-### `wallet_unavailable` Authorization Error Response {#authorization_error_responsewith_the_wallet_unavailable_error_code}
+The following considerations apply irrespective of the mechanism used to invoke the Wallet, i.e., to both redirect-based flows and the Digital Credentials API. The considerations in the subsections below apply only to the mechanism they refer to.
 
-In the event that another component is invoked instead of the Wallet, the End-User SHOULD be informed and give consent before the invoked component returns the `wallet_unavailable` Authorization Error Response to the Verifier.
-
-### Digital Credential API Error Responses {#privacy-dc-api-error}
-
-Returning any OpenID4VP protocol error, regardless of content, can reveal additional information about the End-User’s underlying Credentials or Wallet in a way that is unique to the Digital Credentials API since reaching the Wallet can be dependent on a Wallet's ability to satisfy the request. For example, platform implementations could only allow Wallets to be selected that satisfy the request. In this case, OpenID4VP protocol error responses can only be returned by a selected Wallet and would therefore reveal that the End-User is in possession of Credentials that satisfy the request. This is in contrast to other engagement methods, in which the Wallet receives the request before learning if it can be fulfilled. What is revealed by a Wallet in those cases depends on how each individual Wallet processes the request.
-
-The narrower a request is, the more information is revealed: 
+Where the fact that an error response is returned, or the content of that error response, depends on the Wallet's ability to satisfy the request, the narrower a request is, the more information is revealed: 
 
  * A request that can be fulfilled by a broad range of documents will only reveal that the End-User has a Credential from a large set of documents.
  * A request for a single document type will reveal the End-User is in possession of that Credential. How sensitive this is would depend on the particular Credential.
  * A request with which can only be satisfied by a single trusted authority will reveal that the End-User has a Credential from a particular authority, from which other attributes may be inferred. 
  * A request with value matching (as defined in (#selecting_claims)) will reveal the specific value of that claim/attribute. 
 
+Note that when the Digital Credentials API is used, this can be the case even if the Wallet behaves identically in all cases, as described in (#privacy-dc-api-error).
+
 Wallet implementations need to balance the value of error detection to the maintenance and scaling of the Verifier ecosystem with the information that is revealed.
 
 A Wallet SHOULD NOT return any OpenID4VP protocol errors without End-User interaction either with the platform or the Wallet. When handling errors, implementations can opt to cancel the flow (the details of which are platform specific) rather than return an OpenID4VP protocol-specific error. This will make the result indistinguishable from other platform aborts, preventing any information from being revealed.
 
 A Wallet SHOULD NOT return any OpenID4VP protocol errors before obtaining End-User consent, when processing a request containing value matching (to avoid revealing values of claims without consent), or issuer selection (to avoid revealing that the End-User has a Credential from a particular authority). Additionally, the End-User consent protects against undetected, repeated requests to the Wallet.
+
+### `wallet_unavailable` Authorization Error Response {#authorization_error_responsewith_the_wallet_unavailable_error_code}
+
+In the event that another component is invoked instead of the Wallet, the End-User SHOULD be informed and give consent before the invoked component returns the `wallet_unavailable` Authorization Error Response to the Verifier.
+
+### Digital Credential API Error Responses {#privacy-dc-api-error}
+
+Returning any OpenID4VP protocol error, regardless of content, can reveal additional information about the End-User’s underlying Credentials or Wallet in a way that is unique to the Digital Credentials API since reaching the Wallet can be dependent on a Wallet's ability to satisfy the request. For example, platform implementations could allow only Wallets that satisfy the request to be selected. In this case, OpenID4VP protocol error responses can only be returned by a selected Wallet and would therefore reveal that the End-User is in possession of Credentials that satisfy the request. This is in contrast to other engagement methods, in which the Wallet receives the request before learning if it can be fulfilled. What is revealed by a Wallet in those cases depends on how each individual Wallet processes the request.
 
 ## Establishing Trust in the Issuers {#privacy_trusted_authorities}
 
@@ -2588,7 +2623,7 @@ The following is a non-normative example of the payload of a signed OpenID4VP re
 
 Every OpenID4VP Request results in a response being provided through the Digital Credentials API (DC API), or in a canceled flow. If a response is provided, the response is an instance of the `DigitalCredential` interface, as defined in [@!W3C.Digital_Credentials_API], and the OpenID4VP Response parameters as defined for the Response Type are represented as an object within the `data` property.
 
-Protocol error responses are returned as an object within the `data` property. This object has a single property with the name `error` and a value containing the error response code as defined in (#error-response). Note that a protocol error generated by the Wallet will still result in a fulfilled promise for the Digital Credentials API request. Privacy considerations specific to returning error responses over the Digital Credentials API can be found in (#privacy-dc-api-error).
+Protocol error responses are returned as an object within the `data` property. This object has a single property with the name `error` and a value containing the error response code as defined in (#error-response). Note that a protocol error generated by the Wallet will still result in a fulfilled promise for the Digital Credentials API request. Privacy considerations that apply to returning error responses can be found in (#error-responses) and (#privacy-dc-api-error).
 
 The following is a non-normative example of a `data` object containing an error:
 
@@ -2618,6 +2653,7 @@ The following privacy considerations from OpenID4VP apply:
 
 * Selective Disclosure as described in (#selective-disclosure).
 * Privacy implications of mechanisms to establish trust in Issuers as described in (#privacy_trusted_authorities).
+* Error Responses as described in (#error-responses) and (#privacy-dc-api-error).
 
 # Credential Format Specific Parameters and Rules {#format_specific_parameters}
 
@@ -3638,6 +3674,8 @@ The technology described in this specification was made available from contribut
    * Updated origin examples to remove trailing slash
    * Clarify that `aud` corresponds to `issuer` Wallet Metadata paremeter if Dynamic Discovery is used
    * Clarified that request_uri_method is a case-sensitive string
+   * Clarify that a VP Token cannot be empty and that empty objects in VP Tokens cannot be used to signify an error response; an error response is returned instead
+   * Editorial improvement of the `vp_token` section
    * Remove requirements for duplicate claim entries
    
 -final
