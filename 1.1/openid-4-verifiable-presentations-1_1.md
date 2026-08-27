@@ -279,8 +279,8 @@ The Verifier communicates a Client Identifier Prefix that indicates how the Wall
 Depending on the Client Identifier Prefix, the Verifier can communicate a JSON object with its metadata using the `client_metadata` parameter which contains name/value pairs.
 
 Additional request parameters, other than those defined in this section, MAY be defined and used, as described in [@!RFC6749].
-The Wallet MUST ignore any unrecognized parameters, other than the `transaction_data` parameter.
-One exception to this rule is the `transaction_data` parameter. Wallets that do not support this parameter MUST reject requests that contain it.
+The Wallet MUST ignore any unrecognized parameters.
+One exception to this rule is the `transaction_data` parameter: a Wallet that does not support this parameter MUST reject requests that contain it, as defined in (#transaction_data).
 
 ## New Parameters {#new_parameters}
 This specification defines the following new request parameters:
@@ -676,6 +676,8 @@ The following is a non-normative example of a payload for a request object:
 The Wallet MUST process the request as defined in [@RFC9101]. The Wallet SHOULD NOT follow HTTP redirects and SHOULD treat them as an error response (see (#http_redirects)). Additionally, if the Wallet passed a `wallet_nonce` in the POST request, the Wallet MUST validate whether the request object contains the respective nonce value in a `wallet_nonce` claim. If it does not, the Wallet MUST terminate request processing.
 
 The Wallet MUST extract the set of Authorization Request parameters from the Request Object. The Wallet MUST only use the parameters in this Request Object, even if the same parameter was provided in an Authorization Request query parameter. The Client Identifier value in the `client_id` Authorization Request parameter and the Request Object `client_id` claim value MUST be identical, including the Client Identifier Prefix. If any of these conditions are not met, the Wallet MUST terminate request processing.
+
+When this specification requires the Wallet to terminate request processing (or terminate the process), the Wallet stops processing the request and does not return an Authorization Response or Authorization Error Response to the Verifier. In these situations, the Wallet was unable to obtain an authentic Authorization Request, so there is no trusted endpoint to which an Authorization Error Response could be sent.
 
 The Wallet then validates the request as specified in OAuth 2.0 [@RFC6749].
 
@@ -1550,7 +1552,7 @@ The transaction data mechanism enables a binding between the user's identificati
 
 The Wallet that received the `transaction_data` parameter in the request MUST include a representation or reference to the data in the respective Credential presentation. How this is done is transaction data type specific. Credential Formats can give recommendations of how to handle transaction data, such as those in (#format_specific_parameters).
 
-If the Wallet does not support `transaction_data` parameter, it MUST return an error upon receiving a request that includes it.
+If the Wallet does not support the `transaction_data` parameter, it MUST reject a request that includes it: the Wallet MUST NOT return a VP Token for such a request, and any response returned MUST be an error response using the error code `invalid_transaction_data` (see (#error-response)). As described in (#error-responses), the Wallet can instead abort processing without returning a response to the Verifier.
 
 ## Error Response {#error-response}
 
@@ -1586,6 +1588,7 @@ This document also defines the following additional error codes and error descri
 
 `invalid_transaction_data`:
 
+- the Wallet does not support the `transaction_data` parameter, or
 - any of the following is true for at least one object in the `transaction_data` structure:
   - contains an unknown or unsupported transaction data type value,
   - is an object of a known type but containing unknown fields,
@@ -3732,6 +3735,8 @@ The technology described in this specification was made available from contribut
 
    -01
 
+   * Clarify that a Wallet terminating request processing does not return a response to the Verifier
+   * Clarify that a Wallet rejecting a request containing an unsupported `transaction_data` parameter uses the `invalid_transaction_data` error code if it returns an error response
    * Clarify that the Wallet does not follow HTTP redirects
    * Clarify jwks use parameter
    * Clarify nonce entropy requirements
