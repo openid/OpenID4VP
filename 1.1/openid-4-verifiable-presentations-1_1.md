@@ -656,7 +656,7 @@ wallet_nonce=qPmxiNFCR3QTm19POc8u
 
 ### Request URI Response
 
-The Request URI response MUST be an HTTP response with the content type `application/oauth-authz-req+jwt` and the body being a signed, optionally encrypted, request object as defined in [@RFC9101]. The request object MUST fulfill the requirements as defined in (#vp_token_request).
+The Request URI response MUST be an HTTP response with the content type `application/oauth-authz-req+jwt` and the body being a request object as defined in [@RFC9101], optionally encrypted. The request object is signed unless the Client Identifier Prefix in use requires an unsigned request (e.g., `redirect_uri`), in which case the JWT uses the `alg` value `none`. The request object MUST fulfill the requirements as defined in (#vp_token_request).
 
 The following is a non-normative example of a payload for a request object:
 
@@ -3744,6 +3744,7 @@ The technology described in this specification was made available from contribut
    * Clarify that `aud` corresponds to `issuer` Wallet Metadata paremeter if Dynamic Discovery is used
    * Clarified `intent_to_retain` value when not present
    * Removed invalid_scope error guidance as duplicate of RFC6749
+   * Clarify that the Request URI response is unsigned (JWT with `alg` value `none`) when the Client Identifier Prefix in use requires unsigned requests
    * Clarified that Multi-RP-sig section means Verifier Info instead of attestations
    * Updated origin examples to remove trailing slash
    * Clarified that request_uri_method is a case-sensitive string
