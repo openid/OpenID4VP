@@ -3253,7 +3253,8 @@ The following is an SD-JWT VC specific parameter in the `meta` parameter in a Cr
 When a Wallet or Verifier needs to determine whether a Credential's type satisfies a Credential Query, it MUST do so by evaluating if at least one of the following true:
 
 1. The value of the `vct` claim in the Credential is contained in the `vct_values` array.
-1. The `aka_vcts` claim is present and has at least one element that is contained in the `aka_vcts` array.
+1. The `aka_vcts` claim is present and has at least one element that is contained in the `vct_values` array.
+1. There exists out of band information that the received `vct` value is interpreted as a match with at least one element in the `vct_values` array.
 
 ### Presentation Response
 
