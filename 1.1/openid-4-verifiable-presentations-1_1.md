@@ -3334,6 +3334,8 @@ the inheritance logic defined in [@!I-D.ietf-oauth-sd-jwt-vc].
 
 ### Presentation Response
 
+Each Presentation is represented as a string containing an SD-JWT or SD-JWT+KB in the compact serialized format defined in Section 4 of [@!I-D.ietf-oauth-selective-disclosure-jwt]. The JWS JSON Serialization defined in Section 8 of [@!I-D.ietf-oauth-selective-disclosure-jwt] MUST NOT be used with the `dc+sd-jwt` Credential Format Identifier.
+
 A non-normative example DCQL query using the SD-JWT VC format is shown in (#dcql_query_example).
 The respective response is shown in (#response_dcql_query).
 
@@ -3751,3 +3753,4 @@ The technology described in this specification was made available from contribut
    * Editorial improvement of the `vp_token` section
    * Remove requirements for duplicate claim entries
    * add security considerations on untrusted input
+   * Clarify `dc+sd-jwt` presentations use the compact serialized SD-JWT format
