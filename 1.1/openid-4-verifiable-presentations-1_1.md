@@ -2735,7 +2735,7 @@ OpenID for Verifiable Presentations is Credential Format agnostic, i.e., it is d
 
 The following sections define the Credential Format specific parameters and rules for W3C Verifiable Credentials compliant to the [@VC_DATA] specification and for W3C Verifiable Presentations of such Credentials.
 
-If `require_cryptographic_holder_binding` is set to `true` in the Credential Query, the Wallet MUST return a Verifiable Presentation of a Verifiable Credential. Otherwise, a Verifiable Credential without Holder Binding MUST be returned, i.e., the Wallet includes the Verifiable Credential itself directly in the VP Token, without wrapping it in a Verifiable Presentation.
+If `require_cryptographic_holder_binding` is set to `true` in the Credential Query, the Wallet MUST return a Verifiable Presentation of a Verifiable Credential. If set to `false`, a Verifiable Credential without Holder Binding MUST be returned, i.e., the Wallet includes the Verifiable Credential itself directly in the VP Token, without wrapping it in a Verifiable Presentation.
 
 ### Parameters in the `meta` parameter in Credential Query
 
