@@ -1917,7 +1917,7 @@ The following is a non-normative example of the payload of a Verifiable Presenta
 
 In the example above, the requested `nonce` value is included as the `nonce` and `client_id` as the `aud` value in the proof of the Verifiable Presentation.
 
-The following is a non-normative example of a Verifiable Presentation following a request with the Credential Format Identifier `ldp_vc` without a `proof` property:
+The following is a non-normative example of a Verifiable Presentation following a request with the Credential Format Identifier `ldp_vc`, containing a `proof` property:
 
 ```json
 {
