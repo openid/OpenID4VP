@@ -3250,11 +3250,13 @@ The following is an SD-JWT VC specific parameter in the `meta` parameter in a Cr
 `vct_values`:
 : REQUIRED. A non-empty array of strings that specifies allowed values for the type of the requested Verifiable Credential. All elements in the array MUST be valid type identifiers as defined in [@!I-D.ietf-oauth-sd-jwt-vc]. To satisfy the Credential Query, a Credential MUST be of a type that is included in the `vct_values` array as defined in [@!I-D.ietf-oauth-sd-jwt-vc]. 
 
-When a Wallet or Verifier needs to determine whether a Credential's type satisfies a Credential Query, it MUST do so by evaluating if at least one of the following true:
+When a Wallet or Verifier needs to determine whether a Credential's type satisfies a Credential Query, it RECOMMENDED do so by evaluating if at least one of the following true:
 
 1. The value of the `vct` claim in the Credential is contained in the `vct_values` array.
 1. The `aka_vcts` claim is present and has at least one element that is contained in the `vct_values` array.
 1. There exists out of band information that the received `vct` value is interpreted as a match with at least one element in the `vct_values` array.
+
+Note: A Wallet can infer that a Credential satisfies the `vct_values` parameter via out-of-band mechanisms e.g., type extension, in the absence of an `aka_vcts` claim. However, because standard evaluation by the Verifier relies strictly on matching `vct` or `aka_vcts` values, such presentations could be subject to rejection. To preserve data minimization and avoid presentation failure, Wallets should only use out-of-band type resolution when it is known the Verifier will resolve it in the same way and accept the presentation.
 
 ### Presentation Response
 
