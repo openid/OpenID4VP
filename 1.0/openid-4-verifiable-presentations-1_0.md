@@ -1492,7 +1492,7 @@ The transaction data mechanism enables a binding between the user's identificati
 
 The Wallet that received the `transaction_data` parameter in the request MUST include a representation or reference to the data in the respective Credential presentation. How this is done is transaction data type specific. Credential Formats can give recommendations of how to handle transaction data, such as those in (#format_specific_parameters).
 
-If the Wallet does not support the `transaction_data` parameter, it MUST reject a request that includes it: the Wallet MUST NOT return a VP Token for such a request, and any response returned MUST be an error response using the error code `invalid_transaction_data` (see (#error-response)). As described in (#error-responses), the Wallet can instead abort processing without returning a response to the Verifier.
+If the Wallet does not support the `transaction_data` parameter, it MUST reject a request that includes it: the Wallet MUST NOT return a VP Token for such a request, and any response returned MUST be an error response using the error code `invalid_transaction_data` (see (#error-response)). As described in (#error-responses), the Wallet can instead cancel the flow without returning a response to the Verifier.
 
 ## Error Response {#error-response}
 
