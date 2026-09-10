@@ -656,7 +656,7 @@ wallet_nonce=qPmxiNFCR3QTm19POc8u
 
 ### Request URI Response
 
-The Request URI response MUST be an HTTP response with the content type `application/oauth-authz-req+jwt` and the body being a signed, optionally encrypted, request object as defined in [@RFC9101]. The request object MUST fulfill the requirements as defined in (#vp_token_request).
+The Request URI response MUST be an HTTP response with the content type `application/oauth-authz-req+jwt` and the body being a request object as defined in [@RFC9101], optionally encrypted. The request object is signed unless the Client Identifier Prefix in use requires an unsigned request (e.g., `redirect_uri`), in which case the JWT uses the `alg` value `none`. The request object MUST fulfill the requirements as defined in (#vp_token_request).
 
 The following is a non-normative example of a payload for a request object:
 
@@ -1920,7 +1920,7 @@ The following is a non-normative example of the payload of a Verifiable Presenta
 
 In the example above, the requested `nonce` value is included as the `nonce` and `client_id` as the `aud` value in the proof of the Verifiable Presentation.
 
-The following is a non-normative example of a Verifiable Presentation following a request with the Credential Format Identifier `ldp_vc` without a `proof` property:
+The following is a non-normative example of a Verifiable Presentation following a request with the Credential Format Identifier `ldp_vc`, containing a `proof` property:
 
 ```json
 {
@@ -2738,7 +2738,7 @@ OpenID for Verifiable Presentations is Credential Format agnostic, i.e., it is d
 
 The following sections define the Credential Format specific parameters and rules for W3C Verifiable Credentials compliant to the [@VC_DATA] specification and for W3C Verifiable Presentations of such Credentials.
 
-If `require_cryptographic_holder_binding` is set to `true` in the Credential Query, the Wallet MUST return a Verifiable Presentation of a Verifiable Credential. Otherwise, a Verifiable Credential without Holder Binding MUST be returned.
+If `require_cryptographic_holder_binding` is set to `true` in the Credential Query, the Wallet MUST return a Verifiable Presentation of a Verifiable Credential. If set to `false`, a Verifiable Credential without Holder Binding MUST be returned, i.e., the Wallet includes the Verifiable Credential itself directly in the VP Token, without wrapping it in a Verifiable Presentation.
 
 ### Parameters in the `meta` parameter in Credential Query
 
@@ -2843,7 +2843,7 @@ The following is a non-normative example of the contents of this parameter:
 
 ##### Presentation Response
 
-The following requirements apply to the `nonce` and `aud` claims of the Verifiable Presentation:
+When a Verifiable Presentation is returned, the following requirements apply to its `nonce` and `aud` claims:
 
 - the `nonce` claim MUST be the value of `nonce` from the Authorization Request;
 - the `aud` claim MUST be the value of the Client Identifier, except for requests over the DC API where it MUST be the Origin prefixed with `origin:`, as described in (#dc_api_response).
@@ -2897,7 +2897,7 @@ The following is a non-normative example of the contents of this parameter:
 
 ##### Presentation Response
 
-The following requirements apply to the `challenge` and `domain` claims within the `proof` object in the Verifiable Presentation:
+When a Verifiable Presentation is returned, the following requirements apply to the `challenge` and `domain` claims within its `proof` object:
 
 - the `challenge` claim MUST be the value of `nonce` from the Authorization Request;
 - the `domain` claim MUST be the value of the Client Identifier, except for requests over the DC API where it MUST be the Origin prefixed with `origin:`, as described in (#dc_api_response).
@@ -3337,6 +3337,8 @@ the inheritance logic defined in [@!I-D.ietf-oauth-sd-jwt-vc].
 
 ### Presentation Response
 
+Each Presentation is represented as a string containing an SD-JWT or SD-JWT+KB in the compact serialized format defined in Section 4 of [@!I-D.ietf-oauth-selective-disclosure-jwt]. The JWS JSON Serialization defined in Section 8 of [@!I-D.ietf-oauth-selective-disclosure-jwt] MUST NOT be used with the `dc+sd-jwt` Credential Format Identifier.
+
 A non-normative example DCQL query using the SD-JWT VC format is shown in (#dcql_query_example).
 The respective response is shown in (#response_dcql_query).
 
@@ -3737,6 +3739,7 @@ The technology described in this specification was made available from contribut
 
    * Clarify that a Wallet terminating request processing does not return a response to the Verifier
    * Clarify that a Wallet rejecting a request containing an unsupported `transaction_data` parameter uses the `invalid_transaction_data` error code if it returns an error response
+   * Clarify that a W3C Verifiable Credential requested without Cryptographic Holder Binding is returned directly in the VP Token, without a Verifiable Presentation
    * Clarify that the Wallet does not follow HTTP redirects
    * Clarify jwks use parameter
    * Clarify nonce entropy requirements
@@ -3749,6 +3752,7 @@ The technology described in this specification was made available from contribut
    * Clarify that `aud` corresponds to `issuer` Wallet Metadata paremeter if Dynamic Discovery is used
    * Clarified `intent_to_retain` value when not present
    * Removed invalid_scope error guidance as duplicate of RFC6749
+   * Clarify that the Request URI response is unsigned (JWT with `alg` value `none`) when the Client Identifier Prefix in use requires unsigned requests
    * Clarified that Multi-RP-sig section means Verifier Info instead of attestations
    * Updated origin examples to remove trailing slash
    * Clarified that request_uri_method is a case-sensitive string
@@ -3756,3 +3760,4 @@ The technology described in this specification was made available from contribut
    * Editorial improvement of the `vp_token` section
    * Remove requirements for duplicate claim entries
    * add security considerations on untrusted input
+   * Clarify `dc+sd-jwt` presentations use the compact serialized SD-JWT format
