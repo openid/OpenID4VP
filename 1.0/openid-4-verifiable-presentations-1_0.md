@@ -1792,7 +1792,7 @@ Implementers should be aware that this specification uses several specifications
 * OpenID Federation 1.0 draft -43 [@!OpenID.Federation]
 * SIOPv2 draft -13 [@!SIOPv2]
 * Selective Disclosure for JWTs (SD-JWT) draft -22 [@!I-D.ietf-oauth-selective-disclosure-jwt]
-* SD-JWT-based Verifiable Credentials (SD-JWT VC) draft -09 [@!I-D.ietf-oauth-sd-jwt-vc]
+* SD-JWT-based Verifiable Credentials (SD-JWT VC) draft -19 [@!I-D.ietf-oauth-sd-jwt-vc]
 * Fully-Specified Algorithms for JOSE and COSE draft -13 [@!I-D.ietf-jose-fully-specified-algorithms]
 
 While breaking changes to the specifications referenced in this specification are not expected, should they occur, OpenID4VP implementations should continue to use the specifically referenced versions above in preference to the final versions, unless updated by a profile or new version of this specification.
@@ -3179,7 +3179,10 @@ If `require_cryptographic_holder_binding` is set to `false`, an SD-JWT without t
 
 ### Format Identifier
 
-The Credential Format Identifier is `dc+sd-jwt`.
+The Credential Format Identifier is `dc+sd-jwt`. 
+
+The `dc+sd-jwt` Credential Format Identifier identifies an IETF SD-JWT VC independently
+of the version of [@!I-D.ietf-oauth-sd-jwt-vc] used to issue it.
 
 ### Example Credential
 
@@ -3274,6 +3277,19 @@ The following requirements apply to the `nonce` and `aud` claims in the Key Bind
 - the `nonce` claim MUST be the value of `nonce` from the Authorization Request;
 - the `aud` claim MUST be the value of the Client Identifier, except for requests over the DC API where it MUST be the Origin prefixed with `origin:`, as described in (#dc_api_response).
 
+A Wallet's inability to determine the version of [@!I-D.ietf-oauth-sd-jwt-vc]
+that the Issuer used to issue a Credential of the `dc+sd-jwt` Credential Format
+MUST NOT, on that basis alone, cause the Wallet to treat the Credential as
+non-matching or to withhold it from a response it would otherwise return to the
+Verifier. All other conditions for returning a Credential, including satisfying
+the DCQL query and obtaining the required End-User authorization apply.
+
+A Verifier MUST be prepared to receive a Credential of the `dc+sd-jwt` Credential
+Format that was issued under a version of [@!I-D.ietf-oauth-sd-jwt-vc] other than
+the one it expects. A Verifier MAY respond with an error if it cannot process the
+received version. Doing so is a local processing decision and does not render the
+Wallet's response non-conformant.
+
 The following is a non-normative example of the unsecured payload of the Key Binding JWT of a Verifiable Presentation.
 
 <{{examples/response/kb_jwt_unsecured.json}}
@@ -3307,7 +3323,7 @@ The following outlines a suggested non-normative set of processing steps for SD-
 
 ##### Step 1: SD-JWT VC Processing
 
-- A receiver (holder or verifier) of an SD-JWT VCLD applies the processing rules outlined in Section 4 of [@!I-D.ietf-oauth-sd-jwt-vc], including verifying signatures, validity periods, status information, etc.
+- A receiver (holder or verifier) of an SD-JWT VCLD applies the processing rules outlined in Section 2.4 of [@!I-D.ietf-oauth-sd-jwt-vc], including verifying signatures, validity periods, status information, etc.
 - If the `vct` value is associated with any SD-JWT VC Type Metadata, schema validation of the entire SD-JWT VCLD is performed, including the nested `ld` claim.
 - Additionally, trust framework rules are applied, such as ensuring the Credential Issuer is authorized to issue SD-JWT VCLDs for the specified `vct` value.
 
