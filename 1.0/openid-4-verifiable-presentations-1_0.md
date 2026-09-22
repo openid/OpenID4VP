@@ -681,7 +681,7 @@ The Wallet MUST process the request as defined in [@RFC9101]. The Wallet SHOULD 
 
 The Wallet MUST extract the set of Authorization Request parameters from the Request Object. The Wallet MUST only use the parameters in this Request Object, even if the same parameter was provided in an Authorization Request query parameter. The Client Identifier value in the `client_id` Authorization Request parameter and the Request Object `client_id` claim value MUST be identical, including the Client Identifier Prefix. If any of these conditions are not met, the Wallet MUST terminate request processing.
 
-When this specification requires the Wallet to terminate request processing (or terminate the process), the Wallet stops processing the request and does not return an Authorization Response or Authorization Error Response to the Verifier. In these situations, the Wallet was unable to obtain an authentic Authorization Request, so there is no trusted endpoint to which an Authorization Error Response could be sent.
+When this specification requires the Wallet to terminate request processing (or terminate the process), the Wallet stops processing the request and MUST NOT return an Authorization Response or Authorization Error Response to the Verifier. In these situations, the Wallet was unable to obtain an authentic Authorization Request, so there is no trusted endpoint to which an Authorization Error Response could be sent.
 
 The Wallet then validates the request as specified in OAuth 2.0 [@RFC6749].
 
@@ -1492,7 +1492,7 @@ The transaction data mechanism enables a binding between the user's identificati
 
 The Wallet that received the `transaction_data` parameter in the request MUST include a representation or reference to the data in the respective Credential presentation. How this is done is transaction data type specific. Credential Formats can give recommendations of how to handle transaction data, such as those in (#format_specific_parameters).
 
-If the Wallet does not support the `transaction_data` parameter, it MUST reject a request that includes it: the Wallet MUST NOT return a VP Token for such a request, and any response returned MUST be an error response using the error code `invalid_transaction_data` (see (#error-response)). As described in (#error-responses), the Wallet can instead cancel the flow without returning a response to the Verifier.
+If the Wallet does not support the `transaction_data` parameter, it MUST reject a request that includes it: the Wallet MUST NOT return a VP Token for such a request, and any response returned MUST be an error response using the error code `invalid_transaction_data` (see (#error-response)). As described in (#error-responses), the Wallet MAY instead cancel the flow without returning a response to the Verifier.
 
 ## Error Response {#error-response}
 
