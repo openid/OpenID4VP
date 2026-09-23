@@ -1021,6 +1021,9 @@ A claims path pointer MUST be a non-empty array of strings, nulls and non-negati
 A claims path pointer can be processed, which means it is applied to a Credential. The results of
 processing are the referenced claims.
 
+Credential Format-specific rules as introduced in (#format_specific_parameters) can define special cases in which processing a claims path pointer selects a claim other than the one identified by the direct interpretation of the pointer.
+For example, see (#mdocs_data_element_selection) for the handling of `age_over_NN` data elements in ISO mdocs.
+
 ## Semantics for JSON-based credentials
 
 This section defines the semantics of a claims path pointer when applied to a JSON-based Credential.
@@ -1080,8 +1083,11 @@ In detail, the array is processed as follows:
    one of the components is not a string then abort processing and return an error.
 2. Select the namespace referenced by the first component. If the namespace does
    not exist in the mdoc then abort processing and return an error.
-3. Select the data element referenced by the second component. If the data element does not exist
-   in the Credential then abort processing and return an error.
+3. Select the data element referenced by the second component. If the data element
+   does not exist in the Credential, apply any supported data element selection rule defined
+   for the document type and namespace of the mdoc, as described in (#mdocs_data_element_selection).
+   If such a rule identifies a data element, select that data element instead.
+   If no data element was selected, abort processing and return an error.
 
 The result of the processing is the selected data element value as CBOR data item.
 
@@ -2976,6 +2982,21 @@ The following are ISO mdoc specific parameters to be used in a Claims Query as d
 `intent_to_retain`
 : OPTIONAL. A boolean that is equivalent to `IntentToRetain` variable defined in Section 8.3.2.1.2.1 of [@ISO.18013-5]. If absent, the Verifier makes no statement on `IntentToRetain`.
 
+### Data Element Selection Rules {#mdocs_data_element_selection}
+
+Document types can define special rules under which a data element other than the one requested can be returned. In particular, [@ISO.18013-5] defines that when an mDL does not contain a requested `age_over_NN` data element, a different `age_over_NN` data element can be returned by the Wallet - see Section 7.2.5 of [@ISO.18013-5] for the definition on how the `age_over_NN` matching works.
+
+When processing a claims path pointer for an mdoc where its second component refers to a data element that does not exist in the mdoc, the Wallet SHOULD apply any such rule defined for the document type and namespace of the mdoc.
+If these rules do not identify a data element, the requested data element is treated as not existing in the Credential.
+
+The following rules apply to a data element selected in this way:
+
+* The selected data element is treated as if it were the requested claim when evaluating `claims`, `claim_sets`, and `values` (see (#selecting_claims)). Value matching, if requested, is applied to the value of the selected data element.
+* The Presentation contains the data element that was selected under its own data element identifier, not the identifier used in the Claims Query.
+
+Verifiers SHOULD be prepared to receive a different data element identifier and evaluate it according to the document type's rules.
+Note that this means that a valid response might contain the data element identifiers in the Presentation that differ from the ones in the claims path pointer of the Claims Query.
+
 ### Presentation Response
 
 An example DCQL query using the mdoc format is shown in (#more_dcql_query_examples). The following is a non-normative example for a VP Token in the response:
@@ -3756,3 +3777,4 @@ The technology described in this specification was made available from contribut
    * Remove requirements for duplicate claim entries
    * add security considerations on untrusted input
    * Clarify `dc+sd-jwt` presentations use the compact serialized SD-JWT format
+   * Allow special matching rules on a credential type basis (age_over_NN)
