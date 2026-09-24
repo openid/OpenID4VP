@@ -1510,7 +1510,7 @@ The error response follows the rules as defined in [@!RFC6749], with the followi
 
 `access_denied`:
 
-- The Wallet did not have the requested Credentials to satisfy the Authorization Request.
+- The Wallet did not have the requested Credentials to satisfy the Authorization Request, including the case where matching Credentials cannot be presented to this Verifier, for example because their Credential Format is not included in the Verifier's `vp_formats_supported` metadata.
 - The End-User did not give consent to share the requested Credentials with the Verifier.
 - The Wallet failed to authenticate the End-User.
 
@@ -3690,6 +3690,7 @@ The technology described in this specification was made available from contribut
    * Editorial improvement of the `vp_token` section
    * Remove requirements for duplicate claim entries
    * Clarify `dc+sd-jwt` presentations use the compact serialized SD-JWT format
+   * Clarify that `access_denied` is used when matching Credentials cannot be presented due to the Verifier's `vp_formats_supported` metadata
    
 -final
    
