@@ -269,8 +269,9 @@ This specification defines a new mechanism for the cases when the Wallet wants t
 allow the Verifier to generate a request that matches the technical capabilities of that Wallet.
 To enable this, the Authorization Request can contain a `request_uri_method` parameter with the value `post`
 that signals to the Wallet that it can make an HTTP POST request to the Verifier's `request_uri`
-endpoint with information about its capabilities as defined in (#request_uri_method_post). The Wallet MAY continue with JAR
-when it receives `request_uri_method` parameter with the value `post` but does not support this feature.
+endpoint with information about its capabilities as defined in (#request_uri_method_post).
+If the Wallet receives a request with the `request_uri_method` parameter set to the value `post` (or any other unrecognized value)
+but does not support this feature, it MUST fall back to a GET request to the Request URI.
 
 The Verifier articulates requirements of the Credential(s) that are requested using either the `dcql_query` or `scope` parameters. Wallet implementations MUST process the DCQL query and select candidate Credential(s) using the evaluation process described in (#dcql_query_lang_processing_rules)
 
@@ -3764,3 +3765,4 @@ The technology described in this specification was made available from contribut
    * Remove requirements for duplicate claim entries
    * add security considerations on untrusted input
    * Clarify `dc+sd-jwt` presentations use the compact serialized SD-JWT format
+   * fix inconsistency on the JAR fallback from post to get if unsupported
