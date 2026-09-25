@@ -1679,6 +1679,9 @@ This specification defines the following new Client metadata parameters accordin
 : REQUIRED. An object containing a list of name/value pairs, where the name is a Credential Format Identifier and the value defines format-specific parameters that a Verifier supports. For specific values that can be used, see (#format_specific_parameters).
 Deployments can extend the formats supported, provided Issuers, Holders and Verifiers all understand the new format.
 
+`encrypted_response_enc_values_supported`:
+: OPTIONAL. As defined for the `client_metadata` parameter in (#new_parameters).
+
 Additional Verifier metadata parameters MAY be defined and used,
 as described in [@!RFC7591].
 The Wallet MUST ignore any unrecognized parameters.
@@ -3766,3 +3769,4 @@ The technology described in this specification was made available from contribut
    * add security considerations on untrusted input
    * Clarify `dc+sd-jwt` presentations use the compact serialized SD-JWT format
    * fix inconsistency on the JAR fallback from post to get if unsupported
+   * List `encrypted_response_enc_values_supported` in the Additional Verifier Metadata Parameters section
