@@ -3769,3 +3769,4 @@ The technology described in this specification was made available from contribut
    * add security considerations on untrusted input
    * Clarify `dc+sd-jwt` presentations use the compact serialized SD-JWT format
    * fix inconsistency on the JAR fallback from post to get if unsupported
+   * Clarify doctype_value and vct_values matching
