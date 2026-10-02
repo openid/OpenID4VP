@@ -2751,6 +2751,8 @@ OpenID for Verifiable Presentations is Credential Format agnostic, i.e., it is d
 
 The following sections define the Credential Format specific parameters and rules for W3C Verifiable Credentials compliant to the [@VC_DATA] specification and for W3C Verifiable Presentations of such Credentials.
 
+Credentials with the Credential Format Identifier `jwt_vc_json` do not contain Selectively Disclosable Claims. For Credentials with the Credential Format Identifier `ldp_vc`, which claims are Selectively Disclosable Claims depends on the Data Integrity cryptosuite [@VC_DATA_INTEGRITY] used.
+
 If `require_cryptographic_holder_binding` is set to `true` in the Credential Query, the Wallet MUST return a Verifiable Presentation of a Verifiable Credential. If set to `false`, a Verifiable Credential without Holder Binding MUST be returned, i.e., the Wallet includes the Verifiable Credential itself directly in the VP Token, without wrapping it in a Verifiable Presentation.
 
 ### Parameters in the `meta` parameter in Credential Query
@@ -2934,7 +2936,7 @@ It is RECOMMENDED that each transaction data type defines a data element (`NameS
 
 Some document types support some transaction data ((#transaction_data)) to be protected using mdoc authentication, as part of the `DeviceSigned` data structure [@ISO.18013-5]. In those cases, the specifications of these document types include which transaction data types are supported, and the issuer includes the relevant data elements in the `KeyAuthorizations`. If a Wallet receives a request with a `transaction_data` type whose data element is unauthorized, the Wallet MUST reject the request due to an unsupported transaction data type.
 
-Since data elements in the `DeviceSigned` structure are Selectively Disclosable Claims (see (#mdocs_sd_claims)), a Verifier requesting transaction data that is returned as a data element in the `DeviceSigned` structure MUST include a Claims Query for that data element in the respective Credential Query.
+Since data elements in the `DeviceSigned` structure are Selectively Disclosable Claims (see (#mdocs)), a Verifier requesting transaction data that is returned as a data element in the `DeviceSigned` structure MUST include a Claims Query for that data element in the respective Credential Query.
 
 ### Metadata
 
