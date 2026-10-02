@@ -2936,8 +2936,6 @@ It is RECOMMENDED that each transaction data type defines a data element (`NameS
 
 Some document types support some transaction data ((#transaction_data)) to be protected using mdoc authentication, as part of the `DeviceSigned` data structure [@ISO.18013-5]. In those cases, the specifications of these document types include which transaction data types are supported, and the issuer includes the relevant data elements in the `KeyAuthorizations`. If a Wallet receives a request with a `transaction_data` type whose data element is unauthorized, the Wallet MUST reject the request due to an unsupported transaction data type.
 
-Since data elements in the `DeviceSigned` structure are Selectively Disclosable Claims (see (#mdocs)), a Verifier requesting transaction data that is returned as a data element in the `DeviceSigned` structure MUST include a Claims Query for that data element in the respective Credential Query.
-
 ### Metadata
 
 The `vp_formats_supported` parameter of the Verifier metadata or Wallet metadata MUST have the Credential Format Identifier as a key, and the value MUST be an object consisting of the following name/value pairs:
