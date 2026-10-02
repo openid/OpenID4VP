@@ -122,6 +122,12 @@ Origin:
 Presentation:
 : Data that is presented to a specific Verifier, derived from a Credential. In this specification, Presentations are usually Verifiable Presentations including Holder Binding (as defined below), but may also be Presentations without Holder Binding (discussed in (#nkb-credentials)).
 
+Selective Disclosure:
+: The ability of the Holder to present only a subset of the claims contained in a Credential to a Verifier, without revealing the other claims contained in that Credential. See (#selective-disclosure) for privacy considerations.
+
+Selectively Disclosable Claim:
+: A claim that is only included in a Presentation if it was explicitly requested by the Verifier. Claims that are not selectively disclosable are always included in a Presentation of the Credential containing them, regardless of whether they were requested. Which claims are selectively disclosable depends on the Credential Format and on the Credential itself.
+
 VP Token:
 : An artifact containing one or more Presentations returned as a response to an Authorization Request. The structure of VP Tokens is defined in (#response-parameters).
 
@@ -925,20 +931,21 @@ When conversion according to these rules is not clearly defined, behavior is out
 The following section describes the logic that applies for selecting claims 
 and for selecting credentials.
 
-For formats supporting selective disclosure, these rules support selecting a minimal
+For formats supporting Selective Disclosure, these rules support selecting a minimal
 dataset to fulfill the Verifier's request in a privacy-friendly manner
 (see (#privacy-considerations) for additional considerations). Wallets MUST NOT send
-selectively disclosable claims that have not been selected according to the rules below.
+Selectively Disclosable Claims that have not been selected according to the rules below.
 A single Presentation of a Credential MAY contain more than the claims selected in the
 particular DCQL Credential Query if the same Credential is selected with the additional
 claims in a separate Credential Query in the same request, or the additional claims are
-not selectively disclosable.
+not Selectively Disclosable Claims. Which claims are Selectively Disclosable Claims for a
+particular Credential Format is defined in (#format_specific_parameters).
 
 ### Selecting Claims {#selecting_claims}
 
 The following rules apply for selecting claims via `claims` and `claim_sets`:
 
-- If `claims` is absent, the Verifier is requesting no claims that are selectively disclosable; the Wallet MUST
+- If `claims` is absent, the Verifier is requesting no Selectively Disclosable Claims; the Wallet MUST
   return only the claims that are mandatory to present (e.g., SD-JWT and Key Binding JWT for a Credential
   of format IETF SD-JWT VC).
 - If `claims` is present, but `claim_sets` is absent,
@@ -981,7 +988,7 @@ deviate. Non-exhaustive examples of such reasons are:
 If the Wallet cannot deliver all claims requested by the Verifier
 according to these rules, it MUST NOT return the respective Credential.
 
-For Credential Formats that do not support selective disclosure, the case of both `claims`
+For Credential Formats that do not support Selective Disclosure, the case of both `claims`
 and `claim_sets` being absent is interpreted as requesting a presentation of the "full credential"
 since all claims are mandatory to present.
 
@@ -2917,6 +2924,8 @@ The following is a non-normative example of the Verifiable Presentation in the `
 
 ISO/IEC 18013-5:2021 [@ISO.18013-5] defines a mobile driving license (mDL) Credential in the mobile document (mdoc) format. Although ISO/IEC 18013-5:2021 [@ISO.18013-5] is specific to mobile driving licenses (mDLs), the Credential format can be utilized with any type of Credential (or mdoc document types). The ISO/IEC 23220 series has extracted components from ISO/IEC 18013-5:2021 [@ISO.18013-5] that are common across document types to facilitate the profiling of the specification for other document types. The core data structures are shared between ISO/IEC 18013-5:2021 [@ISO.18013-5], ISO/IEC 23220-2 [@ISO.23220-2], ISO/IEC 23220-4 [@ISO.23220-4] which are encoded in CBOR and secured using COSE_Sign1.
 
+Every data element in an mdoc, identified by its `NameSpace` and `DataElementIdentifier`, is a Selectively Disclosable Claim. This applies both to data elements returned in the `IssuerSigned` structure (i.e., in `IssuerNameSpaces`) and to data elements returned in the `DeviceSigned` structure (i.e., in `DeviceNameSpaces`) [@ISO.18013-5]. Consequently, the Wallet MUST NOT include any data element in either structure that has not been selected according to the rules in (#dcql_query_lang_processing_rules).
+
 The Credential Format Identifier for Credentials in the mdoc format is `mso_mdoc`.
 
 ### Transaction Data
@@ -2924,6 +2933,8 @@ The Credential Format Identifier for Credentials in the mdoc format is `mso_mdoc
 It is RECOMMENDED that each transaction data type defines a data element (`NameSpace`, `DataElementIdentifier`, `DataElementValue`) to be used to return the processed transaction data. Additionally, it is RECOMMENDED that it specifies the processing rules, potentially including any hash function to be applied, and the expected resulting structure.
 
 Some document types support some transaction data ((#transaction_data)) to be protected using mdoc authentication, as part of the `DeviceSigned` data structure [@ISO.18013-5]. In those cases, the specifications of these document types include which transaction data types are supported, and the issuer includes the relevant data elements in the `KeyAuthorizations`. If a Wallet receives a request with a `transaction_data` type whose data element is unauthorized, the Wallet MUST reject the request due to an unsupported transaction data type.
+
+Since data elements in the `DeviceSigned` structure are Selectively Disclosable Claims (see (#mdocs_sd_claims)), a Verifier requesting transaction data that is returned as a data element in the `DeviceSigned` structure MUST include a Claims Query for that data element in the respective Credential Query.
 
 ### Metadata
 
@@ -3253,6 +3264,8 @@ CBOR diagnostic:
 ## IETF SD-JWT VC
 
 This section defines how Credentials complying with [@!I-D.ietf-oauth-sd-jwt-vc] can be presented to the Verifier using this specification.
+
+A claim (including an array element) is a Selectively Disclosable Claim if it is contained in a Disclosure as defined in [@!I-D.ietf-oauth-selective-disclosure-jwt]. When a Selectively Disclosable Claim nested in a selectively disclosable object or array is selected, the Disclosures of all parent objects or arrays of that claim are necessary to process it and are therefore also included in the Presentation, as described in [@!I-D.ietf-oauth-selective-disclosure-jwt]. Claims that are contained in plaintext in the Issuer-signed JWT are not Selectively Disclosable Claims and are always included in a Presentation.
 
 If `require_cryptographic_holder_binding` is set to `true` in the Credential Query, the Wallet MUST return an SD-JWT [@!I-D.ietf-oauth-selective-disclosure-jwt] with a Key Binding JWT (SD-JWT+KB) as the Verifiable Presentation. SD-JWTs that do not support Holder Binding (i.e., do not have a `cnf` Claim) cannot be returned in this case.
 If `require_cryptographic_holder_binding` is set to `false`, an SD-JWT without the Key Binding JWT MAY be returned.
@@ -3769,3 +3782,4 @@ The technology described in this specification was made available from contribut
    * add security considerations on untrusted input
    * Clarify `dc+sd-jwt` presentations use the compact serialized SD-JWT format
    * fix inconsistency on the JAR fallback from post to get if unsupported
+   * Define the terms Selective Disclosure and Selectively Disclosable Claim and add Credential Format specific rules on which claims are selectively disclosable
