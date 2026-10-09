@@ -1022,8 +1022,8 @@ A claims path pointer MUST be a non-empty array of strings, nulls and non-negati
 A claims path pointer can be processed, which means it is applied to a Credential. The results of
 processing are the referenced claims.
 
-Credential Format-specific rules as introduced in (#format_specific_parameters) can define special cases in which processing a claims path pointer selects a claim other than the one identified by the direct interpretation of the pointer.
-For example, see (#mdocs_data_element_selection) for the handling of `age_over_NN` data elements in ISO mdocs.
+Credential Format-specific rules as introduced in (#format_specific_parameters) can define special cases in which processing a claims path pointer selects a claim other than the one identified by the direct interpretation of the pointer, especially on a basis of special behaviour for claims in specific credential types.
+For example, see (#mdocs_data_element_selection) for the handling of `age_over_NN` data elements in an ISO mdoc of type mDL (org.iso.18013.5.1).
 
 ## Semantics for JSON-based credentials
 
