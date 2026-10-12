@@ -269,8 +269,9 @@ This specification defines a new mechanism for the cases when the Wallet wants t
 allow the Verifier to generate a request that matches the technical capabilities of that Wallet.
 To enable this, the Authorization Request can contain a `request_uri_method` parameter with the value `post`
 that signals to the Wallet that it can make an HTTP POST request to the Verifier's `request_uri`
-endpoint with information about its capabilities as defined in (#request_uri_method_post). The Wallet MAY continue with JAR
-when it receives `request_uri_method` parameter with the value `post` but does not support this feature.
+endpoint with information about its capabilities as defined in (#request_uri_method_post).
+If the Wallet receives a request with the `request_uri_method` parameter set to the value `post` (or any other unrecognized value)
+but does not support this feature, it MUST fall back to a GET request to the Request URI.
 
 The Verifier articulates requirements of the Credential(s) that are requested using either the `dcql_query` or `scope` parameters. Wallet implementations MUST process the DCQL query and select candidate Credential(s) using the evaluation process described in (#dcql_query_lang_processing_rules)
 
@@ -279,8 +280,8 @@ The Verifier communicates a Client Identifier Prefix that indicates how the Wall
 Depending on the Client Identifier Prefix, the Verifier can communicate a JSON object with its metadata using the `client_metadata` parameter which contains name/value pairs.
 
 Additional request parameters, other than those defined in this section, MAY be defined and used, as described in [@!RFC6749].
-The Wallet MUST ignore any unrecognized parameters, other than the `transaction_data` parameter.
-One exception to this rule is the `transaction_data` parameter. Wallets that do not support this parameter MUST reject requests that contain it.
+The Wallet MUST ignore any unrecognized parameters.
+One exception to this rule is the `transaction_data` parameter: a Wallet that does not support this parameter MUST reject requests that contain it, as defined in (#transaction_data).
 
 ## New Parameters {#new_parameters}
 This specification defines the following new request parameters:
@@ -676,6 +677,8 @@ The following is a non-normative example of a payload for a request object:
 The Wallet MUST process the request as defined in [@RFC9101]. The Wallet SHOULD NOT follow HTTP redirects and SHOULD treat them as an error response (see (#http_redirects)). Additionally, if the Wallet passed a `wallet_nonce` in the POST request, the Wallet MUST validate whether the request object contains the respective nonce value in a `wallet_nonce` claim. If it does not, the Wallet MUST terminate request processing.
 
 The Wallet MUST extract the set of Authorization Request parameters from the Request Object. The Wallet MUST only use the parameters in this Request Object, even if the same parameter was provided in an Authorization Request query parameter. The Client Identifier value in the `client_id` Authorization Request parameter and the Request Object `client_id` claim value MUST be identical, including the Client Identifier Prefix. If any of these conditions are not met, the Wallet MUST terminate request processing.
+
+When this specification requires the Wallet to terminate request processing (or terminate the process), the Wallet stops processing the request and MUST NOT return an Authorization Response or Authorization Error Response to the Verifier. In these situations, the Wallet was unable to obtain an authentic Authorization Request, so there is no trusted endpoint to which an Authorization Error Response could be sent.
 
 The Wallet then validates the request as specified in OAuth 2.0 [@RFC6749].
 
@@ -1550,7 +1553,7 @@ The transaction data mechanism enables a binding between the user's identificati
 
 The Wallet that received the `transaction_data` parameter in the request MUST include a representation or reference to the data in the respective Credential presentation. How this is done is transaction data type specific. Credential Formats can give recommendations of how to handle transaction data, such as those in (#format_specific_parameters).
 
-If the Wallet does not support `transaction_data` parameter, it MUST return an error upon receiving a request that includes it.
+If the Wallet does not support the `transaction_data` parameter, it MUST reject a request that includes it: the Wallet MUST NOT return a VP Token for such a request, and any response returned SHOULD be an error response using the error code `invalid_transaction_data` (see (#error-response)). As described in (#error-responses), the Wallet MAY instead cancel the flow without returning a response to the Verifier.
 
 ## Error Response {#error-response}
 
@@ -1587,6 +1590,7 @@ This document also defines the following additional error codes and error descri
 
 `invalid_transaction_data`:
 
+- the Wallet does not support the `transaction_data` parameter, or
 - any of the following is true for at least one object in the `transaction_data` structure:
   - contains an unknown or unsupported transaction data type value,
   - is an object of a known type but containing unknown fields,
@@ -1678,6 +1682,9 @@ This specification defines the following new Client metadata parameters accordin
 `vp_formats_supported`:
 : REQUIRED. An object containing a list of name/value pairs, where the name is a Credential Format Identifier and the value defines format-specific parameters that a Verifier supports. For specific values that can be used, see (#format_specific_parameters).
 Deployments can extend the formats supported, provided Issuers, Holders and Verifiers all understand the new format.
+
+`encrypted_response_enc_values_supported`:
+: OPTIONAL. As defined for the `client_metadata` parameter in (#new_parameters).
 
 Additional Verifier metadata parameters MAY be defined and used,
 as described in [@!RFC7591].
@@ -2975,8 +2982,7 @@ The following is an ISO mdoc specific parameter in the `meta` parameter in a Cre
 
 `doctype_value`:
 : REQUIRED. String that specifies an allowed value for the
-doctype of the requested Verifiable Credential. It MUST
-be a valid doctype identifier as defined in [@ISO.18013-5].
+doctype of the requested Verifiable Credential. It MUST be a valid doctype identifier as defined in [@ISO.18013-5]. For an mdoc to satisfy the Credential Query, the value of the `docType` element in the `MobileSecurityObject` structure MUST be equal to the `doctype_value`.
 
 ### Parameter in the Claims Query {#mdocs_claims_query}
 
@@ -3335,11 +3341,15 @@ The following is a non-normative example of `client_metadata` request parameter 
 The following is an SD-JWT VC specific parameter in the `meta` parameter in a Credential Query as defined in (#credential_query).
 
 `vct_values`:
-: REQUIRED. A non-empty array of strings that specifies allowed values for
-the type of the requested Verifiable Credential. All elements in the array MUST
-be valid type identifiers as defined in [@!I-D.ietf-oauth-sd-jwt-vc]. The Wallet
-MAY return Credentials that inherit from any of the specified types, following
-the inheritance logic defined in [@!I-D.ietf-oauth-sd-jwt-vc].
+: REQUIRED. A non-empty array of strings that specifies allowed values for the type of the requested Verifiable Credential. All elements in the array MUST be valid type identifiers as defined in [@!I-D.ietf-oauth-sd-jwt-vc]. To satisfy the Credential Query, a Credential MUST be of a type that is included in the `vct_values` array as defined in [@!I-D.ietf-oauth-sd-jwt-vc]. 
+
+When a Wallet or Verifier needs to determine whether a Credential's type satisfies a Credential Query, it is RECOMMENDED to do so by evaluating if at least one of the following is true:
+
+1. The value of the `vct` claim in the Credential is contained in the `vct_values` array.
+1. The `aka_vcts` claim is present and has at least one element that is contained in the `vct_values` array.
+1. There exists out of band information that the received `vct` value is interpreted as a match with at least one element in the `vct_values` array.
+
+Note: A Wallet can infer that a Credential satisfies the `vct_values` parameter via out-of-band mechanisms e.g., type extension, in the absence of an `aka_vcts` claim. However, because standard evaluation by the Verifier relies strictly on matching `vct` or `aka_vcts` values, such presentations could be subject to rejection. To preserve data minimization and avoid presentation failure, Wallets should only use out-of-band type resolution when it is known the Verifier will resolve it in the same way and accept the presentation.
 
 ### Presentation Response
 
@@ -3743,6 +3753,8 @@ The technology described in this specification was made available from contribut
 
    -01
 
+   * Clarify that a Wallet terminating request processing does not return a response to the Verifier
+   * Clarify that a Wallet rejecting a request containing an unsupported `transaction_data` parameter uses the `invalid_transaction_data` error code if it returns an error response
    * Clarify that a W3C Verifiable Credential requested without Cryptographic Holder Binding is returned directly in the VP Token, without a Verifiable Presentation
    * Clarify that the Wallet does not follow HTTP redirects
    * Clarify jwks use parameter
@@ -3766,3 +3778,5 @@ The technology described in this specification was made available from contribut
    * add security considerations on untrusted input
    * Clarify `dc+sd-jwt` presentations use the compact serialized SD-JWT format
    * Clarify that `invalid_request` is used when the `dcql_query` requests a Credential Format not included in the Verifier's `vp_formats_supported` metadata
+   * fix inconsistency on the JAR fallback from post to get if unsupported
+   * List `encrypted_response_enc_values_supported` in the Additional Verifier Metadata Parameters section
