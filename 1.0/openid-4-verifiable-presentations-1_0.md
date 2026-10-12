@@ -1505,6 +1505,7 @@ The error response follows the rules as defined in [@!RFC6749], with the followi
 - The request uses the `vp_token` Response Type but does not include a `dcql_query` parameter nor a `scope` parameter referencing a DCQL query.
 - The Wallet does not support the Client Identifier Prefix passed in the Authorization Request.
 - The Client Identifier passed in the request did not belong to its Client Identifier Prefix, or requirements of a certain prefix were violated, for example an unsigned request was sent with Client Identifier Prefix `openid_federation`.
+- The `dcql_query` parameter requests a Credential Format that is not included in the Verifier's `vp_formats_supported` metadata.
 
 `invalid_client`:
 
@@ -3699,6 +3700,7 @@ The technology described in this specification was made available from contribut
    * Editorial improvement of the `vp_token` section
    * Remove requirements for duplicate claim entries
    * Clarify `dc+sd-jwt` presentations use the compact serialized SD-JWT format
+   * Clarify that `invalid_request` is used when the `dcql_query` requests a Credential Format not included in the Verifier's `vp_formats_supported` metadata
    * fix inconsistency on the JAR fallback from post to get if unsupported
    * List `encrypted_response_enc_values_supported` in the Additional Verifier Metadata Parameters section
    
