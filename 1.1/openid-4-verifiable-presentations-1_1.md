@@ -3341,7 +3341,7 @@ The following is a non-normative example of `client_metadata` request parameter 
 The following is an SD-JWT VC specific parameter in the `meta` parameter in a Credential Query as defined in (#credential_query).
 
 `vct_values`:
-: REQUIRED. A non-empty array of strings that specifies allowed values for the type of the requested Verifiable Credential. All elements in the array MUST be valid type identifiers as defined in [@!I-D.ietf-oauth-sd-jwt-vc]. To satisfy the Credential Query, a Credential MUST be of a type that is included in the `vct_values` array as defined in [@!I-D.ietf-oauth-sd-jwt-vc]. 
+: REQUIRED. A non-empty array of strings that specifies allowed values for the type of the requested Verifiable Credential. All elements in the array MUST be valid type identifiers as defined in [@!I-D.ietf-oauth-sd-jwt-vc].
 
 When a Wallet or Verifier needs to determine whether a Credential's type satisfies a Credential Query, it is RECOMMENDED to do so by evaluating if at least one of the following is true:
 
@@ -3779,4 +3779,5 @@ The technology described in this specification was made available from contribut
    * Clarify `dc+sd-jwt` presentations use the compact serialized SD-JWT format
    * Clarify that `invalid_request` is used when the `dcql_query` requests a Credential Format not included in the Verifier's `vp_formats_supported` metadata
    * fix inconsistency on the JAR fallback from post to get if unsupported
+   * Clarify doctype_value and vct_values matching
    * List `encrypted_response_enc_values_supported` in the Additional Verifier Metadata Parameters section
