@@ -3181,19 +3181,7 @@ The following requirements apply to the `nonce` and `aud` claims in the Key Bind
 - the `nonce` claim MUST be the value of `nonce` from the Authorization Request;
 - the `aud` claim MUST be the value of the Client Identifier, except for requests over the DC API where it MUST be the Origin prefixed with `origin:`, as described in (#dc_api_response).
 
-A Wallet's inability to determine the version of [@!I-D.ietf-oauth-sd-jwt-vc]
-that the Issuer used to issue a Credential of the `dc+sd-jwt` Credential Format
-MUST NOT, on that basis alone, cause the Wallet to treat the Credential as
-non-matching or to withhold it from a response it would otherwise return to the
-Verifier. All other conditions for returning a Credential, including satisfying
-the DCQL query and obtaining the required End-User authorization apply.
-
-A Verifier MUST be prepared to receive a Credential of the `dc+sd-jwt` Credential
-Format that was issued under a version of [@!I-D.ietf-oauth-sd-jwt-vc] other than
-the one it expects. A Verifier MAY respond with an error if it cannot process the
-received version. Doing so is a local processing decision and does not render the
-Wallet's response non-conformant.
-
+An SD-JWT Credential is expected to match the final version of [@!I-D.ietf-oauth-sd-jwt-vc]. Any differences to previous drafts are out of scope for this specification and are negotiated by the Credential Issuer, Holder and Verifier.
 The following is a non-normative example of the unsecured payload of the Key Binding JWT of a Verifiable Presentation.
 
 <{{examples/response/kb_jwt_unsecured.json}}
