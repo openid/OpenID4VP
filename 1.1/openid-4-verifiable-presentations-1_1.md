@@ -3816,4 +3816,4 @@ The technology described in this specification was made available from contribut
    * Clarify that `invalid_request` is used when the `dcql_query` requests a Credential Format not included in the Verifier's `vp_formats_supported` metadata
    * fix inconsistency on the JAR fallback from post to get if unsupported
    * List `encrypted_response_enc_values_supported` in the Additional Verifier Metadata Parameters section
-   * Relax `transaction_data` handling: unrecognized or unsupported objects make the referenced Credential Queries unsatisfiable rather than failing the whole request; add an example
+   * Relax `transaction_data` handling: unrecognized or unsupported objects make the referenced Credential Queries unsatisfiable rather than failing the whole request
