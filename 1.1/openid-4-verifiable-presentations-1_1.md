@@ -1024,7 +1024,7 @@ A claims path pointer MUST be a non-empty array of strings, nulls and non-negati
 A claims path pointer can be processed, which means it is applied to a Credential. The results of
 processing are the referenced claims.
 
-Credential Format-specific rules as introduced in (#format_specific_parameters) can define special cases in which processing a claims path pointer selects a claim other than the one identified by the direct interpretation of the pointer, especially on a basis of special behaviour for claims in specific credential types.
+Credential Format-specific rules as introduced in (#format_specific_parameters) can define special cases in which processing a claims path pointer selects a claim other than the one identified by the direct interpretation of the pointer, especially on the basis of special behavior for claims in specific credential types.
 For example, see (#mdocs_data_element_selection) for the handling of `age_over_NN` data elements in an ISO mdoc of type mDL (org.iso.18013.5.1).
 
 ## Semantics for JSON-based credentials
@@ -2999,7 +2999,7 @@ The following are ISO mdoc specific parameters to be used in a Claims Query as d
 
 ### Data Element Selection Rules {#mdocs_data_element_selection}
 
-Document types can define special rules under which a data element other than the one requested can be returned. In particular, [@ISO.18013-5] defines that when an mDL does not contain a requested `age_over_NN` data element, a different `age_over_NN` data element can be returned by the Wallet - see Section 7.2.5 of [@ISO.18013-5] for the definition on how the `age_over_NN` matching works.
+Document types can define special rules under which a data element other than the one requested can be returned. For example, [@ISO.18013-5] defines that when an mDL does not contain a requested `age_over_NN` data element, a different `age_over_NN` data element can be returned by the Wallet - see Section 7.2.5 of [@ISO.18013-5] for the definition on how the `age_over_NN` matching works.
 
 When processing a claims path pointer for an mdoc where its second component refers to a data element that does not exist in the mdoc, the Wallet SHOULD apply any such rule defined for the document type and namespace of the mdoc.
 If these rules do not identify a data element, the requested data element is treated as not existing in the Credential.
