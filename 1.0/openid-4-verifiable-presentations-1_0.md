@@ -3181,7 +3181,7 @@ The following requirements apply to the `nonce` and `aud` claims in the Key Bind
 - the `nonce` claim MUST be the value of `nonce` from the Authorization Request;
 - the `aud` claim MUST be the value of the Client Identifier, except for requests over the DC API where it MUST be the Origin prefixed with `origin:`, as described in (#dc_api_response).
 
-An SD-JWT Credential is expected to match the final version of [@!I-D.ietf-oauth-sd-jwt-vc]. Any differences to previous drafts are out of scope for this specification and are negotiated by the Credential Issuer, Holder and Verifier.
+An SD-JWT Credential MUST match a version of [@!I-D.ietf-oauth-sd-jwt-vc], draft 9 or later, and SHOULD match <SD-JWT VC RFC TBD>.
 The following is a non-normative example of the unsecured payload of the Key Binding JWT of a Verifiable Presentation.
 
 <{{examples/response/kb_jwt_unsecured.json}}
