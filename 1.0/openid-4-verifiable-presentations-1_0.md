@@ -284,8 +284,8 @@ The Verifier communicates a Client Identifier Prefix that indicates how the Wall
 Depending on the Client Identifier Prefix, the Verifier can communicate a JSON object with its metadata using the `client_metadata` parameter which contains name/value pairs.
 
 Additional request parameters, other than those defined in this section, MAY be defined and used, as described in [@!RFC6749].
-The Wallet MUST ignore any unrecognized parameters, other than the `transaction_data` parameter.
-One exception to this rule is the `transaction_data` parameter. Wallets that do not support this parameter MUST reject requests that contain it.
+The Wallet MUST ignore any unrecognized parameters.
+One exception to this rule is the `transaction_data` parameter: a Wallet that does not support this parameter MUST reject requests that contain it, as defined in (#transaction_data).
 
 ## New Parameters {#new_parameters}
 This specification defines the following new request parameters:
@@ -682,6 +682,8 @@ The Wallet MUST process the request as defined in [@RFC9101]. The Wallet SHOULD 
 
 The Wallet MUST extract the set of Authorization Request parameters from the Request Object. The Wallet MUST only use the parameters in this Request Object, even if the same parameter was provided in an Authorization Request query parameter. The Client Identifier value in the `client_id` Authorization Request parameter and the Request Object `client_id` claim value MUST be identical, including the Client Identifier Prefix. If any of these conditions are not met, the Wallet MUST terminate request processing.
 
+When this specification requires the Wallet to terminate request processing (or terminate the process), the Wallet stops processing the request and MUST NOT return an Authorization Response or Authorization Error Response to the Verifier. In these situations, the Wallet was unable to obtain an authentic Authorization Request, so there is no trusted endpoint to which an Authorization Error Response could be sent.
+
 The Wallet then validates the request as specified in OAuth 2.0 [@RFC6749].
 
 ### Request URI Error Response
@@ -1026,6 +1028,9 @@ A claims path pointer MUST be a non-empty array of strings, nulls and non-negati
 A claims path pointer can be processed, which means it is applied to a Credential. The results of
 processing are the referenced claims.
 
+Credential Format-specific rules as introduced in (#format_specific_parameters) can define special cases in which processing a claims path pointer selects a claim other than the one identified by the direct interpretation of the pointer, especially on the basis of special behavior for claims in specific credential types.
+For example, see (#mdocs_data_element_selection) for the handling of `age_over_NN` data elements in an ISO mdoc of type mDL (org.iso.18013.5.1).
+
 ## Semantics for JSON-based credentials
 
 This section defines the semantics of a claims path pointer when applied to a JSON-based Credential.
@@ -1085,8 +1090,11 @@ In detail, the array is processed as follows:
    one of the components is not a string then abort processing and return an error.
 2. Select the namespace referenced by the first component. If the namespace does
    not exist in the mdoc then abort processing and return an error.
-3. Select the data element referenced by the second component. If the data element does not exist
-   in the Credential then abort processing and return an error.
+3. Select the data element referenced by the second component. If the data element
+   does not exist in the Credential, apply any supported data element selection rule defined
+   for the document type and namespace of the mdoc, as described in (#mdocs_data_element_selection).
+   If such a rule identifies a data element, select that data element instead.
+   If no data element was selected, abort processing and return an error.
 
 The result of the processing is the selected data element value as CBOR data item.
 
@@ -1491,7 +1499,7 @@ The transaction data mechanism enables a binding between the user's identificati
 
 The Wallet that received the `transaction_data` parameter in the request MUST include a representation or reference to the data in the respective Credential presentation. How this is done is transaction data type specific. Credential Formats can give recommendations of how to handle transaction data, such as those in (#format_specific_parameters).
 
-If the Wallet does not support `transaction_data` parameter, it MUST return an error upon receiving a request that includes it.
+If the Wallet does not support the `transaction_data` parameter, it MUST reject a request that includes it: the Wallet MUST NOT return a VP Token for such a request, and any response returned SHOULD be an error response using the error code `invalid_transaction_data` (see (#error-response)). As described in (#error-responses), the Wallet MAY instead cancel the flow without returning a response to the Verifier.
 
 ## Error Response {#error-response}
 
@@ -1503,6 +1511,7 @@ The error response follows the rules as defined in [@!RFC6749], with the followi
 - The request uses the `vp_token` Response Type but does not include a `dcql_query` parameter nor a `scope` parameter referencing a DCQL query.
 - The Wallet does not support the Client Identifier Prefix passed in the Authorization Request.
 - The Client Identifier passed in the request did not belong to its Client Identifier Prefix, or requirements of a certain prefix were violated, for example an unsigned request was sent with Client Identifier Prefix `openid_federation`.
+- The `dcql_query` parameter requests a Credential Format that is not included in the Verifier's `vp_formats_supported` metadata.
 
 `invalid_client`:
 
@@ -1527,6 +1536,7 @@ This document also defines the following additional error codes and error descri
 
 `invalid_transaction_data`:
 
+- the Wallet does not support the `transaction_data` parameter, or
 - any of the following is true for at least one object in the `transaction_data` structure:
   - contains an unknown or unsupported transaction data type value,
   - is an object of a known type but containing unknown fields,
@@ -1618,6 +1628,9 @@ This specification defines the following new Client metadata parameters accordin
 `vp_formats_supported`:
 : REQUIRED. An object containing a list of name/value pairs, where the name is a Credential Format Identifier and the value defines format-specific parameters that a Verifier supports. For specific values that can be used, see (#format_specific_parameters).
 Deployments can extend the formats supported, provided Issuers, Holders and Verifiers all understand the new format.
+
+`encrypted_response_enc_values_supported`:
+: OPTIONAL. As defined for the `client_metadata` parameter in (#new_parameters).
 
 Additional Verifier metadata parameters MAY be defined and used,
 as described in [@!RFC7591].
@@ -2913,6 +2926,21 @@ The following are ISO mdoc specific parameters to be used in a Claims Query as d
 `intent_to_retain`
 : OPTIONAL. A boolean that is equivalent to `IntentToRetain` variable defined in Section 8.3.2.1.2.1 of [@ISO.18013-5]. If absent, the Verifier makes no statement on `IntentToRetain`.
 
+### Data Element Selection Rules {#mdocs_data_element_selection}
+
+Document types can define special rules under which a data element other than the one requested can be returned. For example, [@ISO.18013-5] defines that when an mDL does not contain a requested `age_over_NN` data element, a different `age_over_NN` data element can be returned by the Wallet - see Section 7.2.5 of [@ISO.18013-5] for the definition on how the `age_over_NN` matching works.
+
+When processing a claims path pointer for an mdoc where its second component refers to a data element that does not exist in the mdoc, the Wallet SHOULD apply any such rule defined for the document type and namespace of the mdoc.
+If these rules do not identify a data element, the requested data element is treated as not existing in the Credential.
+
+The following rules apply to a data element selected in this way:
+
+* The selected data element is treated as if it were the requested claim when evaluating `claims`, `claim_sets`, and `values` (see (#selecting_claims)). Value matching, if requested, is applied to the value of the selected data element.
+* The Presentation contains the data element that was selected under its own data element identifier, not the identifier used in the Claims Query.
+
+Verifiers SHOULD be prepared to receive a different data element identifier and evaluate it according to the document type's rules.
+Note that this means that a valid response might contain the data element identifiers in the Presentation that differ from the ones in the claims path pointer of the Claims Query.
+
 ### Presentation Response
 
 An example DCQL query using the mdoc format is shown in (#more_dcql_query_examples). The following is a non-normative example for a VP Token in the response:
@@ -3671,6 +3699,8 @@ The technology described in this specification was made available from contribut
 
 -31
 
+   * Clarify that a Wallet terminating request processing does not return a response to the Verifier
+   * Clarify that a Wallet rejecting a request containing an unsupported `transaction_data` parameter uses the `invalid_transaction_data` error code if it returns an error response
    * Clarify that a W3C Verifiable Credential requested without Cryptographic Holder Binding is returned directly in the VP Token, without a Verifiable Presentation
    * add security considerations on untrusted input
    * Clarify that the Wallet does not follow HTTP redirects
@@ -3691,7 +3721,10 @@ The technology described in this specification was made available from contribut
    * Editorial improvement of the `vp_token` section
    * Remove requirements for duplicate claim entries
    * Clarify `dc+sd-jwt` presentations use the compact serialized SD-JWT format
+   * Clarify that `invalid_request` is used when the `dcql_query` requests a Credential Format not included in the Verifier's `vp_formats_supported` metadata
    * fix inconsistency on the JAR fallback from post to get if unsupported
+   * List `encrypted_response_enc_values_supported` in the Additional Verifier Metadata Parameters section
+   * Allow special matching rules on a credential type basis (age_over_NN)
    
 -final
    
