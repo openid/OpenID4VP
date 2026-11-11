@@ -434,7 +434,7 @@ The following is a non-normative example of an Authorization Request with a Requ
 
 ```
 GET /authorize?
-  client_id=redirect_uri%3Ahttps%3A%2F%2Fclient.example.org%2Fcb
+  client_id=x509_san_dns%3Aclient.example.org
   &request=eyJrd...
 ```
 
@@ -442,11 +442,12 @@ Where the contents of the `request` query parameter consist of a base64url-encod
 
 ```json
 {
-  "iss": "redirect_uri:https://client.example.org/cb",
+  "iss": "x509_san_dns:client.example.org",
   "aud": "https://self-issued.me/v2",
   "response_type": "vp_token",
-  "client_id": "redirect_uri:https://client.example.org/cb",
-  "redirect_uri": "https//client.example.org/cb",
+  "response_mode": "fragment",
+  "client_id": "x509_san_dns:client.example.org",
+  "redirect_uri": "https://client.example.org/cb",
   "dcql_query": {
     "credentials": [
       {
