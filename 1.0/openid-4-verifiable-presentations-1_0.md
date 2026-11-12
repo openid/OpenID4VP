@@ -3084,8 +3084,7 @@ If `require_cryptographic_holder_binding` is set to `false`, an SD-JWT without t
 
 The Credential Format Identifier is `dc+sd-jwt`. 
 
-The `dc+sd-jwt` Credential Format Identifier identifies an IETF SD-JWT VC independently
-of the version of [@!I-D.ietf-oauth-sd-jwt-vc] used to issue it.
+An SD-JWT Credential MUST match a version of [@!I-D.ietf-oauth-sd-jwt-vc], draft 9 or later, and SHOULD match <SD-JWT VC RFC TBD>.
 
 ### Example Credential
 
@@ -3178,7 +3177,6 @@ The following requirements apply to the `nonce` and `aud` claims in the Key Bind
 - the `nonce` claim MUST be the value of `nonce` from the Authorization Request;
 - the `aud` claim MUST be the value of the Client Identifier, except for requests over the DC API where it MUST be the Origin prefixed with `origin:`, as described in (#dc_api_response).
 
-An SD-JWT Credential MUST match a version of [@!I-D.ietf-oauth-sd-jwt-vc], draft 9 or later, and SHOULD match <SD-JWT VC RFC TBD>.
 The following is a non-normative example of the unsecured payload of the Key Binding JWT of a Verifiable Presentation.
 
 <{{examples/response/kb_jwt_unsecured.json}}
