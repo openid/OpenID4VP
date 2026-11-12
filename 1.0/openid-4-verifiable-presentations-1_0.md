@@ -1803,11 +1803,8 @@ Note: If the Verifier's Response URI did not return a `redirect_uri` in step (6)
 
 Implementers should be aware that this specification uses several specifications that are not yet final specifications. Those specifications are:
 
-* OpenID Federation 1.0 draft -43 [@!OpenID.Federation]
 * SIOPv2 draft -13 [@!SIOPv2]
-* Selective Disclosure for JWTs (SD-JWT) draft -22 [@!I-D.ietf-oauth-selective-disclosure-jwt]
-* SD-JWT-based Verifiable Credentials (SD-JWT VC) draft -09 [@!I-D.ietf-oauth-sd-jwt-vc]
-* Fully-Specified Algorithms for JOSE and COSE draft -13 [@!I-D.ietf-jose-fully-specified-algorithms]
+* SD-JWT-based Verifiable Credentials (SD-JWT VC) draft -19 [@!I-D.ietf-oauth-sd-jwt-vc]
 
 While breaking changes to the specifications referenced in this specification are not expected, should they occur, OpenID4VP implementations should continue to use the specifically referenced versions above in preference to the final versions, unless updated by a profile or new version of this specification.
 
@@ -3216,7 +3213,9 @@ If `require_cryptographic_holder_binding` is set to `false`, an SD-JWT without t
 
 ### Format Identifier
 
-The Credential Format Identifier is `dc+sd-jwt`.
+The Credential Format Identifier is `dc+sd-jwt`. 
+
+An SD-JWT Credential MUST match a version of [@!I-D.ietf-oauth-sd-jwt-vc], draft 9 or later, and SHOULD match <SD-JWT VC RFC TBD>.
 
 ### Example Credential
 
@@ -3344,7 +3343,7 @@ The following outlines a suggested non-normative set of processing steps for SD-
 
 ##### Step 1: SD-JWT VC Processing
 
-- A receiver (holder or verifier) of an SD-JWT VCLD applies the processing rules outlined in Section 4 of [@!I-D.ietf-oauth-sd-jwt-vc], including verifying signatures, validity periods, status information, etc.
+- A receiver (holder or verifier) of an SD-JWT VCLD applies the processing rules outlined in Section 2.4 of [@!I-D.ietf-oauth-sd-jwt-vc], including verifying signatures, validity periods, status information, etc.
 - If the `vct` value is associated with any SD-JWT VC Type Metadata, schema validation of the entire SD-JWT VCLD is performed, including the nested `ld` claim.
 - Additionally, trust framework rules are applied, such as ensuring the Credential Issuer is authorized to issue SD-JWT VCLDs for the specified `vct` value.
 
