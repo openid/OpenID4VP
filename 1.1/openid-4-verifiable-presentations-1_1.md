@@ -3152,8 +3152,7 @@ If `require_cryptographic_holder_binding` is set to `false`, an SD-JWT without t
 
 The Credential Format Identifier is `dc+sd-jwt`.
 
-The `dc+sd-jwt` Credential Format Identifier identifies an IETF SD-JWT VC independently
-of the version of [@!I-D.ietf-oauth-sd-jwt-vc] used to issue it.
+An SD-JWT Credential MUST match a version of [@!I-D.ietf-oauth-sd-jwt-vc], draft 9 or later, and SHOULD match <SD-JWT VC RFC TBD>.
 
 ### Example Credential
 
