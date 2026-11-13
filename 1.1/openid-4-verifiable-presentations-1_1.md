@@ -1589,7 +1589,7 @@ The following are the two `transaction_data` objects in the example above, after
 }
 ```
 
-A Wallet that supports `payment_v2` but not `payment_v1` ignores the first `transaction_data` object, treats `payment_card_v1` as unsatisfiable, and returns a Presentation for `payment_card_v2` including the `payment_v2` transaction data. A Wallet that supports neither type cannot satisfy the Credential Set Query and rejects the request.
+A Wallet that supports `payment_v2` but not `payment_v1` ignores the first `transaction_data` object, treats `payment_card_v1` as unsatisfiable, and returns a Presentation for `payment_card_v2` including the `payment_v2` transaction data. A Wallet that supports neither type cannot satisfy the Credential Set Query, so it does not return a VP Token and any response it returns is an `invalid_transaction_data` error response, as described above.
 
 ## Error Response {#error-response}
 
