@@ -314,10 +314,10 @@ This specification defines the following new request parameters:
     This enables the Wallet to assess the Verifier's capabilities, allowing it to transmit only the relevant capabilities through the `wallet_metadata` parameter in the Request URI POST request.
 
 `transaction_data`: 
-: OPTIONAL. Non-empty array of strings, where each string is a base64url-encoded JSON object that contains a typed parameter set with details about the transaction that the Verifier is requesting the End-User to authorize. See (#transaction_data) for details. The Wallet MUST return an error if a request contains even one unrecognized transaction data type or transaction data not conforming to the respective type definition. In addition to the parameters determined by the type of transaction data, each `transaction_data` object consists of the following parameters defined by this specification:
+: OPTIONAL. Non-empty array of strings, where each string is a base64url-encoded JSON object that contains a typed parameter set with details about the transaction that the Verifier is requesting the End-User to authorize. See (#transaction_data) for details, including the rules for processing transaction data of a type that the Wallet does not recognize or support. In addition to the parameters determined by the type of transaction data, each `transaction_data` object consists of the following parameters defined by this specification:
 
     * `type`: REQUIRED. String that identifies the type of transaction data. This value determines parameters that can be included in the `transaction_data` object. The specific values are out of scope for this specification. It is RECOMMENDED to use collision-resistant names for `type` values.
-    * `credential_ids`: REQUIRED. Non-empty array of strings each referencing a Credential requested by the Verifier that can be used to authorize this transaction. The string matches the `id` field in the DCQL Credential Query. If there is more than one element in the array, the Wallet MUST use only one of the referenced Credentials for transaction authorization.
+    * `credential_ids`: REQUIRED. Non-empty array of strings each referencing a Credential requested by the Verifier that can be used to authorize this transaction. The string matches the `id` field in the DCQL Credential Query. A `transaction_data` object MUST only be used with the Credential Queries with a matching `id` in its `credential_ids` and MUST NOT be used with any other Credential Queries in the request. Which of the referenced Credential Queries are returned is determined by the DCQL query (see (#transaction_data)).
 
     Each document specifying details of a transaction data type defines what Credential(s) can be used to authorize those transactions. Those Credential(s) can be issued specifically for the transaction authorization use case or re-use existing Credential(s) used for user identification. A mechanism for Credential Issuers to express that a particular Credential can be used for authorization of transaction data is out of scope for this specification.
 
@@ -1003,7 +1003,9 @@ Credential Set Query.
 
 Credentials not matching the respective constraints expressed within
 `credentials` MUST NOT be returned, i.e., they are treated as if
-they would not exist in the Wallet.
+they would not exist in the Wallet. Likewise, a Credential Query referenced by
+a `transaction_data` object that the Wallet cannot process is treated as if it
+could not be satisfied, as defined in (#transaction_data_processing).
 
 If the Wallet cannot deliver all non-optional Credentials requested by the
 Verifier according to these rules, it MUST NOT return any Credential(s).
@@ -1557,9 +1559,43 @@ The following is a non-normative example of the payload of the JWT used in the e
 
 The transaction data mechanism enables a binding between the user's identification/authentication and the user’s authorization, for example to complete a payment transaction, or to sign specific document(s) using QES (Qualified Electronic Signatures). This is achieved by signing the transaction data used for user authorization with the user-controlled key used for proof of possession of the Credential being presented as a means for user identification/authentication.
 
-The Wallet that received the `transaction_data` parameter in the request MUST include a representation or reference to the data in the respective Credential presentation. How this is done is transaction data type specific. Credential Formats can give recommendations of how to handle transaction data, such as those in (#format_specific_parameters).
+A `transaction_data` object MUST only be used with the Credential Queries with a matching `id` in its `credential_ids`, and MUST NOT be used with any other Credential Queries in the request. For each Credential Query referenced in a `transaction_data` object's `credential_ids` for which a Presentation is returned, the Wallet that received the `transaction_data` parameter in the request MUST include a representation or reference to the data of that `transaction_data` object in the respective Credential presentation, and MUST NOT include it in the Presentation returned for any other Credential Query. If a `transaction_data` object's `credential_ids` references multiple Credential Queries, which of those Credential Queries are returned is determined by the DCQL query processing rules in (#dcql_query_lang_processing_rules). The Verifier MUST verify that each Presentation returned for a Credential Query referenced in a `transaction_data` object's `credential_ids` includes the expected representation or reference to that `transaction_data` object, and MUST NOT accept a `transaction_data` object for any Credential Query whose `id` is not in its `credential_ids`. How the representation or reference is included is transaction data type specific. Credential Formats can give recommendations of how to handle transaction data, such as those in (#format_specific_parameters). The handling of `transaction_data` objects that the Wallet does not recognize or cannot process is defined in (#transaction_data_processing).
 
 If the Wallet does not support the `transaction_data` parameter, it MUST reject a request that includes it: the Wallet MUST NOT return a VP Token for such a request, and any response returned SHOULD be an error response using the error code `invalid_transaction_data` (see (#error-response)). As described in (#error-responses), the Wallet MAY instead cancel the flow without returning a response to the Verifier.
+
+### Processing Rules {#transaction_data_processing}
+
+A Wallet is not required to recognize or support every transaction data type. A `transaction_data` object is unprocessable by a Wallet if it contains a transaction data type that the Wallet does not recognize or support, or if it does not conform to the definition of its transaction data type. Note that the same object can be unprocessable by one Wallet and processable by another. A `transaction_data` object whose `credential_ids` contains a value that does not match the `id` of any Credential Query in the request MUST be rejected as described in (#error-response). The Wallet MUST handle an unprocessable `transaction_data` object as follows:
+
+- When selecting Credentials according to (#dcql_query_lang_processing_rules), the Wallet MUST treat every Credential Query whose `id` is referenced in the `credential_ids` of the unprocessable object as if it could not be satisfied. In particular, the Wallet MUST NOT return a Presentation for any of these Credential Queries.
+- The Wallet MUST otherwise ignore the unprocessable object. The presence of an unprocessable `transaction_data` object MUST NOT, by itself, cause the Wallet to reject the request if the DCQL query can still be satisfied without the Credential Queries referenced by that object.
+- If, as a consequence of the rules above, the DCQL query cannot be satisfied, the Wallet MUST NOT return a VP Token, and any response returned SHOULD be an error response using the error code `invalid_transaction_data` (see (#error-response)).
+
+These rules allow a Verifier to include alternative `transaction_data` objects in a single request, each referencing a different Credential Query. The alternatives can be, for example, different versions of a transaction data type, or transaction data types specific to different ecosystems. The Verifier uses `credential_sets` to express that returning any one of the referenced Credentials is sufficient. A Wallet can then authorize the transaction using a Credential whose associated transaction data type it supports, ignoring the other alternatives rather than rejecting the whole request.
+
+The following is a non-normative example of a DCQL query and a `transaction_data` parameter in a request. The Verifier accepts a payment authorization based on either the `payment_card_v1` Credential Query together with a `transaction_data` object of type `payment_v1`, or the `payment_card_v2` Credential Query together with a `transaction_data` object of type `payment_v2`:
+
+<{{examples/query_lang/transaction_data_alternatives.json}}
+
+The following are the two `transaction_data` objects in the example above, after base64url decoding:
+
+```
+{
+  "type": "payment_v1",
+  "credential_ids": [ "payment_card_v1" ],
+  // other parameters specific to payment_v1
+}
+```
+
+```
+{
+  "type": "payment_v2",
+  "credential_ids": [ "payment_card_v2" ],
+  // other parameters specific to payment_v2
+}
+```
+
+A Wallet that supports `payment_v2` but not `payment_v1` ignores the first `transaction_data` object, treats `payment_card_v1` as unsatisfiable, and returns a Presentation for `payment_card_v2` including the `payment_v2` transaction data. A Wallet that supports neither type cannot satisfy the Credential Set Query, so it does not return a VP Token and any response it returns is an `invalid_transaction_data` error response, as described above.
 
 ## Error Response {#error-response}
 
@@ -1597,7 +1633,7 @@ This document also defines the following additional error codes and error descri
 `invalid_transaction_data`:
 
 - the Wallet does not support the `transaction_data` parameter, or
-- any of the following is true for at least one object in the `transaction_data` structure:
+- any of the following is true for at least one object in the `transaction_data` structure and the Wallet was not otherwise able to satisfy the request (see (#transaction_data_processing)):
   - contains an unknown or unsupported transaction data type value,
   - is an object of a known type but containing unknown fields,
   - contains fields of the wrong type for the transaction data type,
@@ -2936,7 +2972,7 @@ The Credential Format Identifier for Credentials in the mdoc format is `mso_mdoc
 
 It is RECOMMENDED that each transaction data type defines a data element (`NameSpace`, `DataElementIdentifier`, `DataElementValue`) to be used to return the processed transaction data. Additionally, it is RECOMMENDED that it specifies the processing rules, potentially including any hash function to be applied, and the expected resulting structure.
 
-Some document types support some transaction data ((#transaction_data)) to be protected using mdoc authentication, as part of the `DeviceSigned` data structure [@ISO.18013-5]. In those cases, the specifications of these document types include which transaction data types are supported, and the issuer includes the relevant data elements in the `KeyAuthorizations`. If a Wallet receives a request with a `transaction_data` type whose data element is unauthorized, the Wallet MUST reject the request due to an unsupported transaction data type.
+Some document types support some transaction data ((#transaction_data)) to be protected using mdoc authentication, as part of the `DeviceSigned` data structure [@ISO.18013-5]. In those cases, the specifications of these document types include which transaction data types are supported, and the issuer includes the relevant data elements in the `KeyAuthorizations`. If a Wallet receives a request with a `transaction_data` type whose data element is unauthorized for a Credential, the Wallet MUST NOT use that Credential to satisfy the referenced Credential Queries, i.e., the Credential is treated as if it did not match them.
 
 ### Metadata
 
@@ -3802,3 +3838,4 @@ The technology described in this specification was made available from contribut
    * Clarify that `invalid_request` is used when the `dcql_query` requests a Credential Format not included in the Verifier's `vp_formats_supported` metadata
    * fix inconsistency on the JAR fallback from post to get if unsupported
    * List `encrypted_response_enc_values_supported` in the Additional Verifier Metadata Parameters section
+   * Relax `transaction_data` handling: unrecognized or unsupported objects make the referenced Credential Queries unsatisfiable rather than failing the whole request

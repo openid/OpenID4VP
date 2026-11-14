@@ -1,0 +1,38 @@
+{
+  "dcql_query": {
+    "credentials": [
+      {
+        "id": "payment_card_v1",
+        "format": "dc+sd-jwt",
+        "meta": {
+          "vct_values": ["https://payments.example.com/payment_card"]
+        },
+        "claims": [
+          {"path": ["account_number"]}
+        ]
+      },
+      {
+        "id": "payment_card_v2",
+        "format": "dc+sd-jwt",
+        "meta": {
+          "vct_values": ["https://payments.example.com/payment_card"]
+        },
+        "claims": [
+          {"path": ["account_number"]}
+        ]
+      }
+    ],
+    "credential_sets": [
+      {
+        "options": [
+          [ "payment_card_v1" ],
+          [ "payment_card_v2" ]
+        ]
+      }
+    ]
+  },
+  "transaction_data": [
+    "<base64url-encoded payment_v1 transaction data>",
+    "<base64url-encoded payment_v2 transaction data>"
+  ]
+}
