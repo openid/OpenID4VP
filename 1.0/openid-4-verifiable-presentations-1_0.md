@@ -3725,6 +3725,9 @@ The technology described in this specification was made available from contribut
    * fix inconsistency on the JAR fallback from post to get if unsupported
    * List `encrypted_response_enc_values_supported` in the Additional Verifier Metadata Parameters section
    * Allow special matching rules on a credential type basis (age_over_NN)
+   * Remove the per-prefix requirements to obtain Verifier metadata from `client_metadata` and add security considerations on the source of Verifier metadata
+   * Apply the guidance against returning protocol errors without End-User interaction to all requests, not only DC API requests
+   * Disallow unsafe URI schemes, and `http` outside development environments, in `expected_origins`
    
 -final
    
