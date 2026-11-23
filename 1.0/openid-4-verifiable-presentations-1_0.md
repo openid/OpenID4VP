@@ -2604,6 +2604,8 @@ In this case, the following request parameters, if used, MUST be present only in
 
 All other request parameters MUST be present in the `payload` element of the JWS object.
 
+All request parameters are encoded in a Request Object as defined in (#vp_token_request), except as specified in this section. Each JSON object in the `signatures` array MUST contain the `typ` Header Parameter with the value `oauth-authz-req+jwt` in its protected header (the `protected` member); a `typ` Header Parameter in the unprotected header (the `header` member) does not satisfy this requirement. The Wallet MUST NOT process the request if the protected header of the element of the `signatures` array that it uses to process the request (i.e., from which it obtains the `client_id`) does not contain the `typ` Header Parameter with the value `oauth-authz-req+jwt`. This applies regardless of whether the Wallet validates the corresponding signature (see (#client_identifier_prefixes)).
+
 Below is a non-normative example of such a request:
 
 ```json
@@ -2629,6 +2631,7 @@ The following is a non-normative example of the content of a decoded protected h
 ```json
 {
   "alg": "ES256",
+  "typ": "oauth-authz-req+jwt",
   "x5c": [
     "MIICOjCCAeG...djzH7lA==",
     "MIICLTCCAdS...koAmhWVKe"
@@ -3725,6 +3728,7 @@ The technology described in this specification was made available from contribut
    * fix inconsistency on the JAR fallback from post to get if unsupported
    * List `encrypted_response_enc_values_supported` in the Additional Verifier Metadata Parameters section
    * Allow special matching rules on a credential type basis (age_over_NN)
+   * Clarify that the Request Object requirements apply to multi-signed requests and that the `typ` Header Parameter is required in the protected header of each signature
    
 -final
    
