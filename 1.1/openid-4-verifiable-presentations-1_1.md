@@ -3772,6 +3772,7 @@ The technology described in this specification was made available from contribut
    * Clarify that the Request URI response is unsigned (JWT with `alg` value `none`) when the Client Identifier Prefix in use requires unsigned requests
    * Clarified that Multi-RP-sig section means Verifier Info instead of attestations
    * Updated origin examples to remove trailing slash
+   * Fix the example of a Request Object passed by value: use a Client Identifier Prefix that permits signed requests, add the missing `response_mode` and fix the `redirect_uri` typo
    * Clarified that request_uri_method is a case-sensitive string
    * Clarify that a VP Token cannot be empty and that empty objects in VP Tokens cannot be used to signify an error response; an error response is returned instead
    * Editorial improvement of the `vp_token` section
